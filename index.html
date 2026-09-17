@@ -1,1 +1,271 @@
-<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LockOn ServiceOS — system dla serwisów telefonów</title><meta name="description" content="LockOn ServiceOS to system do obsługi serwisów telefonów: zlecenia, klienci, części, rozliczenia, role i wsparcie punktów."><link rel="stylesheet" href="assets/styles.css"><link rel="icon" href="assets/logo.svg" type="image/svg+xml"></head><body><header class="nav"><div class="wrap navin"><a class="brand" href="index.html"><img src="assets/logo.svg" alt="LockOn ServiceOS"></a><nav class="links"><a href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz</a><a href="#funkcje">Funkcje</a><a href="#google">Logowanie Google</a><a href="privacy.html">Prywatność</a><a href="terms.html">Regulamin</a></nav></div></header><main><section class="hero"><div class="wrap hero-grid"><div><div class="eyebrow"><span class="dot"></span> LockOn ServiceOS • system obsługi serwisu</div><h1>Jedno miejsce do <span class="grad">prowadzenia serwisu</span>.</h1><p class="lead">LockOn ServiceOS pomaga obsługiwać punkty serwisowe telefonów: klientów, zlecenia, części, użytkowników, role, rozliczenia i codzienny workflow.</p><div class="actions"><a class="btn primary" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz dla Windows</a><a class="btn" href="https://github.com/LokosPL/LockOn-Hub/releases/latest">Najnowsza wersja</a></div><p class="tiny" style="margin-top:14px">Aktualizacje są pobierane z GitHub Releases i mogą być instalowane bezpośrednio z LockOn ServiceOS.</p></div><div class="visual" aria-label="Podgląd interfejsu LockOn ServiceOS"><div class="window"><div class="bar"><i></i><i></i><i></i></div><div class="screen"><div class="side"><span></span><span></span><span></span><span></span><span></span></div><div class="main"><div class="hero-card"></div><div class="cards"><div class="card"><span></span><span style="width:58%"></span></div><div class="card"><span></span><span style="width:72%"></span></div><div class="card"><span></span><span style="width:45%"></span></div><div class="card"><span></span><span style="width:68%"></span></div></div></div></div></div></div></div></section><section id="funkcje" class="section"><div class="wrap"><h2>Stworzone pod realną pracę serwisu.</h2><p class="intro">System jest projektowany jako aplikacja desktopowa dla punktów serwisowych, z kontrolą dostępu, przeglądarką wewnętrzną i modułami operacyjnymi.</p><div class="feature-grid"><article class="feature"><div class="badge">01</div><b>Zlecenia i klienci</b><p>Obsługa urządzeń, usterek, statusów napraw, danych klienta oraz historii serwisowej.</p></article><article class="feature"><div class="badge">02</div><b>Punkty i role</b><p>Właściciel aplikacji może zarządzać kontami, rolami oraz przypisaniem użytkowników do punktów.</p></article><article class="feature"><div class="badge">03</div><b>Rozliczenia</b><p>Serwisanci mogą zgłaszać przychody do weryfikacji, a system wspiera zasady rozliczeń punktu.</p></article><article class="feature"><div class="badge">04</div><b>Przeglądarka w aplikacji</b><p>Dostęp do stron dostawców, ofert i narzędzi bez opuszczania środowiska LockOn ServiceOS.</p></article><article class="feature"><div class="badge">05</div><b>Wsparcie LockOnOS</b><p>Dedykowany moduł pomocy i możliwość obsługi wybranych punktów przez zespół wsparcia.</p></article><article class="feature"><div class="badge">06</div><b>Rozwój pod AI</b><p>Architektura przewiduje analizę cen części, ofert i funkcje automatyzujące codzienną pracę.</p></article></div></div></section><section id="google" class="section"><div class="wrap"><h2>Logowanie przez Google.</h2><p class="intro">Google służy wyłącznie do uwierzytelnienia użytkownika i przekazania podstawowych danych profilu potrzebnych do utworzenia konta w LockOn ServiceOS.</p><div class="legalbox"><h3>Jakie dane wykorzystujemy przy logowaniu?</h3><p>W zakresie logowania aplikacja może otrzymać identyfikator konta Google, adres e-mail, nazwę profilu oraz zdjęcie profilowe. Nie prosimy o dostęp do treści Gmaila, Dysku Google ani prywatnych wiadomości.</p><p>Nowe konto może oczekiwać na zatwierdzenie i przypisanie odpowiedniej roli lub punktu przez administratora systemu.</p></div></div></section></main><footer class="footer"><div class="wrap footer-in"><div><strong>LockOn ServiceOS</strong><div class="tiny">Autor: Bartłomiej Motłoch • Punkt Nowogard</div></div><div class="tiny"><a href="privacy.html">Polityka prywatności</a> · <a href="terms.html">Regulamin</a> · Kontakt: <a href="mailto:bartekmotloch@wp.pl">bartekmotloch@wp.pl</a></div></div></footer></body></html>
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090a0c">
+  <title>LockOn ServiceOS — serwis pod kontrolą</title>
+  <meta name="description" content="LockOn ServiceOS porządkuje codzienną pracę serwisu GSM. Zlecenia, zespół, punkty, rozliczenia i narzędzia w jednej aplikacji dla Windows.">
+  <meta property="og:title" content="LockOn ServiceOS — serwis pod kontrolą">
+  <meta property="og:description" content="Jedna aplikacja do codziennej pracy serwisu GSM. Szybko, czytelnie i bez chaosu.">
+  <meta property="og:type" content="website">
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="page-noise" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="wrap navin">
+      <a class="brand" href="#top" aria-label="LockOn ServiceOS">
+        <img src="assets/logo.svg" alt="">
+        <span><strong>LockOn</strong><small>ServiceOS</small></span>
+      </a>
+
+      <nav class="links" aria-label="Nawigacja">
+        <a href="#poznaj">Poznaj</a>
+        <a href="#podglad">Podgląd</a>
+        <a href="#jak-dziala">Jak działa</a>
+        <a href="#aktualizacje">Aktualizacje</a>
+      </nav>
+
+      <a class="nav-download" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
+        Pobierz <span>↓</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-orbit orbit-one"></div>
+      <div class="hero-orbit orbit-two"></div>
+
+      <div class="wrap hero-grid">
+        <div class="hero-copy reveal">
+          <div class="kicker"><span class="live-dot"></span> LockOn ServiceOS 0.5.0 · Windows</div>
+          <h1>Serwis działa lepiej,<br><span>gdy wszystko jest pod ręką.</span></h1>
+          <p class="lead">
+            LockOn ServiceOS zbiera codzienną pracę serwisu GSM w jednym miejscu.
+            Mniej przełączania, mniej szukania, więcej czasu na klientów i naprawy.
+          </p>
+
+          <div class="actions">
+            <a class="btn primary" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
+              <span class="btn-icon">⊞</span> Pobierz dla Windows
+            </a>
+            <a class="btn ghost" href="#podglad">Zobacz aplikację <span>→</span></a>
+          </div>
+
+          <div class="hero-meta">
+            <span>Logowanie Google</span>
+            <span>Automatyczne aktualizacje</span>
+            <span>Role i punkty</span>
+          </div>
+        </div>
+
+        <div class="app-stage reveal reveal-delay" id="podglad">
+          <div class="stage-glow"></div>
+          <div class="app-window tilt-card">
+            <div class="app-titlebar">
+              <div class="window-brand">
+                <img src="assets/logo.svg" alt="">
+                <span>LockOn ServiceOS</span>
+              </div>
+              <div class="window-controls"><i></i><i></i><i></i></div>
+            </div>
+
+            <div class="app-shell">
+              <aside class="app-sidebar">
+                <div class="mini-profile">
+                  <div class="avatar">BM</div>
+                  <div><b>Bartłomiej</b><small>Właściciel</small></div>
+                </div>
+                <div class="side-label">Główne</div>
+                <div class="side-item active"><span>⌂</span> Pulpit</div>
+                <div class="side-item"><span>◫</span> Zlecenia</div>
+                <div class="side-item"><span>◎</span> Klienci</div>
+                <div class="side-item"><span>⌁</span> Przeglądarka</div>
+                <div class="side-label">Zarządzanie</div>
+                <div class="side-item"><span>♙</span> Użytkownicy <em>2</em></div>
+                <div class="side-item"><span>◈</span> Rozliczenia</div>
+              </aside>
+
+              <section class="app-content">
+                <div class="app-head">
+                  <div>
+                    <small>Punkt Nowogard</small>
+                    <h3>Dzień dobry 👋</h3>
+                  </div>
+                  <div class="app-head-actions">
+                    <span class="sync-pill"><i></i> Online</span>
+                    <div class="round-avatar">B</div>
+                  </div>
+                </div>
+
+                <div class="stats">
+                  <article><small>Otwarte naprawy</small><strong>12</strong><span>+3 dzisiaj</span></article>
+                  <article><small>Do odbioru</small><strong>5</strong><span>gotowe</span></article>
+                  <article class="accent-card"><small>Przychód dziś</small><strong>1 840 zł</strong><span>po weryfikacji</span></article>
+                </div>
+
+                <div class="app-columns">
+                  <div class="panel repairs">
+                    <div class="panel-head"><b>Ostatnie zlecenia</b><span>Wszystkie →</span></div>
+                    <div class="repair-row"><div class="device-icon"></div><div><b>iPhone 13</b><small>Wymiana wyświetlacza</small></div><span class="tag working">W naprawie</span></div>
+                    <div class="repair-row"><div class="device-icon">S</div><div><b>Galaxy S23</b><small>Gniazdo ładowania</small></div><span class="tag ready">Gotowe</span></div>
+                    <div class="repair-row"><div class="device-icon">X</div><div><b>Xiaomi 13</b><small>Diagnoza</small></div><span class="tag waiting">Oczekuje</span></div>
+                  </div>
+
+                  <div class="panel approval">
+                    <div class="panel-head"><b>Nowe konto</b><span class="pulse-dot"></span></div>
+                    <div class="request-user">
+                      <div class="avatar orange">AK</div>
+                      <div><b>Anna Kowalska</b><small>Serwisant · Punkt Goleniów</small></div>
+                    </div>
+                    <button>Sprawdź zgłoszenie</button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div class="float-card float-left">
+            <span class="float-icon">✓</span>
+            <div><b>Aktualizacja gotowa</b><small>ServiceOS 0.5.1</small></div>
+          </div>
+          <div class="float-card float-right">
+            <span class="float-icon hot">G</span>
+            <div><b>Bezpieczne logowanie</b><small>Google OAuth</small></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrap scroll-hint"><span></span> Przewiń i poznaj system</div>
+    </section>
+
+    <section class="statement" id="poznaj">
+      <div class="wrap statement-grid">
+        <div class="section-kicker reveal">Jedno miejsce. Jeden rytm pracy.</div>
+        <h2 class="reveal">Nie kolejny „system do wszystkiego”.<br><span>Po prostu wygodniejsze miejsce do pracy.</span></h2>
+        <p class="statement-copy reveal">
+          Zlecenie wpada. Serwisant je prowadzi. Szef widzi, co dzieje się w punktach.
+          Zespół ma dostęp tylko do tego, czego potrzebuje. A Ty nie składasz dnia z pięciu różnych narzędzi.
+        </p>
+      </div>
+
+      <div class="wrap feature-bento">
+        <article class="feature-card large reveal">
+          <div class="feature-top"><span class="feature-number">01</span><span class="soft-chip">codzienna praca</span></div>
+          <h3>Zlecenia, które da się ogarnąć jednym spojrzeniem.</h3>
+          <p>Urządzenie, usterka, status, klient i historia — wszystko tam, gdzie tego szukasz.</p>
+          <div class="mini-board">
+            <div class="board-line"><span>iPhone 14 Pro</span><b class="ready-dot">Gotowe</b></div>
+            <div class="board-line"><span>Samsung A55</span><b class="work-dot">W naprawie</b></div>
+            <div class="board-line"><span>Pixel 8</span><b class="wait-dot">Diagnoza</b></div>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-top"><span class="feature-number">02</span></div>
+          <h3>Ludzie widzą to, co trzeba.</h3>
+          <p>Role, punkty i akceptacja nowych kont bez bałaganu w uprawnieniach.</p>
+          <div class="role-stack"><span>Właściciel</span><span>Szef</span><span>Koordynator</span><span>Serwisant</span></div>
+        </article>
+
+        <article class="feature-card reveal">
+          <div class="feature-top"><span class="feature-number">03</span></div>
+          <h3>Rozliczenia bez karteczek.</h3>
+          <p>Serwisant zgłasza przychód, przełożony weryfikuje, a podział jest czytelny.</p>
+          <div class="split-demo"><div><small>Serwisant</small><strong>50%</strong></div><div><small>Szef</small><strong>50%</strong></div></div>
+        </article>
+
+        <article class="feature-card wide reveal">
+          <div class="feature-top"><span class="feature-number">04</span><span class="soft-chip">bez wychodzenia z aplikacji</span></div>
+          <div class="wide-copy">
+            <div><h3>Przeglądarka jest tam, gdzie pracujesz.</h3><p>Dostawcy, części, dokumentacja i narzędzia otwierają się wewnątrz ServiceOS.</p></div>
+            <div class="browser-demo">
+              <div class="browser-bar"><i></i><span>części · dostawcy · narzędzia</span><b>↻</b></div>
+              <div class="browser-lines"><span></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="flow-section" id="jak-dziala">
+      <div class="wrap">
+        <div class="center-head reveal">
+          <div class="section-kicker">Od logowania do pracy</div>
+          <h2>Prosto od pierwszego uruchomienia.</h2>
+          <p>Użytkownik nie dostaje od razu dostępu do wszystkiego. Wchodzi do systemu, zgłasza swój punkt i rolę, a administrator zatwierdza konto.</p>
+        </div>
+
+        <div class="flow reveal">
+          <div class="flow-step"><span>01</span><div class="flow-icon">G</div><b>Logowanie Google</b><small>Szybko, bez nowego hasła.</small></div>
+          <div class="flow-line"><i></i></div>
+          <div class="flow-step"><span>02</span><div class="flow-icon">⌖</div><b>Punkt i rola</b><small>Użytkownik wysyła zgłoszenie.</small></div>
+          <div class="flow-line"><i></i></div>
+          <div class="flow-step"><span>03</span><div class="flow-icon">✓</div><b>Akceptacja</b><small>Administrator nadaje dostęp.</small></div>
+          <div class="flow-line"><i></i></div>
+          <div class="flow-step"><span>04</span><div class="flow-icon">→</div><b>Gotowe</b><small>ServiceOS pamięta sesję.</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="updates-section" id="aktualizacje">
+      <div class="wrap updates-card reveal">
+        <div class="update-orb"></div>
+        <div class="updates-copy">
+          <div class="section-kicker">ServiceOS rośnie razem z Tobą</div>
+          <h2>Nowa wersja?<br><span>Nie szukasz nowego pliku.</span></h2>
+          <p>Aplikacja korzysta z GitHub Releases. Gdy pojawi się aktualizacja, ServiceOS może ją wykryć i pobrać bez ręcznego szukania kolejnego instalatora.</p>
+          <a class="text-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest">Zobacz najnowsze wydanie <span>↗</span></a>
+        </div>
+
+        <div class="update-ui">
+          <div class="update-window">
+            <div class="update-logo"><img src="assets/logo.svg" alt=""></div>
+            <small>Dostępna nowa wersja</small>
+            <h3>LockOn ServiceOS <span>0.5.1</span></h3>
+            <div class="progress"><i></i></div>
+            <div class="progress-meta"><span>Pobieranie aktualizacji…</span><b>72%</b></div>
+            <button>Pobierz i zainstaluj</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="download-section">
+      <div class="wrap download-card reveal">
+        <div>
+          <div class="section-kicker">Gotowy?</div>
+          <h2>Uruchom swój serwis<br>w ServiceOS.</h2>
+          <p>Aktualna wersja dla Windows. Jeden instalator, kolejne aktualizacje już z aplikacji.</p>
+        </div>
+        <div class="download-side">
+          <a class="btn primary big" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz LockOn ServiceOS <span>↓</span></a>
+          <small>Windows · wersja 0.5.0 · GitHub Releases</small>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-in">
+      <div class="footer-brand">
+        <img src="assets/logo.svg" alt="">
+        <div><strong>LockOn ServiceOS</strong><small>Bartłomiej Motłoch · Punkt Nowogard</small></div>
+      </div>
+      <div class="footer-links">
+        <a href="privacy.html">Prywatność</a>
+        <a href="terms.html">Regulamin</a>
+        <a href="mailto:bartekmotloch@wp.pl">Kontakt</a>
+        <a href="https://github.com/LokosPL/LockOn-Hub/releases/latest">Wydania ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>
