@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" role="img" aria-labelledby="title desc">
+  <title id="title">LockOn ServiceOS</title>
+  <desc id="desc">Logo LockOn ServiceOS z ikoną telefonu i motywem serwisowym</desc>
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff8a00"/>
+      <stop offset="1" stop-color="#ff2d20"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(12 14)">
+    <rect x="16" y="5" width="112" height="142" rx="28" fill="none" stroke="#f7f7f8" stroke-width="9"/>
+    <rect x="52" y="17" width="40" height="6" rx="3" fill="#f7f7f8" opacity=".9"/>
+    <path d="M49 82l18 18 35-45" fill="none" stroke="#f7f7f8" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M-2 112c36-31 92-51 151-47" fill="none" stroke="url(#accent)" stroke-width="12" stroke-linecap="round"/>
+    <path d="M142 65l16 1-11 12" fill="url(#accent)"/>
+  </g>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <text x="188" y="91" font-size="64" font-weight="800" fill="#f7f7f8" letter-spacing="-3">LockOn</text>
+    <text x="190" y="137" font-size="31" font-weight="650" fill="url(#accent)" letter-spacing="2">ServiceOS</text>
+  </g>
+</svg>
