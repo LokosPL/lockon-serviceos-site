@@ -75,6 +75,15 @@
   document.querySelectorAll('.demo-nav').forEach(btn => btn.addEventListener('click', () => showDemo(btn.dataset.demoTarget)));
   document.querySelectorAll('[data-demo-jump]').forEach(btn => btn.addEventListener('click', () => showDemo(btn.dataset.demoJump)));
 
+  const formatBytes = (bytes) => {
+    const value = Number(bytes);
+    if (!Number.isFinite(value) || value <= 0) return '—';
+    const mb = value / 1024 / 1024;
+    return mb >= 10 ? mb.toFixed(0) + ' MB' : mb.toFixed(1) + ' MB';
+  };
+
+  const normalizeDigest = (value) => String(value || '').replace(/^sha256:/i, '').trim().toLowerCase();
+
   const applyRelease = (release) => {
     const version = release?.tag_name || '';
     const clean = version ? version.replace(/^v/i, '') : '';
@@ -84,14 +93,52 @@
     if (asset?.browser_download_url) {
       document.querySelectorAll('.download-link').forEach(el => el.href = asset.browser_download_url);
     }
+
+    const digest = normalizeDigest(asset?.digest);
+    document.querySelectorAll('[data-release-digest]').forEach(el => {
+      el.textContent = digest || 'dostępny w GitHub Release';
+      if (digest) el.setAttribute('title', digest);
+    });
+    document.querySelectorAll('[data-release-size]').forEach(el => {
+      el.textContent = asset ? 'LockOn-ServiceOS-Setup.exe · ' + formatBytes(asset.size) : 'LockOn-ServiceOS-Setup.exe';
+    });
+
     if (release?.html_url) document.querySelectorAll('.release-link').forEach(el => el.href = release.html_url);
   };
 
+  const releaseController = new AbortController();
+  const releaseTimeout = setTimeout(() => releaseController.abort(), 5000);
+
   fetch('https://api.github.com/repos/LokosPL/LockOn-Hub/releases/latest', {
-    headers: { 'Accept': 'application/vnd.github+json' }
-  }).then(r => r.ok ? r.json() : Promise.reject()).then(applyRelease).catch(() => {
-    document.querySelectorAll('[data-release-version]').forEach(el => {
-      if (!el.textContent.trim() || el.textContent.trim() === '—') el.textContent = 'najnowsza';
+    headers: { 'Accept': 'application/vnd.github+json' },
+    credentials: 'omit',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
+    signal: releaseController.signal
+  }).then(r => r.ok ? r.json() : Promise.reject(new Error('release metadata unavailable')))
+    .then(applyRelease)
+    .catch(() => {
+      document.querySelectorAll('[data-release-version]').forEach(el => {
+        if (!el.textContent.trim() || el.textContent.trim() === '—') el.textContent = 'najnowsza';
+      });
+      document.querySelectorAll('[data-release-digest]').forEach(el => el.textContent = 'sprawdź w GitHub Release');
+      document.querySelectorAll('[data-release-size]').forEach(el => el.textContent = 'LockOn-ServiceOS-Setup.exe');
+    })
+    .finally(() => clearTimeout(releaseTimeout));
+
+  document.querySelectorAll('[data-copy-digest]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const target = document.querySelector('[data-release-digest]');
+      const digest = normalizeDigest(target?.textContent);
+      if (!/^[a-f0-9]{64}$/.test(digest)) return;
+      try {
+        await navigator.clipboard.writeText(digest);
+        const original = button.textContent;
+        button.textContent = 'Skopiowano';
+        setTimeout(() => { button.textContent = original; }, 1400);
+      } catch {
+        button.textContent = 'Zaznacz hash';
+      }
     });
   });
 })();
