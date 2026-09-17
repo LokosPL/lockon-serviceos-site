@@ -2,267 +2,198 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#090a0c">
-  <title>LockOn ServiceOS — serwis pod kontrolą</title>
-  <meta name="description" content="LockOn ServiceOS porządkuje codzienną pracę serwisu GSM. Zlecenia, zespół, punkty, rozliczenia i narzędzia w jednej aplikacji dla Windows.">
-  <meta property="og:title" content="LockOn ServiceOS — serwis pod kontrolą">
-  <meta property="og:description" content="Jedna aplikacja do codziennej pracy serwisu GSM. Szybko, czytelnie i bez chaosu.">
+  <title>LockOn ServiceOS — pobierz dla Windows</title>
+  <meta name="description" content="Pobierz LockOn ServiceOS — aplikację desktopową do codziennej pracy serwisu GSM z wbudowaną przeglądarką, logowaniem Google, pomocą i automatycznymi aktualizacjami.">
+  <meta property="og:title" content="LockOn ServiceOS">
+  <meta property="og:description" content="Jedno spokojne miejsce do codziennej pracy serwisu. Pobierz ServiceOS dla Windows.">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body>
+  <div class="site-loader" id="siteLoader" aria-live="polite">
+    <div class="loader-core">
+      <div class="loader-brand">
+        <img src="assets/logo.svg" alt="">
+        <div><strong>LockOn</strong><span>ServiceOS</span></div>
+      </div>
+      <div class="loader-copy"><strong>Serwis pod kontrolą.</strong><span id="loaderLabel">Uruchamianie strony…</span></div>
+      <div class="loader-track"><i id="loaderProgress"></i></div>
+      <div class="loader-meta"><span>LOCKON SERVICEOS</span><b id="loaderPercent">8%</b></div>
+    </div>
+  </div>
+
   <div class="cursor-glow" aria-hidden="true"></div>
-  <div class="page-noise" aria-hidden="true"></div>
 
   <header class="nav">
-    <div class="wrap navin">
+    <div class="wrap nav-inner">
       <a class="brand" href="#top" aria-label="LockOn ServiceOS">
         <img src="assets/logo.svg" alt="">
-        <span><strong>LockOn</strong><small>ServiceOS</small></span>
+        <div><strong>LockOn</strong><span>ServiceOS</span></div>
       </a>
-
-      <nav class="links" aria-label="Nawigacja">
-        <a href="#poznaj">Poznaj</a>
-        <a href="#podglad">Podgląd</a>
-        <a href="#jak-dziala">Jak działa</a>
-        <a href="#aktualizacje">Aktualizacje</a>
+      <nav class="nav-links">
+        <a href="#aplikacja">Aplikacja</a>
+        <a href="#najwazniejsze">Najważniejsze</a>
+        <a href="#pobierz">Pobierz</a>
       </nav>
-
-      <a class="nav-download" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
-        Pobierz <span>↓</span>
-      </a>
+      <a class="nav-download download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz <span>↓</span></a>
     </div>
   </header>
 
   <main id="top">
     <section class="hero">
-      <div class="hero-orbit orbit-one"></div>
-      <div class="hero-orbit orbit-two"></div>
-
+      <div class="hero-light light-a"></div>
+      <div class="hero-light light-b"></div>
       <div class="wrap hero-grid">
         <div class="hero-copy reveal">
-          <div class="kicker"><span class="live-dot"></span> LockOn ServiceOS 0.5.0 · Windows</div>
-          <h1>Serwis działa lepiej,<br><span>gdy wszystko jest pod ręką.</span></h1>
-          <p class="lead">
-            LockOn ServiceOS zbiera codzienną pracę serwisu GSM w jednym miejscu.
-            Mniej przełączania, mniej szukania, więcej czasu na klientów i naprawy.
-          </p>
-
-          <div class="actions">
-            <a class="btn primary" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
-              <span class="btn-icon">⊞</span> Pobierz dla Windows
+          <div class="kicker"><span class="live-dot"></span> Dostępny dla Windows · <span data-release-version>najnowsza wersja</span></div>
+          <h1>Otwórz.<br>Pracuj.<br><span>Resztę ogarnia ServiceOS.</span></h1>
+          <p>Jedna aplikacja do rzeczy, których naprawdę używasz w ciągu dnia. Szybki start, wbudowana przeglądarka, pomoc i aktualizacje bez szukania kolejnych plików.</p>
+          <div class="hero-actions">
+            <a class="button primary download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
+              <span class="windows-mark">⊞</span> Pobierz dla Windows
             </a>
-            <a class="btn ghost" href="#podglad">Zobacz aplikację <span>→</span></a>
+            <a class="button secondary" href="#aplikacja">Zobacz jak wygląda <span>↓</span></a>
           </div>
-
-          <div class="hero-meta">
-            <span>Logowanie Google</span>
-            <span>Automatyczne aktualizacje</span>
-            <span>Role i punkty</span>
-          </div>
+          <div class="hero-note">Instalator pobierany bezpośrednio z oficjalnego GitHub Release.</div>
         </div>
 
-        <div class="app-stage reveal reveal-delay" id="podglad">
-          <div class="stage-glow"></div>
-          <div class="app-window tilt-card">
-            <div class="app-titlebar">
-              <div class="window-brand">
-                <img src="assets/logo.svg" alt="">
-                <span>LockOn ServiceOS</span>
-              </div>
-              <div class="window-controls"><i></i><i></i><i></i></div>
+        <div class="hero-device reveal delay">
+          <div class="device-glow"></div>
+          <div class="mini-app">
+            <div class="mini-title">
+              <div><span class="mini-mark"></span><b>LockOn ServiceOS</b><small>Punkt Nowogard</small></div>
+              <div class="window-dots"><i></i><i></i><i></i></div>
             </div>
-
-            <div class="app-shell">
-              <aside class="app-sidebar">
-                <div class="mini-profile">
-                  <div class="avatar">BM</div>
-                  <div><b>Bartłomiej</b><small>Właściciel</small></div>
-                </div>
-                <div class="side-label">Główne</div>
-                <div class="side-item active"><span>⌂</span> Pulpit</div>
-                <div class="side-item"><span>◫</span> Zlecenia</div>
-                <div class="side-item"><span>◎</span> Klienci</div>
-                <div class="side-item"><span>⌁</span> Przeglądarka</div>
-                <div class="side-label">Zarządzanie</div>
-                <div class="side-item"><span>♙</span> Użytkownicy <em>2</em></div>
-                <div class="side-item"><span>◈</span> Rozliczenia</div>
+            <div class="mini-body">
+              <aside>
+                <div class="mini-brand"><img src="assets/logo.svg" alt=""></div>
+                <button class="active">⌂</button>
+                <button>⌘</button>
+                <button>?</button>
               </aside>
+              <section>
+                <div class="mini-kicker">PUNKT NOWOGARD</div>
+                <h2>Dzień dobry.<br><span>Wszystko jest gotowe.</span></h2>
+                <div class="mini-stat-row"><div><small>Punkty</small><strong>3</strong></div><div><small>Przychód</small><strong>1 840 zł</strong></div><div><small>System</small><strong>ONLINE</strong></div></div>
+                <div class="mini-actions"><span>Otwórz przeglądarkę →</span><span>Pomoc</span></div>
+              </section>
+            </div>
+          </div>
+          <div class="floating-pill fp-one"><i></i><span>Google</span><b>zalogowano</b></div>
+          <div class="floating-pill fp-two"><i></i><span>Aktualizacje</span><b>gotowe</b></div>
+        </div>
+      </div>
+    </section>
 
-              <section class="app-content">
-                <div class="app-head">
-                  <div>
-                    <small>Punkt Nowogard</small>
-                    <h3>Dzień dobry 👋</h3>
-                  </div>
-                  <div class="app-head-actions">
-                    <span class="sync-pill"><i></i> Online</span>
-                    <div class="round-avatar">B</div>
-                  </div>
+    <section class="app-demo-section" id="aplikacja">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="kicker">Poczuj aplikację jeszcze przed instalacją</div>
+          <h2>Strona działa trochę jak <span>ServiceOS.</span></h2>
+          <p>Kliknij po lewej. To nie jest film ani obrazek — podgląd reaguje jak mała wersja aplikacji.</p>
+        </div>
+
+        <div class="demo-shell reveal">
+          <div class="demo-titlebar">
+            <div class="demo-title-left"><span class="mini-mark"></span><strong>LockOn ServiceOS</strong><small>Podgląd</small></div>
+            <div class="window-dots"><i></i><i></i><i></i></div>
+          </div>
+
+          <div class="demo-body">
+            <aside class="demo-sidebar">
+              <div class="demo-logo"><img src="assets/logo.svg" alt=""><div><b>LockOn</b><span>ServiceOS</span></div></div>
+              <div class="demo-branch"><i></i><span>Punkt Nowogard</span></div>
+              <button class="demo-nav active" data-demo-target="home"><span>⌂</span><b>Start</b></button>
+              <button class="demo-nav" data-demo-target="browser"><span>◎</span><b>Przeglądarka</b></button>
+              <button class="demo-nav" data-demo-target="help"><span>?</span><b>Pomoc</b></button>
+              <button class="demo-nav" data-demo-target="update"><span>↻</span><b>Aktualizacje</b></button>
+              <div class="demo-account"><span>BM</span><div><b>Bartłomiej</b><small>Właściciel</small></div></div>
+            </aside>
+
+            <div class="demo-content">
+              <section class="demo-screen active" data-demo-screen="home">
+                <div class="demo-screen-top"><span class="kicker"><i class="live-dot"></i> PUNKT NOWOGARD</span><small>ServiceOS <b data-release-version>—</b></small></div>
+                <h3>Dzień dobry, Bartłomiej.<br><span>Wszystko jest gotowe.</span></h3>
+                <p>Najważniejsze rzeczy pod ręką. Bez pustych ekranów i bez zbędnego klikania.</p>
+                <div class="demo-stats"><article><span>Punkty</span><strong>3</strong><small>wszystkie widoczne</small></article><article><span>Aktywne konta</span><strong>8</strong><small>system gotowy</small></article><article><span>Przychód</span><strong>1 840 zł</strong><small>zatwierdzony</small></article></div>
+                <div class="demo-quick"><button data-demo-jump="browser">◎ <span>Przeglądarka</span><b>→</b></button><button data-demo-jump="help">? <span>Pomoc</span><b>→</b></button></div>
+              </section>
+
+              <section class="demo-screen browser-screen" data-demo-screen="browser">
+                <div class="fake-browser-toolbar"><div class="fake-nav">← → ↻ ⌂</div><div class="fake-address"><span>◎</span> google.com</div><div>↗</div></div>
+                <div class="fake-browser-page">
+                  <div class="google-word">Google</div>
+                  <div class="fake-search"><span>Wyszukaj w Google…</span><b>⌕</b></div>
+                  <div class="fake-browser-caption">Strony otwierają się wewnątrz ServiceOS.</div>
                 </div>
+              </section>
 
-                <div class="stats">
-                  <article><small>Otwarte naprawy</small><strong>12</strong><span>+3 dzisiaj</span></article>
-                  <article><small>Do odbioru</small><strong>5</strong><span>gotowe</span></article>
-                  <article class="accent-card"><small>Przychód dziś</small><strong>1 840 zł</strong><span>po weryfikacji</span></article>
+              <section class="demo-screen help-screen" data-demo-screen="help">
+                <div class="demo-muted-content">
+                  <h3>Pomoc nie zasłania całej aplikacji.</h3>
+                  <p>Otwiera się jako kompaktowy panel z prawej strony.</p>
                 </div>
+                <div class="fake-help-panel">
+                  <div class="fake-help-head"><div><strong>Pomoc LockOn</strong><small>Rozmowa lokalna</small></div><b>×</b></div>
+                  <div class="fake-message system">Napisz, z czym masz problem.</div>
+                  <div class="fake-message user">Przeglądarka nie chce się odświeżyć.</div>
+                  <div class="fake-compose"><span>Napisz, co nie działa…</span><b>↑</b></div>
+                </div>
+              </section>
 
-                <div class="app-columns">
-                  <div class="panel repairs">
-                    <div class="panel-head"><b>Ostatnie zlecenia</b><span>Wszystkie →</span></div>
-                    <div class="repair-row"><div class="device-icon"></div><div><b>iPhone 13</b><small>Wymiana wyświetlacza</small></div><span class="tag working">W naprawie</span></div>
-                    <div class="repair-row"><div class="device-icon">S</div><div><b>Galaxy S23</b><small>Gniazdo ładowania</small></div><span class="tag ready">Gotowe</span></div>
-                    <div class="repair-row"><div class="device-icon">X</div><div><b>Xiaomi 13</b><small>Diagnoza</small></div><span class="tag waiting">Oczekuje</span></div>
-                  </div>
-
-                  <div class="panel approval">
-                    <div class="panel-head"><b>Nowe konto</b><span class="pulse-dot"></span></div>
-                    <div class="request-user">
-                      <div class="avatar orange">AK</div>
-                      <div><b>Anna Kowalska</b><small>Serwisant · Punkt Goleniów</small></div>
-                    </div>
-                    <button>Sprawdź zgłoszenie</button>
-                  </div>
+              <section class="demo-screen update-screen" data-demo-screen="update">
+                <div class="update-demo-card">
+                  <div class="update-demo-icon">↻</div>
+                  <span>AKTUALIZACJE</span>
+                  <h3>Nowa wersja pojawia się sama.</h3>
+                  <p>ServiceOS sprawdza GitHub Releases. Nie musisz szukać nowego instalatora za każdym razem.</p>
+                  <div class="update-row"><div><small>Zainstalowana</small><strong data-release-version>—</strong></div><b class="up-to-date">AKTUALNA</b></div>
+                  <button>Sprawdź aktualizacje</button>
                 </div>
               </section>
             </div>
           </div>
-
-          <div class="float-card float-left">
-            <span class="float-icon">✓</span>
-            <div><b>Aktualizacja gotowa</b><small>ServiceOS 0.5.1</small></div>
-          </div>
-          <div class="float-card float-right">
-            <span class="float-icon hot">G</span>
-            <div><b>Bezpieczne logowanie</b><small>Google OAuth</small></div>
-          </div>
         </div>
       </div>
-
-      <div class="wrap scroll-hint"><span></span> Przewiń i poznaj system</div>
     </section>
 
-    <section class="statement" id="poznaj">
-      <div class="wrap statement-grid">
-        <div class="section-kicker reveal">Jedno miejsce. Jeden rytm pracy.</div>
-        <h2 class="reveal">Nie kolejny „system do wszystkiego”.<br><span>Po prostu wygodniejsze miejsce do pracy.</span></h2>
-        <p class="statement-copy reveal">
-          Zlecenie wpada. Serwisant je prowadzi. Szef widzi, co dzieje się w punktach.
-          Zespół ma dostęp tylko do tego, czego potrzebuje. A Ty nie składasz dnia z pięciu różnych narzędzi.
-        </p>
-      </div>
-
-      <div class="wrap feature-bento">
-        <article class="feature-card large reveal">
-          <div class="feature-top"><span class="feature-number">01</span><span class="soft-chip">codzienna praca</span></div>
-          <h3>Zlecenia, które da się ogarnąć jednym spojrzeniem.</h3>
-          <p>Urządzenie, usterka, status, klient i historia — wszystko tam, gdzie tego szukasz.</p>
-          <div class="mini-board">
-            <div class="board-line"><span>iPhone 14 Pro</span><b class="ready-dot">Gotowe</b></div>
-            <div class="board-line"><span>Samsung A55</span><b class="work-dot">W naprawie</b></div>
-            <div class="board-line"><span>Pixel 8</span><b class="wait-dot">Diagnoza</b></div>
-          </div>
-        </article>
-
-        <article class="feature-card reveal">
-          <div class="feature-top"><span class="feature-number">02</span></div>
-          <h3>Ludzie widzą to, co trzeba.</h3>
-          <p>Role, punkty i akceptacja nowych kont bez bałaganu w uprawnieniach.</p>
-          <div class="role-stack"><span>Właściciel</span><span>Szef</span><span>Koordynator</span><span>Serwisant</span></div>
-        </article>
-
-        <article class="feature-card reveal">
-          <div class="feature-top"><span class="feature-number">03</span></div>
-          <h3>Rozliczenia bez karteczek.</h3>
-          <p>Serwisant zgłasza przychód, przełożony weryfikuje, a podział jest czytelny.</p>
-          <div class="split-demo"><div><small>Serwisant</small><strong>50%</strong></div><div><small>Szef</small><strong>50%</strong></div></div>
-        </article>
-
-        <article class="feature-card wide reveal">
-          <div class="feature-top"><span class="feature-number">04</span><span class="soft-chip">bez wychodzenia z aplikacji</span></div>
-          <div class="wide-copy">
-            <div><h3>Przeglądarka jest tam, gdzie pracujesz.</h3><p>Dostawcy, części, dokumentacja i narzędzia otwierają się wewnątrz ServiceOS.</p></div>
-            <div class="browser-demo">
-              <div class="browser-bar"><i></i><span>części · dostawcy · narzędzia</span><b>↻</b></div>
-              <div class="browser-lines"><span></span><span></span><span></span><span></span></div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="flow-section" id="jak-dziala">
+    <section class="core-section" id="najwazniejsze">
       <div class="wrap">
-        <div class="center-head reveal">
-          <div class="section-kicker">Od logowania do pracy</div>
-          <h2>Prosto od pierwszego uruchomienia.</h2>
-          <p>Użytkownik nie dostaje od razu dostępu do wszystkiego. Wchodzi do systemu, zgłasza swój punkt i rolę, a administrator zatwierdza konto.</p>
+        <div class="section-head compact reveal">
+          <div class="kicker">Tylko to, co ma znaczenie</div>
+          <h2>Mniej funkcji na pokaz.<br><span>Więcej rzeczy, które faktycznie działają.</span></h2>
         </div>
 
-        <div class="flow reveal">
-          <div class="flow-step"><span>01</span><div class="flow-icon">G</div><b>Logowanie Google</b><small>Szybko, bez nowego hasła.</small></div>
-          <div class="flow-line"><i></i></div>
-          <div class="flow-step"><span>02</span><div class="flow-icon">⌖</div><b>Punkt i rola</b><small>Użytkownik wysyła zgłoszenie.</small></div>
-          <div class="flow-line"><i></i></div>
-          <div class="flow-step"><span>03</span><div class="flow-icon">✓</div><b>Akceptacja</b><small>Administrator nadaje dostęp.</small></div>
-          <div class="flow-line"><i></i></div>
-          <div class="flow-step"><span>04</span><div class="flow-icon">→</div><b>Gotowe</b><small>ServiceOS pamięta sesję.</small></div>
+        <div class="core-grid">
+          <article class="core-card reveal"><span>01</span><div class="core-icon">⌂</div><h3>Spokojny start</h3><p>Po uruchomieniu widzisz czytelny pulpit, stan systemu i skróty do rzeczy, których używasz.</p></article>
+          <article class="core-card reveal"><span>02</span><div class="core-icon">◎</div><h3>Przeglądarka w środku</h3><p>Google, dostawcy i potrzebne strony otwierasz bez opuszczania aplikacji.</p></article>
+          <article class="core-card reveal"><span>03</span><div class="core-icon">↻</div><h3>Aktualizacje bez polowania</h3><p>Nowe wydania są spięte z GitHub Releases i aplikacja potrafi je wykryć oraz pobrać.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="updates-section" id="aktualizacje">
-      <div class="wrap updates-card reveal">
-        <div class="update-orb"></div>
-        <div class="updates-copy">
-          <div class="section-kicker">ServiceOS rośnie razem z Tobą</div>
-          <h2>Nowa wersja?<br><span>Nie szukasz nowego pliku.</span></h2>
-          <p>Aplikacja korzysta z GitHub Releases. Gdy pojawi się aktualizacja, ServiceOS może ją wykryć i pobrać bez ręcznego szukania kolejnego instalatora.</p>
-          <a class="text-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest">Zobacz najnowsze wydanie <span>↗</span></a>
-        </div>
-
-        <div class="update-ui">
-          <div class="update-window">
-            <div class="update-logo"><img src="assets/logo.svg" alt=""></div>
-            <small>Dostępna nowa wersja</small>
-            <h3>LockOn ServiceOS <span>0.5.1</span></h3>
-            <div class="progress"><i></i></div>
-            <div class="progress-meta"><span>Pobieranie aktualizacji…</span><b>72%</b></div>
-            <button>Pobierz i zainstaluj</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="download-section">
+    <section class="download-section" id="pobierz">
       <div class="wrap download-card reveal">
-        <div>
-          <div class="section-kicker">Gotowy?</div>
-          <h2>Uruchom swój serwis<br>w ServiceOS.</h2>
-          <p>Aktualna wersja dla Windows. Jeden instalator, kolejne aktualizacje już z aplikacji.</p>
+        <div class="download-copy">
+          <div class="kicker"><span class="live-dot"></span> GOTOWE DO POBRANIA</div>
+          <h2>LockOn ServiceOS<br><span data-release-version>najnowsza wersja</span></h2>
+          <p>Pobierz instalator dla Windows. Po instalacji kolejne wydania będą dostępne przez system aktualizacji w aplikacji.</p>
         </div>
-        <div class="download-side">
-          <a class="btn primary big" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz LockOn ServiceOS <span>↓</span></a>
-          <small>Windows · wersja 0.5.0 · GitHub Releases</small>
+        <div class="download-action">
+          <a class="button primary big download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz instalator <span>↓</span></a>
+          <div><span>Windows 64-bit</span><i></i><a class="release-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest">GitHub Release ↗</a></div>
         </div>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="wrap footer-in">
-      <div class="footer-brand">
-        <img src="assets/logo.svg" alt="">
-        <div><strong>LockOn ServiceOS</strong><small>Bartłomiej Motłoch · Punkt Nowogard</small></div>
-      </div>
-      <div class="footer-links">
-        <a href="privacy.html">Prywatność</a>
-        <a href="terms.html">Regulamin</a>
-        <a href="mailto:bartekmotloch@wp.pl">Kontakt</a>
-        <a href="https://github.com/LokosPL/LockOn-Hub/releases/latest">Wydania ↗</a>
-      </div>
+    <div class="wrap footer-inner">
+      <div class="footer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Bartłomiej Motłoch · Punkt Nowogard</span></div></div>
+      <div class="footer-links"><a href="privacy.html">Prywatność</a><a href="terms.html">Regulamin</a><a href="mailto:bartekmotloch@wp.pl">Kontakt</a></div>
     </div>
   </footer>
 
