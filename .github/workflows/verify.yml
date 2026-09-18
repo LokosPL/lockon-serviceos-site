@@ -1,0 +1,41 @@
+name: Verify LockOn ServiceOS site
+
+on:
+  push:
+    paths:
+      - "index.html"
+      - "assets/**"
+      - ".github/workflows/verify.yml"
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lockon-site-verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 22
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/google-auth.js
+          node --check assets/google-config.js
+          node --check assets/site.js
+      - name: Verify central auth wiring
+        shell: bash
+        run: |
+          grep -q 'auth/google-web' assets/google-auth.js
+          grep -q 'website/redeem' assets/google-auth.js
+          grep -q 'lockonapi.compute' assets/google-config.js
+          grep -q 'lockonapi.compute' index.html
