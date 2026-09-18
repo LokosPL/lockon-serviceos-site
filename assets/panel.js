@@ -14,7 +14,7 @@
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
-    IN_REPAIR:'W naprawie', READY:'Gotowe do odbioru', COMPLETED:'Zakończone',
+    IN_REPAIR:'W naprawie', REPAIR_DONE:'Naprawa zakończona', READY:'Gotowe do odbioru', COMPLETED:'Zakończone',
     CANCELLED:'Anulowane', REJECTED:'Odrzucone'
   };
   const TRANSFER_LABELS = {
@@ -131,9 +131,10 @@
   const orderCard = (order, compact = false) => {
     const transfer = order.latestTransfer;
     const meta = [
-      order.pointName,
+      'macierzysty: ' + (order.homePointName || order.pointName),
+      'lokalizacja: ' + (order.currentLocationLabel || order.currentPointName || order.pointName),
       order.assignedTechnicianName ? 'technik: ' + order.assignedTechnicianName : '',
-      transfer ? (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
+      transfer ? (transfer.kind === 'RETURN_HOME' ? 'powrót · ' : '') + (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
     ].filter(Boolean);
     return '<article class="panel-order-card" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
@@ -199,7 +200,7 @@
         '<div class="transfer-icon">' + (item.status === 'ACCEPTED' ? '✓' : '⇄') + '</div>' +
         '<div class="transfer-content"><strong>#' + esc(item.orderNumber) + ' · ' + esc(item.customerName) + '</strong>' +
           '<span>' + esc(item.device || '') + '</span>' +
-          '<small>' + esc(item.fromPointName) + ' → ' + esc(item.toPointName) + ' · ' + esc(TRANSFER_LABELS[item.status] || item.status) + ' · ' + esc(formatDate(item.updatedAt)) + '</small>' +
+          '<small>' + esc(item.kind === 'RETURN_HOME' ? 'Powrót do punktu macierzystego · ' : 'Do serwisu · ') + esc(item.fromPointName) + ' → ' + esc(item.toPointName) + ' · ' + esc(TRANSFER_LABELS[item.status] || item.status) + ' · ' + esc(formatDate(item.updatedAt)) + '</small>' +
           (item.note ? '<p>' + esc(item.note) + '</p>' : '') +
         '</div>' +
         '<div class="transfer-actions">' + transferActions(item) + '</div>' +
@@ -234,9 +235,11 @@
     activeOrderId = id;
     const dialog = document.getElementById('orderDialog');
     const host = document.getElementById('orderDialogContent');
-    const activeTransfer = order.latestTransfer && ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(order.latestTransfer.status);
-    const currentServicePointId = (order.transfers || []).find((item) => item.status === 'ACCEPTED')?.toPointId || order.pointId;
-    const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId);
+    const activeTransfer = order.openTransfer || (order.latestTransfer && ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(order.latestTransfer.status) ? order.latestTransfer : null);
+    const currentServicePointId = order.currentPointId || order.homePointId || order.pointId;
+    const homePointId = order.homePointId || order.pointId;
+    const canOperateCurrentPoint = canOperatePoint(currentServicePointId);
+    const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId);
 
     let notes = [];
     try { notes = await api('/service/orders/' + encodeURIComponent(order.id) + '/notes'); } catch {}
@@ -248,17 +251,24 @@
         '<div><span>Technik</span><strong>' + esc(order.assignedTechnicianName || 'Nieprzypisany') + '</strong></div>' +
         '<div><span>IMEI</span><strong>' + esc(order.imei || '—') + '</strong></div>' +
         '<div><span>Termin</span><strong>' + esc(order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : '—') + '</strong></div>' +
+        '<div><span>Punkt macierzysty</span><strong>' + esc(order.homePointName || order.pointName) + '</strong></div>' +
+        '<div><span>Lokalizacja</span><strong>' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</strong></div>' +
       '</div>' +
       '<div class="order-dialog-section"><span>OPIS USTERKI</span><p class="order-note-text">' + esc(order.issueDescription || '—') + '</p></div>' +
       (canEditService() ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
-        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + '>' + esc(label) + '</option>').join('') +
+        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' || value === 'COMPLETED') && order.canMarkReady === false) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
         '</select><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-status="' + esc(order.id) + '">Zapisz status</button></div></div>' : '') +
-      '<div class="order-dialog-section"><span>PRZEKAZANIE</span>' +
+      '<div class="order-dialog-section"><span>LOGISTYKA URZĄDZENIA</span>' +
+        '<p class="order-note-text"><strong>Macierzysty:</strong> ' + esc(order.homePointName || order.pointName) + '<br><strong>Teraz:</strong> ' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</p>' +
         (activeTransfer
-          ? '<p class="order-note-text">' + esc(TRANSFER_LABELS[order.latestTransfer.status] || order.latestTransfer.status) + ': ' + esc(order.latestTransfer.fromPointName) + ' → ' + esc(order.latestTransfer.toPointName) + '</p>'
-          : canEditService() && availableServices.length
-            ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz serwis docelowy…</option>' + availableServices.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + ' · ' + point.city) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka dla serwisu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Wyślij do serwisu</button></div>'
-            : '<p class="order-note-text">Brak aktywnego przekazania.</p>') +
+          ? '<p class="order-note-text">' + esc(activeTransfer.kind === 'RETURN_HOME' ? 'Powrót do punktu macierzystego' : 'Przekazanie do serwisu') + ' · ' + esc(TRANSFER_LABELS[activeTransfer.status] || activeTransfer.status) + ': ' + esc(activeTransfer.fromPointName) + ' → ' + esc(activeTransfer.toPointName) + '</p>'
+          : order.returnRequired
+            ? (canEditService() && canOperateCurrentPoint && order.status === 'REPAIR_DONE'
+                ? '<input id="mobileReturnNote" class="order-note-input" maxlength="500" placeholder="Notatka do zwrotu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-return="' + esc(order.id) + '">Odeślij do punktu macierzystego</button></div>'
+                : '<p class="order-note-text">' + esc(order.status === 'REPAIR_DONE' ? 'Zwrot musi rozpocząć użytkownik obsługujący aktualny punkt urządzenia.' : 'Urządzenie jest poza punktem macierzystym. Po zakończeniu naprawy ustaw „Naprawa zakończona”, a następnie rozpocznij obowiązkowy zwrot.') + '</p>')
+            : canEditService() && availableServices.length
+              ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz serwis docelowy…</option>' + availableServices.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + ' · ' + point.city) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka dla serwisu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Wyślij do serwisu</button></div>'
+              : '<p class="order-note-text">Brak aktywnego transportu.</p>') +
       '</div>' +
       '<div class="order-dialog-section"><span>NOTATKI WEWNĘTRZNE</span>' +
         (canEditService() ? '<input id="mobileInternalNote" class="order-note-input" maxlength="2000" placeholder="Dodaj notatkę…"><div class="order-dialog-actions"><button class="mini-action" data-add-note="' + esc(order.id) + '">Dodaj</button></div>' : '') +
@@ -286,12 +296,27 @@
     if (!toPointId) return toast('Wybierz serwis docelowy.','error');
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/transfer', {
-        method:'POST', body:JSON.stringify({toPointId,note})
+        method:'POST', body:JSON.stringify({toPointId,note,kind:'OUTBOUND_SERVICE'})
       });
       toast(result?.notification?.sent ? 'Urządzenie wysłano. Klient dostał wiadomość.' : 'Urządzenie wysłano do serwisu.');
       document.getElementById('orderDialog')?.close();
       await Promise.all([loadOrders(),loadTransfers()]);
     } catch (error) { toast(error.message || 'Nie udało się wysłać urządzenia.','error'); }
+  };
+
+  const sendOrderReturn = async (id) => {
+    const order = orders.find((item) => item.id === id);
+    if (!order) return;
+    const note = document.getElementById('mobileReturnNote')?.value || '';
+    try {
+      const result = await api('/service/orders/' + encodeURIComponent(id) + '/transfer', {
+        method:'POST',
+        body:JSON.stringify({kind:'RETURN_HOME',toPointId:order.homePointId || order.pointId,note})
+      });
+      toast(result?.notification?.sent ? 'Urządzenie wraca do punktu macierzystego. Klient dostał wiadomość.' : 'Rozpoczęto zwrot do punktu macierzystego.');
+      document.getElementById('orderDialog')?.close();
+      await Promise.all([loadOrders(),loadTransfers()]);
+    } catch (error) { toast(error.message || 'Nie udało się rozpocząć zwrotu.','error'); }
   };
 
   const addOrderNote = async (id) => {
@@ -441,6 +466,8 @@
       if (saveStatus) { void saveOrderStatus(saveStatus.dataset.saveOrderStatus); return; }
       const sendTransfer = event.target.closest('[data-send-transfer]');
       if (sendTransfer) { void sendOrderTransfer(sendTransfer.dataset.sendTransfer); return; }
+      const sendReturn = event.target.closest('[data-send-return]');
+      if (sendReturn) { void sendOrderReturn(sendReturn.dataset.sendReturn); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
       const block = event.target.closest('[data-admin-block]');
