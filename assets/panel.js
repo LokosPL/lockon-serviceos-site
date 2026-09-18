@@ -235,7 +235,8 @@
     const dialog = document.getElementById('orderDialog');
     const host = document.getElementById('orderDialogContent');
     const activeTransfer = order.latestTransfer && ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(order.latestTransfer.status);
-    const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== order.pointId);
+    const currentServicePointId = (order.transfers || []).find((item) => item.status === 'ACCEPTED')?.toPointId || order.pointId;
+    const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId);
 
     let notes = [];
     try { notes = await api('/service/orders/' + encodeURIComponent(order.id) + '/notes'); } catch {}
