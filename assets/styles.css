@@ -71,3 +71,14 @@
 .hash-row button{height:25px;padding:0 8px;border:1px solid rgba(255,255,255,.09);border-radius:7px;background:#171a20;color:#9ca5af;cursor:pointer;font-size:7px}
 .hash-row button:hover{border-color:rgba(255,255,255,.16);color:#fff}
 @media(max-width:760px){.hash-row{grid-template-columns:1fr auto}.hash-row>span{grid-column:1/-1}}
+
+
+/* customer portal preview */
+.client-preview-section{padding:86px 0 20px}
+.client-preview-card{margin-top:28px;padding:30px;border:1px solid rgba(255,255,255,.08);border-radius:24px;background:linear-gradient(145deg,rgba(24,29,37,.86),rgba(11,14,19,.92));display:flex;align-items:center;justify-content:space-between;gap:32px;box-shadow:0 30px 80px rgba(0,0,0,.18)}
+.client-preview-card>div{max-width:720px}
+.client-preview-card h3{font-size:25px;letter-spacing:-.04em;margin:12px 0 8px}
+.client-preview-card p{color:#7f8995;line-height:1.7;margin:0}
+.client-preview-card button{height:46px;padding:0 18px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:#141820;color:#59616b;white-space:nowrap;cursor:not-allowed}
+.status-badge-soon{display:inline-flex;padding:6px 9px;border:1px solid rgba(255,141,72,.16);border-radius:999px;background:rgba(255,112,36,.06);color:#d47d4f;font-size:8px;font-weight:850;letter-spacing:.08em}
+@media(max-width:760px){.client-preview-card{align-items:flex-start;flex-direction:column}.client-preview-card button{width:100%}}
