@@ -256,7 +256,7 @@
       '</div>' +
       '<div class="order-dialog-section"><span>OPIS USTERKI</span><p class="order-note-text">' + esc(order.issueDescription || '—') + '</p></div>' +
       (canEditService() ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
-        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' || value === 'COMPLETED') && order.canMarkReady === false) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
+        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' && order.canMarkReady === false) || (value === 'COMPLETED' && (order.canMarkReady === false || order.status !== 'READY'))) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
         '</select><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-status="' + esc(order.id) + '">Zapisz status</button></div></div>' : '') +
       '<div class="order-dialog-section"><span>LOGISTYKA URZĄDZENIA</span>' +
         '<p class="order-note-text"><strong>Macierzysty:</strong> ' + esc(order.homePointName || order.pointName) + '<br><strong>Teraz:</strong> ' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</p>' +
