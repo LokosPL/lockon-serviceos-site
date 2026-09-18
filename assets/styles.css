@@ -264,3 +264,39 @@ body{
   .google-account-avatar{width:42px;height:42px}
   .google-account-state button{grid-column:1/-1;width:100%}
 }
+
+
+/* Fix Google Identity button sizing */
+.google-signin-host{
+  width:320px;
+  height:44px;
+  min-width:320px;
+  min-height:44px;
+  max-width:100%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:flex-end
+}
+.google-signin-host>div{
+  width:320px!important;
+  height:44px!important;
+  max-width:320px!important
+}
+.google-signin-host iframe{
+  width:320px!important;
+  height:44px!important;
+  max-width:320px!important;
+  min-height:44px!important;
+  border:0!important;
+  transform:none!important
+}
+@media(max-width:760px){
+  .google-signin-host,
+  .google-signin-host>div,
+  .google-signin-host iframe{
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important
+  }
+}
