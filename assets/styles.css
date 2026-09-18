@@ -93,3 +93,19 @@
 .account-preview-card span{font-size:10px;color:#737e8a}
 .account-preview-card button{height:34px;padding:0 12px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:#12161c;color:#626b75}
 @media(max-width:620px){.account-preview-card{grid-template-columns:44px 1fr}.account-preview-card button{grid-column:1/-1;width:100%}}
+
+
+/* latest release strip */
+.release-strip{padding:0 0 26px}
+.release-strip-inner{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:16px;padding:15px 17px;border:1px solid rgba(255,255,255,.075);border-radius:16px;background:linear-gradient(135deg,rgba(255,105,31,.055),rgba(17,21,28,.82));box-shadow:0 18px 50px rgba(0,0,0,.13)}
+.release-strip-badge{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid rgba(97,217,154,.13);border-radius:999px;background:rgba(97,217,154,.055);white-space:nowrap}
+.release-strip-badge strong{font-size:9px;color:#aee9c7}
+.release-strip-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.release-strip-copy strong{font-size:11px}
+.release-strip-copy span{font-size:9px;line-height:1.55;color:#7f8995}
+.release-strip-inner>a{font-size:9px;color:#d6dbe1;text-decoration:none;white-space:nowrap}
+.release-strip-inner>a:hover{color:#fff}
+@media(max-width:760px){
+  .release-strip-inner{grid-template-columns:1fr;align-items:start}
+  .release-strip-badge{width:max-content}
+}
