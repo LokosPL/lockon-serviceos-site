@@ -46,5 +46,7 @@ jobs:
           grep -q 'webAuthCode' index.html
           grep -q '/service/orders' assets/panel.js
           grep -q '/service/transfers' assets/panel.js
+          grep -q 'RETURN_HOME' assets/panel.js
+          grep -q 'REPAIR_DONE' assets/panel.js
           grep -q '/admin/logout-all' assets/panel.js
           grep -q 'panel.html' manifest.webmanifest
