@@ -210,3 +210,57 @@ body{
   .fake-theme-grid{grid-template-columns:1fr}
   .fake-scale-row{grid-template-columns:repeat(2,1fr)}
 }
+
+
+/* Google account sign-in */
+.web-account-card{
+  margin-top:24px;
+  padding:22px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:20px;
+  background:linear-gradient(145deg,rgba(18,23,30,.94),rgba(10,13,18,.96));
+  box-shadow:0 26px 70px rgba(0,0,0,.18);
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;
+  gap:20px
+}
+.web-account-copy{display:flex;align-items:center;gap:14px;min-width:0}
+.web-account-copy>div:last-child{display:flex;flex-direction:column;gap:4px;min-width:0}
+.web-account-copy strong{font-size:17px}
+.web-account-copy span{font-size:13px;line-height:1.55;color:#7d8793}
+.google-signin-host{min-width:320px;min-height:44px;display:flex;align-items:center;justify-content:flex-end}
+.google-account-state{
+  grid-column:1/-1;
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) auto;
+  gap:12px;
+  align-items:center;
+  padding:14px;
+  border:1px solid rgba(97,217,154,.12);
+  border-radius:14px;
+  background:rgba(97,217,154,.045)
+}
+.google-account-state[hidden]{display:none}
+.google-account-avatar{
+  width:46px;height:46px;border-radius:13px;object-fit:cover;
+  border:1px solid rgba(255,255,255,.11)
+}
+.google-account-state>div{display:flex;flex-direction:column;gap:3px}
+.google-account-state strong{font-size:15px}
+.google-account-state span{font-size:12px;color:#7e8995}
+.google-account-state button{
+  height:36px;padding:0 12px;border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;background:#151a21;color:#c7cdd4;cursor:pointer
+}
+.google-account-state button:hover{border-color:rgba(255,255,255,.17);color:#fff}
+.account-security-note{
+  max-width:820px;margin:12px 2px 0;color:#66717d;font-size:12px;line-height:1.65
+}
+@media(max-width:760px){
+  .web-account-card{grid-template-columns:1fr;align-items:start}
+  .google-signin-host{min-width:0;justify-content:flex-start}
+  .google-account-state{grid-template-columns:42px 1fr}
+  .google-account-avatar{width:42px;height:42px}
+  .google-account-state button{grid-column:1/-1;width:100%}
+}
