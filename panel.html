@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b0d10">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <title>Panel mobilny — LockOn ServiceOS</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/panel.css">
+</head>
+<body class="mobile-panel">
+  <div id="panelBoot" class="panel-boot">
+    <img src="assets/logo.svg" alt="">
+    <strong>ServiceOS</strong>
+    <span>Ładowanie panelu…</span>
+  </div>
+
+  <header class="panel-header">
+    <a class="panel-brand" href="panel.html">
+      <img src="assets/logo.svg" alt="">
+      <div><strong>ServiceOS</strong><span>Panel mobilny</span></div>
+    </a>
+    <div class="panel-point">
+      <span>AKTYWNY PUNKT</span>
+      <select id="panelPointSelect" aria-label="Aktywny punkt"></select>
+    </div>
+    <button id="panelAccountButton" class="panel-account-button" type="button" aria-label="Konto">?</button>
+  </header>
+
+  <main class="panel-main">
+    <section id="view-home" class="panel-view active">
+      <div class="panel-hero">
+        <span class="panel-kicker">SERVICEOS · ONLINE</span>
+        <h1 id="panelGreeting">Dzień dobry.</h1>
+        <p>Najważniejsze rzeczy z serwisu masz teraz pod ręką.</p>
+      </div>
+      <div class="panel-kpis">
+        <article><span>Aktywne zlecenia</span><strong id="kpiActive">—</strong><small>w Twoim zakresie</small></article>
+        <article><span>Przekazania</span><strong id="kpiTransfers">—</strong><small>w toku</small></article>
+        <article class="owner-only" hidden><span>Sesje WWW</span><strong id="kpiWebSessions">—</strong><small>aktywne</small></article>
+        <article class="owner-only" hidden><span>Zablokowane</span><strong id="kpiBlocked">—</strong><small>konta</small></article>
+      </div>
+
+      <div class="panel-section-head">
+        <div><span>SZYBKIE AKCJE</span><h2>Co robisz teraz?</h2></div>
+      </div>
+      <div class="panel-quick-grid">
+        <button type="button" data-panel-nav="new"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></button>
+        <button type="button" data-panel-nav="orders"><b>⌕</b><span><strong>Zlecenia</strong><small>Status i szczegóły</small></span></button>
+        <button type="button" data-panel-nav="transfers"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></button>
+        <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><span><strong>Administracja</strong><small>Konta i bezpieczeństwo</small></span></button>
+      </div>
+
+      <div class="panel-section-head">
+        <div><span>OSTATNIE</span><h2>Najnowsze zlecenia</h2></div>
+        <button id="refreshHome" type="button">Odśwież</button>
+      </div>
+      <div id="homeOrders" class="panel-list"></div>
+    </section>
+
+    <section id="view-new" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>NOWE ZLECENIE</span><h1>Przyjmij telefon</h1></div></div>
+      <form id="newOrderForm" class="panel-form-card">
+        <div class="panel-form-section">
+          <div class="panel-form-title"><span>01</span><div><strong>Klient</strong><small>Podaj przynajmniej e-mail albo telefon.</small></div></div>
+          <div class="panel-form-grid">
+            <label><span>Imię</span><input name="firstName" maxlength="80" required autocomplete="given-name"></label>
+            <label><span>Nazwisko</span><input name="lastName" maxlength="100" required autocomplete="family-name"></label>
+            <label><span>E-mail</span><input name="email" type="email" maxlength="180" autocomplete="email"></label>
+            <label><span>Telefon</span><input name="phone" maxlength="50" inputmode="tel" autocomplete="tel"></label>
+          </div>
+        </div>
+
+        <div class="panel-form-section">
+          <div class="panel-form-title"><span>02</span><div><strong>Urządzenie</strong><small>Dane techniczne i opis problemu.</small></div></div>
+          <div class="panel-form-grid">
+            <label><span>Marka</span><input name="brand" maxlength="80" required></label>
+            <label><span>Model</span><input name="model" maxlength="120" required></label>
+            <label><span>IMEI</span><input name="imei" maxlength="16" inputmode="numeric"></label>
+            <label><span>Numer seryjny</span><input name="serialNumber" maxlength="120"></label>
+            <label><span>Typ</span><select name="orderType"><option value="REPAIR">Naprawa</option><option value="COMPLAINT">Reklamacja</option></select></label>
+            <label><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
+            <label class="full management-only" hidden><span>Szacowany koszt (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
+            <label class="full"><span>Opis usterki</span><textarea name="issueDescription" rows="5" maxlength="2000" required></textarea></label>
+            <label class="full"><span>Uwagi do urządzenia</span><textarea name="deviceNotes" rows="3" maxlength="1000"></textarea></label>
+          </div>
+        </div>
+        <div id="newOrderStatus" class="panel-form-status"></div>
+        <button class="panel-primary-button" type="submit">Utwórz zlecenie</button>
+      </form>
+    </section>
+
+    <section id="view-orders" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>SERWIS</span><h1>Zlecenia</h1></div><button id="refreshOrders" type="button">↻</button></div>
+      <div class="panel-search"><span>⌕</span><input id="orderSearch" placeholder="Numer, klient, marka lub model"></div>
+      <div id="ordersList" class="panel-list panel-orders-list"></div>
+    </section>
+
+    <section id="view-transfers" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>LOGISTYKA</span><h1>Przekazania</h1></div><button id="refreshTransfers" type="button">↻</button></div>
+      <div class="transfer-filter">
+        <button class="active" data-transfer-filter="">Wszystkie</button>
+        <button data-transfer-filter="IN_TRANSIT">W drodze</button>
+        <button data-transfer-filter="DELIVERED">Do przyjęcia</button>
+        <button data-transfer-filter="ACCEPTED">Przyjęte</button>
+      </div>
+      <div id="transfersList" class="panel-list"></div>
+    </section>
+
+    <section id="view-admin" class="panel-view owner-only" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>OWNER</span><h1>Administracja</h1></div><button id="refreshAdmin" type="button">↻</button></div>
+      <div class="admin-mobile-stats">
+        <div><span>Aktywne sesje</span><strong id="adminSessions">—</strong></div>
+        <div><span>Zablokowane</span><strong id="adminBlocked">—</strong></div>
+        <div><span>Serwisy</span><strong id="adminServices">—</strong></div>
+        <div><span>Przekazania</span><strong id="adminTransfers">—</strong></div>
+      </div>
+      <div class="owner-danger-zone">
+        <div><strong>Sesje użytkowników</strong><small>W razie incydentu możesz natychmiast wylogować wszystkie urządzenia poza swoim.</small></div>
+        <button id="logoutEveryone" type="button">Wyloguj wszystkich poza mną</button>
+      </div>
+
+      <div class="panel-section-head"><div><span>KONTA</span><h2>Użytkownicy</h2></div></div>
+      <div id="adminUsers" class="panel-list"></div>
+
+      <div class="panel-section-head"><div><span>PUNKTY</span><h2>Serwisy i lokalizacje</h2></div></div>
+      <div id="adminPoints" class="panel-list"></div>
+
+      <details class="mobile-create-point">
+        <summary>＋ Dodaj nowy punkt / serwis</summary>
+        <form id="mobilePointForm" class="panel-form-card compact">
+          <label><span>Nazwa</span><input name="name" required maxlength="90"></label>
+          <label><span>Miasto</span><input name="city" required maxlength="90"></label>
+          <label class="check"><input name="serviceEnabled" type="checkbox" checked><span>Ma własny serwis</span></label>
+          <label class="check"><input name="acceptsExternalRepairs" type="checkbox" checked><span>Przyjmuje urządzenia z innych punktów</span></label>
+          <label><span>Notatka</span><textarea name="serviceNote" maxlength="500" rows="2"></textarea></label>
+          <button class="panel-primary-button" type="submit">Dodaj lokalizację</button>
+        </form>
+      </details>
+    </section>
+  </main>
+
+  <nav class="panel-bottom-nav" aria-label="Nawigacja panelu">
+    <button class="active" data-panel-nav="home"><span>⌂</span><b>Start</b></button>
+    <button data-panel-nav="new"><span>＋</span><b>Nowe</b></button>
+    <button data-panel-nav="orders"><span>▣</span><b>Zlecenia</b></button>
+    <button data-panel-nav="transfers"><span>⇄</span><b>Przekazania</b></button>
+    <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Admin</b></button>
+  </nav>
+
+  <dialog id="accountDialog" class="panel-dialog">
+    <div class="panel-dialog-card">
+      <button class="dialog-close" type="button" data-close-dialog="accountDialog">×</button>
+      <div class="account-dialog-head"><div id="accountInitials">?</div><span><strong id="accountName">Konto</strong><small id="accountEmail"></small></span></div>
+      <div class="account-dialog-meta"><span>Rola</span><strong id="accountRole">—</strong></div>
+      <button id="panelLogout" class="panel-danger-button" type="button">Wyloguj z panelu</button>
+    </div>
+  </dialog>
+
+  <dialog id="orderDialog" class="panel-dialog order-dialog">
+    <div class="panel-dialog-card">
+      <button class="dialog-close" type="button" data-close-dialog="orderDialog">×</button>
+      <div id="orderDialogContent"></div>
+    </div>
+  </dialog>
+
+  <div id="panelToast" class="panel-toast" hidden></div>
+
+  <script src="assets/google-config.js"></script>
+  <script src="assets/panel.js"></script>
+</body>
+</html>
