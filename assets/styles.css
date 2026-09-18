@@ -82,3 +82,14 @@
 .client-preview-card button{height:46px;padding:0 18px;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:#141820;color:#59616b;white-space:nowrap;cursor:not-allowed}
 .status-badge-soon{display:inline-flex;padding:6px 9px;border:1px solid rgba(255,141,72,.16);border-radius:999px;background:rgba(255,112,36,.06);color:#d47d4f;font-size:8px;font-weight:850;letter-spacing:.08em}
 @media(max-width:760px){.client-preview-card{align-items:flex-start;flex-direction:column}.client-preview-card button{width:100%}}
+
+
+/* account preview */
+.account-preview-section{padding:64px 0 18px}
+.account-preview-card{margin-top:24px;padding:18px 20px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:rgba(15,19,25,.78);display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:14px}
+.account-preview-icon{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,#202630,#141820);color:#f2f4f7;font-size:18px;font-weight:850}
+.account-preview-card>div:nth-child(2){display:flex;flex-direction:column;gap:4px}
+.account-preview-card strong{font-size:13px}
+.account-preview-card span{font-size:10px;color:#737e8a}
+.account-preview-card button{height:34px;padding:0 12px;border:1px solid rgba(255,255,255,.07);border-radius:9px;background:#12161c;color:#626b75}
+@media(max-width:620px){.account-preview-card{grid-template-columns:44px 1fr}.account-preview-card button{grid-column:1/-1;width:100%}}
