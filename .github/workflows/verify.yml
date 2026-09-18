@@ -32,6 +32,9 @@ jobs:
           node --check assets/google-auth.js
           node --check assets/google-config.js
           node --check assets/site.js
+          node --check assets/home-v2.js
+          node --check assets/panel.js
+          node --check sw.js
       - name: Verify central auth wiring
         shell: bash
         run: |
@@ -39,3 +42,9 @@ jobs:
           grep -q 'website/redeem' assets/google-auth.js
           grep -q 'lockonapi.compute' assets/google-config.js
           grep -q 'lockonapi.compute' index.html
+          grep -q 'navLoginButton' index.html
+          grep -q 'webAuthCode' index.html
+          grep -q '/service/orders' assets/panel.js
+          grep -q '/service/transfers' assets/panel.js
+          grep -q '/admin/logout-all' assets/panel.js
+          grep -q 'panel.html' manifest.webmanifest
