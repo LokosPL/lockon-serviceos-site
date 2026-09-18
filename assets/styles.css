@@ -49,3 +49,25 @@
   .hash-row{grid-template-columns:1fr auto}
   .hash-row>span{grid-column:1/-1}
 }
+
+
+/* installer integrity */
+.download-trust{
+  margin-top:8px!important;
+  padding:13px!important;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:12px;
+  background:rgba(8,10,13,.64);
+  display:flex!important;
+  flex-direction:column;
+  align-items:stretch!important;
+  gap:9px!important;
+}
+.download-trust>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.download-trust span,.download-trust small{color:#69727d;font-size:7px}
+.download-trust strong{font-size:8px;color:#b9c0c8;font-weight:700;text-align:right}
+.hash-row{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;gap:8px!important;align-items:center!important}
+.hash-row code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#8e98a4;font:600 7px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace}
+.hash-row button{height:25px;padding:0 8px;border:1px solid rgba(255,255,255,.09);border-radius:7px;background:#171a20;color:#9ca5af;cursor:pointer;font-size:7px}
+.hash-row button:hover{border-color:rgba(255,255,255,.16);color:#fff}
+@media(max-width:760px){.hash-row{grid-template-columns:1fr auto}.hash-row>span{grid-column:1/-1}}
