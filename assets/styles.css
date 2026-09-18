@@ -300,3 +300,60 @@ body{
     max-width:100%!important
   }
 }
+
+
+/* Central ServiceOS web authentication */
+.web-auth-actions{
+  min-width:min(100%,360px);
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:12px
+}
+.web-auth-actions .google-signin-host{align-self:flex-end}
+.web-code-login{
+  padding:12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:13px;
+  background:#0d1117;
+  display:flex;
+  flex-direction:column;
+  gap:9px
+}
+.web-code-login>div:first-child{display:flex;flex-direction:column;gap:3px}
+.web-code-login strong{font-size:12px}
+.web-code-login span,.web-code-login small{font-size:10px;line-height:1.45;color:#68737f}
+.web-code-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px}
+.web-code-row input{
+  min-width:0;
+  height:38px;
+  padding:0 10px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;
+  background:#090c11;
+  color:#f3f5f7;
+  font:750 13px/1 ui-monospace,SFMono-Regular,Consolas,monospace;
+  letter-spacing:.12em;
+  text-transform:uppercase
+}
+.web-code-row input::placeholder{color:#4f5964}
+.web-code-row button{
+  height:38px;
+  padding:0 11px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:9px;
+  background:#171c23;
+  color:#d5dae0;
+  cursor:pointer;
+  font-size:11px;
+  font-weight:750
+}
+.web-code-row button:hover:not(:disabled){border-color:rgba(255,255,255,.17);color:#fff}
+.web-code-row button:disabled{opacity:.5;cursor:wait}
+#googleAuthSetup.auth-error{color:#ff8c87}
+@media(max-width:760px){
+  .web-auth-actions{min-width:0;width:100%}
+  .web-auth-actions .google-signin-host{align-self:stretch}
+  .web-code-row{grid-template-columns:1fr}
+  .web-code-row button{width:100%}
+}
