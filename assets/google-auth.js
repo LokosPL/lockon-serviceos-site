@@ -2,27 +2,22 @@
   const config = window.LOCKON_WEB_AUTH || {};
   const clientId = String(config.googleClientId || '').trim();
   const apiBaseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
+  const tokenKey = 'lockon.web.session';
+
+  const loginButton = document.getElementById('navLoginButton');
+  const panelLink = document.getElementById('navPanelLink');
+  const dialog = document.getElementById('webLoginDialog');
+  const closeDialog = document.getElementById('closeWebLogin');
   const signInHost = document.getElementById('googleSignInButton');
-  const setupState = document.getElementById('googleAuthSetup');
-  const accountState = document.getElementById('googleAccountState');
-  const accountAvatar = document.getElementById('googleAccountAvatar');
-  const accountName = document.getElementById('googleAccountName');
-  const accountEmail = document.getElementById('googleAccountEmail');
-  const signOut = document.getElementById('googleSignOut');
   const codeInput = document.getElementById('webAuthCode');
   const codeSubmit = document.getElementById('webAuthCodeSubmit');
   const codeStatus = document.getElementById('webAuthCodeStatus');
+  const accountState = document.getElementById('googleAccountState');
+  const accountName = document.getElementById('googleAccountName');
+  const accountEmail = document.getElementById('googleAccountEmail');
+  const signOut = document.getElementById('googleSignOut');
 
-  if (!signInHost || !setupState || !accountState || !apiBaseUrl) return;
-
-  const tokenKey = 'lockon.web.session';
-
-  const setStatus = (message, error = false) => {
-    if (!setupState) return;
-    setupState.hidden = false;
-    setupState.textContent = message;
-    setupState.classList.toggle('auth-error', Boolean(error));
-  };
+  if (!apiBaseUrl) return;
 
   const api = async (path, options = {}, token = '') => {
     const headers = new Headers(options.headers || {});
@@ -38,68 +33,65 @@
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
-      const error = new Error(payload?.message || 'Nie udało się zalogować do ServiceOS.');
+      const error = new Error(payload?.message || 'Nie udało się połączyć z ServiceOS.');
       error.code = payload?.error || 'REQUEST_FAILED';
       throw error;
     }
     return payload;
   };
 
+  const setCodeStatus = (text, error = false) => {
+    if (!codeStatus) return;
+    codeStatus.textContent = text;
+    codeStatus.classList.toggle('auth-error', error);
+  };
+
   const renderSignedOut = () => {
-    accountState.hidden = true;
-    setupState.hidden = false;
-    signInHost.hidden = false;
-    if (accountAvatar) {
-      accountAvatar.removeAttribute('src');
-      accountAvatar.hidden = true;
-    }
+    if (loginButton) loginButton.hidden = false;
+    if (panelLink) panelLink.hidden = true;
+    if (accountState) accountState.hidden = true;
   };
 
   const renderSignedIn = (payload) => {
     const user = payload?.user || {};
-    setupState.hidden = true;
-    signInHost.hidden = true;
-    accountState.hidden = false;
-    accountName.textContent = user.name || 'Konto ServiceOS';
-    accountEmail.textContent = user.email || '';
-    if (user.picture && accountAvatar) {
-      accountAvatar.src = user.picture;
-      accountAvatar.hidden = false;
-    } else if (accountAvatar) {
-      accountAvatar.removeAttribute('src');
-      accountAvatar.hidden = true;
-    }
-    if (codeStatus) codeStatus.textContent = 'Sesja ServiceOS jest aktywna.';
+    if (loginButton) loginButton.hidden = true;
+    if (panelLink) panelLink.hidden = false;
+    if (accountState) accountState.hidden = false;
+    if (accountName) accountName.textContent = user.name || 'Konto ServiceOS';
+    if (accountEmail) accountEmail.textContent = user.email || '';
+    setCodeStatus('Sesja aktywna. Możesz otworzyć mobilny panel.');
   };
 
-  const saveSession = (payload) => {
+  const saveSession = (payload, openPanel = true) => {
     if (!payload?.token) throw new Error('Backend nie zwrócił sesji ServiceOS.');
     sessionStorage.setItem(tokenKey, payload.token);
     renderSignedIn(payload);
+    try { dialog?.close(); } catch {}
+    if (openPanel) window.location.href = 'panel.html';
   };
 
   const restore = async () => {
     const token = sessionStorage.getItem(tokenKey) || '';
-    if (!token) return false;
+    if (!token) { renderSignedOut(); return false; }
     try {
       const payload = await api('/me', {}, token);
       renderSignedIn(payload);
       return true;
     } catch {
       sessionStorage.removeItem(tokenKey);
+      renderSignedOut();
       return false;
     }
   };
 
-  signOut?.addEventListener('click', async () => {
-    const token = sessionStorage.getItem(tokenKey) || '';
-    sessionStorage.removeItem(tokenKey);
-    try {
-      if (token) await api('/auth/logout', { method: 'POST', body: '{}' }, token);
-    } catch {}
-    window.google?.accounts?.id?.disableAutoSelect?.();
-    if (codeStatus) codeStatus.textContent = 'Możesz zalogować się Google albo kodem z aplikacji.';
-    renderSignedOut();
+  loginButton?.addEventListener('click', () => {
+    if (typeof dialog?.showModal === 'function') dialog.showModal();
+    else dialog?.setAttribute('open', '');
+    setTimeout(() => codeInput?.focus(), 80);
+  });
+  closeDialog?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
   });
 
   codeInput?.addEventListener('input', () => {
@@ -111,16 +103,16 @@
     const code = String(codeInput?.value || '').trim();
     if (!code) return;
     if (codeSubmit) codeSubmit.disabled = true;
-    if (codeStatus) codeStatus.textContent = 'Sprawdzam kod…';
+    setCodeStatus('Sprawdzam kod…');
     try {
       const payload = await api('/website/redeem', {
         method: 'POST',
         body: JSON.stringify({ code })
       });
-      saveSession(payload);
       if (codeInput) codeInput.value = '';
+      saveSession(payload, true);
     } catch (error) {
-      if (codeStatus) codeStatus.textContent = error instanceof Error ? error.message : 'Kod jest nieprawidłowy.';
+      setCodeStatus(error instanceof Error ? error.message : 'Kod jest nieprawidłowy.', true);
     } finally {
       if (codeSubmit) codeSubmit.disabled = false;
     }
@@ -131,17 +123,17 @@
     if (event.key === 'Enter') void redeemCode();
   });
 
-  if (!clientId) {
-    setStatus('Brakuje Web Client ID Google.', true);
-    signInHost.hidden = true;
-    return;
-  }
+  signOut?.addEventListener('click', async () => {
+    const token = sessionStorage.getItem(tokenKey) || '';
+    sessionStorage.removeItem(tokenKey);
+    try { if (token) await api('/auth/logout', { method: 'POST', body: '{}' }, token); } catch {}
+    window.google?.accounts?.id?.disableAutoSelect?.();
+    renderSignedOut();
+    setCodeStatus('Wylogowano.');
+  });
 
   const loadGoogleIdentity = () => new Promise((resolve, reject) => {
-    if (window.google?.accounts?.id) {
-      resolve(window.google);
-      return;
-    }
+    if (window.google?.accounts?.id) return resolve(window.google);
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client?hl=pl';
     script.async = true;
@@ -152,30 +144,28 @@
     document.head.appendChild(script);
   });
 
-  const initialize = async () => {
-    const restored = await restore();
+  const initializeGoogle = async () => {
+    if (!clientId || !signInHost) return;
     const google = await loadGoogleIdentity();
-
     google.accounts.id.initialize({
       client_id: clientId,
       auto_select: false,
       cancel_on_tap_outside: true,
       callback: async (response) => {
         try {
-          setStatus('Weryfikuję konto w ServiceOS…');
+          setCodeStatus('Weryfikuję konto Google…');
           const payload = await api('/auth/google-web', {
             method: 'POST',
             body: JSON.stringify({ idToken: String(response?.credential || '') })
           });
-          saveSession(payload);
+          saveSession(payload, true);
         } catch (error) {
           sessionStorage.removeItem(tokenKey);
           renderSignedOut();
-          setStatus(error instanceof Error ? error.message : 'Brak dostępu do ServiceOS.', true);
+          setCodeStatus(error instanceof Error ? error.message : 'Brak dostępu do ServiceOS.', true);
         }
       }
     });
-
     google.accounts.id.renderButton(signInHost, {
       type: 'standard',
       theme: 'filled_black',
@@ -185,15 +175,17 @@
       logo_alignment: 'left',
       width: 320
     });
-
-    if (!restored) {
-      renderSignedOut();
-      setStatus('Zaloguj się aktywnym kontem ServiceOS albo użyj kodu z aplikacji.');
-    }
   };
 
-  initialize().catch((error) => {
-    renderSignedOut();
-    setStatus(error instanceof Error ? error.message : 'Logowanie jest chwilowo niedostępne.', true);
+  window.LockOnWebAuth = Object.freeze({
+    api,
+    token: () => sessionStorage.getItem(tokenKey) || '',
+    clear: () => sessionStorage.removeItem(tokenKey)
   });
+
+  void restore();
+  void initializeGoogle().catch((error) => setCodeStatus(error instanceof Error ? error.message : 'Logowanie Google jest chwilowo niedostępne.', true));
+
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('login') === '1') loginButton?.click();
 })();
