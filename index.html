@@ -54,7 +54,7 @@
         <div class="hero-copy reveal">
           <div class="kicker"><span class="live-dot"></span> Dostępny dla Windows · <span data-release-version>najnowsza wersja</span></div>
           <h1>Otwórz.<br>Pracuj.<br><span>Resztę ogarnia ServiceOS.</span></h1>
-          <p>Jedna aplikacja do rzeczy, których naprawdę używasz w ciągu dnia. Szybki start, wbudowana przeglądarka, pomoc i aktualizacje bez szukania kolejnych plików.</p>
+          <p>Jedna aplikacja do rzeczy, których naprawdę używasz w ciągu dnia. Interfejs dopasowuje się do Full HD, QHD i 4K, a każdy użytkownik może ustawić własny motyw i wielkość elementów.</p>
           <div class="hero-actions">
             <a class="button primary download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">
               <span class="windows-mark">⊞</span> Pobierz dla Windows
@@ -108,7 +108,7 @@
         <div class="section-head reveal">
           <div class="kicker">Poczuj aplikację jeszcze przed instalacją</div>
           <h2>Strona działa trochę jak <span>ServiceOS.</span></h2>
-          <p>Kliknij po lewej. To nie jest film ani obrazek — podgląd reaguje jak mała wersja aplikacji.</p>
+          <p>Kliknij po lewej. Podgląd pokazuje aktualny pulpit, aktualizacje oraz nowe ustawienia wyglądu dostępne dla każdej roli.</p>
         </div>
 
         <div class="demo-shell reveal">
@@ -125,6 +125,7 @@
               <button class="demo-nav" data-demo-target="browser"><span>◎</span><b>Przeglądarka</b></button>
               <button class="demo-nav" data-demo-target="help"><span>?</span><b>Pomoc</b></button>
               <button class="demo-nav" data-demo-target="update"><span>↻</span><b>Aktualizacje</b></button>
+              <button class="demo-nav" data-demo-target="settings"><span>⚙</span><b>Ustawienia</b></button>
               <div class="demo-account"><span>BM</span><div><b>Bartłomiej</b><small>Właściciel</small></div></div>
             </aside>
 
@@ -163,11 +164,23 @@
                 <div class="update-demo-card">
                   <div class="update-demo-icon">↻</div>
                   <span>AKTUALIZACJE</span>
-                  <h3>Nowa wersja pojawia się sama.</h3>
-                  <p>ServiceOS sprawdza GitHub Releases. Nie musisz szukać nowego instalatora za każdym razem.</p>
+                  <h3>Nowa wersja pojawia się podczas pracy.</h3>
+                  <p>ServiceOS sprawdza wydania w tle. Gdy aktualizacja jest gotowa, jedno kliknięcie wystarcza — aplikacja sama zaktualizuje się i uruchomi ponownie.</p>
                   <div class="update-row"><div><small>Zainstalowana</small><strong data-release-version>—</strong></div><b class="up-to-date">AKTUALNA</b></div>
-                  <button>Sprawdź aktualizacje</button>
+                  <button>Zaktualizuj teraz</button>
                 </div>
+              </section>
+
+              <section class="demo-screen settings-demo-screen" data-demo-screen="settings">
+                <div class="demo-screen-top"><span class="kicker">USTAWIENIA OSOBISTE</span><small>dla każdej roli</small></div>
+                <h3>Dopasuj ServiceOS.<br><span>Bez restartu.</span></h3>
+                <p>Motyw i skala interfejsu są zapisywane lokalnie dla użytkownika.</p>
+                <div class="fake-theme-grid">
+                  <article class="fake-theme selected"><i class="fake-theme-swatch graphite"></i><div><strong>Grafit</strong><small>domyślny</small></div><b>✓</b></article>
+                  <article class="fake-theme"><i class="fake-theme-swatch carbon"></i><div><strong>Carbon</strong><small>głębsza czerń</small></div></article>
+                  <article class="fake-theme"><i class="fake-theme-swatch midnight"></i><div><strong>Midnight</strong><small>chłodny granat</small></div></article>
+                </div>
+                <div class="fake-scale-row"><span class="selected">Auto</span><span>Kompakt</span><span>Wygodny</span><span>Duży</span></div>
               </section>
             </div>
           </div>
@@ -185,7 +198,8 @@
         <div class="core-grid">
           <article class="core-card reveal"><span>01</span><div class="core-icon">⌂</div><h3>Spokojny start</h3><p>Po uruchomieniu widzisz czytelny pulpit, stan systemu i skróty do rzeczy, których używasz.</p></article>
           <article class="core-card reveal"><span>02</span><div class="core-icon">◎</div><h3>Przeglądarka w środku</h3><p>Google, dostawcy i potrzebne strony otwierasz bez opuszczania aplikacji.</p></article>
-          <article class="core-card reveal"><span>03</span><div class="core-icon">↻</div><h3>Aktualizacje bez polowania</h3><p>Nowe wydania są spięte z GitHub Releases i aplikacja potrafi je wykryć oraz pobrać.</p></article>
+          <article class="core-card reveal"><span>03</span><div class="core-icon">↻</div><h3>Aktualizacje bez polowania</h3><p>Nowe wydania są wykrywane i pobierane podczas pracy. Po potwierdzeniu ServiceOS sam wykonuje restart potrzebny do podmiany wersji.</p></article>
+          <article class="core-card reveal"><span>04</span><div class="core-icon">⚙</div><h3>Wygląd dla każdego</h3><p>Grafit, Carbon lub Midnight oraz cztery tryby skali. Ustawienia osobiste są dostępne niezależnie od roli użytkownika.</p></article>
         </div>
       </div>
     </section>
