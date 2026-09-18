@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#090a0c">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://api.github.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src https://api.github.com https://accounts.google.com; object-src 'none'; frame-src https://accounts.google.com; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
   <title>LockOn ServiceOS — pobierz dla Windows</title>
   <meta name="description" content="Pobierz LockOn ServiceOS — aplikację desktopową do codziennej pracy serwisu GSM z wbudowaną przeglądarką, logowaniem Google, pomocą i automatycznymi aktualizacjami.">
   <meta property="og:title" content="LockOn ServiceOS">
@@ -221,15 +221,30 @@
     <section class="account-preview-section" id="konto">
       <div class="wrap">
         <div class="section-head compact reveal">
-          <div class="kicker">KONTO LOCKON · NASTĘPNY ETAP</div>
-          <h2>Jedno konto Google.<br><span>Ten sam bezpieczny dostęp.</span></h2>
-          <p>Logowanie na stronie połączymy z tym samym backendem co ServiceOS, dzięki czemu użytkownik zobaczy wyłącznie dane dozwolone dla swojej roli i punktu.</p>
+          <div class="kicker">KONTO LOCKON · GOOGLE</div>
+          <h2>Jedno konto Google.<br><span>Ten sam profil na stronie.</span></h2>
+          <p>Warstwa logowania Google na stronie jest już przygotowana. Po aktywacji Web Client ID użytkownik zaloguje się bez hasła LockOn. Dane serwisowe i role zostaną podpięte dopiero do centralnego API.</p>
         </div>
-        <div class="account-preview-card reveal">
-          <div class="account-preview-icon">G</div>
-          <div><strong>Logowanie Google na stronie</strong><span>Przygotowane do podłączenia po uruchomieniu centralnego API i bazy.</span></div>
-          <button type="button" disabled>Wkrótce</button>
+
+        <div class="web-account-card reveal">
+          <div class="web-account-copy">
+            <div class="account-preview-icon">G</div>
+            <div>
+              <strong>Konto Google</strong>
+              <span id="googleAuthSetup">Sprawdzam konfigurację logowania…</span>
+            </div>
+          </div>
+
+          <div id="googleSignInButton" class="google-signin-host" aria-label="Zaloguj się przez Google"></div>
+
+          <div id="googleAccountState" class="google-account-state" hidden>
+            <img id="googleAccountAvatar" class="google-account-avatar" alt="" hidden>
+            <div><strong id="googleAccountName">Konto Google</strong><span id="googleAccountEmail"></span></div>
+            <button id="googleSignOut" type="button">Wyloguj</button>
+          </div>
         </div>
+
+        <p class="account-security-note">Na tym etapie strona przechowuje podstawowy profil tylko w sesji przeglądarki. Nie daje to dostępu do danych serwisowych, rozliczeń ani administracji.</p>
       </div>
     </section>
 
@@ -265,6 +280,8 @@
     </div>
   </footer>
 
+  <script src="assets/google-config.js"></script>
+  <script src="assets/google-auth.js"></script>
   <script src="assets/site.js"></script>
 </body>
 </html>
