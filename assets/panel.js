@@ -1,4 +1,12 @@
 (() => {
+  const onboardingKey = 'lockon.employee.onboarding.v1';
+  let onboardingAccepted = false;
+  try { onboardingAccepted = localStorage.getItem(onboardingKey) === 'accepted'; } catch {}
+  if (!onboardingAccepted) {
+    window.location.replace('index.html?next=panel#start');
+    return;
+  }
+
   const config = window.LOCKON_WEB_AUTH || {};
   const apiBaseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
   const tokenKey = 'lockon.web.session';
