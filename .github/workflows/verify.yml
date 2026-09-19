@@ -50,7 +50,12 @@ jobs:
           grep -q 'lockon.employee.onboarding.v1' assets/panel.js
           grep -q 'Połącz urządzenie' index.html
           grep -q 'orderWorkflowFilters' panel.html
+          grep -q 'ZAKŁADKI I MODUŁY' index.html
+          grep -q 'Rozliczenia' index.html
+          grep -q 'mobile-anchor-nav' index.html
           grep -q 'workflow' assets/panel.js
+          ! grep -q 'style="' index.html
+          ! grep -q 'style="' assets/panel.js
           grep -q '/service/orders' assets/panel.js
           grep -q '/service/transfers' assets/panel.js
           grep -q 'RETURN_HOME' assets/panel.js

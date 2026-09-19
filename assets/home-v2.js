@@ -47,7 +47,7 @@
       lockState.classList.toggle('unlocked', accepted);
       lockState.innerHTML = accepted
         ? '<span>✓</span><strong>Instrukcja zaakceptowana — możesz pobrać aplikację lub połączyć telefon.</strong>'
-        : '<span>🔒</span><strong>Najpierw przejdź sekcję „Zacznij tutaj”.</strong>';
+        : '<span>🔒</span><strong>Najpierw zaakceptuj zasady pracownika.</strong>';
     }
   };
 
@@ -73,7 +73,7 @@
     if (nextPanel) {
       window.setTimeout(() => document.getElementById('navLoginButton')?.click(), 250);
     } else {
-      document.getElementById('pobierz')?.scrollIntoView({ behavior:'smooth', block:'center' });
+      document.getElementById('download')?.scrollIntoView({ behavior:'smooth', block:'center' });
     }
   });
 

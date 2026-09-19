@@ -153,7 +153,7 @@
         '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
       '</div>' +
       (workflow ? '<div class="mobile-workflow-strip">' +
-        '<div><span>Etap ' + esc(workflow.stageNumber) + '/' + esc(workflow.stageTotal) + '</span><strong>' + esc(workflow.stageLabel) + '</strong><i><b style="width:' + esc(workflow.progressPercent) + '%"></b></i></div>' +
+        '<div><span>Etap ' + esc(workflow.stageNumber) + '/' + esc(workflow.stageTotal) + '</span><strong>' + esc(workflow.stageLabel) + '</strong><progress max="100" value="' + esc(workflow.progressPercent) + '"></progress></div>' +
         '<div><span>Następna akcja</span><strong>' + esc(workflow.nextAction) + '</strong></div>' +
         '<em class="' + esc(String(workflow.attentionCode || '').toLowerCase()) + '">' + esc(workflow.attentionLabel) +
           (workflow.dueInMinutes != null && workflow.dueInMinutes < 0 ? '<small>' + esc(Math.ceil(Math.abs(workflow.dueInMinutes)/60)) + ' h po terminie</small>' : '') +
@@ -330,7 +330,19 @@
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/status', {
         method:'POST', body:JSON.stringify({status})
       });
-      toast(result?.notification?.sent ? 'Status zapisany i klient otrzymał e-mail.' : 'Status zapisany.');
+      const settlement = result?.settlement;
+      const settlementText = settlement ? ' Rozliczenie ' + Number(settlement.amount || 0).toFixed(2) + ' ' + String(settlement.currency || 'PLN') + ' dodano automatycznie.' : '';
+      if (result?.notification?.sent) {
+        toast('Status zapisany. Klient otrzymał e-mail.' + settlementText);
+      } else if (result?.notification?.queued) {
+        toast('Status zapisany. E-mail jest w kolejce do ponowienia.' + settlementText);
+      } else if (result?.notification?.reason === 'NO_CUSTOMER_EMAIL') {
+        toast('Status zapisany. Klient nie ma adresu e-mail.' + settlementText);
+      } else if (result?.notification?.reason === 'NO_SENDER') {
+        toast('Status zapisany, ale brak aktywnego firmowego nadawcy Gmail.' + settlementText,'error');
+      } else {
+        toast('Status zapisany.' + settlementText);
+      }
       document.getElementById('orderDialog')?.close();
       await loadOrders();
     } catch (error) { toast(error.message || 'Nie udało się zapisać statusu.','error'); }
@@ -475,7 +487,17 @@
       status.className = 'panel-form-status ok';
       status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
       event.currentTarget.reset();
-      toast(result.notification?.sent ? 'Zlecenie utworzone. Klient dostał potwierdzenie.' : 'Zlecenie utworzone.');
+      if (result.notification?.sent) {
+        toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');
+      } else if (result.notification?.queued) {
+        toast('Zlecenie utworzone. E-mail czeka na ponowną wysyłkę.');
+      } else if (result.notification?.reason === 'NO_CUSTOMER_EMAIL') {
+        toast('Zlecenie utworzone. Klient nie podał adresu e-mail.');
+      } else if (result.notification?.reason === 'NO_SENDER') {
+        toast('Zlecenie utworzone, ale brak aktywnego firmowego nadawcy Gmail.','error');
+      } else {
+        toast('Zlecenie utworzone.');
+      }
       await loadOrders();
       window.setTimeout(() => showView('orders'),700);
     } catch (error) {
