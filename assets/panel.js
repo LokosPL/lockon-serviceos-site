@@ -610,6 +610,7 @@
     document.getElementById('adminBlocked').textContent = String(admin.system?.blockedUsers ?? 0);
     document.getElementById('adminServices').textContent = String(admin.system?.servicePoints ?? 0);
     document.getElementById('adminTransfers').textContent = String(admin.system?.openTransfers ?? 0);
+    renderAdminPending();
     renderAdminUsers();
     renderAdminPoints();
     renderAdminAuditSelectors();
@@ -748,23 +749,79 @@
   };
 
   const roleLabel=(role)=>AUDIT_ROLE_LABELS[role]||'Bez roli';
-  const renderAdminUsers = () => {
-    const host = document.getElementById('adminUsers');
-    const users = admin?.users || [];
+  const ADMIN_PRIMARY_ROLES=['BOSS','COORDINATOR','TECHNICIAN','USER'];
+
+  const renderAdminPending = () => {
+    const host=document.getElementById('adminPending');
+    if(!host)return;
+    const users=admin?.pendingUsers||[];
     const points=admin?.points||[];
-    host.innerHTML = users.map((user) => {
-      const owner = user.role === 'OWNER';
-      const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
-      const roles=['BOSS','COORDINATOR','SUPPORT','TECHNICIAN','USER'];
-      return '<article class="admin-user-card">' +
-        '<div><strong>' + esc(user.name) + (user.blocked ? ' <span class="blocked-label">· ZABLOKOWANE</span>' : '') + '</strong><span>' + esc(user.email) + '</span><small>' + esc(roleLabel(user.role)) + ' · ' + esc(assigned) + ' · ostatnio ' + esc(formatDate(user.lastLoginAt)) + '</small></div>' +
-        (!owner ? '<details class="mobile-account-edit"><summary>Edytuj konto</summary><label>Rola<select data-admin-role="' + esc(user.id) + '">' + roles.map(r=>'<option value="'+r+'"'+(r===user.role?' selected':'')+'>'+esc(roleLabel(r))+'</option>').join('') + '</select></label><div class="mobile-account-points">' + points.map(p=>'<label><input type="checkbox" data-admin-point-user="'+esc(user.id)+'" value="'+esc(p.id)+'"'+((user.pointIds||[]).includes(p.id)?' checked':'')+'>'+esc(p.name)+'</label>').join('') + '</div>' + (user.role==='TECHNICIAN'?'<label>Udział serwisanta (%)<input type="number" min="0" max="100" step="0.01" data-admin-split="'+esc(user.id)+'" value="'+esc(user.technicianSplitPercent??50)+'"></label>':'') + '<button class="mini-action primary" data-admin-save-user="'+esc(user.id)+'">Zapisz zmiany</button></details>' : '') +
-        '<div class="admin-user-actions">' +
-          (!owner ? '<button class="mini-action ' + (user.blocked ? 'primary' : 'danger') + '" data-admin-block="' + esc(user.id) + '" data-blocked="' + (user.blocked ? '1' : '0') + '">' + (user.blocked ? 'Odblokuj' : 'Zablokuj') + '</button>' : '') +
-          '<button class="mini-action" data-admin-logout-user="' + esc(user.id) + '">Wyloguj</button>' +
-        '</div>' +
+    host.innerHTML=users.map((user)=>{
+      const requested=user.requestedPoint||null;
+      const legacySupport=requested?.requestedRole==='SUPPORT';
+      const suggested=ADMIN_PRIMARY_ROLES.includes(requested?.requestedRole)?requested.requestedRole:'USER';
+      const requestedText=requested?(requested.pointName+(requested.city?' · '+requested.city:'')):'Nie podano punktu';
+      return '<article class="admin-pending-card" data-pending-user="'+esc(user.id)+'">'+
+        '<div class="admin-pending-head"><div><strong>'+esc(user.name)+'</strong><span>'+esc(user.email)+'</span></div><b>OCZEKUJE</b></div>'+
+        '<div class="admin-pending-request"><span>Zgłoszony punkt<strong>'+esc(requestedText)+'</strong></span><span>Proponowana rola<strong>'+esc(roleLabel(suggested))+'</strong></span></div>'+
+        '<label class="mobile-admin-field"><span>Główna rola po akceptacji</span><select data-pending-role="'+esc(user.id)+'">'+ADMIN_PRIMARY_ROLES.map(role=>'<option value="'+role+'"'+(role===suggested?' selected':'')+'>'+esc(roleLabel(role))+'</option>').join('')+'</select></label>'+
+        (requested?'<label class="mobile-support-toggle requested"><input type="checkbox" data-pending-requested="'+esc(user.id)+'" checked><span><strong>Użyj zgłoszonego punktu</strong><small>ServiceOS przypisze istniejący punkt o tej nazwie lub utworzy go, jeśli jeszcze go nie ma.</small></span></label>':'')+
+        '<div class="mobile-account-points">'+points.map(point=>'<label><input type="checkbox" data-pending-point-user="'+esc(user.id)+'" value="'+esc(point.id)+'"><span>'+esc(point.name)+'<small>'+esc(point.city||'')+'</small></span></label>').join('')+'</div>'+
+        '<label class="mobile-support-toggle"><input type="checkbox" data-pending-support="'+esc(user.id)+'"'+(legacySupport?' checked':'')+'><span><strong>Wsparcie LockOn</strong><small>Dodatkowe uprawnienie konsultanta. Nie zastępuje głównej roli.</small></span></label>'+
+        '<div class="admin-pending-actions"><button class="mini-action primary" data-admin-approve="'+esc(user.id)+'">Akceptuj konto</button><button class="mini-action danger" data-admin-reject="'+esc(user.id)+'">Odrzuć</button></div>'+
       '</article>';
-    }).join('') || '<div class="panel-list-empty">Brak użytkowników.</div>';
+    }).join('')||'<div class="panel-list-empty">Brak nowych wniosków do akceptacji.</div>';
+  };
+
+  const approveAdminUser = async (id) => {
+    const role=document.querySelector('[data-pending-role="'+CSS.escape(id)+'"]')?.value||'USER';
+    const supportEnabled=document.querySelector('[data-pending-support="'+CSS.escape(id)+'"]')?.checked===true;
+    const useRequested=document.querySelector('[data-pending-requested="'+CSS.escape(id)+'"]')?.checked===true;
+    const pointIds=role==='BOSS'?[]:[...document.querySelectorAll('[data-pending-point-user="'+CSS.escape(id)+'"]:checked')].map(el=>el.value);
+    try{
+      await api('/admin/users/'+encodeURIComponent(id)+'/approve',{method:'POST',body:JSON.stringify({role,pointIds,createRequestedPoint:role!=='BOSS'&&useRequested,supportEnabled})});
+      toast('Konto zostało zaakceptowane.');
+      await loadAdmin();
+    }catch(error){toast(error.message||'Nie udało się zaakceptować konta.','error');}
+  };
+
+  const rejectAdminUser = async (id) => {
+    if(!window.confirm('Odrzucić ten wniosek o dostęp?'))return;
+    try{
+      await api('/admin/users/'+encodeURIComponent(id)+'/reject',{method:'POST',body:'{}'});
+      toast('Wniosek został odrzucony.');
+      await loadAdmin();
+    }catch(error){toast(error.message||'Nie udało się odrzucić wniosku.','error');}
+  };
+
+  const renderAdminUsers = () => {
+    const host=document.getElementById('adminUsers');
+    const users=admin?.users||[];
+    const points=admin?.points||[];
+    host.innerHTML=users.map((user)=>{
+      const owner=user.role==='OWNER';
+      const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
+      const effectiveRole=user.role==='SUPPORT'?'USER':(user.role||'USER');
+      const supportEnabled=user.supportEnabled===true||user.role==='SUPPORT'||owner;
+      return '<article class="admin-user-card admin-user-card-v2 '+(user.blocked?'blocked':'')+'">'+
+        '<div class="mobile-admin-user-head"><div><strong>'+esc(user.name)+'</strong><span>'+esc(user.email)+'</span></div><div class="mobile-admin-badges">'+
+          (user.blocked?'<b class="danger">ZABLOKOWANE</b>':'<b>AKTYWNE</b>')+
+          (supportEnabled&&!owner?'<b class="support">WSPARCIE</b>':'')+
+        '</div></div>'+
+        '<div class="mobile-admin-summary"><span><small>Główna rola</small><strong>'+esc(roleLabel(user.role))+'</strong></span><span><small>Punkty</small><strong>'+esc(assigned)+'</strong></span><span><small>Ostatnie logowanie</small><strong>'+esc(formatDate(user.lastLoginAt))+'</strong></span></div>'+
+        (user.blocked&&user.blockedReason?'<div class="mobile-block-reason">'+esc(user.blockedReason)+'</div>':'')+
+        (!owner?'<details class="mobile-account-edit"><summary>Edytuj konto i uprawnienia</summary>'+
+          '<label class="mobile-admin-field"><span>Główna rola</span><select data-admin-role="'+esc(user.id)+'">'+ADMIN_PRIMARY_ROLES.map(role=>'<option value="'+role+'"'+(role===effectiveRole?' selected':'')+'>'+esc(roleLabel(role))+'</option>').join('')+'</select></label>'+
+          '<div class="mobile-account-points">'+points.map(p=>'<label><input type="checkbox" data-admin-point-user="'+esc(user.id)+'" value="'+esc(p.id)+'"'+((user.pointIds||[]).includes(p.id)?' checked':'')+'><span>'+esc(p.name)+'<small>'+esc(p.city||'')+'</small></span></label>').join('')+'</div>'+
+          (effectiveRole==='TECHNICIAN'?'<label class="mobile-admin-field"><span>Udział serwisanta (%)</span><input type="number" min="0" max="100" step="0.01" data-admin-split="'+esc(user.id)+'" value="'+esc(user.technicianSplitPercent??50)+'"></label>':'')+
+          '<label class="mobile-support-toggle"><input type="checkbox" data-admin-support="'+esc(user.id)+'"'+(supportEnabled?' checked':'')+'><span><strong>Wsparcie LockOn</strong><small>Może dołączać do rozmów użytkowników z przypisanych punktów.</small></span></label>'+
+          '<button class="mini-action primary wide" data-admin-save-user="'+esc(user.id)+'">Zapisz uprawnienia</button></details>':'')+
+        '<div class="admin-user-actions">'+
+          (!owner?'<button class="mini-action '+(user.blocked?'primary':'danger')+'" data-admin-block="'+esc(user.id)+'" data-blocked="'+(user.blocked?'1':'0')+'">'+(user.blocked?'Odblokuj konto':'Zablokuj konto')+'</button>':'')+
+          '<button class="mini-action" data-admin-logout-user="'+esc(user.id)+'">Wyloguj urządzenia</button>'+
+        '</div>'+
+      '</article>';
+    }).join('')||'<div class="panel-list-empty">Brak użytkowników.</div>';
   };
 
   const saveAdminUser = async (id) => {
@@ -772,7 +829,8 @@
     const pointIds=[...document.querySelectorAll('[data-admin-point-user="'+CSS.escape(id)+'"]:checked')].map(el=>el.value);
     const splitEl=document.querySelector('[data-admin-split="'+CSS.escape(id)+'"]');
     const technicianSplitPercent=role==='TECHNICIAN'?Number(splitEl?.value??50):null;
-    try{await api('/admin/users/'+encodeURIComponent(id)+'/access',{method:'POST',body:JSON.stringify({role,pointIds,technicianSplitPercent})});toast('Konto zostało zaktualizowane.');await loadAdmin();}catch(error){toast(error.message||'Nie udało się zapisać konta.','error');}
+    const supportEnabled=document.querySelector('[data-admin-support="'+CSS.escape(id)+'"]')?.checked===true;
+    try{await api('/admin/users/'+encodeURIComponent(id)+'/access',{method:'POST',body:JSON.stringify({role,pointIds,technicianSplitPercent,supportEnabled})});toast('Konto zostało zaktualizowane.');await loadAdmin();}catch(error){toast(error.message||'Nie udało się zapisać konta.','error');}
   };
 
   const renderAdminPoints = () => {
@@ -790,13 +848,9 @@
   };
 
   const blockUser = async (id, currentlyBlocked) => {
-    const blocked = !currentlyBlocked;
-    let reason = '';
-    if (blocked) {
-      const answer = window.prompt('Powód blokady (opcjonalnie):','');
-      if (answer === null) return;
-      reason = answer;
-    }
+    const blocked=!currentlyBlocked;
+    if(!window.confirm(blocked?'Zablokować konto i natychmiast wylogować je ze wszystkich urządzeń?':'Odblokować to konto?'))return;
+    const reason=blocked?'Ręczna blokada konta przez właściciela':'';
     try {
       await api('/admin/users/' + encodeURIComponent(id) + '/block', {method:'POST',body:JSON.stringify({blocked,reason})});
       toast(blocked ? 'Konto zablokowane i wylogowane.' : 'Konto odblokowane.');
@@ -917,6 +971,10 @@
       if(quotePrice){void priceCustomerQuote(quotePrice.dataset.customerQuotePrice);return;}
       const quoteClose=event.target.closest('[data-customer-quote-close]');
       if(quoteClose){if(window.confirm('Zamknąć to zapytanie klienta?'))void closeCustomerQuote(quoteClose.dataset.customerQuoteClose);return;}
+      const approveUserButton=event.target.closest('[data-admin-approve]');
+      if(approveUserButton){void approveAdminUser(approveUserButton.dataset.adminApprove);return;}
+      const rejectUserButton=event.target.closest('[data-admin-reject]');
+      if(rejectUserButton){void rejectAdminUser(rejectUserButton.dataset.adminReject);return;}
       const block = event.target.closest('[data-admin-block]');
       if (block) { void blockUser(block.dataset.adminBlock,block.dataset.blocked === '1'); return; }
       const saveAdminUserButton = event.target.closest('[data-admin-save-user]');
