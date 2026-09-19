@@ -692,7 +692,12 @@
     try {
       me = await api('/me');
     } catch (error) {
-      if (error?.status === 401 || error?.status === 403) return redirectLogin(true);
+      if (error?.status === 401) return redirectLogin(true);
+      if (error?.status === 403) {
+        const bootLabel = document.querySelector('#panelBoot span');
+        if (bootLabel) bootLabel.textContent = error.message || 'Konto nie ma dostępu do panelu. Sesja pozostaje zapisana.';
+        return;
+      }
       const bootLabel = document.querySelector('#panelBoot span');
       if (bootLabel) bootLabel.textContent = 'Brak połączenia z ServiceOS. Sesja jest zachowana — ponawiam…';
       window.setTimeout(() => void boot(), 3500);
