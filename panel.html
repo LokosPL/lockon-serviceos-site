@@ -52,6 +52,7 @@
         <button type="button" data-panel-nav="new"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></button>
         <button type="button" data-panel-nav="orders"><b>⌕</b><span><strong>Zlecenia</strong><small>Status i szczegóły</small></span></button>
         <button type="button" data-panel-nav="transfers"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></button>
+        <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><span><strong>Wyceny klientów</strong><small>Zapytania z portalu klienta</small></span></button>
         <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><span><strong>Rozliczenia</strong><small>Przychód i podział</small></span></button>
         <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><span><strong>Administracja</strong><small>Konta i bezpieczeństwo</small></span></button>
       </div>
@@ -115,6 +116,12 @@
       <div id="transfersList" class="panel-list"></div>
     </section>
 
+    <section id="view-quotes" class="panel-view quote-staff-only" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>PORTAL KLIENTA</span><h1>Wyceny klientów</h1></div><button id="refreshCustomerQuotes" type="button">↻</button></div>
+      <div class="panel-section-head"><div><span>ZAPYTANIA</span><h2>Do obsługi przez serwis</h2></div><small>Zapytania są automatycznie kierowane do serwisanta punktu albo do najczęściej używanego serwisu docelowego.</small></div>
+      <div id="customerQuotesList" class="panel-list customer-quote-list"></div>
+    </section>
+
     <section id="view-earnings" class="panel-view finance-only" hidden>
       <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>ROZLICZENIA</span><h1>Przychód firmy</h1></div><button id="refreshEarnings" type="button">↻</button></div>
       <div class="mobile-finance-summary">
@@ -176,6 +183,7 @@
     <button data-panel-nav="new"><span>＋</span><b>Nowe</b></button>
     <button data-panel-nav="orders"><span>▣</span><b>Zlecenia</b></button>
     <button data-panel-nav="transfers"><span>⇄</span><b>Przekazania</b></button>
+    <button class="quote-staff-only" data-panel-nav="quotes" hidden><span>✉</span><b>Wyceny</b></button>
     <button class="finance-only" data-panel-nav="earnings" hidden><span>zł</span><b>Rozliczenia</b></button>
     <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Admin</b></button>
   </nav>
