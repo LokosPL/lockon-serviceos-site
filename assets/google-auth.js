@@ -3,6 +3,31 @@
   const clientId = String(config.googleClientId || '').trim();
   const apiBaseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
   const tokenKey = 'lockon.web.session';
+  const readToken = () => {
+    try {
+      const persistent = localStorage.getItem(tokenKey) || '';
+      if (persistent) return persistent;
+      const legacy = sessionStorage.getItem(tokenKey) || '';
+      if (legacy) {
+        localStorage.setItem(tokenKey, legacy);
+        sessionStorage.removeItem(tokenKey);
+        return legacy;
+      }
+    } catch {}
+    try { return sessionStorage.getItem(tokenKey) || ''; } catch { return ''; }
+  };
+  const writeToken = (value) => {
+    try {
+      localStorage.setItem(tokenKey, value);
+      sessionStorage.removeItem(tokenKey);
+      return;
+    } catch {}
+    try { sessionStorage.setItem(tokenKey, value); } catch {}
+  };
+  const clearToken = () => {
+    try { localStorage.removeItem(tokenKey); } catch {}
+    try { sessionStorage.removeItem(tokenKey); } catch {}
+  };
 
   const loginButton = document.getElementById('navLoginButton');
   const panelLink = document.getElementById('navPanelLink');
@@ -35,6 +60,7 @@
     if (!response.ok) {
       const error = new Error(payload?.message || 'Nie udało się połączyć z ServiceOS.');
       error.code = payload?.error || 'REQUEST_FAILED';
+      error.status = response.status;
       throw error;
     }
     return payload;
@@ -64,22 +90,25 @@
 
   const saveSession = (payload, openPanel = true) => {
     if (!payload?.token) throw new Error('Backend nie zwrócił sesji ServiceOS.');
-    sessionStorage.setItem(tokenKey, payload.token);
+    writeToken(payload.token);
     renderSignedIn(payload);
     try { dialog?.close(); } catch {}
     if (openPanel) window.location.href = 'panel.html';
   };
 
   const restore = async () => {
-    const token = sessionStorage.getItem(tokenKey) || '';
+    const token = readToken();
     if (!token) { renderSignedOut(); return false; }
     try {
       const payload = await api('/me', {}, token);
       renderSignedIn(payload);
       return true;
-    } catch {
-      sessionStorage.removeItem(tokenKey);
+    } catch (error) {
+      if (error?.status === 401 || error?.status === 403) clearToken();
       renderSignedOut();
+      if (error?.status !== 401 && error?.status !== 403) {
+        setCodeStatus('Sesja jest zapisana, ale chwilowo nie udało się połączyć z ServiceOS. Odśwież stronę za moment.', true);
+      }
       return false;
     }
   };
@@ -124,8 +153,8 @@
   });
 
   signOut?.addEventListener('click', async () => {
-    const token = sessionStorage.getItem(tokenKey) || '';
-    sessionStorage.removeItem(tokenKey);
+    const token = readToken();
+    clearToken();
     try { if (token) await api('/auth/logout', { method: 'POST', body: '{}' }, token); } catch {}
     window.google?.accounts?.id?.disableAutoSelect?.();
     renderSignedOut();
@@ -160,7 +189,6 @@
           });
           saveSession(payload, true);
         } catch (error) {
-          sessionStorage.removeItem(tokenKey);
           renderSignedOut();
           setCodeStatus(error instanceof Error ? error.message : 'Brak dostępu do ServiceOS.', true);
         }
@@ -179,8 +207,8 @@
 
   window.LockOnWebAuth = Object.freeze({
     api,
-    token: () => sessionStorage.getItem(tokenKey) || '',
-    clear: () => sessionStorage.removeItem(tokenKey)
+    token: () => readToken(),
+    clear: () => clearToken()
   });
 
   void restore();
