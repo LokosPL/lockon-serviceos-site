@@ -53,6 +53,12 @@ jobs:
           grep -q 'ZAKŁADKI I MODUŁY' index.html
           grep -q 'Rozliczenia' index.html
           grep -q 'mobile-anchor-nav' index.html
+          grep -q 'track.html' sw.js
+          grep -q 'public/service-track' assets/track.js
+          grep -q 'noindex,nofollow,noarchive' track.html
+          grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
+          grep -q 'position:static' assets/home-v2.css
+          grep -q "serviceos-shell-v7" sw.js
           grep -q 'workflow' assets/panel.js
           grep -q 'Cena orientacyjna' panel.html
           grep -q 'data-save-order-prices' assets/panel.js
