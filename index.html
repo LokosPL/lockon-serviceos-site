@@ -196,14 +196,14 @@
           </aside>
           <div class="preview-content">
             <div class="preview-topbar"><div><span>AKTYWNY PUNKT</span><strong>Punkt Nowogard</strong></div><span class="online-dot"><i></i> ONLINE</span></div>
-
-            <div class="demo-screen active" data-demo-screen="dashboard">
+            <div class="preview-stage" aria-live="polite">
+            <div class="demo-screen active" data-demo-screen="dashboard" aria-hidden="false">
               <div class="preview-page-title"><span>START</span><h3>Co wymaga uwagi?</h3></div>
               <div class="preview-stats"><article><span>Działaj teraz</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
               <button type="button" class="preview-focus" data-demo-jump="service"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small><b>Otwórz zlecenie →</b></button>
             </div>
 
-            <div class="demo-screen" data-demo-screen="service">
+            <div class="demo-screen" data-demo-screen="service" aria-hidden="true">
               <div class="preview-page-title"><span>SERWIS</span><h3>Kolejka pracy</h3></div>
               <div class="preview-filters"><span class="active">Działaj teraz <b>4</b></span><span>Po terminie <b>1</b></span><span>W drodze <b>2</b></span><span>Gotowe <b>3</b></span></div>
               <div class="preview-orders">
@@ -213,16 +213,17 @@
               </div>
             </div>
 
-            <div class="demo-screen" data-demo-screen="finance">
+            <div class="demo-screen" data-demo-screen="finance" aria-hidden="true">
               <div class="preview-page-title"><span>ROZLICZENIA</span><h3>Procent ustawiany przez serwisanta</h3></div>
               <div class="preview-stats finance"><article><span>Przychód</span><strong>1 840 zł</strong><small>zapisany automatycznie</small></article><article><span>Serwisant</span><strong>1 104 zł</strong><small>przykład: 60%</small></article><article><span>Szef</span><strong>736 zł</strong><small>przykład: 40%</small></article></div>
               <div class="preview-settlement"><span>✓ ZLECENIE #1038 ZAKOŃCZONE</span><strong>500,00 zł dodane automatycznie</strong><p>300,00 zł serwisant · 200,00 zł Szef · przykład ustawienia 60/40</p></div>
             </div>
 
-            <div class="demo-screen" data-demo-screen="admin">
+            <div class="demo-screen" data-demo-screen="admin" aria-hidden="true">
               <div class="preview-page-title"><span>OWNER</span><h3>Administracja i bezpieczeństwo</h3></div>
               <div class="preview-stats admin"><article><span>Sesje</span><strong>6</strong><small>Windows + WWW</small></article><article><span>Serwisy</span><strong>2</strong><small>aktywne punkty</small></article><article><span>Zablokowane</span><strong>0</strong><small>konta</small></article></div>
               <div class="preview-admin-list"><div><span><strong>Wyspa Gryf</strong><small>aktywny TECHNICIAN</small></span><b>AUTO SERWIS</b></div><div><span><strong>Punkt Nowogard</strong><small>firmowy nadawca Gmail</small></span><b>ONLINE</b></div></div>
+            </div>
             </div>
           </div>
         </div>

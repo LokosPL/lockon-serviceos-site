@@ -428,3 +428,17 @@ body.portal-home *{box-sizing:border-box}
 @media(max-width:470px){
   .portal-home #preview .demo-screen{min-height:0}
 }
+
+
+/* v9 stable application preview: screens share one grid cell and never move page scroll */
+.portal-home #preview .preview-content{display:flex;flex-direction:column;min-height:598px;overflow:hidden}
+.portal-home #preview .preview-stage{display:grid;grid-template-columns:minmax(0,1fr);flex:1;min-height:534px;overflow:hidden}
+.portal-home #preview .preview-stage>.demo-screen{grid-area:1/1;display:block!important;visibility:hidden;opacity:0;pointer-events:none;overflow:auto;align-self:stretch;min-width:0;transition:opacity .18s ease}
+.portal-home #preview .preview-stage>.demo-screen.active{visibility:visible;opacity:1;pointer-events:auto}
+@media(max-width:760px){
+  .portal-home #preview .preview-content{min-height:0}
+  .portal-home #preview .preview-stage{min-height:560px}
+}
+@media(max-width:470px){
+  .portal-home #preview .preview-stage{min-height:650px}
+}

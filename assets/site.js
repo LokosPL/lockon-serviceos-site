@@ -71,15 +71,11 @@
   const previewRoot = document.getElementById('preview');
   const showDemo = (target) => {
     if (!previewRoot || !target) return;
-    const preview = previewRoot.querySelector('.app-preview');
-    const beforeTop = preview?.getBoundingClientRect().top;
     previewRoot.querySelectorAll('.demo-nav').forEach(btn => btn.classList.toggle('active', btn.dataset.demoTarget === target));
-    previewRoot.querySelectorAll('.demo-screen').forEach(screen => screen.classList.toggle('active', screen.dataset.demoScreen === target));
-    window.requestAnimationFrame(() => {
-      if (!preview || beforeTop == null) return;
-      const afterTop = preview.getBoundingClientRect().top;
-      const delta = afterTop - beforeTop;
-      if (Math.abs(delta) > 1) window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
+    previewRoot.querySelectorAll('.demo-screen').forEach(screen => {
+      const active = screen.dataset.demoScreen === target;
+      screen.classList.toggle('active', active);
+      screen.setAttribute('aria-hidden', active ? 'false' : 'true');
     });
   };
   previewRoot?.querySelectorAll('.demo-nav').forEach(btn => btn.addEventListener('click', (event) => {
