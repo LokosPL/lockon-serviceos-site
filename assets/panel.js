@@ -312,7 +312,7 @@
     const activeTransfer = order.openTransfer || (order.latestTransfer && ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(order.latestTransfer.status) ? order.latestTransfer : null);
     const currentServicePointId = activeTransfer ? '' : (order.currentPointId || order.homePointId || order.pointId);
     const homePointId = order.homePointId || order.pointId;
-    const canOperateCurrentPoint = Boolean(currentServicePointId) && canOperatePoint(currentServicePointId);
+    const canOperateCurrentPoint = Boolean(currentServicePointId) && activePointId === currentServicePointId && canOperatePoint(currentServicePointId);
     const canEditOrderHere = canEditService() && canOperateCurrentPoint && !activeTransfer;
     const transferOnly = order.handlingMode === 'TRANSFER_ONLY';
     const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId);
@@ -403,7 +403,7 @@
     if (order.handlingMode === 'TRANSFER_ONLY' && status !== 'CANCELLED') return toast('W trybie przekazania można jedynie anulować zlecenie.','error');
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/status', {
-        method:'POST', body:JSON.stringify({status})
+        method:'POST', body:JSON.stringify({status,actingPointId:activePointId})
       });
       const settlement = result?.settlement;
       const settlementText = settlement ? ' Rozliczenie ' + Number(settlement.amount || 0).toFixed(2) + ' ' + String(settlement.currency || 'PLN') + ' dodano automatycznie.' : '';
@@ -647,7 +647,12 @@
       if (close) document.getElementById(close.dataset.closeDialog)?.close();
     });
 
-    document.getElementById('panelPointSelect')?.addEventListener('change',(event) => { activePointId=event.target.value; });
+    document.getElementById('panelPointSelect')?.addEventListener('change',(event) => {
+      activePointId=event.target.value;
+      renderHome();
+      renderOrders();
+      if (activeOrderId) void openOrder(activeOrderId);
+    });
     document.getElementById('panelAccountButton')?.addEventListener('click',()=>document.getElementById('accountDialog')?.showModal());
     document.getElementById('orderSearch')?.addEventListener('input',renderOrders);
     document.getElementById('refreshHome')?.addEventListener('click',()=>void refreshData());
