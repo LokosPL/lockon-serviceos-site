@@ -68,11 +68,13 @@
   }, { threshold: .1, rootMargin: '0px 0px -35px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+  const previewRoot = document.getElementById('preview');
   const showDemo = (target) => {
-    const preview = document.querySelector('.app-preview');
+    if (!previewRoot || !target) return;
+    const preview = previewRoot.querySelector('.app-preview');
     const beforeTop = preview?.getBoundingClientRect().top;
-    document.querySelectorAll('.demo-nav').forEach(btn => btn.classList.toggle('active', btn.dataset.demoTarget === target));
-    document.querySelectorAll('.demo-screen').forEach(screen => screen.classList.toggle('active', screen.dataset.demoScreen === target));
+    previewRoot.querySelectorAll('.demo-nav').forEach(btn => btn.classList.toggle('active', btn.dataset.demoTarget === target));
+    previewRoot.querySelectorAll('.demo-screen').forEach(screen => screen.classList.toggle('active', screen.dataset.demoScreen === target));
     window.requestAnimationFrame(() => {
       if (!preview || beforeTop == null) return;
       const afterTop = preview.getBoundingClientRect().top;
@@ -80,11 +82,11 @@
       if (Math.abs(delta) > 1) window.scrollBy({ top: delta, left: 0, behavior: 'instant' });
     });
   };
-  document.querySelectorAll('.demo-nav').forEach(btn => btn.addEventListener('click', (event) => {
+  previewRoot?.querySelectorAll('.demo-nav').forEach(btn => btn.addEventListener('click', (event) => {
     event.preventDefault();
     showDemo(btn.dataset.demoTarget);
   }));
-  document.querySelectorAll('[data-demo-jump]').forEach(btn => btn.addEventListener('click', (event) => {
+  previewRoot?.querySelectorAll('[data-demo-jump]').forEach(btn => btn.addEventListener('click', (event) => {
     event.preventDefault();
     showDemo(btn.dataset.demoJump);
   }));
