@@ -34,6 +34,8 @@ const render=()=>{
   q('#customerOrderCount').textContent=String(d.orders.length);
   q('#customerQuoteCount').textContent=String(d.quoteRequests.filter(x=>!['CLOSED','CANCELLED'].includes(x.status)).length);
   q('#customerSince').textContent=fmt(d.customer.customerSince).split(',')[0];
+  q('#customerPortalCode').textContent=d.customerPortalCode||'—';
+  q('#customerPortalLink').href=d.customerPortalUrl||'klient.html';
   q('#customerSync').textContent='Dane aktualne · '+new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
   q('#customerOrders').innerHTML=d.orders.length?d.orders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
@@ -90,6 +92,14 @@ q('#customerQuoteForm').addEventListener('submit',async(ev)=>{
     })});
     portalData=data;render();ev.currentTarget.reset();status.textContent='Zapytanie zostało wysłane. Odpowiedź serwisanta pojawi się w sekcji „Wyceny i rozmowy”.';status.hidden=false;
   }catch(e){status.textContent=e.message;status.hidden=false;}finally{btn.disabled=false;}
+});
+q('#copyCustomerCode').addEventListener('click',async()=>{
+  const code=portalData?.customerPortalCode||'';
+  if(!code)return;
+  const button=q('#copyCustomerCode');
+  try{await navigator.clipboard.writeText(code);button.textContent='Skopiowano';}
+  catch{button.textContent=code;}
+  window.setTimeout(()=>{button.textContent='Kopiuj kod';},1600);
 });
 q('#customerLogout').addEventListener('click',()=>showLogin());
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void load();});

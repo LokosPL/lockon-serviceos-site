@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0b0d10">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech https://speed.cloudflare.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
   <title>Panel mobilny — LockOn ServiceOS</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
@@ -133,6 +133,26 @@
       <div id="financePoints" class="mobile-finance-points"></div>
     </section>
 
+    <section id="view-support" class="panel-view" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>POMOC LOCKON</span><h1>Pomoc i konsultant</h1></div><button id="refreshSupport" type="button">↻</button></div>
+      <div id="mobileSupportState" class="mobile-support-state"></div>
+      <section class="mobile-help-chat">
+        <div id="mobileHelpMessages" class="mobile-help-messages"></div>
+        <form id="mobileHelpForm" class="mobile-help-compose">
+          <textarea id="mobileHelpInput" maxlength="1500" rows="2" placeholder="Np. „zlecenie 123 statusy” albo „jak działają przekazania?”"></textarea>
+          <button type="submit">Wyślij</button>
+        </form>
+        <button id="mobileRequestConsultant" class="mobile-request-consultant" type="button">Poproś konsultanta o dołączenie</button>
+      </section>
+
+      <section class="support-staff-only" hidden>
+        <div class="panel-section-head"><div><span>WSPARCIE LOCKON</span><h2>Aktywni użytkownicy</h2></div><small>Treść rozmowy jest dostępna dopiero po prośbie użytkownika o konsultanta.</small></div>
+        <div id="mobileSupportPresence" class="mobile-support-presence"></div>
+        <div class="panel-section-head"><div><span>KOLEJKA</span><h2>Prośby o konsultanta</h2></div></div>
+        <div id="mobileSupportTickets" class="mobile-support-tickets"></div>
+      </section>
+    </section>
+
     <section id="view-admin" class="panel-view owner-only" hidden>
       <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>OWNER</span><h1>Administracja</h1></div><button id="refreshAdmin" type="button">↻</button></div>
       <div class="admin-mobile-stats">
@@ -146,7 +166,10 @@
         <button id="logoutEveryone" type="button">Wyloguj wszystkich poza mną</button>
       </div>
 
-      <div class="panel-section-head"><div><span>KONTA</span><h2>Użytkownicy</h2></div></div>
+      <div class="panel-section-head"><div><span>DO AKCEPTACJI</span><h2>Nowe wnioski</h2></div><small>Jako właściciel możesz zaakceptować konto bez przechodzenia do aplikacji na komputerze.</small></div>
+      <div id="adminPending" class="panel-list admin-pending-list"></div>
+
+      <div class="panel-section-head"><div><span>KONTA I UPRAWNIENIA</span><h2>Zespół</h2></div><small>Główna rola, punkty i dodatkowe Wsparcie LockOn są ustawiane osobno.</small></div>
       <div id="adminUsers" class="panel-list"></div>
 
       <div class="panel-section-head"><div><span>PUNKTY</span><h2>Serwisy i lokalizacje</h2></div></div>
@@ -198,6 +221,7 @@
     <button data-panel-nav="transfers"><span>⇄</span><b>Przekazania</b></button>
     <button class="quote-staff-only" data-panel-nav="quotes" hidden><span>✉</span><b>Wyceny</b></button>
     <button class="finance-only" data-panel-nav="earnings" hidden><span>zł</span><b>Rozliczenia</b></button>
+    <button data-panel-nav="support"><span>?</span><b>Pomoc</b></button>
     <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Admin</b></button>
   </nav>
 

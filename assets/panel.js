@@ -40,6 +40,10 @@
   let transferFilter = '';
   let orderFilter = 'ALL';
   let activeOrderId = '';
+  let supportConversation = null;
+  let supportPresence = [];
+  let supportTickets = [];
+  let mobileHelpToolResult = null;
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
@@ -105,6 +109,7 @@
   const canReadFinance = () => FINANCE_READ.has(role());
   const canHandleCustomerQuotes = () => CUSTOMER_QUOTE_STAFF.has(role());
   const isOwner = () => role() === 'OWNER';
+  const canSupportStaff = () => isOwner() || role() === 'SUPPORT' || me?.user?.supportEnabled === true;
   const pointIds = () => (me?.points || []).map((point) => point.id);
   const canOperatePoint = (pointId) => ['OWNER','BOSS'].includes(role()) || pointIds().includes(pointId);
 
@@ -121,6 +126,7 @@
     if (name === 'earnings') void loadFinance();
     if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
+    if (name === 'support') void loadSupport();
   };
 
   const formatDate = (value) => {
@@ -145,6 +151,7 @@
     document.querySelectorAll('.service-edit-only').forEach((el) => { el.hidden = !canEditService(); });
     document.querySelectorAll('.finance-only').forEach((el) => { el.hidden = !canReadFinance(); });
     document.querySelectorAll('.quote-staff-only').forEach((el) => { el.hidden = !canHandleCustomerQuotes(); });
+    document.querySelectorAll('.support-staff-only').forEach((el) => { el.hidden = !canSupportStaff(); });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
@@ -597,6 +604,202 @@
     }catch(error){toast(error.message||'Nie udało się zamknąć zapytania.','error');}
   };
 
+  const mobileSupportAuthor=(author)=>({user:'Ty',assistant:'Bot ServiceOS',support:'Konsultant',system:'ServiceOS'}[author]||'ServiceOS');
+
+  const runMobileLocalTool = async (action) => {
+    mobileHelpToolResult={kind:action.type==='SPEED_TEST'?'speed':'diag',title:action.type==='SPEED_TEST'?'Test internetu':'Diagnostyka ServiceOS',lines:['Trwa pomiar…']};
+    renderMobileSupport();
+    try{
+      if(action.type==='SPEED_TEST'){
+        const samples=[];
+        for(let index=0;index<3;index+=1){
+          const started=performance.now();
+          const response=await fetch('https://speed.cloudflare.com/__down?bytes=1000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          if(!response.ok)throw new Error('Serwer testowy: HTTP '+response.status);
+          await response.arrayBuffer();samples.push(performance.now()-started);
+        }
+        const started=performance.now();
+        const response=await fetch('https://speed.cloudflare.com/__down?bytes=5000000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+        if(!response.ok)throw new Error('Serwer testowy: HTTP '+response.status);
+        const bytes=(await response.arrayBuffer()).byteLength;
+        const elapsed=Math.max(1,performance.now()-started);
+        const download=((bytes*8)/(elapsed*1000)).toFixed(1);
+        const latency=Math.round(samples.reduce((sum,value)=>sum+value,0)/samples.length);
+        let upload='nie udało się zmierzyć';
+        try{
+          const uploadBytes=1000000;
+          const body=new Uint8Array(uploadBytes);
+          const upStarted=performance.now();
+          const up=await fetch('https://speed.cloudflare.com/__up',{method:'POST',body,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/octet-stream'}});
+          if(!up.ok)throw new Error('HTTP '+up.status);
+          await up.arrayBuffer().catch(()=>new ArrayBuffer(0));
+          upload=((uploadBytes*8)/(Math.max(1,performance.now()-upStarted)*1000)).toFixed(1)+' Mb/s';
+        }catch{}
+        const quality=Number(download)>=100&&latency<=35?'Bardzo dobre':Number(download)>=30&&latency<=70?'Dobre':Number(download)>=10&&latency<=120?'Wystarczające':'Słabe';
+        mobileHelpToolResult={kind:'speed',title:'Wynik testu internetu',lines:['Pobieranie: '+download+' Mb/s','Wysyłanie: '+upload,'Opóźnienie: '+latency+' ms','Ocena łącza: '+quality]};
+      }else{
+        let internetOk=false,internetLatency=null,apiOk=false,apiLatency=null,apiError='';
+        try{
+          const start=performance.now();const response=await fetch('https://speed.cloudflare.com/__down?bytes=1000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          internetOk=response.ok;await response.arrayBuffer();internetLatency=Math.round(performance.now()-start);
+        }catch{}
+        try{
+          const start=performance.now();const response=await fetch(apiBaseUrl+'/health',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          apiOk=response.ok;apiLatency=Math.round(performance.now()-start);if(!response.ok)apiError='HTTP '+response.status;
+        }catch(error){apiError=error?.message||'Brak połączenia';}
+        mobileHelpToolResult={kind:'diag',title:'Diagnostyka ServiceOS',lines:[
+          'Internet: '+(internetOk?'działa':'brak odpowiedzi')+(internetLatency==null?'':' · '+internetLatency+' ms'),
+          'Centralne API: '+(apiOk?'działa':'problem')+(apiLatency==null?'':' · '+apiLatency+' ms'),
+          ...(apiError?['API: '+apiError]:[])
+        ]};
+      }
+    }catch(error){
+      mobileHelpToolResult={kind:'diag',title:'Nie udało się wykonać pomiaru',lines:[error?.message||'Błąd diagnostyki.']};
+    }
+    renderMobileSupport();
+  };
+
+  const runMobileHelpAction = async (action) => {
+    if(!action)return;
+    if(action.type==='SPEED_TEST'||action.type==='CONNECTIVITY_TEST'){
+      await runMobileLocalTool(action);return;
+    }
+    if(action.type==='BROWSER_SEARCH'&&action.query){
+      const query=String(action.query).trim().slice(0,180);
+      const url=action.provider==='YOUTUBE'
+        ? 'https://www.youtube.com/results?search_query='+encodeURIComponent(query)
+        : 'https://www.google.com/search?q='+encodeURIComponent(query);
+      window.open(url,'_blank','noopener,noreferrer');
+      return;
+    }
+    if(action.type==='OPEN_ORDER'&&action.orderId){
+      showView('orders');
+      await loadOrders();
+      await openOrder(action.orderId);
+      return;
+    }
+    if(action.type==='OPEN_USER'&&action.userId&&isOwner()){
+      showView('admin');
+      await loadAdmin();
+      const card=document.querySelector('[data-mobile-admin-user="'+CSS.escape(action.userId)+'"]');
+      card?.scrollIntoView({behavior:'smooth',block:'center'});
+      card?.querySelector('details')?.setAttribute('open','');
+      return;
+    }
+    if(action.type==='NAVIGATE'&&action.target){
+      const target=String(action.target);
+      if(['service','administration'].includes(target)){
+        showView(target==='service'?'orders':'admin');
+      }else if(target==='earnings')showView('earnings');
+      else if(target==='support')showView('support');
+      else if(target==='settings')document.getElementById('panelAccountButton')?.click();
+    }
+  };
+
+  const renderMobileSupport = () => {
+    const stateHost=document.getElementById('mobileSupportState');
+    const messagesHost=document.getElementById('mobileHelpMessages');
+    if(!stateHost||!messagesHost)return;
+    const state=supportConversation?.consultantState||'BOT';
+    const joinedName=supportConversation?.assignedSupportName||'Konsultant';
+    stateHost.className='mobile-support-state '+state.toLowerCase();
+    stateHost.innerHTML=state==='JOINED'
+      ? '<strong>'+esc(joinedName)+' jest w rozmowie</strong><span>Twoje wiadomości trafiają teraz do konsultanta. Bot nie odpowiada automatycznie.</span>'
+      : state==='WAITING'
+        ? '<strong>Czekasz na konsultanta</strong><span>Możesz nadal korzystać z bota. Gdy konsultant dołączy, pojawi się tutaj automatycznie.</span>'
+        : '<strong>Najpierw pomaga bot ServiceOS</strong><span>Bot zna aplikację, zlecenia w Twoim zakresie i może przenieść Cię do właściwego miejsca.</span>';
+    const request=document.getElementById('mobileRequestConsultant');
+    if(request){
+      request.hidden=state==='JOINED';
+      request.disabled=state==='WAITING';
+      request.textContent=state==='WAITING'?'Prośba wysłana — czekasz na konsultanta':'Poproś konsultanta o dołączenie';
+    }
+    const thread=(supportConversation?.messages||[]).map(message=>{
+      const action=message.action&&message.action.type!=='WEBSITE_CODE'
+        ? '<button type="button" class="mobile-help-action" data-mobile-help-action="'+esc(encodeURIComponent(JSON.stringify(message.action)))+'">'+esc(message.action.label||'Otwórz w ServiceOS')+' →</button>'
+        : '';
+      return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
+    }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Możesz zapytać o zlecenie, proces lub obsługę ServiceOS.</div>';
+    const tool=mobileHelpToolResult
+      ? '<article class="mobile-help-tool '+esc(mobileHelpToolResult.kind)+'"><strong>'+esc(mobileHelpToolResult.title)+'</strong>'+mobileHelpToolResult.lines.map(line=>'<span>'+esc(line)+'</span>').join('')+'</article>'
+      : '';
+    messagesHost.innerHTML=thread+tool;
+    messagesHost.scrollTop=messagesHost.scrollHeight;
+  };
+
+  const renderMobileSupportStaff = () => {
+    if(!canSupportStaff())return;
+    const presenceHost=document.getElementById('mobileSupportPresence');
+    const ticketsHost=document.getElementById('mobileSupportTickets');
+    if(presenceHost){
+      presenceHost.innerHTML=supportPresence.map(person=>
+        '<article class="mobile-presence-row '+esc(String(person.consultantState||'BOT').toLowerCase())+'"><i></i><div><strong>'+esc(person.name)+'</strong><span>'+esc(roleLabel(person.role))+' · '+esc((person.clientTypes||[]).map(x=>x==='WEB'?'WWW / telefon':'desktop').join(' + '))+'</span></div><b>'+esc(person.consultantState==='WAITING'?'CZEKA':person.consultantState==='JOINED'?'W ROZMOWIE':'BOT')+'</b></article>'
+      ).join('')||'<div class="panel-list-empty">Brak aktywnych użytkowników.</div>';
+    }
+    if(ticketsHost){
+      ticketsHost.innerHTML=supportTickets.filter(ticket=>ticket.status==='OPEN').map(ticket=>{
+        const msgs=(ticket.messages||[]).map(message=>'<div class="mobile-ticket-message '+esc(message.author)+'"><b>'+esc(mobileSupportAuthor(message.author))+'</b><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p><small>'+esc(formatDate(message.createdAt))+'</small></div>').join('');
+        return '<article class="mobile-support-ticket"><div class="mobile-support-ticket-head"><div><strong>'+esc(ticket.userName)+'</strong><span>'+esc(ticket.userEmail)+' · '+esc(ticket.pointName)+'</span></div><b>'+(ticket.assignedSupportUserId?'DOŁĄCZONO':'CZEKA')+'</b></div>'+
+          '<div class="mobile-ticket-thread">'+msgs+'</div>'+
+          '<div class="mobile-ticket-actions">'+
+            (!ticket.assignedSupportUserId?'<button class="mini-action primary" data-mobile-support-take="'+esc(ticket.id)+'">Dołącz</button>':'')+
+            '<input data-mobile-support-reply-input="'+esc(ticket.id)+'" maxlength="2000" placeholder="Napisz do użytkownika…">'+
+            '<button class="mini-action primary" data-mobile-support-reply="'+esc(ticket.id)+'">Wyślij</button>'+
+            '<button class="mini-action" data-mobile-support-close="'+esc(ticket.id)+'">Zamknij</button>'+
+          '</div></article>';
+      }).join('')||'<div class="panel-list-empty">Nikt nie czeka teraz na konsultanta.</div>';
+    }
+  };
+
+  const loadSupport = async (silent=false) => {
+    try{
+      const jobs=[api('/support/conversation')];
+      if(canSupportStaff())jobs.push(api('/support/presence'),api('/support/tickets'));
+      const result=await Promise.all(jobs);
+      supportConversation=result[0];
+      if(canSupportStaff()){supportPresence=result[1]||[];supportTickets=result[2]||[];}
+      renderMobileSupport();
+      renderMobileSupportStaff();
+    }catch(error){if(!silent)toast(error.message||'Nie udało się pobrać pomocy.','error');}
+  };
+
+  const sendMobileHelp = async (message) => {
+    const value=String(message||'').trim();
+    if(!value)return;
+    try{
+      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value})});
+      if(!supportConversation)supportConversation={id:'',status:'OPEN',messages:[],consultantState:'BOT'};
+      supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
+      supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
+      renderMobileSupport();
+      if(result.action&&['SPEED_TEST','CONNECTIVITY_TEST'].includes(result.action.type))void runMobileLocalTool(result.action);
+      window.setTimeout(()=>void loadSupport(true),500);
+    }catch(error){toast(error.message||'Nie udało się wysłać wiadomości.','error');}
+  };
+
+  const requestMobileConsultant = async () => {
+    try{
+      await api('/support/request',{method:'POST',body:JSON.stringify({pointId:activePointId||me?.point?.id||'',message:'Proszę konsultanta o dołączenie do rozmowy.'})});
+      toast('Prośba o konsultanta została wysłana.');
+      await loadSupport(true);
+    }catch(error){toast(error.message||'Nie udało się poprosić konsultanta.','error');}
+  };
+
+  const mobileSupportAction = async (id,action) => {
+    try{
+      if(action==='reply'){
+        const input=document.querySelector('[data-mobile-support-reply-input="'+CSS.escape(id)+'"]');
+        const message=String(input?.value||'').trim();
+        if(!message)return;
+        await api('/support/tickets/'+encodeURIComponent(id)+'/reply',{method:'POST',body:JSON.stringify({message})});
+      }else{
+        if(action==='close'&&!window.confirm('Zamknąć tę rozmowę wsparcia?'))return;
+        await api('/support/tickets/'+encodeURIComponent(id)+'/'+action,{method:'POST',body:'{}'});
+      }
+      await loadSupport(true);
+    }catch(error){toast(error.message||'Operacja wsparcia nie powiodła się.','error');}
+  };
+
   const loadFinance = async () => {
     if (!canReadFinance()) return;
     financeData = await api('/finance/revenues');
@@ -610,6 +813,7 @@
     document.getElementById('adminBlocked').textContent = String(admin.system?.blockedUsers ?? 0);
     document.getElementById('adminServices').textContent = String(admin.system?.servicePoints ?? 0);
     document.getElementById('adminTransfers').textContent = String(admin.system?.openTransfers ?? 0);
+    renderAdminPending();
     renderAdminUsers();
     renderAdminPoints();
     renderAdminAuditSelectors();
@@ -748,23 +952,79 @@
   };
 
   const roleLabel=(role)=>AUDIT_ROLE_LABELS[role]||'Bez roli';
-  const renderAdminUsers = () => {
-    const host = document.getElementById('adminUsers');
-    const users = admin?.users || [];
+  const ADMIN_PRIMARY_ROLES=['BOSS','COORDINATOR','TECHNICIAN','USER'];
+
+  const renderAdminPending = () => {
+    const host=document.getElementById('adminPending');
+    if(!host)return;
+    const users=admin?.pendingUsers||[];
     const points=admin?.points||[];
-    host.innerHTML = users.map((user) => {
-      const owner = user.role === 'OWNER';
-      const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
-      const roles=['BOSS','COORDINATOR','SUPPORT','TECHNICIAN','USER'];
-      return '<article class="admin-user-card">' +
-        '<div><strong>' + esc(user.name) + (user.blocked ? ' <span class="blocked-label">· ZABLOKOWANE</span>' : '') + '</strong><span>' + esc(user.email) + '</span><small>' + esc(roleLabel(user.role)) + ' · ' + esc(assigned) + ' · ostatnio ' + esc(formatDate(user.lastLoginAt)) + '</small></div>' +
-        (!owner ? '<details class="mobile-account-edit"><summary>Edytuj konto</summary><label>Rola<select data-admin-role="' + esc(user.id) + '">' + roles.map(r=>'<option value="'+r+'"'+(r===user.role?' selected':'')+'>'+esc(roleLabel(r))+'</option>').join('') + '</select></label><div class="mobile-account-points">' + points.map(p=>'<label><input type="checkbox" data-admin-point-user="'+esc(user.id)+'" value="'+esc(p.id)+'"'+((user.pointIds||[]).includes(p.id)?' checked':'')+'>'+esc(p.name)+'</label>').join('') + '</div>' + (user.role==='TECHNICIAN'?'<label>Udział serwisanta (%)<input type="number" min="0" max="100" step="0.01" data-admin-split="'+esc(user.id)+'" value="'+esc(user.technicianSplitPercent??50)+'"></label>':'') + '<button class="mini-action primary" data-admin-save-user="'+esc(user.id)+'">Zapisz zmiany</button></details>' : '') +
-        '<div class="admin-user-actions">' +
-          (!owner ? '<button class="mini-action ' + (user.blocked ? 'primary' : 'danger') + '" data-admin-block="' + esc(user.id) + '" data-blocked="' + (user.blocked ? '1' : '0') + '">' + (user.blocked ? 'Odblokuj' : 'Zablokuj') + '</button>' : '') +
-          '<button class="mini-action" data-admin-logout-user="' + esc(user.id) + '">Wyloguj</button>' +
-        '</div>' +
+    host.innerHTML=users.map((user)=>{
+      const requested=user.requestedPoint||null;
+      const legacySupport=requested?.requestedRole==='SUPPORT';
+      const suggested=ADMIN_PRIMARY_ROLES.includes(requested?.requestedRole)?requested.requestedRole:'USER';
+      const requestedText=requested?(requested.pointName+(requested.city?' · '+requested.city:'')):'Nie podano punktu';
+      return '<article class="admin-pending-card" data-pending-user="'+esc(user.id)+'">'+
+        '<div class="admin-pending-head"><div><strong>'+esc(user.name)+'</strong><span>'+esc(user.email)+'</span></div><b>OCZEKUJE</b></div>'+
+        '<div class="admin-pending-request"><span>Zgłoszony punkt<strong>'+esc(requestedText)+'</strong></span><span>Proponowana rola<strong>'+esc(roleLabel(suggested))+'</strong></span></div>'+
+        '<label class="mobile-admin-field"><span>Główna rola po akceptacji</span><select data-pending-role="'+esc(user.id)+'">'+ADMIN_PRIMARY_ROLES.map(role=>'<option value="'+role+'"'+(role===suggested?' selected':'')+'>'+esc(roleLabel(role))+'</option>').join('')+'</select></label>'+
+        (requested?'<label class="mobile-support-toggle requested"><input type="checkbox" data-pending-requested="'+esc(user.id)+'" checked><span><strong>Użyj zgłoszonego punktu</strong><small>ServiceOS przypisze istniejący punkt o tej nazwie lub utworzy go, jeśli jeszcze go nie ma.</small></span></label>':'')+
+        '<div class="mobile-account-points">'+points.map(point=>'<label><input type="checkbox" data-pending-point-user="'+esc(user.id)+'" value="'+esc(point.id)+'"><span>'+esc(point.name)+'<small>'+esc(point.city||'')+'</small></span></label>').join('')+'</div>'+
+        '<label class="mobile-support-toggle"><input type="checkbox" data-pending-support="'+esc(user.id)+'"'+(legacySupport?' checked':'')+'><span><strong>Wsparcie LockOn</strong><small>Dodatkowe uprawnienie konsultanta. Nie zastępuje głównej roli.</small></span></label>'+
+        '<div class="admin-pending-actions"><button class="mini-action primary" data-admin-approve="'+esc(user.id)+'">Akceptuj konto</button><button class="mini-action danger" data-admin-reject="'+esc(user.id)+'">Odrzuć</button></div>'+
       '</article>';
-    }).join('') || '<div class="panel-list-empty">Brak użytkowników.</div>';
+    }).join('')||'<div class="panel-list-empty">Brak nowych wniosków do akceptacji.</div>';
+  };
+
+  const approveAdminUser = async (id) => {
+    const role=document.querySelector('[data-pending-role="'+CSS.escape(id)+'"]')?.value||'USER';
+    const supportEnabled=document.querySelector('[data-pending-support="'+CSS.escape(id)+'"]')?.checked===true;
+    const useRequested=document.querySelector('[data-pending-requested="'+CSS.escape(id)+'"]')?.checked===true;
+    const pointIds=role==='BOSS'?[]:[...document.querySelectorAll('[data-pending-point-user="'+CSS.escape(id)+'"]:checked')].map(el=>el.value);
+    try{
+      await api('/admin/users/'+encodeURIComponent(id)+'/approve',{method:'POST',body:JSON.stringify({role,pointIds,createRequestedPoint:role!=='BOSS'&&useRequested,supportEnabled})});
+      toast('Konto zostało zaakceptowane.');
+      await loadAdmin();
+    }catch(error){toast(error.message||'Nie udało się zaakceptować konta.','error');}
+  };
+
+  const rejectAdminUser = async (id) => {
+    if(!window.confirm('Odrzucić ten wniosek o dostęp?'))return;
+    try{
+      await api('/admin/users/'+encodeURIComponent(id)+'/reject',{method:'POST',body:'{}'});
+      toast('Wniosek został odrzucony.');
+      await loadAdmin();
+    }catch(error){toast(error.message||'Nie udało się odrzucić wniosku.','error');}
+  };
+
+  const renderAdminUsers = () => {
+    const host=document.getElementById('adminUsers');
+    const users=admin?.users||[];
+    const points=admin?.points||[];
+    host.innerHTML=users.map((user)=>{
+      const owner=user.role==='OWNER';
+      const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
+      const effectiveRole=user.role==='SUPPORT'?'USER':(user.role||'USER');
+      const supportEnabled=user.supportEnabled===true||user.role==='SUPPORT'||owner;
+      return '<article class="admin-user-card admin-user-card-v2 '+(user.blocked?'blocked':'')+'" data-mobile-admin-user="'+esc(user.id)+'">'+
+        '<div class="mobile-admin-user-head"><div><strong>'+esc(user.name)+'</strong><span>'+esc(user.email)+'</span></div><div class="mobile-admin-badges">'+
+          (user.blocked?'<b class="danger">ZABLOKOWANE</b>':'<b>AKTYWNE</b>')+
+          (supportEnabled&&!owner?'<b class="support">WSPARCIE</b>':'')+
+        '</div></div>'+
+        '<div class="mobile-admin-summary"><span><small>Główna rola</small><strong>'+esc(roleLabel(user.role))+'</strong></span><span><small>Punkty</small><strong>'+esc(assigned)+'</strong></span><span><small>Ostatnie logowanie</small><strong>'+esc(formatDate(user.lastLoginAt))+'</strong></span></div>'+
+        (user.blocked&&user.blockedReason?'<div class="mobile-block-reason">'+esc(user.blockedReason)+'</div>':'')+
+        (!owner?'<details class="mobile-account-edit"><summary>Edytuj konto i uprawnienia</summary>'+
+          '<label class="mobile-admin-field"><span>Główna rola</span><select data-admin-role="'+esc(user.id)+'">'+ADMIN_PRIMARY_ROLES.map(role=>'<option value="'+role+'"'+(role===effectiveRole?' selected':'')+'>'+esc(roleLabel(role))+'</option>').join('')+'</select></label>'+
+          '<div class="mobile-account-points">'+points.map(p=>'<label><input type="checkbox" data-admin-point-user="'+esc(user.id)+'" value="'+esc(p.id)+'"'+((user.pointIds||[]).includes(p.id)?' checked':'')+'><span>'+esc(p.name)+'<small>'+esc(p.city||'')+'</small></span></label>').join('')+'</div>'+
+          (effectiveRole==='TECHNICIAN'?'<label class="mobile-admin-field"><span>Udział serwisanta (%)</span><input type="number" min="0" max="100" step="0.01" data-admin-split="'+esc(user.id)+'" value="'+esc(user.technicianSplitPercent??50)+'"></label>':'')+
+          '<label class="mobile-support-toggle"><input type="checkbox" data-admin-support="'+esc(user.id)+'"'+(supportEnabled?' checked':'')+'><span><strong>Wsparcie LockOn</strong><small>Może dołączać do rozmów użytkowników z przypisanych punktów.</small></span></label>'+
+          '<button class="mini-action primary wide" data-admin-save-user="'+esc(user.id)+'">Zapisz uprawnienia</button></details>':'')+
+        '<div class="admin-user-actions">'+
+          (!owner?'<button class="mini-action '+(user.blocked?'primary':'danger')+'" data-admin-block="'+esc(user.id)+'" data-blocked="'+(user.blocked?'1':'0')+'">'+(user.blocked?'Odblokuj konto':'Zablokuj konto')+'</button>':'')+
+          '<button class="mini-action" data-admin-logout-user="'+esc(user.id)+'">Wyloguj urządzenia</button>'+
+        '</div>'+
+      '</article>';
+    }).join('')||'<div class="panel-list-empty">Brak użytkowników.</div>';
   };
 
   const saveAdminUser = async (id) => {
@@ -772,7 +1032,8 @@
     const pointIds=[...document.querySelectorAll('[data-admin-point-user="'+CSS.escape(id)+'"]:checked')].map(el=>el.value);
     const splitEl=document.querySelector('[data-admin-split="'+CSS.escape(id)+'"]');
     const technicianSplitPercent=role==='TECHNICIAN'?Number(splitEl?.value??50):null;
-    try{await api('/admin/users/'+encodeURIComponent(id)+'/access',{method:'POST',body:JSON.stringify({role,pointIds,technicianSplitPercent})});toast('Konto zostało zaktualizowane.');await loadAdmin();}catch(error){toast(error.message||'Nie udało się zapisać konta.','error');}
+    const supportEnabled=document.querySelector('[data-admin-support="'+CSS.escape(id)+'"]')?.checked===true;
+    try{await api('/admin/users/'+encodeURIComponent(id)+'/access',{method:'POST',body:JSON.stringify({role,pointIds,technicianSplitPercent,supportEnabled})});toast('Konto zostało zaktualizowane.');await loadAdmin();}catch(error){toast(error.message||'Nie udało się zapisać konta.','error');}
   };
 
   const renderAdminPoints = () => {
@@ -790,13 +1051,9 @@
   };
 
   const blockUser = async (id, currentlyBlocked) => {
-    const blocked = !currentlyBlocked;
-    let reason = '';
-    if (blocked) {
-      const answer = window.prompt('Powód blokady (opcjonalnie):','');
-      if (answer === null) return;
-      reason = answer;
-    }
+    const blocked=!currentlyBlocked;
+    if(!window.confirm(blocked?'Zablokować konto i natychmiast wylogować je ze wszystkich urządzeń?':'Odblokować to konto?'))return;
+    const reason=blocked?'Ręczna blokada konta przez właściciela':'';
     try {
       await api('/admin/users/' + encodeURIComponent(id) + '/block', {method:'POST',body:JSON.stringify({blocked,reason})});
       toast(blocked ? 'Konto zablokowane i wylogowane.' : 'Konto odblokowane.');
@@ -911,12 +1168,24 @@
       if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
+      const helpAction=event.target.closest('[data-mobile-help-action]');
+      if(helpAction){try{void runMobileHelpAction(JSON.parse(decodeURIComponent(helpAction.dataset.mobileHelpAction)));}catch{}return;}
+      const supportTake=event.target.closest('[data-mobile-support-take]');
+      if(supportTake){void mobileSupportAction(supportTake.dataset.mobileSupportTake,'take');return;}
+      const supportReply=event.target.closest('[data-mobile-support-reply]');
+      if(supportReply){void mobileSupportAction(supportReply.dataset.mobileSupportReply,'reply');return;}
+      const supportClose=event.target.closest('[data-mobile-support-close]');
+      if(supportClose){void mobileSupportAction(supportClose.dataset.mobileSupportClose,'close');return;}
       const quoteReply=event.target.closest('[data-customer-quote-reply]');
       if(quoteReply){void replyCustomerQuote(quoteReply.dataset.customerQuoteReply);return;}
       const quotePrice=event.target.closest('[data-customer-quote-price]');
       if(quotePrice){void priceCustomerQuote(quotePrice.dataset.customerQuotePrice);return;}
       const quoteClose=event.target.closest('[data-customer-quote-close]');
       if(quoteClose){if(window.confirm('Zamknąć to zapytanie klienta?'))void closeCustomerQuote(quoteClose.dataset.customerQuoteClose);return;}
+      const approveUserButton=event.target.closest('[data-admin-approve]');
+      if(approveUserButton){void approveAdminUser(approveUserButton.dataset.adminApprove);return;}
+      const rejectUserButton=event.target.closest('[data-admin-reject]');
+      if(rejectUserButton){void rejectAdminUser(rejectUserButton.dataset.adminReject);return;}
       const block = event.target.closest('[data-admin-block]');
       if (block) { void blockUser(block.dataset.adminBlock,block.dataset.blocked === '1'); return; }
       const saveAdminUserButton = event.target.closest('[data-admin-save-user]');
@@ -947,6 +1216,9 @@
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
     document.getElementById('refreshCustomerQuotes')?.addEventListener('click',()=>void loadCustomerQuotes());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
+    document.getElementById('refreshSupport')?.addEventListener('click',()=>void loadSupport());
+    document.getElementById('mobileHelpForm')?.addEventListener('submit',(event)=>{event.preventDefault();const input=document.getElementById('mobileHelpInput');const value=input?.value||'';if(input)input.value='';void sendMobileHelp(value);});
+    document.getElementById('mobileRequestConsultant')?.addEventListener('click',()=>void requestMobileConsultant());
     document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
     document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
@@ -1011,6 +1283,9 @@
     window.setInterval(()=>{
       if(canHandleCustomerQuotes()&&document.visibilityState==='visible') void loadCustomerQuotes();
     },20000);
+    window.setInterval(()=>{
+      if(document.visibilityState==='visible'&&document.getElementById('view-support')?.classList.contains('active')) void loadSupport(true);
+    },4000);
   };
 
   void boot();
