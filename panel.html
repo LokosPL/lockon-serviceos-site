@@ -83,8 +83,10 @@
             <label><span>IMEI</span><input name="imei" maxlength="16" inputmode="numeric"></label>
             <label><span>Numer seryjny</span><input name="serialNumber" maxlength="120"></label>
             <label><span>Typ</span><select name="orderType"><option value="REPAIR">Naprawa</option><option value="COMPLAINT">Reklamacja</option></select></label>
-            <label><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
-            <label class="full service-edit-only" hidden><span>Cena orientacyjna (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
+            <label class="full"><span>Sposób obsługi</span><select id="mobileHandlingMode" name="handlingMode"><option value="STANDARD">Normalny serwis</option><option value="TRANSFER_ONLY">Tylko przekazanie urządzenia</option></select></label>
+            <div id="mobileTransferOnlyInfo" class="mobile-mode-info full" hidden><strong>Tylko przekazanie</strong><span>Bez etapów diagnozy i naprawy. Możesz przekazywać urządzenie między punktami albo anulować zlecenie.</span></div>
+            <label data-standard-service><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
+            <label class="full service-edit-only" data-standard-service hidden><span>Cena orientacyjna (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
             <label class="full"><span>Opis usterki</span><textarea name="issueDescription" rows="5" maxlength="2000" required></textarea></label>
             <label class="full"><span>Uwagi do urządzenia</span><textarea name="deviceNotes" rows="3" maxlength="1000"></textarea></label>
           </div>
