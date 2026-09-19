@@ -91,7 +91,15 @@
 
     const asset = release?.assets?.find(item => item.name === 'LockOn-ServiceOS-Setup.exe');
     if (asset?.browser_download_url) {
-      document.querySelectorAll('.download-link').forEach(el => el.href = asset.browser_download_url);
+      document.querySelectorAll('.download-link').forEach(el => {
+        el.dataset.downloadUrl = asset.browser_download_url;
+        let accepted = true;
+        if (el.hasAttribute('data-requires-onboarding')) {
+          try { accepted = localStorage.getItem('lockon.employee.onboarding.v1') === 'accepted'; }
+          catch { accepted = false; }
+        }
+        el.href = accepted ? asset.browser_download_url : '#start';
+      });
     }
 
     const digest = normalizeDigest(asset?.digest);

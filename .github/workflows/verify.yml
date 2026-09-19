@@ -44,6 +44,13 @@ jobs:
           grep -q 'lockonapi.compute' index.html
           grep -q 'navLoginButton' index.html
           grep -q 'webAuthCode' index.html
+          grep -q 'agreeEmployee' index.html
+          grep -q 'data-requires-onboarding' index.html
+          grep -q 'lockon.employee.onboarding.v1' assets/home-v2.js
+          grep -q 'lockon.employee.onboarding.v1' assets/panel.js
+          grep -q 'Połącz urządzenie' index.html
+          grep -q 'orderWorkflowFilters' panel.html
+          grep -q 'workflow' assets/panel.js
           grep -q '/service/orders' assets/panel.js
           grep -q '/service/transfers' assets/panel.js
           grep -q 'RETURN_HOME' assets/panel.js

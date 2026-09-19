@@ -35,8 +35,9 @@
       <div class="panel-hero">
         <span class="panel-kicker">SERVICEOS · ONLINE</span>
         <h1 id="panelGreeting">Dzień dobry.</h1>
-        <p>Najważniejsze rzeczy z serwisu masz teraz pod ręką.</p>
+        <p>Najpierw zobacz, co wymaga Twojej reakcji.</p>
       </div>
+      <div id="panelFocus" class="panel-focus"></div>
       <div class="panel-kpis">
         <article><span>Aktywne zlecenia</span><strong id="kpiActive">—</strong><small>w Twoim zakresie</small></article>
         <article><span>Przekazania</span><strong id="kpiTransfers">—</strong><small>w toku</small></article>
@@ -95,7 +96,8 @@
 
     <section id="view-orders" class="panel-view">
       <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>SERWIS</span><h1>Zlecenia</h1></div><button id="refreshOrders" type="button">↻</button></div>
-      <div class="panel-search"><span>⌕</span><input id="orderSearch" placeholder="Numer, klient, marka lub model"></div>
+      <div class="panel-search"><span>⌕</span><input id="orderSearch" placeholder="Numer, klient, marka, model lub następna akcja"></div>
+      <div id="orderWorkflowFilters" class="order-workflow-filters"></div>
       <div id="ordersList" class="panel-list panel-orders-list"></div>
     </section>
 
@@ -134,8 +136,8 @@
         <form id="mobilePointForm" class="panel-form-card compact">
           <label><span>Nazwa</span><input name="name" required maxlength="90"></label>
           <label><span>Miasto</span><input name="city" required maxlength="90"></label>
-          <label class="check"><input name="serviceEnabled" type="checkbox" checked><span>Ma własny serwis</span></label>
-          <label class="check"><input name="acceptsExternalRepairs" type="checkbox" checked><span>Przyjmuje urządzenia z innych punktów</span></label>
+          <label class="check"><input name="serviceEnabled" type="checkbox"><span>Ręczny serwis bez aktywnego TECHNICIAN</span></label>
+          <label class="check"><input name="acceptsExternalRepairs" type="checkbox"><span>Ręcznie przyjmuj przekazania bez aktywnego TECHNICIAN</span></label>
           <label><span>Notatka</span><textarea name="serviceNote" maxlength="500" rows="2"></textarea></label>
           <button class="panel-primary-button" type="submit">Dodaj lokalizację</button>
         </form>
