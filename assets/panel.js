@@ -170,10 +170,21 @@
 
   const renderHome = () => {
     const host = document.getElementById('homeOrders');
+    const focus = document.getElementById('panelFocus');
     if (!canReadService()) {
       host.innerHTML = '<div class="panel-list-empty">Twoja rola nie ma dostępu do modułu Serwis.</div>';
+      if (focus) focus.innerHTML = '';
       renderKpis();
       return;
+    }
+    const first = orders.find((order) => order.workflow?.nextActionCode !== 'NONE');
+    if (focus) {
+      focus.innerHTML = first?.workflow
+        ? '<button type="button" data-open-order="' + esc(first.id) + '" class="' + esc(String(first.workflow.attentionCode || 'ACTIVE').toLowerCase()) + '">' +
+            '<div><span>NASTĘPNA AKCJA · #' + esc(first.orderNumber) + '</span><strong>' + esc(first.workflow.nextAction) + '</strong><small>' + esc(first.brand + ' ' + first.model) + ' · ' + esc(first.workflow.stageLabel) + (first.estimatedCompletionAt ? ' · termin ' + esc(formatDate(first.estimatedCompletionAt)) : '') + '</small></div>' +
+            '<b>→</b>' +
+          '</button>'
+        : '<div class="panel-focus-clear"><span>✓</span><strong>Brak pilnych działań w Twoim zakresie.</strong></div>';
     }
     host.innerHTML = orders.slice(0,4).map((order) => orderCard(order,true)).join('') || '<div class="panel-list-empty">Brak zleceń w Twoim zakresie.</div>';
     renderKpis();
