@@ -318,8 +318,8 @@
     const currentServicePointId = activeTransfer ? '' : (order.currentPointId || order.homePointId || order.pointId);
     const homePointId = order.homePointId || order.pointId;
     const canOperateCurrentPoint = Boolean(currentServicePointId) && activePointId === currentServicePointId && canOperatePoint(currentServicePointId);
-    const canEditOrderHere = canTransferOrderHere && !activeTransfer;
     const canTransferOrderHere = canTransferService() && canOperateCurrentPoint && !activeTransfer;
+    const canEditOrderHere = canEditService() && canOperateCurrentPoint && !activeTransfer;
     const canCancelOrderHere = canCancelService() && canOperateCurrentPoint && !activeTransfer;
     const transferOnly = order.handlingMode === 'TRANSFER_ONLY';
     const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId);
