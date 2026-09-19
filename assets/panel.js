@@ -31,6 +31,7 @@
   let me = null;
   let orders = [];
   let transfers = [];
+  let customerQuotes = [];
   let servicePoints = [];
   let admin = null;
   let auditEvents = [];
@@ -55,6 +56,7 @@
   const SERVICE_TRANSFER = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN','USER']);
   const SERVICE_MANAGE = new Set(['OWNER','BOSS','COORDINATOR']);
   const FINANCE_READ = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN']);
+  const CUSTOMER_QUOTE_STAFF = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN']);
 
   const esc = (value) => String(value ?? '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -101,6 +103,7 @@
   const canCancelService = () => canCreateService();
   const canManageService = () => SERVICE_MANAGE.has(role());
   const canReadFinance = () => FINANCE_READ.has(role());
+  const canHandleCustomerQuotes = () => CUSTOMER_QUOTE_STAFF.has(role());
   const isOwner = () => role() === 'OWNER';
   const pointIds = () => (me?.points || []).map((point) => point.id);
   const canOperatePoint = (pointId) => ['OWNER','BOSS'].includes(role()) || pointIds().includes(pointId);
@@ -108,6 +111,7 @@
   const showView = (name) => {
     if (name === 'admin' && !isOwner()) name = 'home';
     if (name === 'earnings' && !canReadFinance()) name = 'home';
+    if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'home';
     if (['new','orders','transfers'].includes(name) && !canReadService()) name = 'home';
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
     document.querySelectorAll('[data-panel-nav]').forEach((button) => button.classList.toggle('active', button.dataset.panelNav === name));
@@ -115,6 +119,7 @@
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
     if (name === 'earnings') void loadFinance();
+    if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
   };
 
@@ -139,6 +144,7 @@
     document.querySelectorAll('.management-only').forEach((el) => { el.hidden = !canManageService(); });
     document.querySelectorAll('.service-edit-only').forEach((el) => { el.hidden = !canEditService(); });
     document.querySelectorAll('.finance-only').forEach((el) => { el.hidden = !canReadFinance(); });
+    document.querySelectorAll('.quote-staff-only').forEach((el) => { el.hidden = !canHandleCustomerQuotes(); });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
@@ -512,6 +518,82 @@
     ).join('') || '<div class="panel-list-empty">Brak rozliczeń.</div>';
   };
 
+  const quoteStatusLabel=(status)=>({OPEN:'Oczekuje',QUOTED:'Wycena wysłana',CLOSED:'Zamknięte',CANCELLED:'Anulowane'}[status]||status);
+
+  const renderCustomerQuotes = () => {
+    const host=document.getElementById('customerQuotesList');
+    if(!host)return;
+    host.innerHTML=customerQuotes.map((item)=>{
+      const routed=item.routedPointName!==item.requestedPointName
+        ? '<small>Przekierowano: '+esc(item.requestedPointName)+' → '+esc(item.routedPointName)+'</small>'
+        : '<small>Punkt: '+esc(item.routedPointName)+'</small>';
+      const messages=(item.messages||[]).slice(-8).map((m)=>
+        '<p class="customer-quote-message '+esc(String(m.senderKind||'').toLowerCase())+'"><b>'+
+        esc(m.senderKind==='CUSTOMER'?'Klient':m.senderKind==='STAFF'?(m.senderName||'Serwis'):'ServiceOS')+
+        ':</b> '+esc(m.body)+'<small>'+esc(formatDate(m.createdAt))+'</small></p>'
+      ).join('');
+      const priced=item.quoteAmount!=null
+        ? '<div class="customer-quote-price"><span>Aktualna wycena</span><strong>'+esc(Number(item.quoteAmount).toFixed(2))+' '+esc(item.currency||'PLN')+'</strong>'+(item.quoteNote?'<small>'+esc(item.quoteNote)+'</small>':'')+'</div>'
+        : '';
+      const actions=['CLOSED','CANCELLED'].includes(item.status)?'':
+        '<div class="customer-quote-actions">'+
+          '<input data-quote-amount="'+esc(item.id)+'" type="number" min="0" step="0.01" placeholder="Kwota PLN" value="'+(item.quoteAmount!=null?esc(item.quoteAmount):'')+'">'+
+          '<input data-quote-note="'+esc(item.id)+'" maxlength="1000" placeholder="Opis wyceny">'+
+          '<button type="button" data-customer-quote-price="'+esc(item.id)+'">Wyślij wycenę</button>'+
+        '</div>'+
+        '<div class="customer-quote-actions">'+
+          '<input data-quote-reply="'+esc(item.id)+'" maxlength="1000" placeholder="Wiadomość dla klienta">'+
+          '<button type="button" data-customer-quote-reply="'+esc(item.id)+'">Odpowiedz</button>'+
+          '<button type="button" class="secondary" data-customer-quote-close="'+esc(item.id)+'">Zamknij</button>'+
+        '</div>';
+      return '<article class="customer-quote-card">'+
+        '<div class="customer-quote-head"><div><strong>'+esc(item.customerName)+' · '+esc(item.deviceDescription)+'</strong>'+routed+
+        '<small>'+esc(item.customerEmail||item.customerPhone||'Brak kontaktu')+' · '+esc(formatDate(item.updatedAt))+'</small></div><span>'+esc(quoteStatusLabel(item.status))+'</span></div>'+
+        '<p>'+esc(item.issueDescription)+'</p>'+
+        (item.assignedTechnicianName?'<small>Serwisant: '+esc(item.assignedTechnicianName)+'</small>':'<small>Oczekuje na przypisanie serwisanta.</small>')+
+        priced+'<div class="customer-quote-messages">'+messages+'</div>'+actions+
+      '</article>';
+    }).join('')||'<div class="panel-list-empty">Brak zapytań o wycenę w Twoim zakresie.</div>';
+  };
+
+  const loadCustomerQuotes = async () => {
+    if(!canHandleCustomerQuotes())return;
+    const params=new URLSearchParams();
+    if(activePointId&& !['OWNER','BOSS'].includes(role())) params.set('pointId',activePointId);
+    customerQuotes=await api('/service/customer-quotes'+(params.toString()?'?'+params.toString():''));
+    renderCustomerQuotes();
+  };
+
+  const replyCustomerQuote = async (id) => {
+    const input=document.querySelector('[data-quote-reply="'+CSS.escape(id)+'"]');
+    const message=String(input?.value||'').trim();
+    if(!message)return toast('Wpisz wiadomość dla klienta.','error');
+    try{
+      await api('/service/customer-quotes/'+encodeURIComponent(id)+'/reply',{method:'POST',body:JSON.stringify({message})});
+      toast('Odpowiedź została zapisana w portalu klienta.');
+      await loadCustomerQuotes();
+    }catch(error){toast(error.message||'Nie udało się wysłać odpowiedzi.','error');}
+  };
+
+  const priceCustomerQuote = async (id) => {
+    const amount=Number(document.querySelector('[data-quote-amount="'+CSS.escape(id)+'"]')?.value);
+    const note=String(document.querySelector('[data-quote-note="'+CSS.escape(id)+'"]')?.value||'').trim();
+    if(!Number.isFinite(amount)||amount<0)return toast('Podaj prawidłową kwotę wyceny.','error');
+    try{
+      await api('/service/customer-quotes/'+encodeURIComponent(id)+'/quote',{method:'POST',body:JSON.stringify({amount,note})});
+      toast('Wycena została przekazana klientowi.');
+      await loadCustomerQuotes();
+    }catch(error){toast(error.message||'Nie udało się zapisać wyceny.','error');}
+  };
+
+  const closeCustomerQuote = async (id) => {
+    try{
+      await api('/service/customer-quotes/'+encodeURIComponent(id)+'/close',{method:'POST',body:'{}'});
+      toast('Zapytanie zostało zamknięte.');
+      await loadCustomerQuotes();
+    }catch(error){toast(error.message||'Nie udało się zamknąć zapytania.','error');}
+  };
+
   const loadFinance = async () => {
     if (!canReadFinance()) return;
     financeData = await api('/finance/revenues');
@@ -753,6 +835,12 @@
       if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
+      const quoteReply=event.target.closest('[data-customer-quote-reply]');
+      if(quoteReply){void replyCustomerQuote(quoteReply.dataset.customerQuoteReply);return;}
+      const quotePrice=event.target.closest('[data-customer-quote-price]');
+      if(quotePrice){void priceCustomerQuote(quotePrice.dataset.customerQuotePrice);return;}
+      const quoteClose=event.target.closest('[data-customer-quote-close]');
+      if(quoteClose){if(window.confirm('Zamknąć to zapytanie klienta?'))void closeCustomerQuote(quoteClose.dataset.customerQuoteClose);return;}
       const block = event.target.closest('[data-admin-block]');
       if (block) { void blockUser(block.dataset.adminBlock,block.dataset.blocked === '1'); return; }
       const saveAdminUserButton = event.target.closest('[data-admin-save-user]');
@@ -781,6 +869,7 @@
     document.getElementById('refreshHome')?.addEventListener('click',()=>void refreshData());
     document.getElementById('refreshOrders')?.addEventListener('click',()=>void loadOrders());
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
+    document.getElementById('refreshCustomerQuotes')?.addEventListener('click',()=>void loadCustomerQuotes());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
     document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
@@ -812,6 +901,7 @@
   const refreshData = async () => {
     const jobs=[];
     if(canReadService()) jobs.push(loadOrders(),loadTransfers());
+    if(canHandleCustomerQuotes()) jobs.push(loadCustomerQuotes());
     if(isOwner()) jobs.push(loadAdmin());
     await Promise.all(jobs);
     renderHome();
