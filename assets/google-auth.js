@@ -1,8 +1,10 @@
 (() => {
+  'use strict';
+
   const config = window.LOCKON_WEB_AUTH || {};
-  const clientId = String(config.googleClientId || '').trim();
   const apiBaseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
   const tokenKey = 'lockon.web.session';
+
   const readToken = () => {
     try {
       const persistent = localStorage.getItem(tokenKey) || '';
@@ -16,6 +18,7 @@
     } catch {}
     try { return sessionStorage.getItem(tokenKey) || ''; } catch { return ''; }
   };
+
   const writeToken = (value) => {
     try {
       localStorage.setItem(tokenKey, value);
@@ -24,6 +27,7 @@
     } catch {}
     try { sessionStorage.setItem(tokenKey, value); } catch {}
   };
+
   const clearToken = () => {
     try { localStorage.removeItem(tokenKey); } catch {}
     try { sessionStorage.removeItem(tokenKey); } catch {}
@@ -33,14 +37,10 @@
   const panelLink = document.getElementById('navPanelLink');
   const dialog = document.getElementById('webLoginDialog');
   const closeDialog = document.getElementById('closeWebLogin');
-  const signInHost = document.getElementById('googleSignInButton');
+  const codeForm = document.getElementById('webAuthCodeForm');
   const codeInput = document.getElementById('webAuthCode');
   const codeSubmit = document.getElementById('webAuthCodeSubmit');
   const codeStatus = document.getElementById('webAuthCodeStatus');
-  const accountState = document.getElementById('googleAccountState');
-  const accountName = document.getElementById('googleAccountName');
-  const accountEmail = document.getElementById('googleAccountEmail');
-  const signOut = document.getElementById('googleSignOut');
 
   if (!apiBaseUrl) return;
 
@@ -49,6 +49,7 @@
     headers.set('Accept', 'application/json');
     if (options.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
     if (token) headers.set('Authorization', 'Bearer ' + token);
+
     const response = await fetch(apiBaseUrl + path, {
       ...options,
       headers,
@@ -75,64 +76,92 @@
   const renderSignedOut = () => {
     if (loginButton) loginButton.hidden = false;
     if (panelLink) panelLink.hidden = true;
-    if (accountState) accountState.hidden = true;
   };
 
-  const renderSignedIn = (payload) => {
-    const user = payload?.user || {};
+  const renderSignedIn = () => {
     if (loginButton) loginButton.hidden = true;
     if (panelLink) panelLink.hidden = false;
-    if (accountState) accountState.hidden = false;
-    if (accountName) accountName.textContent = user.name || 'Konto ServiceOS';
-    if (accountEmail) accountEmail.textContent = user.email || '';
-    setCodeStatus('Sesja aktywna. Możesz otworzyć mobilny panel.');
+    setCodeStatus('Telefon jest już połączony. Możesz otworzyć panel.');
   };
 
   const saveSession = (payload, openPanel = true) => {
     if (!payload?.token) throw new Error('Backend nie zwrócił sesji ServiceOS.');
     writeToken(payload.token);
-    renderSignedIn(payload);
+    renderSignedIn();
     try { dialog?.close(); } catch {}
     if (openPanel) window.location.href = 'panel.html';
   };
 
   const restore = async () => {
     const token = readToken();
-    if (!token) { renderSignedOut(); return false; }
+    if (!token) {
+      renderSignedOut();
+      return false;
+    }
     try {
-      const payload = await api('/me', {}, token);
-      renderSignedIn(payload);
+      await api('/me', {}, token);
+      renderSignedIn();
       return true;
     } catch (error) {
-      if (error?.status === 401) clearToken();
+      if (error?.status === 401 || error?.status === 403) clearToken();
       renderSignedOut();
       if (error?.status !== 401 && error?.status !== 403) {
-        setCodeStatus('Sesja jest zapisana, ale chwilowo nie udało się połączyć z ServiceOS. Odśwież stronę za moment.', true);
+        setCodeStatus('Sesja jest zapisana, ale ServiceOS jest chwilowo niedostępny. Spróbuj ponownie za moment.', true);
       }
       return false;
     }
   };
 
-  loginButton?.addEventListener('click', () => {
+  const openDialog = () => {
     if (typeof dialog?.showModal === 'function') dialog.showModal();
     else dialog?.setAttribute('open', '');
-    setTimeout(() => codeInput?.focus(), 80);
-  });
+    setCodeStatus('Kod działa tylko raz i nie zmienia Twoich uprawnień.');
+    window.setTimeout(() => codeInput?.focus(), 90);
+  };
+
+  loginButton?.addEventListener('click', openDialog);
   closeDialog?.addEventListener('click', () => dialog?.close());
   dialog?.addEventListener('click', (event) => {
     if (event.target === dialog) dialog.close();
   });
 
-  codeInput?.addEventListener('input', () => {
-    const clean = String(codeInput.value || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+  const normalizedCode = () => String(codeInput?.value || '')
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, '')
+    .slice(0, 8);
+
+  const syncCodeField = () => {
+    if (!codeInput) return;
+    const clean = normalizedCode();
     codeInput.value = clean.length > 4 ? clean.slice(0, 4) + '-' + clean.slice(4) : clean;
+    const complete = clean.length === 8;
+    codeInput.dataset.complete = complete ? 'true' : 'false';
+    if (codeSubmit) codeSubmit.disabled = !complete;
+    if (!codeStatus?.classList.contains('auth-error')) {
+      setCodeStatus(complete
+        ? 'Kod jest kompletny. Możesz połączyć telefon.'
+        : 'Kod działa tylko raz i nie zmienia Twoich uprawnień.');
+    }
+  };
+
+  codeInput?.addEventListener('input', () => {
+    codeStatus?.classList.remove('auth-error');
+    syncCodeField();
   });
 
   const redeemCode = async () => {
-    const code = String(codeInput?.value || '').trim();
-    if (!code) return;
+    const clean = normalizedCode();
+    if (clean.length !== 8) {
+      setCodeStatus('Wpisz pełny kod w formacie ABCD-EFGH.', true);
+      codeInput?.focus();
+      return;
+    }
+
+    const code = clean.slice(0, 4) + '-' + clean.slice(4);
     if (codeSubmit) codeSubmit.disabled = true;
-    setCodeStatus('Sprawdzam kod…');
+    if (codeInput) codeInput.disabled = true;
+    setCodeStatus('Sprawdzam kod i łączę telefon…');
+
     try {
       const payload = await api('/website/redeem', {
         method: 'POST',
@@ -141,69 +170,22 @@
       if (codeInput) codeInput.value = '';
       saveSession(payload, true);
     } catch (error) {
-      setCodeStatus(error instanceof Error ? error.message : 'Kod jest nieprawidłowy.', true);
+      setCodeStatus(error instanceof Error ? error.message : 'Kod jest nieprawidłowy albo wygasł.', true);
+      if (codeInput) {
+        codeInput.disabled = false;
+        codeInput.select();
+      }
+      syncCodeField();
     } finally {
-      if (codeSubmit) codeSubmit.disabled = false;
+      if (codeInput) codeInput.disabled = false;
+      syncCodeField();
     }
   };
 
-  codeSubmit?.addEventListener('click', () => void redeemCode());
-  codeInput?.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') void redeemCode();
+  codeForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    void redeemCode();
   });
-
-  signOut?.addEventListener('click', async () => {
-    const token = readToken();
-    clearToken();
-    try { if (token) await api('/auth/logout', { method: 'POST', body: '{}' }, token); } catch {}
-    window.google?.accounts?.id?.disableAutoSelect?.();
-    renderSignedOut();
-    setCodeStatus('Wylogowano.');
-  });
-
-  const loadGoogleIdentity = () => new Promise((resolve, reject) => {
-    if (window.google?.accounts?.id) return resolve(window.google);
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client?hl=pl';
-    script.async = true;
-    script.defer = true;
-    script.referrerPolicy = 'no-referrer';
-    script.onload = () => resolve(window.google);
-    script.onerror = () => reject(new Error('Nie udało się załadować Google Identity Services.'));
-    document.head.appendChild(script);
-  });
-
-  const initializeGoogle = async () => {
-    if (!clientId || !signInHost) return;
-    const google = await loadGoogleIdentity();
-    google.accounts.id.initialize({
-      client_id: clientId,
-      auto_select: false,
-      cancel_on_tap_outside: true,
-      callback: async (response) => {
-        try {
-          setCodeStatus('Weryfikuję konto Google…');
-          const payload = await api('/auth/google-web', {
-            method: 'POST',
-            body: JSON.stringify({ idToken: String(response?.credential || '') })
-          });
-          saveSession(payload, true);
-        } catch (error) {
-          renderSignedOut();
-          setCodeStatus(error instanceof Error ? error.message : 'Brak dostępu do ServiceOS.', true);
-        }
-      }
-    });
-    google.accounts.id.renderButton(signInHost, {
-      type: 'standard',
-      theme: 'filled_black',
-      size: 'large',
-      text: 'continue_with',
-      shape: 'rectangular',
-      logo_alignment: 'left',
-      width: 320
-    });
-  };
 
   window.LockOnWebAuth = Object.freeze({
     api,
@@ -211,9 +193,16 @@
     clear: () => clearToken()
   });
 
+  syncCodeField();
   void restore();
-  void initializeGoogle().catch((error) => setCodeStatus(error instanceof Error ? error.message : 'Logowanie Google jest chwilowo niedostępne.', true));
 
   const params = new URLSearchParams(window.location.search);
-  if (params.get('login') === '1') loginButton?.click();
+  if (params.get('login') === '1') {
+    window.setTimeout(() => {
+      if (!readToken()) openDialog();
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('login');
+      history.replaceState(null, '', cleanUrl.pathname + cleanUrl.search + cleanUrl.hash);
+    }, 80);
+  }
 })();

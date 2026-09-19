@@ -11,6 +11,7 @@
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/customer-portal.css">
   <link rel="stylesheet" href="assets/ui-2026.css">
+  <link rel="stylesheet" href="assets/web-polish.css">
 </head>
 <body class="customer-portal-page">
   <header class="customer-nav">
@@ -20,14 +21,27 @@
 
   <main class="customer-shell">
     <section id="customerLogin" class="customer-login-card">
-      <span class="eyebrow">PRYWATNA STREFA KLIENTA</span>
-      <h1>Twoje naprawy i wyceny w jednym miejscu</h1>
-      <p>Wpisz kod klienta z wiadomości e-mail od LockOn. Ten sam kod pokazuje wszystkie Twoje zlecenia, naprawy i wyceny.</p>
-      <form id="customerLoginForm">
-        <label><span>Kod klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
-        <button type="submit">Pokaż moje zlecenia</button>
-      </form>
-      <div id="customerLoginError" class="customer-error" hidden></div>
+      <div class="customer-login-intro">
+        <span class="eyebrow">PRYWATNA STREFA KLIENTA</span>
+        <h1>Twoje naprawy. Jeden prosty portal.</h1>
+        <p>Historia zleceń, aktualne statusy, wyceny i rozmowy z serwisem są w jednym miejscu. Potrzebujesz tylko stałego kodu klienta z wiadomości od LockOn.</p>
+        <div class="customer-login-points">
+          <article><b>01</b><span>Sprawdź wszystkie swoje zlecenia i aktualne etapy napraw.</span></article>
+          <article><b>02</b><span>Poproś o wycenę i odpisuj serwisowi bez szukania osobnego kontaktu.</span></article>
+          <article><b>03</b><span>Ten sam kod działa przy kolejnych wizytach — zachowaj go dla siebie.</span></article>
+        </div>
+      </div>
+      <div class="customer-login-box">
+        <div class="customer-login-box-icon">LK</div>
+        <strong>Otwórz swój portal</strong>
+        <p>Wpisz kod dokładnie tak, jak otrzymałeś go w wiadomości.</p>
+        <form id="customerLoginForm">
+          <label><span>Kod klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
+          <button type="submit">Pokaż moje zlecenia</button>
+        </form>
+        <div class="customer-login-note"><strong>Bezpieczeństwo:</strong> kod otwiera Twoją prywatną historię, dlatego nie udostępniaj go osobom trzecim.</div>
+        <div id="customerLoginError" class="customer-error" hidden></div>
+      </div>
     </section>
 
     <div id="customerPortal" hidden>

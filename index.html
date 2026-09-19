@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#080a0d">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://api.github.com https://accounts.google.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src https://accounts.google.com; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
   <title>LockOn ServiceOS — portal pracownika</title>
   <link rel="canonical" href="https://app.serviceos.pl/">
   <meta name="description" content="Oficjalny portal pracownika LockOn ServiceOS: zasady, instalacja, połączenie telefonu, moduły systemu i panel mobilny.">
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="assets/home-v2.css">
   <link rel="stylesheet" href="assets/ui-2026.css">
   <link rel="stylesheet" href="assets/home-story.css">
+  <link rel="stylesheet" href="assets/web-polish.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
@@ -39,8 +40,8 @@
       </a>
       <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
         <a href="#day">Jak działa</a>
-        <a href="#modules">Poznaj aplikację</a>
-        <a href="#connect">Połącz telefon</a>
+        <a href="#modules">Aplikacja</a>
+        <a href="#connect">Telefon</a>
       </nav>
       <div class="portal-nav-actions">
         <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
@@ -450,27 +451,40 @@
     </section>
   </main>
 
-  <dialog id="webLoginDialog" class="portal-login-dialog">
+  <dialog id="webLoginDialog" class="portal-login-dialog" aria-labelledby="webLoginTitle">
     <div class="portal-login-card">
-      <button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button>
-      <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połącz urządzenie mobilne</span></div></div>
-      <h2>Wpisz kod z aplikacji.</h2>
-      <p>Na komputerze otwórz <strong>Pomoc → Połącz urządzenie</strong>. Kod jest jednorazowy i ważny tylko kilka minut.</p>
-      <div class="portal-code-field">
-        <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS">
-        <button id="webAuthCodeSubmit" type="button">Połącz</button>
+      <div class="portal-login-head">
+        <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połączenie telefonu</span></div></div>
+        <button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button>
       </div>
-      <small id="webAuthCodeStatus">Telefon uzyska dostęp tylko do Twojego aktualnego zakresu pracy.</small>
-      <div class="portal-login-divider"><span>lub</span></div>
-      <div id="googleSignInButton" class="google-signin-host" aria-label="Zaloguj się przez Google"></div>
-      <div id="googleAccountState" class="portal-account-state" hidden>
-        <div><strong id="googleAccountName">Konto ServiceOS</strong><span id="googleAccountEmail"></span></div>
-        <button id="googleSignOut" type="button">Wyloguj</button>
+
+      <div class="portal-login-body">
+        <div class="portal-login-copy">
+          <span class="portal-login-kicker">TYLKO KOD Z APLIKACJI</span>
+          <h2 id="webLoginTitle">Połącz telefon z ServiceOS.</h2>
+          <p>Na komputerze w aplikacji Windows otwórz <strong>Pomoc → Połącz urządzenie</strong>. Wygeneruj jednorazowy kod i wpisz go poniżej.</p>
+        </div>
+
+        <div class="portal-login-guide" aria-label="Jak uzyskać kod">
+          <article><b>1</b><strong>Otwórz ServiceOS na komputerze</strong><span>Zaloguj się swoim zatwierdzonym kontem pracownika.</span></article>
+          <article><b>2</b><strong>Wejdź w Pomoc → Połącz urządzenie</strong><span>Aplikacja pokaże kod ważny tylko przez kilka minut.</span></article>
+          <article><b>3</b><strong>Wpisz kod tutaj</strong><span>Po poprawnym kodzie telefon otworzy panel automatycznie.</span></article>
+        </div>
+
+        <form id="webAuthCodeForm" class="portal-code-form">
+          <label for="webAuthCode"><span>Jednorazowy kod</span><span>format: ABCD-EFGH</span></label>
+          <div class="portal-code-field">
+            <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required>
+            <button id="webAuthCodeSubmit" type="submit" disabled>Połącz telefon</button>
+          </div>
+          <small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small>
+        </form>
+
+        <div class="portal-login-security"><span>✓</span><span>Telefon otrzyma dokładnie ten sam zakres dostępu, który jest przypisany do Twojego konta w ServiceOS. Nie ma osobnego logowania Google na stronie WWW.</span></div>
+        <div class="portal-login-help">Nie masz kodu? W aplikacji Windows otwórz <strong>Pomoc → Połącz urządzenie</strong>.</div>
       </div>
-      <div class="portal-login-security"><span>✓</span><span>Połączenie telefonu nie rozszerza dostępu do danych. Korzysta z centralnej roli zatwierdzonej w ServiceOS.</span></div>
     </div>
   </dialog>
-
   <footer class="footer portal-footer">
     <div class="wrap footer-inner">
       <div class="footer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Portal pracownika</span></div></div>
