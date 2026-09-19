@@ -43,6 +43,7 @@
   let supportConversation = null;
   let supportPresence = [];
   let supportTickets = [];
+  let mobileHelpToolResult = null;
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
@@ -605,8 +606,72 @@
 
   const mobileSupportAuthor=(author)=>({user:'Ty',assistant:'Bot ServiceOS',support:'Konsultant',system:'ServiceOS'}[author]||'ServiceOS');
 
+  const runMobileLocalTool = async (action) => {
+    mobileHelpToolResult={kind:action.type==='SPEED_TEST'?'speed':'diag',title:action.type==='SPEED_TEST'?'Test internetu':'Diagnostyka ServiceOS',lines:['Trwa pomiar…']};
+    renderMobileSupport();
+    try{
+      if(action.type==='SPEED_TEST'){
+        const samples=[];
+        for(let index=0;index<3;index+=1){
+          const started=performance.now();
+          const response=await fetch('https://speed.cloudflare.com/__down?bytes=1000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          if(!response.ok)throw new Error('Serwer testowy: HTTP '+response.status);
+          await response.arrayBuffer();samples.push(performance.now()-started);
+        }
+        const started=performance.now();
+        const response=await fetch('https://speed.cloudflare.com/__down?bytes=5000000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+        if(!response.ok)throw new Error('Serwer testowy: HTTP '+response.status);
+        const bytes=(await response.arrayBuffer()).byteLength;
+        const elapsed=Math.max(1,performance.now()-started);
+        const download=((bytes*8)/(elapsed*1000)).toFixed(1);
+        const latency=Math.round(samples.reduce((sum,value)=>sum+value,0)/samples.length);
+        let upload='nie udało się zmierzyć';
+        try{
+          const uploadBytes=1000000;
+          const body=new Uint8Array(uploadBytes);
+          const upStarted=performance.now();
+          const up=await fetch('https://speed.cloudflare.com/__up',{method:'POST',body,cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/octet-stream'}});
+          if(!up.ok)throw new Error('HTTP '+up.status);
+          await up.arrayBuffer().catch(()=>new ArrayBuffer(0));
+          upload=((uploadBytes*8)/(Math.max(1,performance.now()-upStarted)*1000)).toFixed(1)+' Mb/s';
+        }catch{}
+        const quality=Number(download)>=100&&latency<=35?'Bardzo dobre':Number(download)>=30&&latency<=70?'Dobre':Number(download)>=10&&latency<=120?'Wystarczające':'Słabe';
+        mobileHelpToolResult={kind:'speed',title:'Wynik testu internetu',lines:['Pobieranie: '+download+' Mb/s','Wysyłanie: '+upload,'Opóźnienie: '+latency+' ms','Ocena łącza: '+quality]};
+      }else{
+        let internetOk=false,internetLatency=null,apiOk=false,apiLatency=null,apiError='';
+        try{
+          const start=performance.now();const response=await fetch('https://speed.cloudflare.com/__down?bytes=1000',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          internetOk=response.ok;await response.arrayBuffer();internetLatency=Math.round(performance.now()-start);
+        }catch{}
+        try{
+          const start=performance.now();const response=await fetch(apiBaseUrl+'/health',{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer'});
+          apiOk=response.ok;apiLatency=Math.round(performance.now()-start);if(!response.ok)apiError='HTTP '+response.status;
+        }catch(error){apiError=error?.message||'Brak połączenia';}
+        mobileHelpToolResult={kind:'diag',title:'Diagnostyka ServiceOS',lines:[
+          'Internet: '+(internetOk?'działa':'brak odpowiedzi')+(internetLatency==null?'':' · '+internetLatency+' ms'),
+          'Centralne API: '+(apiOk?'działa':'problem')+(apiLatency==null?'':' · '+apiLatency+' ms'),
+          ...(apiError?['API: '+apiError]:[])
+        ]};
+      }
+    }catch(error){
+      mobileHelpToolResult={kind:'diag',title:'Nie udało się wykonać pomiaru',lines:[error?.message||'Błąd diagnostyki.']};
+    }
+    renderMobileSupport();
+  };
+
   const runMobileHelpAction = async (action) => {
     if(!action)return;
+    if(action.type==='SPEED_TEST'||action.type==='CONNECTIVITY_TEST'){
+      await runMobileLocalTool(action);return;
+    }
+    if(action.type==='BROWSER_SEARCH'&&action.query){
+      const query=String(action.query).trim().slice(0,180);
+      const url=action.provider==='YOUTUBE'
+        ? 'https://www.youtube.com/results?search_query='+encodeURIComponent(query)
+        : 'https://www.google.com/search?q='+encodeURIComponent(query);
+      window.open(url,'_blank','noopener,noreferrer');
+      return;
+    }
     if(action.type==='OPEN_ORDER'&&action.orderId){
       showView('orders');
       await loadOrders();
@@ -649,12 +714,16 @@
       request.disabled=state==='WAITING';
       request.textContent=state==='WAITING'?'Prośba wysłana — czekasz na konsultanta':'Poproś konsultanta o dołączenie';
     }
-    messagesHost.innerHTML=(supportConversation?.messages||[]).map(message=>{
+    const thread=(supportConversation?.messages||[]).map(message=>{
       const action=message.action&&message.action.type!=='WEBSITE_CODE'
         ? '<button type="button" class="mobile-help-action" data-mobile-help-action="'+esc(encodeURIComponent(JSON.stringify(message.action)))+'">'+esc(message.action.label||'Otwórz w ServiceOS')+' →</button>'
         : '';
       return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
     }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Możesz zapytać o zlecenie, proces lub obsługę ServiceOS.</div>';
+    const tool=mobileHelpToolResult
+      ? '<article class="mobile-help-tool '+esc(mobileHelpToolResult.kind)+'"><strong>'+esc(mobileHelpToolResult.title)+'</strong>'+mobileHelpToolResult.lines.map(line=>'<span>'+esc(line)+'</span>').join('')+'</article>'
+      : '';
+    messagesHost.innerHTML=thread+tool;
     messagesHost.scrollTop=messagesHost.scrollHeight;
   };
 
@@ -703,6 +772,7 @@
       supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
       supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
       renderMobileSupport();
+      if(result.action&&['SPEED_TEST','CONNECTIVITY_TEST'].includes(result.action.type))void runMobileLocalTool(result.action);
       window.setTimeout(()=>void loadSupport(true),500);
     }catch(error){toast(error.message||'Nie udało się wysłać wiadomości.','error');}
   };
