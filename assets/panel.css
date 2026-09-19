@@ -422,3 +422,24 @@ button{color:inherit}
 .mobile-audit-card details{margin-top:8px}
 .mobile-audit-card summary{font-size:10px;color:var(--panel-muted)}
 .mobile-audit-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:9px}
+
+
+.mobile-finance-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0 16px}
+.mobile-finance-summary article{padding:12px;border:1px solid var(--panel-line);border-radius:12px;background:var(--panel-card);display:flex;flex-direction:column;gap:4px}
+.mobile-finance-summary span{font-size:10px;color:var(--panel-muted)}
+.mobile-finance-summary strong{font-size:15px}
+.mobile-finance-points{display:flex;flex-direction:column;gap:8px}
+.mobile-finance-point{border:1px solid var(--panel-line);border-radius:12px;background:var(--panel-card);overflow:hidden}
+.mobile-finance-point>summary{list-style:none;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px;cursor:pointer}
+.mobile-finance-point>summary::-webkit-details-marker{display:none}
+.mobile-finance-point>summary>div{display:flex;flex-direction:column;gap:3px}
+.mobile-finance-point>summary strong{font-size:13px}
+.mobile-finance-point>summary span{font-size:10px;color:var(--panel-muted)}
+.mobile-finance-point>summary>div:last-child{align-items:flex-end}
+.mobile-finance-entries{border-top:1px solid var(--panel-line);padding:6px}
+.mobile-finance-entries article{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 10px;padding:9px;border-bottom:1px solid var(--panel-line)}
+.mobile-finance-entries article:last-child{border-bottom:0}
+.mobile-finance-entries article>div{display:flex;flex-direction:column;gap:2px}
+.mobile-finance-entries article span,.mobile-finance-entries article small{font-size:10px;color:var(--panel-muted)}
+.mobile-finance-entries article small{grid-column:1/-1}
+@media(max-width:620px){.mobile-finance-summary{grid-template-columns:1fr}.mobile-finance-point>summary{grid-template-columns:1fr}.mobile-finance-point>summary>div:last-child{align-items:flex-start}}
