@@ -495,19 +495,32 @@
     renderKpis();
   };
 
+  const roleLabel=(role)=>({OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'}[role]||'Bez roli');
   const renderAdminUsers = () => {
     const host = document.getElementById('adminUsers');
     const users = admin?.users || [];
+    const points=admin?.points||[];
     host.innerHTML = users.map((user) => {
       const owner = user.role === 'OWNER';
+      const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
+      const roles=['BOSS','COORDINATOR','SUPPORT','TECHNICIAN','USER'];
       return '<article class="admin-user-card">' +
-        '<div><strong>' + esc(user.name) + (user.blocked ? ' <span class="blocked-label">· ZABLOKOWANE</span>' : '') + '</strong><span>' + esc(user.email) + '</span><small>' + esc(user.role || 'Bez roli') + ' · ostatnio ' + esc(formatDate(user.lastLoginAt)) + (user.blockedReason ? ' · ' + esc(user.blockedReason) : '') + '</small></div>' +
+        '<div><strong>' + esc(user.name) + (user.blocked ? ' <span class="blocked-label">· ZABLOKOWANE</span>' : '') + '</strong><span>' + esc(user.email) + '</span><small>' + esc(roleLabel(user.role)) + ' · ' + esc(assigned) + ' · ostatnio ' + esc(formatDate(user.lastLoginAt)) + '</small></div>' +
+        (!owner ? '<details class="mobile-account-edit"><summary>Edytuj konto</summary><label>Rola<select data-admin-role="' + esc(user.id) + '">' + roles.map(r=>'<option value="'+r+'"'+(r===user.role?' selected':'')+'>'+esc(roleLabel(r))+'</option>').join('') + '</select></label><div class="mobile-account-points">' + points.map(p=>'<label><input type="checkbox" data-admin-point-user="'+esc(user.id)+'" value="'+esc(p.id)+'"'+((user.pointIds||[]).includes(p.id)?' checked':'')+'>'+esc(p.name)+'</label>').join('') + '</div>' + (user.role==='TECHNICIAN'?'<label>Udział serwisanta (%)<input type="number" min="0" max="100" step="0.01" data-admin-split="'+esc(user.id)+'" value="'+esc(user.technicianSplitPercent??50)+'"></label>':'') + '<button class="mini-action primary" data-admin-save-user="'+esc(user.id)+'">Zapisz zmiany</button></details>' : '') +
         '<div class="admin-user-actions">' +
           (!owner ? '<button class="mini-action ' + (user.blocked ? 'primary' : 'danger') + '" data-admin-block="' + esc(user.id) + '" data-blocked="' + (user.blocked ? '1' : '0') + '">' + (user.blocked ? 'Odblokuj' : 'Zablokuj') + '</button>' : '') +
           '<button class="mini-action" data-admin-logout-user="' + esc(user.id) + '">Wyloguj</button>' +
         '</div>' +
       '</article>';
     }).join('') || '<div class="panel-list-empty">Brak użytkowników.</div>';
+  };
+
+  const saveAdminUser = async (id) => {
+    const role=document.querySelector('[data-admin-role="'+CSS.escape(id)+'"]')?.value||'USER';
+    const pointIds=[...document.querySelectorAll('[data-admin-point-user="'+CSS.escape(id)+'"]:checked')].map(el=>el.value);
+    const splitEl=document.querySelector('[data-admin-split="'+CSS.escape(id)+'"]');
+    const technicianSplitPercent=role==='TECHNICIAN'?Number(splitEl?.value??50):null;
+    try{await api('/admin/users/'+encodeURIComponent(id)+'/access',{method:'POST',body:JSON.stringify({role,pointIds,technicianSplitPercent})});toast('Konto zostało zaktualizowane.');await loadAdmin();}catch(error){toast(error.message||'Nie udało się zapisać konta.','error');}
   };
 
   const renderAdminPoints = () => {
@@ -648,6 +661,8 @@
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
       const block = event.target.closest('[data-admin-block]');
       if (block) { void blockUser(block.dataset.adminBlock,block.dataset.blocked === '1'); return; }
+      const saveAdminUserButton = event.target.closest('[data-admin-save-user]');
+      if (saveAdminUserButton) { void saveAdminUser(saveAdminUserButton.dataset.adminSaveUser); return; }
       const logoutUserButton = event.target.closest('[data-admin-logout-user]');
       if (logoutUserButton) { void logoutUser(logoutUserButton.dataset.adminLogoutUser); return; }
       const filter = event.target.closest('[data-transfer-filter]');
