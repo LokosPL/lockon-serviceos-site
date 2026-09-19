@@ -138,4 +138,4 @@ jobs:
           grep -q 'assets/web-polish.css' signing.html
           grep -q 'web-polish.css' sw.js
           grep -q 'customer-login-intro' klient.html
-          grep -q 'Panel WWW pracownika jest łączony wyłącznie' privacy.html
+          grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
