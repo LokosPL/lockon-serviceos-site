@@ -406,3 +406,19 @@ button{color:inherit}
 .status-readonly-mobile{border-color:rgba(255,171,92,.18);background:rgba(255,171,92,.035)}
 .status-readonly-mobile .order-note-text{margin-top:8px;color:#8f99a4}
 .status-readonly-mobile .order-note-text strong{color:#f1f3f5;font-size:14px}
+
+
+.mobile-audit-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 14px}
+.mobile-audit-filters input,.mobile-audit-filters select,.mobile-audit-filters button{min-height:42px;border:1px solid var(--panel-line);border-radius:11px;background:var(--panel-card);color:inherit;padding:0 10px}
+.mobile-audit-filters button{grid-column:1/-1;font-weight:800}
+.mobile-audit-list{display:flex;flex-direction:column;gap:8px}
+.mobile-audit-card{padding:12px;border:1px solid var(--panel-line);border-radius:12px;background:var(--panel-card)}
+.mobile-audit-card>div:first-child{display:flex;flex-direction:column;gap:3px}
+.mobile-audit-card strong{font-size:13px}
+.mobile-audit-card span,.mobile-audit-card small,.mobile-audit-card p{font-size:10px;color:var(--panel-muted)}
+.mobile-audit-card p{margin:8px 0 0}
+.mobile-audit-change{display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center;margin-top:8px}
+.mobile-audit-change span{padding:6px;border:1px solid var(--panel-line);border-radius:8px;overflow-wrap:anywhere}
+.mobile-audit-card details{margin-top:8px}
+.mobile-audit-card summary{font-size:10px;color:var(--panel-muted)}
+.mobile-audit-card pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:9px}
