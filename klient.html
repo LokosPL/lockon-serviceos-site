@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+  <title>Portal klienta LockOn</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/customer-portal.css">
+</head>
+<body>
+  <header class="customer-nav">
+    <div class="customer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>Portal klienta</span></div></div>
+    <button id="customerLogout" type="button" hidden>Wyloguj</button>
+  </header>
+
+  <main class="customer-shell">
+    <section id="customerLogin" class="customer-login-card">
+      <span class="eyebrow">PRYWATNA STREFA KLIENTA</span>
+      <h1>Twoja historia serwisowa w jednym miejscu</h1>
+      <p>Wpisz stały identyfikator klienta otrzymany w pierwszej wiadomości od LockOn. Ten identyfikator łączy wszystkie Twoje wizyty i zlecenia.</p>
+      <form id="customerLoginForm">
+        <label><span>Identyfikator klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
+        <button type="submit">Otwórz moje serwisy</button>
+      </form>
+      <div id="customerLoginError" class="customer-error" hidden></div>
+    </section>
+
+    <div id="customerPortal" hidden>
+      <section class="customer-hero">
+        <div><span class="eyebrow">KARTA KLIENTA</span><h1 id="customerName">—</h1><p id="customerContact">—</p></div>
+        <div class="customer-sync"><i></i><span id="customerSync">Aktualizuję dane…</span></div>
+      </section>
+
+      <section class="customer-grid">
+        <article><span>Wizyty / zlecenia</span><strong id="customerOrderCount">0</strong></article>
+        <article><span>Otwarte wyceny</span><strong id="customerQuoteCount">0</strong></article>
+        <article><span>Klient od</span><strong id="customerSince">—</strong></article>
+      </section>
+
+      <section class="customer-card">
+        <div class="customer-section-head"><div><span>HISTORIA</span><h2>Twoje serwisy</h2></div><small>Wszystkie zlecenia powiązane z Twoim stałym ID.</small></div>
+        <div id="customerOrders" class="customer-orders"></div>
+      </section>
+
+      <section class="customer-card">
+        <div class="customer-section-head"><div><span>WYCENA ZDALNA</span><h2>Napisz do punktu</h2></div><small>Jeżeli punkt nie ma własnego serwisanta, sprawa zostanie automatycznie przekazana do serwisu, do którego ten punkt najczęściej kieruje naprawy.</small></div>
+        <form id="customerQuoteForm" class="customer-quote-form">
+          <label><span>Punkt LockOn</span><select name="requestedPointId" id="customerQuotePoint" required></select></label>
+          <label><span>Dotyczy zlecenia</span><select name="serviceOrderId" id="customerQuoteOrder"><option value="">Nowa wycena / inne urządzenie</option></select></label>
+          <label class="full"><span>Urządzenie</span><input name="deviceDescription" id="customerQuoteDevice" maxlength="180" placeholder="np. Samsung S25"></label>
+          <label class="full"><span>Co mamy wycenić?</span><textarea name="issueDescription" maxlength="2000" rows="5" required placeholder="Opisz problem, uszkodzenie lub usługę."></textarea></label>
+          <button type="submit">Wyślij zapytanie o wycenę</button>
+        </form>
+        <div id="customerQuoteStatus" class="customer-status" hidden></div>
+      </section>
+
+      <section class="customer-card">
+        <div class="customer-section-head"><div><span>WIADOMOŚCI</span><h2>Wyceny i rozmowy</h2></div><small>Odpowiedzi serwisanta pojawią się tutaj automatycznie.</small></div>
+        <div id="customerQuotes" class="customer-quotes"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="assets/customer-portal.js"></script>
+</body>
+</html>
