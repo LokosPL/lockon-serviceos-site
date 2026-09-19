@@ -624,11 +624,12 @@
     PENDING:'Oczekuje',PROCESSING:'Wysyłanie',SENT:'Wysłano',FAILED:'Błąd wysyłki',APPROVED:'Zatwierdzone',SETTLED:'Rozliczone',
     OPEN:'Otwarte',CLOSED:'Zamknięte',PAID:'Wypłacone',ACTIVE:'Aktywne'
   };
+  const AUDIT_ROLE_LABELS={OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'};
   const AUDIT_ENTITY_LABELS={service_order:'zlecenie serwisowe',notification:'wiadomość e-mail',revenue:'rozliczenie',user:'konto pracownika',point:'punkt',support_conversation:'zgłoszenie wsparcia',customer_quote_request:'zapytanie o wycenę',customer:'klient',auth_session:'sesja'};
   const auditValue=(value)=>{
     if(value==null||value==='')return '—';
     if(typeof value==='boolean')return value?'Tak':'Nie';
-    if(typeof value==='string')return AUDIT_STATUS_LABELS[value]||roleLabel(value)||value;
+    if(typeof value==='string')return AUDIT_STATUS_LABELS[value]||AUDIT_ROLE_LABELS[value]||value;
     if(typeof value==='number')return String(value);
     try{return JSON.stringify(value);}catch{return String(value);}
   };
@@ -746,7 +747,7 @@
     renderAdminAudit();
   };
 
-  const roleLabel=(role)=>({OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'}[role]||'Bez roli');
+  const roleLabel=(role)=>AUDIT_ROLE_LABELS[role]||'Bez roli';
   const renderAdminUsers = () => {
     const host = document.getElementById('adminUsers');
     const users = admin?.users || [];
