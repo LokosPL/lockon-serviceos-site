@@ -47,8 +47,10 @@
     REQUESTED:'Oczekuje', IN_TRANSIT:'W drodze', DELIVERED:'Dostarczono',
     ACCEPTED:'Przyjęte', REJECTED:'Odrzucone', CANCELLED:'Anulowane'
   };
-  const SERVICE_READ = new Set(['OWNER','BOSS','COORDINATOR','SUPPORT','TECHNICIAN']);
+  const SERVICE_READ = new Set(['OWNER','BOSS','COORDINATOR','SUPPORT','TECHNICIAN','USER']);
   const SERVICE_EDIT = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN']);
+  const SERVICE_CREATE = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN','USER']);
+  const SERVICE_TRANSFER = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN','USER']);
   const SERVICE_MANAGE = new Set(['OWNER','BOSS','COORDINATOR']);
 
   const esc = (value) => String(value ?? '')
@@ -91,6 +93,9 @@
   const role = () => String(me?.user?.role || '');
   const canReadService = () => SERVICE_READ.has(role());
   const canEditService = () => SERVICE_EDIT.has(role());
+  const canCreateService = () => SERVICE_CREATE.has(role());
+  const canTransferService = () => SERVICE_TRANSFER.has(role());
+  const canCancelService = () => canCreateService();
   const canManageService = () => SERVICE_MANAGE.has(role());
   const isOwner = () => role() === 'OWNER';
   const pointIds = () => (me?.points || []).map((point) => point.id);
@@ -313,7 +318,9 @@
     const currentServicePointId = activeTransfer ? '' : (order.currentPointId || order.homePointId || order.pointId);
     const homePointId = order.homePointId || order.pointId;
     const canOperateCurrentPoint = Boolean(currentServicePointId) && activePointId === currentServicePointId && canOperatePoint(currentServicePointId);
-    const canEditOrderHere = canEditService() && canOperateCurrentPoint && !activeTransfer;
+    const canEditOrderHere = canTransferOrderHere && !activeTransfer;
+    const canTransferOrderHere = canTransferService() && canOperateCurrentPoint && !activeTransfer;
+    const canCancelOrderHere = canCancelService() && canOperateCurrentPoint && !activeTransfer;
     const transferOnly = order.handlingMode === 'TRANSFER_ONLY';
     const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId);
     const transferOnlyDestinations = [
@@ -337,7 +344,9 @@
       '</div>' +
       '<div class="order-dialog-section"><span>OPIS USTERKI</span><p class="order-note-text">' + esc(order.issueDescription || '—') + '</p></div>' +
       (canEditOrderHere && !transferOnly ? '<div class="order-dialog-section"><span>CENY ZLECENIA</span><div class="mobile-price-grid"><label><small>Cena orientacyjna (PLN)</small><input id="mobileEstimatedCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.estimatedCost == null ? '' : order.estimatedCost) + '"></label><label><small>Cena końcowa (PLN)</small><input id="mobileFinalCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.finalCost == null ? '' : order.finalCost) + '"></label></div><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-prices="' + esc(order.id) + '">Zapisz ceny</button></div></div>' : '') +
-      (canEditOrderHere && transferOnly
+      (canCancelOrderHere && !canEditService() && order.status !== 'CANCELLED'
+        ? '<div class="order-dialog-section transfer-only-mobile"><span>OBSŁUGA ZLECENIA</span><p class="order-note-text">Możesz uzupełnić dane przyjęcia, przekazać urządzenie dalej albo anulować zlecenie. Etapy naprawy są zablokowane.</p><div class="order-dialog-actions"><button class="mini-action danger" data-cancel-service="' + esc(order.id) + '">Anuluj zlecenie</button></div></div>'
+        : canEditOrderHere && transferOnly
         ? '<div class="order-dialog-section transfer-only-mobile"><span>TRYB PRZEKAZANIA</span><p class="order-note-text">Etapy naprawy są zablokowane. Możesz tylko przekazywać urządzenie dalej albo anulować to zlecenie.</p>' + (order.status !== 'CANCELLED' ? '<div class="order-dialog-actions"><button class="mini-action danger" data-cancel-service="' + esc(order.id) + '">Anuluj zlecenie</button></div>' : '') + '</div>'
         : canEditOrderHere ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
         Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' && (order.canMarkReady === false || order.status !== 'REPAIR_DONE')) || (value === 'COMPLETED' && order.status !== 'READY')) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
@@ -348,14 +357,14 @@
         (activeTransfer
           ? '<p class="order-note-text">' + esc(activeTransfer.kind === 'RETURN_HOME' ? 'Powrót do punktu macierzystego' : 'Przekazanie do serwisu') + ' · ' + esc(TRANSFER_LABELS[activeTransfer.status] || activeTransfer.status) + ': ' + esc(activeTransfer.fromPointName) + ' → ' + esc(activeTransfer.toPointName) + '</p>'
           : transferOnly
-            ? (canEditService() && canOperateCurrentPoint
+            ? (canTransferOrderHere
                 ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz punkt docelowy…</option>' + transferOnlyDestinations.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + (point.city ? ' · ' + point.city : '')) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka do protokołu przekazania (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Przekaż urządzenie dalej</button></div>'
                 : '<p class="order-note-text">Przekazanie może rozpocząć użytkownik obsługujący aktualny punkt.</p>')
           : order.returnRequired
-            ? (canEditService() && canOperateCurrentPoint && order.status === 'REPAIR_DONE'
+            ? (canTransferOrderHere && order.status === 'REPAIR_DONE'
                 ? '<input id="mobileReturnNote" class="order-note-input" maxlength="500" placeholder="Notatka do zwrotu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-return="' + esc(order.id) + '">Odeślij do punktu macierzystego</button></div>'
                 : '<p class="order-note-text">' + esc(order.status === 'REPAIR_DONE' ? 'Zwrot musi rozpocząć użytkownik obsługujący aktualny punkt urządzenia.' : 'Urządzenie jest poza punktem macierzystym. Po zakończeniu naprawy ustaw „Naprawa zakończona”, a następnie rozpocznij obowiązkowy zwrot.') + '</p>')
-            : canEditService() && availableServices.length
+            : canTransferOrderHere && availableServices.length
               ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz serwis docelowy…</option>' + availableServices.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + ' · ' + point.city) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka dla serwisu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Wyślij do serwisu</button></div>'
               : '<p class="order-note-text">Brak aktywnego transportu.</p>') +
       '</div>' +
@@ -400,6 +409,7 @@
     const order = orders.find((item) => item.id === id);
     const status = forcedStatus || document.getElementById('mobileOrderStatus')?.value;
     if (!status || !order) return;
+    if (!canEditService() && !(canCancelService() && status === 'CANCELLED')) return toast('Nie masz uprawnień do zmiany statusu naprawy.','error');
     if (order.handlingMode === 'TRANSFER_ONLY' && status !== 'CANCELLED') return toast('W trybie przekazania można jedynie anulować zlecenie.','error');
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/status', {
@@ -424,6 +434,7 @@
   };
 
   const sendOrderTransfer = async (id) => {
+    if (!canTransferService()) return toast('Nie masz uprawnień do przekazania urządzenia.','error');
     const toPointId = document.getElementById('mobileTransferPoint')?.value || '';
     const note = document.getElementById('mobileTransferNote')?.value || '';
     if (!toPointId) return toast('Wybierz serwis docelowy.','error');
@@ -550,7 +561,7 @@
 
   const submitNewOrder = async (event) => {
     event.preventDefault();
-    if (!canEditService()) return;
+    if (!canCreateService()) return;
     const form = new FormData(event.currentTarget);
     const payload = Object.fromEntries(form.entries());
     payload.pointId = activePointId;
