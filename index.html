@@ -6,22 +6,22 @@
   <meta name="theme-color" content="#090a0d">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://api.github.com https://accounts.google.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src https://accounts.google.com; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <title>LockOn ServiceOS — serwis w jednym systemie</title>
+  <title>LockOn ServiceOS — instrukcja pracownika i panel</title>
   <link rel="canonical" href="https://app.serviceos.pl/">
-  <meta name="description" content="LockOn ServiceOS łączy punkty, serwisy, klientów, naprawy i powiadomienia. Pracuj na Windows albo z mobilnego panelu WWW.">
+  <meta name="description" content="Oficjalna strona LockOn ServiceOS. Instrukcja pracownika, zasady korzystania, połączenie telefonu, panel mobilny i aplikacja Windows.">
   <meta property="og:title" content="LockOn ServiceOS">
-  <meta property="og:description" content="Punkty, naprawy, przekazania do serwisu i mobilny panel ServiceOS.">
+  <meta property="og:description" content="Zanim pobierzesz aplikację lub połączysz telefon, poznaj zasady i sposób działania ServiceOS.">
   <meta property="og:type" content="website">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/home-v2.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
-<body class="portal-home">
+<body class="portal-home onboarding-locked">
   <div class="site-loader" id="siteLoader" aria-live="polite">
     <div class="loader-core">
       <div class="loader-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></div>
-      <div class="loader-copy"><strong>Łączę środowisko.</strong><span id="loaderLabel">Uruchamianie ServiceOS…</span></div>
+      <div class="loader-copy"><strong>Przygotowuję ServiceOS.</strong><span id="loaderLabel">Ładowanie instrukcji pracownika…</span></div>
       <div class="loader-track"><i id="loaderProgress"></i></div>
       <div class="loader-meta"><span>SERVICEOS</span><b id="loaderPercent">8%</b></div>
     </div>
@@ -30,92 +30,218 @@
 
   <header class="nav portal-nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="#top" aria-label="LockOn ServiceOS">
-        <img src="assets/logo.svg" alt="">
-        <div><strong>LockOn</strong><span>ServiceOS</span></div>
-      </a>
+      <a class="brand" href="#top" aria-label="LockOn ServiceOS"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></a>
       <nav class="nav-links portal-links">
-        <a href="#system">System</a>
-        <a href="#mobile">Panel mobilny</a>
-        <a href="#flow">Serwis</a>
+        <a href="#start">Zacznij tutaj</a>
+        <a href="#pairing">Telefon</a>
+        <a href="#app-flow">Jak działa</a>
+        <a href="#ui-guide">Poznaj UI</a>
         <a href="#security">Bezpieczeństwo</a>
       </nav>
       <div class="portal-nav-actions">
-        <a id="navPanelLink" class="nav-panel-link" href="panel.html" hidden>Otwórz panel <span>→</span></a>
-        <button id="navLoginButton" class="nav-login-button" type="button">Zaloguj się</button>
-        <a class="nav-download download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz <span>↓</span></a>
+        <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
+        <button id="navLoginButton" class="nav-login-button requires-onboarding" data-requires-onboarding type="button">Połącz telefon</button>
+        <a class="nav-download download-link requires-onboarding" data-requires-onboarding href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz <span>↓</span></a>
       </div>
     </div>
   </header>
 
   <main id="top">
-    <section class="portal-hero">
-      <div class="portal-orb orb-one"></div>
-      <div class="portal-orb orb-two"></div>
+    <section class="portal-hero employee-hero">
+      <div class="portal-orb orb-one"></div><div class="portal-orb orb-two"></div>
+      <div class="hero-grid-lines" aria-hidden="true"></div>
       <div class="wrap portal-hero-grid">
         <div class="portal-hero-copy reveal">
-          <div class="portal-kicker"><span class="live-dot"></span> SERVICEOS · WINDOWS + WWW</div>
-          <h1>Serwis działa dalej,<br><span>nawet gdy nie masz komputera.</span></h1>
-          <p>Przyjmuj telefony, sprawdzaj naprawy, przekazuj urządzenia między punktami i pilnuj dostaw z telefonu. Pełny ServiceOS nadal działa na Windows, a mobilny panel daje dostęp do rzeczy potrzebnych poza stanowiskiem.</p>
+          <div class="portal-kicker"><span class="live-dot"></span> OFICJALNA STRONA PRACOWNIKA LOCKON</div>
+          <h1>Witaj w<br><span>LockOn ServiceOS.</span></h1>
+          <p class="hero-lead">Zanim pobierzesz aplikację albo połączysz telefon z panelem, zapoznaj się z regulaminem, podstawami bezpieczeństwa oraz tym, jak ServiceOS prowadzi pracę od przyjęcia urządzenia do wydania klientowi.</p>
+          <div class="employee-only-warning">
+            <b>TYLKO DLA FIRMY LOCKON</b>
+            <span>Aplikacja powstała dla firmy i pracowników LockOn. Jeżeli nim nie jesteś, nie próbuj tworzyć ani łączyć konta — konto bez zatwierdzenia przez OWNER nie uzyska dostępu.</span>
+          </div>
           <div class="portal-hero-actions">
-            <button class="button primary portal-login-cta" type="button" data-open-login>Zaloguj się kodem z aplikacji</button>
-            <a class="button secondary download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz dla Windows</a>
+            <a class="button primary" href="#start">Zacznij instrukcję pracownika</a>
+            <button class="button secondary requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz urządzenie mobilne</button>
           </div>
           <div class="portal-trust-row">
-            <span><i></i> Jedno konto i te same uprawnienia</span>
-            <span><i></i> Dane centralne</span>
-            <span><i></i> Mobilny panel bez instalacji</span>
+            <span><i></i> Dostęp zatwierdza OWNER</span>
+            <span><i></i> Te same role na Windows i telefonie</span>
+            <span><i></i> Kod urządzenia jest jednorazowy</span>
           </div>
         </div>
 
-        <div class="portal-product-stage reveal delay">
-          <div class="desktop-mock">
-            <div class="desktop-top"><div><span class="mini-mark"></span><strong>LockOn ServiceOS</strong></div><small>ONLINE</small></div>
+        <div class="portal-product-stage hero-device reveal delay" aria-label="Podgląd aplikacji LockOn ServiceOS">
+          <div class="desktop-mock mini-app serviceos-hero-ui">
+            <div class="desktop-top"><div><span class="mini-mark"></span><strong>LockOn ServiceOS</strong></div><small>ONLINE · NOWOGARD</small></div>
             <div class="desktop-layout">
-              <aside><img src="assets/logo.svg" alt=""><i></i><i></i><i></i><i></i></aside>
+              <aside><img src="assets/logo.svg" alt=""><i class="active"></i><i></i><i></i><i></i><i></i></aside>
               <div class="desktop-content">
-                <span class="mock-label">PUNKT NOWOGARD</span>
-                <h3>Naprawy pod kontrolą.</h3>
-                <div class="mock-stats"><div><span>Aktywne</span><strong>12</strong></div><div><span>W serwisie</span><strong>4</strong></div><div><span>Do odbioru</span><strong>3</strong></div></div>
-                <div class="mock-orders"><div><b>#1042</b><span>iPhone 14 Pro</span><em>W naprawie</em></div><div><b>#1041</b><span>Samsung S24</span><em>W drodze</em></div><div><b>#1040</b><span>Pixel 9</span><em>Gotowe</em></div></div>
+                <span class="mock-label">SERWIS · CO ROBIMY DALEJ</span>
+                <h3>Priorytety pracy.</h3>
+                <div class="mock-workflow-row urgent"><b>#1042</b><span><strong>iPhone 14 Pro</strong><small>Etap 3/10 · Diagnoza</small></span><em>DZIAŁAJ TERAZ</em></div>
+                <div class="mock-workflow-row due"><b>#1041</b><span><strong>Samsung S24</strong><small>Etap 5/10 · W naprawie</small></span><em>6 H DO TERMINU</em></div>
+                <div class="mock-workflow-row transit"><b>#1040</b><span><strong>Pixel 9</strong><small>Etap 7/10 · Zwrot do Nowogardu</small></span><em>W DRODZE</em></div>
+                <div class="mock-next-action"><span>NASTĘPNA AKCJA</span><strong>Przyjmij urządzenie w punkcie macierzystym.</strong><i><b></b></i></div>
               </div>
             </div>
           </div>
           <div class="phone-mock">
             <div class="phone-notch"></div>
-            <div class="phone-app-head"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Panel mobilny</span></div></div>
-            <div class="phone-greeting"><span>TERAZ</span><strong>Co chcesz zrobić?</strong></div>
-            <div class="phone-actions"><div>＋<span>Nowe zlecenie</span></div><div>⌕<span>Zlecenia</span></div><div>⇄<span>Przekazania</span></div><div>✓<span>Dostawy</span></div></div>
-            <div class="phone-card"><span>DO PRZYJĘCIA</span><strong>2 urządzenia</strong><small>z innych punktów</small></div>
+            <div class="phone-app-head"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Panel pracownika</span></div></div>
+            <div class="phone-greeting"><span>CO ROBIMY DALEJ</span><strong>Twoja kolejka.</strong></div>
+            <div class="phone-actions"><div>01<span>Działaj teraz</span></div><div>02<span>Po terminie</span></div><div>03<span>W drodze</span></div><div>04<span>Gotowe</span></div></div>
+            <div class="phone-card"><span>NASTĘPNA AKCJA</span><strong>Rozpocznij diagnozę</strong><small>#1045 · iPhone 13</small></div>
           </div>
-          <div class="portal-float-card float-mail"><span>✉</span><div><strong>Klient poinformowany</strong><small>Dostarczono do serwisu</small></div></div>
-          <div class="portal-float-card float-sync"><span>↻</span><div><strong>Synchronizacja</strong><small>Windows ↔ WWW</small></div></div>
+          <div class="portal-float-card float-mail"><span>✓</span><div><strong>Uprawnienia zgodne</strong><small>rola + przypisane punkty</small></div></div>
+          <div class="portal-float-card float-sync"><span>↻</span><div><strong>Synchronizacja</strong><small>Windows ↔ telefon</small></div></div>
         </div>
       </div>
     </section>
 
-    <section class="portal-strip">
+    <section class="portal-strip onboarding-strip">
       <div class="wrap portal-strip-grid">
-        <div><strong data-release-version>—</strong><span>aktualna wersja Windows</span></div>
-        <div><strong>1 konto</strong><span>desktop i telefon</span></div>
-        <div><strong>Role + punkty</strong><span>ten sam zakres dostępu</span></div>
-        <div><strong>Gmail send</strong><span>bez czytania skrzynki</span></div>
+        <div><strong>01</strong><span>przeczytaj zasady</span></div>
+        <div><strong>02</strong><span>zaloguj się na Windows</span></div>
+        <div><strong>03</strong><span>połącz swój telefon</span></div>
+        <div><strong data-release-version>—</strong><span>aktualna wersja ServiceOS</span></div>
       </div>
     </section>
 
-    <section class="portal-section" id="system">
+    <section class="portal-section onboarding-start" id="start">
       <div class="wrap">
         <div class="portal-section-head reveal">
-          <span>JEDEN SYSTEM</span>
-          <h2>Od przyjęcia telefonu<br><em>do odbioru przez klienta.</em></h2>
-          <p>Nie tylko lista napraw. ServiceOS łączy klienta, urządzenie, status, serwisanta, terminy, notatki, koszty i historię w jednej karcie zlecenia.</p>
+          <span>ZACZNIJ TUTAJ</span>
+          <h2>Zanim wejdziesz do systemu,<br><em>poznaj trzy zasady.</em></h2>
+          <p>Bez ich zaakceptowania ta przeglądarka nie odblokuje pobierania instalatora ani logowania do panelu mobilnego.</p>
         </div>
-        <div class="portal-feature-grid">
-          <article class="portal-feature feature-large reveal"><span>01</span><div class="portal-feature-icon">▣</div><h3>Karta zlecenia</h3><p>IMEI, numer seryjny, usterka, termin, technik, wycena, koszt końcowy, notatki wewnętrzne i pełna oś zmian.</p><div class="feature-chips"><i>IMEI</i><i>Historia</i><i>Notatki</i><i>Technik</i></div></article>
-          <article class="portal-feature reveal"><span>02</span><div class="portal-feature-icon">◎</div><h3>Karta klienta</h3><p>Poprzednie urządzenia i naprawy bez tworzenia duplikatów klientów.</p></article>
-          <article class="portal-feature reveal"><span>03</span><div class="portal-feature-icon">✉</div><h3>Powiadomienia</h3><p>Automatyczne e-maile o statusach i etapach transportu urządzenia.</p></article>
-          <article class="portal-feature reveal"><span>04</span><div class="portal-feature-icon">⇄</div><h3>Między punktami</h3><p>Przekazuj urządzenie do punktu z serwisem i śledź drogę niezależnie od statusu naprawy.</p></article>
-          <article class="portal-feature reveal"><span>05</span><div class="portal-feature-icon">?</div><h3>Prywatna pomoc</h3><p>Asystent widzi tylko dane, do których ma dostęp bieżące konto.</p></article>
+
+        <div class="onboarding-rule-grid">
+          <article class="onboarding-rule reveal"><b>01</b><div><span>DOSTĘP</span><h3>ServiceOS jest narzędziem pracowniczym.</h3><p>Loguj się wyłącznie swoim kontem. Dostęp działa dopiero po zatwierdzeniu przez OWNER i zawsze jest ograniczony rolą oraz przypisanymi punktami.</p></div></article>
+          <article class="onboarding-rule reveal delay"><b>02</b><div><span>DANE</span><h3>Pracujesz na prawdziwych danych firmy.</h3><p>Nie udostępniaj kodów, sesji ani danych klientów innym osobom. Wprowadzaj informacje tylko w zakresie potrzebnym do realizacji zlecenia.</p></div></article>
+          <article class="onboarding-rule reveal delay-2"><b>03</b><div><span>URZĄDZENIA</span><h3>Każdy pracownik łączy własny telefon.</h3><p>Panel telefonu dziedziczy Twoją rolę z aplikacji. Kod parowania jest jednorazowy i nie nadaje nowych uprawnień.</p></div></article>
+        </div>
+
+        <div class="onboarding-accept-card reveal" id="onboardingAccept">
+          <div class="accept-copy">
+            <span class="portal-eyebrow">WYMAGANE PRZED POBRANIEM I PANELEM</span>
+            <h3>Potwierdź, że wiesz, z czego korzystasz.</h3>
+            <p>Pełny regulamin i polityka prywatności są dostępne osobno. Poniższe potwierdzenia odblokowują akcje tylko w tej przeglądarce — nie zastępują weryfikacji konta przez OWNER.</p>
+          </div>
+          <div class="accept-checks">
+            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem / uprawnioną osobą LockOn i będę używać własnego konta.</span></label>
+            <label><input id="agreeRules" type="checkbox"><span>Zapoznałem się z <a href="terms.html">regulaminem</a> i <a href="privacy.html">polityką prywatności</a>.</span></label>
+            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że telefon otrzymuje te same uprawnienia co moje konto i kod parowania jest jednorazowy.</span></label>
+            <button id="acceptOnboarding" class="button primary big" type="button" disabled>Rozumiem — odblokuj ServiceOS</button>
+            <small id="onboardingState">Pobieranie i panel są jeszcze zablokowane.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section employee-basics" id="basics">
+      <div class="wrap">
+        <div class="portal-section-head reveal">
+          <span>REGULAMIN W PRAKTYCE</span>
+          <h2>Najważniejsze podstawy<br><em>w jednym miejscu.</em></h2>
+          <p>To skrót dla pracownika. W razie rozbieżności obowiązuje pełny regulamin opublikowany na stronie.</p>
+        </div>
+        <div class="basics-grid">
+          <article><b>01</b><h3>Jedno konto = jedna osoba</h3><p>Nie przekazuj sesji ani kodu parowania. OWNER może zablokować konto i natychmiast unieważnić jego aktywne sesje.</p></article>
+          <article><b>02</b><h3>Zakres danych zależy od roli</h3><p>Widzisz tylko funkcje i punkty przypisane do Twojego konta. Panel WWW nie rozszerza uprawnień z desktopu.</p></article>
+          <article><b>03</b><h3>Klient i urządzenie są danymi roboczymi</h3><p>Wprowadzaj rzetelne dane potrzebne do naprawy: kontakt, urządzenie, IMEI/seryjny, usterkę, termin i notatki serwisowe.</p></article>
+          <article><b>04</b><h3>Status musi odpowiadać rzeczywistości</h3><p>Nie oznaczaj telefonu jako gotowego, dopóki fizycznie nie wrócił do punktu macierzystego i nie został przyjęty.</p></article>
+          <article><b>05</b><h3>Gmail działa w tle</h3><p>ServiceOS używa wyłącznie uprawnienia do wysyłania. Gdy zgoda działa, nie wymaga ponownego klikania; ponowna autoryzacja pojawia się dopiero po jej utracie.</p></article>
+          <article><b>06</b><h3>Nie omijaj zabezpieczeń</h3><p>Próby dostępu do cudzych danych, obchodzenia ról lub udostępniania systemu osobom spoza LockOn są zabronione.</p></article>
+        </div>
+        <a class="rules-link" href="terms.html">Otwórz pełny regulamin <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="portal-section pairing-section" id="pairing">
+      <div class="wrap pairing-grid">
+        <div class="pairing-copy reveal">
+          <span class="portal-eyebrow">OBOWIĄZKOWE DLA PRACOWNIKA</span>
+          <h2>Połącz swój telefon<br><em>z ServiceOS.</em></h2>
+          <p>Każdy pracownik powinien mieć dostęp mobilny na swoim własnym urządzeniu. Dzięki temu możesz przyjąć dostawę, sprawdzić kolejkę i zmienić etap bez wracania do komputera.</p>
+          <div class="pairing-url"><span>Na telefonie otwórz</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj adres</button></div>
+          <button class="button primary requires-onboarding" data-requires-onboarding data-open-login type="button">Mam stronę na telefonie — połącz urządzenie</button>
+        </div>
+        <div class="pairing-steps reveal delay">
+          <article><b>1</b><div><strong>Telefon: app.serviceos.pl</strong><span>Wejdź na oficjalną stronę w przeglądarce telefonu i przejdź instrukcję pracownika.</span></div></article>
+          <article><b>2</b><div><strong>Desktop: zaloguj się do ServiceOS</strong><span>Użyj własnego konta Google. Konto musi być aktywne i zatwierdzone przez OWNER.</span></div></article>
+          <article><b>3</b><div><strong>Pomoc → Połącz urządzenie</strong><span>W aplikacji otwórz Pomoc i kliknij „Połącz urządzenie”. ServiceOS wygeneruje jednorazowy kod WWW ważny kilka minut.</span></div></article>
+          <article><b>4</b><div><strong>Telefon: wpisz kod</strong><span>Na stronie wybierz „Połącz telefon”, wpisz kod i przejdź do panelu. Kod działa tylko raz.</span></div></article>
+          <article><b>5</b><div><strong>Gotowe — bez nowych uprawnień</strong><span>Telefon korzysta z tej samej roli i tych samych punktów co aplikacja Windows. To służy bezpiecznej pracy poza stanowiskiem, nie tworzy osobnego konta.</span></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section how-it-works" id="app-flow">
+      <div class="wrap">
+        <div class="portal-section-head reveal">
+          <span>JAK DZIAŁA APLIKACJA</span>
+          <h2>ServiceOS mówi nie tylko „jaki status”,<br><em>ale co robisz dalej.</em></h2>
+          <p>Zlecenie ma punkt macierzysty, fizyczną lokalizację, etap procesu, następne wymagane działanie, termin oraz alert pilności. Kolejka jest automatycznie układana tak, żeby problemy były widoczne najpierw.</p>
+        </div>
+        <div class="workflow-guide reveal">
+          <article><b>01</b><span><strong>Przyjęte</strong><small>Klient zostawia urządzenie. Powstaje punkt macierzysty zlecenia.</small></span></article>
+          <article><b>02</b><span><strong>Do diagnozy</strong><small>System wskazuje rozpoczęcie diagnozy jako następną akcję.</small></span></article>
+          <article><b>03</b><span><strong>Diagnoza</strong><small>Ustal usterkę i zdecyduj: naprawa, części albo przekazanie.</small></span></article>
+          <article><b>04</b><span><strong>Części / serwis</strong><small>Telefon może czekać na części albo jechać do punktu z aktywnym technikiem.</small></span></article>
+          <article><b>05</b><span><strong>W naprawie</strong><small>Technik realizuje zlecenie i pilnuje ETA.</small></span></article>
+          <article><b>06</b><span><strong>Naprawa zakończona</strong><small>To jeszcze nie oznacza gotowości dla klienta.</small></span></article>
+          <article><b>07</b><span><strong>Zwrot do punktu macierzystego</strong><small>Jeżeli naprawa była poza domem zlecenia, powrót jest obowiązkowy.</small></span></article>
+          <article><b>08</b><span><strong>Przyjęcie zwrotu</strong><small>Punkt macierzysty potwierdza fizyczne dostarczenie.</small></span></article>
+          <article><b>09</b><span><strong>Gotowe do odbioru</strong><small>Dopiero wtedy klient może otrzymać informację o odbiorze.</small></span></article>
+          <article><b>10</b><span><strong>Zakończone</strong><small>Urządzenie wydane klientowi, zlecenie zamknięte.</small></span></article>
+        </div>
+        <div class="attention-legend reveal">
+          <span class="overdue">Po terminie</span><span class="due">Kończy się termin</span><span class="action">Wymaga działania teraz</span><span class="transit">W drodze</span><span>Czeka na serwis</span><span>Czeka na części</span><span class="ready">Gotowe do odbioru</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-section ui-guide-section" id="ui-guide">
+      <div class="wrap">
+        <div class="portal-section-head reveal">
+          <span>POZNAJ INTERFEJS</span>
+          <h2>Zobacz ServiceOS<br><em>zanim zaczniesz zmianę.</em></h2>
+          <p>Ten interaktywny podgląd odwzorowuje układ aplikacji: boczne moduły, punkt, kolejkę serwisową, statusy i centrum OWNER. Klikaj zakładki jak w ServiceOS.</p>
+        </div>
+        <div class="ui-demo-shell reveal">
+          <aside class="ui-demo-sidebar">
+            <div class="ui-demo-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
+            <button class="demo-nav active" data-demo-target="dashboard"><span>⌂</span>Start</button>
+            <button class="demo-nav" data-demo-target="service"><span>▣</span>Serwis</button>
+            <button class="demo-nav" data-demo-target="admin"><span>⚙</span>Administracja</button>
+            <div class="ui-demo-user"><b>BM</b><span><strong>OWNER</strong><small>Punkt Nowogard</small></span></div>
+          </aside>
+          <div class="ui-demo-main">
+            <div class="ui-demo-topbar"><div><span>AKTYWNY PUNKT</span><strong>Punkt Nowogard</strong></div><div class="ui-online"><i></i> ONLINE</div></div>
+
+            <div class="demo-screen active" data-demo-screen="dashboard">
+              <div class="demo-title"><span>DASHBOARD</span><h3>Dzień dobry. Co wymaga uwagi?</h3></div>
+              <div class="demo-kpis"><article><span>Wymaga działania</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
+              <div class="demo-focus-card"><span>NASTĘPNA AKCJA</span><strong>#1042 · Zakończ diagnozę i rozpocznij naprawę</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small><button data-demo-jump="service">Otwórz kolejkę serwisu →</button></div>
+            </div>
+
+            <div class="demo-screen" data-demo-screen="service">
+              <div class="demo-title"><span>SERWIS</span><h3>Co robimy dalej</h3></div>
+              <div class="demo-filter-row"><button class="active">Działaj teraz <b>4</b></button><button>Po terminie <b>1</b></button><button>W drodze <b>2</b></button><button>Gotowe <b>3</b></button></div>
+              <div class="demo-order-list">
+                <article class="urgent"><div class="demo-order-no">#1042</div><div><strong>Anna Kowalska · iPhone 14 Pro</strong><small>Etap 3/10 · Diagnoza</small><p>Następna akcja: <b>Zakończ diagnozę i rozpocznij naprawę</b></p><i><b style="width:30%"></b></i></div><em>PO TERMINIE</em></article>
+                <article><div class="demo-order-no">#1041</div><div><strong>Piotr Nowak · Samsung S24</strong><small>Etap 7/10 · Zwrot do punktu macierzystego</small><p>Następna akcja: <b>Potwierdź dostarczenie do Nowogardu</b></p><i><b style="width:70%"></b></i></div><em>W DRODZE</em></article>
+                <article class="ready"><div class="demo-order-no">#1038</div><div><strong>Marta Lis · iPhone 13</strong><small>Etap 9/10 · Gotowe do odbioru</small><p>Następna akcja: <b>Wydaj urządzenie klientowi</b></p><i><b style="width:90%"></b></i></div><em>GOTOWE</em></article>
+              </div>
+            </div>
+
+            <div class="demo-screen" data-demo-screen="admin">
+              <div class="demo-title"><span>OWNER</span><h3>Administracja i bezpieczeństwo</h3></div>
+              <div class="demo-admin-grid"><article><span>Aktywne sesje</span><strong>6</strong><small>Windows + WWW</small></article><article><span>Punkty serwisowe</span><strong>2</strong><small>technicy aktywni</small></article></div>
+              <div class="demo-admin-list"><div><b>Punkt Nowogard</b><span>0 aktywnych techników · ręczny wyjątek serwisowy</span><em>PRZYJMUJE</em></div><div><b>Wyspa Gryf</b><span>1 aktywny TECHNICIAN · automatyczny cel przekazania</span><em>AUTO</em></div></div>
+              <div class="demo-danger"><span>STREFA NIEBEZPIECZNA</span><strong>Factory reset danych ServiceOS</strong><small>OWNER · świeże logowanie · dokładna fraza · drugie potwierdzenie · trwały log operacji</small></div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -124,46 +250,27 @@
       <div class="wrap portal-mobile-grid">
         <div class="portal-mobile-copy reveal">
           <span class="portal-eyebrow">PANEL MOBILNY</span>
-          <h2>Telefon wystarczy,<br><em>gdy jesteś poza stanowiskiem.</em></h2>
-          <p>Panel WWW został zrobiony pod ekran telefonu. Nie próbuje kopiować całej aplikacji desktopowej — pokazuje szybkie operacje, których realnie potrzebujesz w terenie.</p>
+          <h2>Ten sam proces,<br><em>w kieszeni.</em></h2>
+          <p>Po połączeniu telefonu nie wyświetlamy już instrukcji onboardingowej. Dostajesz od razu roboczy panel: kolejkę „co dalej”, zlecenia, przekazania, przyjmowanie urządzeń i funkcje wynikające z Twojej roli.</p>
           <div class="mobile-capabilities">
-            <div><b>＋</b><span><strong>Nowe zlecenie</strong><small>Klient, urządzenie, usterka i punkt.</small></span></div>
-            <div><b>⌁</b><span><strong>Status i historia</strong><small>Sprawdź, co dzieje się z telefonem.</small></span></div>
-            <div><b>⇄</b><span><strong>Przekaż do serwisu</strong><small>Wybierz punkt, który przyjmuje zewnętrzne naprawy.</small></span></div>
-            <div><b>✓</b><span><strong>Przyjmij dostawę</strong><small>Serwisant potwierdza dostarczenie i przyjęcie.</small></span></div>
+            <div><b>01</b><span><strong>Działaj teraz</strong><small>Najpierw rzeczy wymagające reakcji.</small></span></div>
+            <div><b>02</b><span><strong>ETA i terminy</strong><small>Po terminie i kończące się terminy są wyróżnione.</small></span></div>
+            <div><b>03</b><span><strong>Przekazania</strong><small>Serwis z aktywnym technikiem pojawia się automatycznie.</small></span></div>
+            <div><b>04</b><span><strong>Zwrot do domu</strong><small>Telefon nie stanie się „gotowy”, dopóki fizycznie nie wróci.</small></span></div>
           </div>
-          <button class="button primary" type="button" data-open-login>Otwórz panel mobilny</button>
+          <button class="button primary requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz telefon z panelem</button>
         </div>
         <div class="portal-mobile-preview reveal delay">
           <div class="mobile-preview-shell">
             <div class="mobile-preview-top"><span>9:41</span><i></i><b>● ●</b></div>
             <div class="mobile-preview-brand"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><small>Punkt Nowogard</small></div><button>BM</button></div>
-            <div class="mobile-preview-title"><small>DZIEŃ DOBRY</small><strong>Praca w ruchu.</strong></div>
-            <div class="mobile-preview-tabs"><span class="active">Start</span><span>Zlecenia</span><span>Przekazania</span></div>
-            <div class="mobile-preview-kpis"><div><small>Aktywne</small><strong>12</strong></div><div><small>W drodze</small><strong>2</strong></div></div>
-            <div class="mobile-preview-order"><i></i><div><strong>#1041 · Samsung S24</strong><span>Szczecin → Nowogard</span></div><b>W DRODZE</b></div>
-            <div class="mobile-preview-order"><i></i><div><strong>#1038 · iPhone 13</strong><span>Serwisant: Kamil</span></div><b>NAPRAWA</b></div>
+            <div class="mobile-preview-title"><small>PRIORYTETY</small><strong>Co robimy dalej?</strong></div>
+            <div class="mobile-preview-tabs"><span class="active">Działaj</span><span>Termin</span><span>W drodze</span></div>
+            <div class="mobile-preview-kpis"><div><small>Do zrobienia</small><strong>4</strong></div><div><small>Po terminie</small><strong>1</strong></div></div>
+            <div class="mobile-preview-order"><i></i><div><strong>#1042 · iPhone 14 Pro</strong><span>Diagnoza → rozpocznij naprawę</span></div><b>TERAZ</b></div>
+            <div class="mobile-preview-order"><i></i><div><strong>#1041 · Samsung S24</strong><span>Zwrot: Szczecin → Nowogard</span></div><b>W DRODZE</b></div>
             <button class="mobile-new-order">＋ Nowe zlecenie</button>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="portal-section" id="flow">
-      <div class="wrap">
-        <div class="portal-section-head reveal">
-          <span>LOGISTYKA SERWISOWA</span>
-          <h2>Punkt nie naprawia na miejscu?<br><em>Wyślij urządzenie dalej.</em></h2>
-          <p>Przekazanie ma własny etap, więc status naprawy nie jest mieszany z transportem. Każdy uczestniczący punkt widzi tylko to zlecenie, które faktycznie do niego trafiło.</p>
-        </div>
-        <div class="flow-timeline reveal">
-          <article><b>1</b><span><strong>Przyjęte w punkcie</strong><small>Zlecenie powstaje tam, gdzie klient zostawił urządzenie.</small></span></article>
-          <i>→</i>
-          <article><b>2</b><span><strong>Wysłane do serwisu</strong><small>Klient dostaje osobny e-mail o przekazaniu.</small></span></article>
-          <i>→</i>
-          <article><b>3</b><span><strong>Dostarczone</strong><small>Punkt docelowy potwierdza fizyczną dostawę.</small></span></article>
-          <i>→</i>
-          <article><b>4</b><span><strong>Przyjęte przez serwisanta</strong><small>Technik przejmuje zlecenie do realizacji.</small></span></article>
         </div>
       </div>
     </section>
@@ -171,15 +278,15 @@
     <section class="portal-section portal-security-section" id="security">
       <div class="wrap portal-security-grid">
         <div class="portal-section-head reveal">
-          <span>OWNER CONTROL</span>
-          <h2>Więcej kontroli,<br><em>bez grzebania w bazie.</em></h2>
-          <p>Właściciel ma osobne centrum bezpieczeństwa i administracji, zarówno w aplikacji, jak i w mobilnym panelu.</p>
+          <span>BEZPIECZEŃSTWO</span>
+          <h2>System prowadzi pracę,<br><em>ale nie omija kontroli.</em></h2>
+          <p>Role, punkty, sesje i logistyka są sprawdzane centralnie. Funkcje administracyjne są dostępne wyłącznie dla odpowiednich ról.</p>
         </div>
         <div class="security-feature-list reveal delay">
-          <div><span>01</span><strong>Blokowanie kont</strong><small>Natychmiast unieważnia aktywne sesje użytkownika.</small></div>
-          <div><span>02</span><strong>Wylogowanie urządzeń</strong><small>Jedna osoba albo wszystkie sesje poza bieżącym OWNER.</small></div>
-          <div><span>03</span><strong>Punkty i serwisy</strong><small>Włączaj własny serwis i przyjmowanie zleceń zewnętrznych.</small></div>
-          <div><span>04</span><strong>Audyt</strong><small>Ostatnie działania, sesje WWW/desktop i otwarte przekazania.</small></div>
+          <div><span>01</span><strong>OWNER zatwierdza konta</strong><small>Osoba spoza LockOn nie dostanie dostępu bez akceptacji.</small></div>
+          <div><span>02</span><strong>Telefon dziedziczy rolę</strong><small>Parowanie nie tworzy dodatkowych uprawnień.</small></div>
+          <div><span>03</span><strong>Technik = automatyczny serwis</strong><small>Punkt z aktywnym TECHNICIAN-em staje się celem przekazania, chyba że OWNER wstrzyma przyjęcia.</small></div>
+          <div><span>04</span><strong>Factory reset OWNER</strong><small>Re-auth Google, podwójne potwierdzenie i trwały dziennik operacji.</small></div>
         </div>
       </div>
     </section>
@@ -187,12 +294,14 @@
     <section class="portal-download-section" id="pobierz">
       <div class="wrap portal-download-card reveal">
         <div>
-          <span class="portal-eyebrow">PEŁNY SERVICEOS</span>
-          <h2>Najwygodniej na Windows.<br><em>Najszybciej z telefonu.</em></h2>
-          <p>Aplikacja desktopowa pozostaje głównym stanowiskiem pracy. Panel WWW jest jej mobilnym uzupełnieniem.</p>
+          <span class="portal-eyebrow">GOTOWY DO PRACY?</span>
+          <h2>Pobierz ServiceOS<br><em>albo połącz telefon.</em></h2>
+          <p>Przyciski odblokują się po potwierdzeniu instrukcji pracownika na tej stronie.</p>
+          <div class="download-lock-state" id="downloadLockState"><span>🔒</span><strong>Najpierw przejdź sekcję „Zacznij tutaj”.</strong></div>
         </div>
         <div class="portal-download-actions">
-          <a class="button primary big download-link" href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz instalator <span>↓</span></a>
+          <a class="button primary big download-link requires-onboarding" data-requires-onboarding href="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe">Pobierz instalator <span>↓</span></a>
+          <button class="button secondary big requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz telefon</button>
           <span>Windows 64-bit · <b data-release-size>sprawdzam…</b></span>
           <code data-release-digest>sprawdzam SHA-256…</code>
           <button type="button" data-copy-digest>Kopiuj SHA-256</button>
@@ -204,27 +313,27 @@
   <dialog id="webLoginDialog" class="portal-login-dialog">
     <div class="portal-login-card">
       <button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button>
-      <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Logowanie do panelu WWW</span></div></div>
-      <h2>Masz kod z aplikacji?</h2>
-      <p>W ServiceOS otwórz <strong>Pomoc → Kod WWW</strong>. Kod jest ważny 5 minut i działa tylko raz.</p>
+      <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połącz urządzenie mobilne</span></div></div>
+      <h2>Wpisz kod z aplikacji.</h2>
+      <p>Na komputerze otwórz <strong>Pomoc → Połącz urządzenie</strong>. Jednorazowy kod jest ważny kilka minut i działa tylko raz.</p>
       <div class="portal-code-field">
         <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS">
-        <button id="webAuthCodeSubmit" type="button">Zaloguj</button>
+        <button id="webAuthCodeSubmit" type="button">Połącz</button>
       </div>
-      <small id="webAuthCodeStatus">Kod z aplikacji jest najszybszą metodą.</small>
-      <div class="portal-login-divider"><span>lub</span></div>
+      <small id="webAuthCodeStatus">Po połączeniu telefon użyje dokładnie Twojej roli i przypisanych punktów.</small>
+      <div class="portal-login-divider"><span>lub zaloguj się zatwierdzonym kontem</span></div>
       <div id="googleSignInButton" class="google-signin-host" aria-label="Zaloguj się przez Google"></div>
       <div id="googleAccountState" class="portal-account-state" hidden>
         <div><strong id="googleAccountName">Konto ServiceOS</strong><span id="googleAccountEmail"></span></div>
         <button id="googleSignOut" type="button">Wyloguj</button>
       </div>
-      <div class="portal-login-security"><span aria-hidden="true">✓</span><span>Strona nie nadaje nowych uprawnień. Używa dokładnie tej samej roli i zakresu punktów co aplikacja.</span></div>
+      <div class="portal-login-security"><span aria-hidden="true">✓</span><span>Strona nie nadaje nowych uprawnień. Konto i panel korzystają z centralnej roli oraz zakresu punktów zatwierdzonego przez OWNER.</span></div>
     </div>
   </dialog>
 
   <footer class="footer portal-footer">
     <div class="wrap footer-inner">
-      <div class="footer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Bartłomiej Motłoch</span></div></div>
+      <div class="footer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Oficjalny system firmy LockOn</span></div></div>
       <div class="footer-links"><a href="privacy.html">Prywatność</a><a href="signing.html">Code signing</a><a href="terms.html">Regulamin</a><a href="mailto:bartekmotloch@wp.pl">Kontakt</a></div>
     </div>
   </footer>
