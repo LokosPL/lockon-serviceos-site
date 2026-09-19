@@ -443,3 +443,29 @@ button{color:inherit}
 .mobile-finance-entries article span,.mobile-finance-entries article small{font-size:10px;color:var(--panel-muted)}
 .mobile-finance-entries article small{grid-column:1/-1}
 @media(max-width:620px){.mobile-finance-summary{grid-template-columns:1fr}.mobile-finance-point>summary{grid-template-columns:1fr}.mobile-finance-point>summary>div:last-child{align-items:flex-start}}
+
+
+/* Customer portal quote inbox */
+.customer-quote-list{display:flex;flex-direction:column;gap:10px}
+.customer-quote-card{padding:14px;border:1px solid var(--panel-line);border-radius:14px;background:var(--panel-card)}
+.customer-quote-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.customer-quote-head>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.customer-quote-head strong{font-size:13px}
+.customer-quote-head small{font-size:10px;color:var(--panel-muted)}
+.customer-quote-head>span{font-size:10px;font-weight:850;color:#ff9869;white-space:nowrap}
+.customer-quote-card>p{font-size:11px;color:#a5adb6;line-height:1.5}
+.customer-quote-card>small{font-size:10px;color:var(--panel-muted)}
+.customer-quote-price{margin-top:10px;padding:10px;border:1px solid rgba(105,217,158,.18);border-radius:10px;background:rgba(105,217,158,.035);display:flex;flex-direction:column;gap:3px}
+.customer-quote-price span,.customer-quote-price small{font-size:10px;color:var(--panel-muted)}
+.customer-quote-price strong{font-size:18px;color:#69d99e}
+.customer-quote-messages{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.customer-quote-message{margin:0;padding:9px 10px;border-radius:9px;background:#0c1015;font-size:11px;line-height:1.45}
+.customer-quote-message.customer{border-left:2px solid #7fb3ff}
+.customer-quote-message.staff{border-left:2px solid #ff7b45}
+.customer-quote-message.system{color:#87919b}
+.customer-quote-message small{display:block;margin-top:4px;color:var(--panel-muted)}
+.customer-quote-actions{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:7px;margin-top:9px}
+.customer-quote-actions input,.customer-quote-actions button{min-height:40px;border-radius:10px;border:1px solid var(--panel-line);background:#0c1015;color:inherit;padding:0 10px}
+.customer-quote-actions button{background:#ff7445;border-color:#ff7445;color:#fff;font-weight:800}
+.customer-quote-actions button.secondary{background:transparent;border-color:var(--panel-line);color:inherit}
+@media(max-width:620px){.customer-quote-head{flex-direction:column}.customer-quote-actions{grid-template-columns:1fr}.customer-quote-actions button{width:100%}}
