@@ -84,7 +84,7 @@
             <label><span>Numer seryjny</span><input name="serialNumber" maxlength="120"></label>
             <label><span>Typ</span><select name="orderType"><option value="REPAIR">Naprawa</option><option value="COMPLAINT">Reklamacja</option></select></label>
             <label><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
-            <label class="full management-only" hidden><span>Szacowany koszt (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
+            <label class="full service-edit-only" hidden><span>Cena orientacyjna (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
             <label class="full"><span>Opis usterki</span><textarea name="issueDescription" rows="5" maxlength="2000" required></textarea></label>
             <label class="full"><span>Uwagi do urządzenia</span><textarea name="deviceNotes" rows="3" maxlength="1000"></textarea></label>
           </div>
