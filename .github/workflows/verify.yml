@@ -54,6 +54,10 @@ jobs:
           grep -q 'Rozliczenia' index.html
           grep -q 'mobile-anchor-nav' index.html
           grep -q 'workflow' assets/panel.js
+          grep -q 'Cena orientacyjna' panel.html
+          grep -q 'data-save-order-prices' assets/panel.js
+          grep -q 'event.preventDefault()' assets/site.js
+          ! grep -q '50/50' index.html
           ! grep -q 'style="' index.html
           ! grep -q 'style="' assets/panel.js
           grep -q '/service/orders' assets/panel.js

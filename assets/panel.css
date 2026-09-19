@@ -386,3 +386,10 @@ button{color:inherit}
   .panel-view{animation:none}
   *{scroll-behavior:auto!important}
 }
+
+
+.mobile-price-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.mobile-price-grid label{display:flex;flex-direction:column;gap:5px}
+.mobile-price-grid small{font-size:11px;color:#78838e;font-weight:750}
+.mobile-price-grid .order-note-input{margin-top:0}
+@media(max-width:520px){.mobile-price-grid{grid-template-columns:1fr}}

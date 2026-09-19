@@ -109,6 +109,7 @@
 
     document.querySelectorAll('.owner-only').forEach((el) => { el.hidden = !isOwner(); });
     document.querySelectorAll('.management-only').forEach((el) => { el.hidden = !canManageService(); });
+    document.querySelectorAll('.service-edit-only').forEach((el) => { el.hidden = !canEditService(); });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
@@ -299,8 +300,11 @@
         '<div><span>Termin</span><strong>' + esc(order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : '—') + '</strong></div>' +
         '<div><span>Punkt macierzysty</span><strong>' + esc(order.homePointName || order.pointName) + '</strong></div>' +
         '<div><span>Lokalizacja</span><strong>' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</strong></div>' +
+        '<div><span>Cena orientacyjna</span><strong>' + esc(order.estimatedCost == null ? '—' : Number(order.estimatedCost).toFixed(2) + ' PLN') + '</strong></div>' +
+        '<div><span>Cena końcowa</span><strong>' + esc(order.finalCost == null ? '—' : Number(order.finalCost).toFixed(2) + ' PLN') + '</strong></div>' +
       '</div>' +
       '<div class="order-dialog-section"><span>OPIS USTERKI</span><p class="order-note-text">' + esc(order.issueDescription || '—') + '</p></div>' +
+      (canEditService() ? '<div class="order-dialog-section"><span>CENY ZLECENIA</span><div class="mobile-price-grid"><label><small>Cena orientacyjna (PLN)</small><input id="mobileEstimatedCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.estimatedCost == null ? '' : order.estimatedCost) + '"></label><label><small>Cena końcowa (PLN)</small><input id="mobileFinalCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.finalCost == null ? '' : order.finalCost) + '"></label></div><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-prices="' + esc(order.id) + '">Zapisz ceny</button></div></div>' : '') +
       (canEditService() ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
         Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' && order.canMarkReady === false) || (value === 'COMPLETED' && (order.canMarkReady === false || order.status !== 'READY'))) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
         '</select><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-status="' + esc(order.id) + '">Zapisz status</button></div></div>' : '') +
@@ -321,6 +325,35 @@
         '<div class="mobile-note-list">' + (notes.slice(0,5).map((note) => '<div><strong>' + esc(note.authorName) + '</strong><small>' + esc(formatDate(note.createdAt)) + '</small><p>' + esc(note.body) + '</p></div>').join('') || '<p class="order-note-text">Brak notatek.</p>') + '</div>' +
       '</div>';
     dialog.showModal();
+  };
+
+  const saveOrderPrices = async (id) => {
+    const order = orders.find((item) => item.id === id);
+    if (!order) return;
+    const estimatedRaw = document.getElementById('mobileEstimatedCost')?.value ?? '';
+    const finalRaw = document.getElementById('mobileFinalCost')?.value ?? '';
+    const estimatedCost = estimatedRaw === '' ? null : Number(estimatedRaw);
+    const finalCost = finalRaw === '' ? null : Number(finalRaw);
+    if ((estimatedCost != null && (!Number.isFinite(estimatedCost) || estimatedCost < 0)) ||
+        (finalCost != null && (!Number.isFinite(finalCost) || finalCost < 0))) {
+      return toast('Wpisz prawidłowe ceny.','error');
+    }
+    try {
+      await api('/service/orders/' + encodeURIComponent(id) + '/details', {
+        method:'POST',
+        body:JSON.stringify({
+          imei:order.imei || '',
+          serialNumber:order.serialNumber || '',
+          deviceNotes:order.deviceNotes || '',
+          estimatedCompletionAt:order.estimatedCompletionAt || null,
+          estimatedCost,
+          finalCost
+        })
+      });
+      toast('Ceny zlecenia zostały zapisane.');
+      document.getElementById('orderDialog')?.close();
+      await loadOrders();
+    } catch (error) { toast(error.message || 'Nie udało się zapisać cen.','error'); }
   };
 
   const saveOrderStatus = async (id) => {
@@ -534,6 +567,8 @@
       if (transfer) { void updateTransfer(transfer.dataset.transferId,transfer.dataset.transferAction); return; }
       const saveStatus = event.target.closest('[data-save-order-status]');
       if (saveStatus) { void saveOrderStatus(saveStatus.dataset.saveOrderStatus); return; }
+      const savePrices = event.target.closest('[data-save-order-prices]');
+      if (savePrices) { void saveOrderPrices(savePrices.dataset.saveOrderPrices); return; }
       const sendTransfer = event.target.closest('[data-send-transfer]');
       if (sendTransfer) { void sendOrderTransfer(sendTransfer.dataset.sendTransfer); return; }
       const sendReturn = event.target.closest('[data-send-return]');
