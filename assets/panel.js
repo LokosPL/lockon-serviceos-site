@@ -1006,7 +1006,7 @@
       const assigned=owner||user.role==='BOSS'?'Wszystkie punkty':points.filter(p=>(user.pointIds||[]).includes(p.id)).map(p=>p.name).join(', ')||'Brak punktu';
       const effectiveRole=user.role==='SUPPORT'?'USER':(user.role||'USER');
       const supportEnabled=user.supportEnabled===true||user.role==='SUPPORT'||owner;
-      return '<article class="admin-user-card admin-user-card-v2 '+(user.blocked?'blocked':'')+'">'+
+      return '<article class="admin-user-card admin-user-card-v2 '+(user.blocked?'blocked':'')+'" data-mobile-admin-user="'+esc(user.id)+'">'+
         '<div class="mobile-admin-user-head"><div><strong>'+esc(user.name)+'</strong><span>'+esc(user.email)+'</span></div><div class="mobile-admin-badges">'+
           (user.blocked?'<b class="danger">ZABLOKOWANE</b>':'<b>AKTYWNE</b>')+
           (supportEnabled&&!owner?'<b class="support">WSPARCIE</b>':'')+
