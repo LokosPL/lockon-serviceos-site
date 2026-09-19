@@ -40,8 +40,8 @@
       </a>
       <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
         <a href="#day">Jak działa</a>
-        <a href="#modules">Poznaj aplikację</a>
-        <a href="#connect">Połącz telefon</a>
+        <a href="#modules">Aplikacja</a>
+        <a href="#connect">Telefon</a>
       </nav>
       <div class="portal-nav-actions">
         <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
@@ -474,8 +474,8 @@
         <form id="webAuthCodeForm" class="portal-code-form">
           <label for="webAuthCode"><span>Jednorazowy kod</span><span>format: ABCD-EFGH</span></label>
           <div class="portal-code-field">
-            <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required>
-            <button id="webAuthCodeSubmit" type="submit">Połącz telefon</button>
+            <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required>
+            <button id="webAuthCodeSubmit" type="submit" disabled>Połącz telefon</button>
           </div>
           <small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small>
         </form>
