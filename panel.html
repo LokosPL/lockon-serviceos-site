@@ -133,6 +133,18 @@
       <div class="panel-section-head"><div><span>PUNKTY</span><h2>Serwisy i lokalizacje</h2></div></div>
       <div id="adminPoints" class="panel-list"></div>
 
+      <div class="panel-section-head"><div><span>AUDYT</span><h2>Dziennik działań</h2></div></div>
+      <form id="adminAuditFilters" class="mobile-audit-filters">
+        <select id="adminAuditUser" name="userId" aria-label="Użytkownik"><option value="">Wszyscy użytkownicy</option></select>
+        <select id="adminAuditPoint" name="pointId" aria-label="Punkt"><option value="">Wszystkie punkty</option></select>
+        <input name="action" placeholder="Typ zdarzenia, np. SERVICE">
+        <input name="orderNumber" inputmode="numeric" placeholder="Numer zlecenia">
+        <input name="dateFrom" type="date" aria-label="Data od">
+        <input name="dateTo" type="date" aria-label="Data do">
+        <button type="submit">Filtruj audyt</button>
+      </form>
+      <div id="adminAudit" class="mobile-audit-list"></div>
+
       <details class="mobile-create-point">
         <summary>＋ Dodaj nowy punkt / serwis</summary>
         <form id="mobilePointForm" class="panel-form-card compact">
