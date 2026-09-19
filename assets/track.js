@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const apiBase=String(window.LOCKON_WEB_AUTH?.apiBaseUrl||'').replace(/\/$/,'');
+const apiBase='https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech';
 const loading=document.getElementById('trackLoading');
 const errorBox=document.getElementById('trackError');
 const content=document.getElementById('trackContent');
