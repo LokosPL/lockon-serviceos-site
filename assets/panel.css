@@ -563,3 +563,37 @@ button{color:inherit}
 }
 @keyframes workspaceIn{from{opacity:.35;transform:translateY(8px) scale(.995)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.panel-view.active{animation:none}.panel-order-card,.panel-transfer-card,.admin-user-card,.admin-point-card,.customer-quote-card,.panel-kpis article,.panel-quick-grid>button{transition:none}}
+
+
+/* readable service-order context */
+.panel-order-top{grid-template-columns:74px minmax(0,1fr) auto}
+.panel-order-number{
+  width:72px;height:auto;min-height:58px;padding:8px 6px;border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px
+}
+.panel-order-number strong{font-size:17px;line-height:1;color:#ff9868}
+.panel-order-number small{font-size:8px;line-height:1.25;color:#65717d;text-align:center;font-weight:650}
+.panel-order-main small{font-size:10px;text-transform:uppercase;letter-spacing:.05em}
+.panel-order-context{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:1px}
+.panel-order-context>div{padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:#0b0f14;display:flex;flex-direction:column;min-width:0}
+.panel-order-context span{font-size:9px;text-transform:uppercase;letter-spacing:.055em;color:#65717c}
+.panel-order-context strong{font-size:11px;color:#dce1e5;margin-top:3px;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+.panel-order-context .location{border-color:rgba(255,124,67,.15);background:rgba(255,124,67,.03)}
+.panel-order-context .location strong{color:#ff9b6c}
+.panel-order-context .price strong{color:#69d99e}
+.panel-order-context .transfer strong{color:#7cb8ff}
+@media(min-width:980px){
+  .panel-order-top{grid-template-columns:88px minmax(0,1fr) auto}
+  .panel-order-number{width:86px;min-height:66px;padding:9px 7px}
+  .panel-order-number strong{font-size:20px}.panel-order-number small{font-size:9px}
+  .panel-order-context{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .panel-order-context.compact{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .panel-order-context>div{padding:10px 11px}.panel-order-context strong{font-size:12px}
+}
+@media(max-width:520px){
+  .panel-order-top{grid-template-columns:68px minmax(0,1fr)}
+  .panel-order-number{width:66px;min-height:56px}
+  .panel-order-context{grid-template-columns:1fr 1fr}
+  .panel-order-context>div{padding:8px}
+  .panel-order-context span{font-size:8px}.panel-order-context strong{font-size:10px}
+}
