@@ -36,11 +36,11 @@
         <div><strong>LockOn</strong><span>ServiceOS</span></div>
       </a>
       <nav class="nav-links portal-links" aria-label="Sekcje strony">
-        <a href="#start">Start</a>
-        <a href="#connect">Połącz telefon</a>
         <a href="#modules">Moduły</a>
         <a href="#workflow">Praca serwisu</a>
         <a href="#preview">UI aplikacji</a>
+        <a href="#start">Zasady</a>
+        <a href="#download">Pobierz / połącz</a>
       </nav>
       <div class="portal-nav-actions">
         <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
@@ -51,10 +51,10 @@
   </header>
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
-    <a href="#start">Start</a>
-    <a href="#connect">Telefon</a>
     <a href="#modules">Moduły</a>
+    <a href="#workflow">Proces</a>
     <a href="#preview">Aplikacja</a>
+    <a href="#start">Zasady</a>
     <a href="#download">Pobierz</a>
   </nav>
 
@@ -72,7 +72,7 @@
             <span>Konto bez zatwierdzenia przez OWNER nie uzyska dostępu do danych firmy.</span>
           </div>
           <div class="hero-actions">
-            <a class="button primary big" href="#start">Przejdź instrukcję</a>
+            <a class="button primary big" href="#modules">Poznaj ServiceOS</a>
             <button class="button secondary big requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz mój telefon</button>
           </div>
           <div class="hero-facts">
@@ -124,58 +124,8 @@
       <div class="wrap status-grid">
         <div><strong data-release-version>—</strong><span>aktualna wersja Windows</span></div>
         <div><strong>1 konto</strong><span>desktop + panel WWW</span></div>
-        <div><strong>50 / 50</strong><span>automatyczne rozliczenie</span></div>
+        <div><strong>Własny %</strong><span>rozliczenie każdego serwisanta</span></div>
         <div><strong>24/7</strong><span>dostęp do panelu mobilnego</span></div>
-      </div>
-    </section>
-
-    <section class="page-section" id="start">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>ZANIM ZACZNIESZ</span>
-          <h2>Trzy rzeczy, które musisz wiedzieć.</h2>
-          <p>Przejście tej sekcji jest wymagane przed pobraniem instalatora i połączeniem telefonu z panelem.</p>
-        </div>
-
-        <div class="rule-grid">
-          <article class="rule-card reveal"><b>01</b><div><span>TWOJE KONTO</span><h3>Logujesz się tylko swoim kontem.</h3><p>ServiceOS wykorzystuje role i przypisane punkty. Nie udostępniaj sesji ani kodów innym osobom.</p></div></article>
-          <article class="rule-card reveal delay"><b>02</b><div><span>DANE FIRMY</span><h3>Widzisz wyłącznie dane potrzebne do pracy.</h3><p>Dane klientów, urządzeń i rozliczeń są roboczymi danymi LockOn i nie mogą być używane poza firmą.</p></div></article>
-          <article class="rule-card reveal delay"><b>03</b><div><span>TWÓJ TELEFON</span><h3>Połącz własne urządzenie mobilne.</h3><p>Panel mobilny przejmuje dokładnie Twoją rolę i punkty. Jednorazowy kod nie daje dodatkowych uprawnień.</p></div></article>
-        </div>
-
-        <div class="accept-card reveal" id="onboardingAccept">
-          <div class="accept-intro">
-            <span>WYMAGANE</span>
-            <h3>Potwierdź zasady i odblokuj ServiceOS.</h3>
-            <p>To potwierdzenie zapisuje się tylko w tej przeglądarce. Konto nadal musi być zatwierdzone przez OWNER.</p>
-          </div>
-          <div class="accept-form">
-            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem / osobą uprawnioną przez LockOn i korzystam z własnego konta.</span></label>
-            <label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> oraz <a href="privacy.html">politykę prywatności</a>.</span></label>
-            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod połączenia jest jednorazowy, a telefon dostaje tylko moje obecne uprawnienia.</span></label>
-            <button id="acceptOnboarding" class="button primary big" type="button" disabled>Akceptuję — odblokuj ServiceOS</button>
-            <small id="onboardingState">Pobieranie i panel są zablokowane do czasu akceptacji.</small>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section connect-section" id="connect">
-      <div class="wrap connect-grid">
-        <div class="connect-copy reveal">
-          <span class="section-kicker">POŁĄCZ TELEFON</span>
-          <h2>Panel mobilny w pięciu prostych krokach.</h2>
-          <p>Telefon jest częścią Twojego stanowiska pracy. Po połączeniu możesz sprawdzać zlecenia, zmieniać etapy i obsługiwać przekazania bez wracania do komputera.</p>
-          <div class="site-address"><span>Na telefonie otwórz</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj</button></div>
-          <button class="button primary big requires-onboarding" data-requires-onboarding data-open-login type="button">Mam stronę na telefonie — połącz</button>
-        </div>
-        <div class="connect-steps reveal delay">
-          <article><b>1</b><div><strong>Otwórz app.serviceos.pl na telefonie</strong><span>Przejdź tę instrukcję i zaakceptuj zasady.</span></div></article>
-          <article><b>2</b><div><strong>Zaloguj się do aplikacji Windows</strong><span>Użyj swojego zatwierdzonego konta Google.</span></div></article>
-          <article><b>3</b><div><strong>Otwórz Pomoc → Połącz urządzenie</strong><span>Aplikacja wygeneruje jednorazowy kod WWW ważny kilka minut.</span></div></article>
-          <article><b>4</b><div><strong>Wpisz kod na telefonie</strong><span>Na stronie wybierz „Połącz telefon” i podaj kod z aplikacji.</span></div></article>
-          <article><b>5</b><div><strong>Gotowe</strong><span>Telefon ma tę samą rolę i te same punkty co Twoja aplikacja desktopowa.</span></div></article>
-        </div>
       </div>
     </section>
 
@@ -190,7 +140,7 @@
           <article><div class="module-icon">⌂</div><h3>Start</h3><p>Najważniejsze liczby i rzeczy wymagające reakcji.</p><span>Dashboard</span></article>
           <article><div class="module-icon">▣</div><h3>Serwis</h3><p>Klienci, telefony, statusy, technicy, terminy i następne akcje.</p><span>Zlecenia</span></article>
           <article><div class="module-icon">⇄</div><h3>Przekazania</h3><p>Wysyłka do serwisu, dostawa, przyjęcie i obowiązkowy powrót.</p><span>Logistyka</span></article>
-          <article><div class="module-icon">50%</div><h3>Rozliczenia</h3><p>Zakończone zlecenia trafiają tu automatycznie i od razu dzielą się 50/50.</p><span>Bez weryfikacji</span></article>
+          <article><div class="module-icon">%</div><h3>Rozliczenia</h3><p>Każdy serwisant ustawia własny procent. Zakończone zlecenie zapisuje podział obowiązujący w chwili zamknięcia.</p><span>Indywidualny podział</span></article>
           <article><div class="module-icon">✉</div><h3>Powiadomienia</h3><p>Statusy zlecenia automatycznie wysyłają klientowi wiadomość e-mail.</p><span>Gmail</span></article>
           <article><div class="module-icon">⚙</div><h3>Administracja</h3><p>OWNER zarządza kontami, punktami, serwisami, sesjami i bezpieczeństwem.</p><span>OWNER</span></article>
         </div>
@@ -213,7 +163,7 @@
           <article><b>06</b><strong>Powrót</strong><span>Jeżeli telefon jest poza punktem macierzystym.</span></article>
           <article><b>07</b><strong>Przyjęty w domu</strong><span>Punkt macierzysty potwierdza fizyczny zwrot.</span></article>
           <article><b>08</b><strong>Gotowy do odbioru</strong><span>Klient może odebrać urządzenie.</span></article>
-          <article><b>09</b><strong>Zakończone</strong><span>Automatyczne rozliczenie 50/50.</span></article>
+          <article><b>09</b><strong>Zakończone</strong><span>Automatyczne rozliczenie według ustawień serwisanta.</span></article>
           <article><b>10</b><strong>Historia</strong><span>Wszystkie zmiany pozostają zapisane.</span></article>
         </div>
         <div class="priority-row reveal">
@@ -239,10 +189,10 @@
         <div class="app-preview reveal">
           <aside class="preview-nav">
             <div class="preview-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></div>
-            <button class="demo-nav active" data-demo-target="dashboard">⌂ <span>Start</span></button>
-            <button class="demo-nav" data-demo-target="service">▣ <span>Serwis</span></button>
-            <button class="demo-nav" data-demo-target="finance">50% <span>Rozliczenia</span></button>
-            <button class="demo-nav" data-demo-target="admin">⚙ <span>Administracja</span></button>
+            <button type="button" class="demo-nav active" data-demo-target="dashboard">⌂ <span>Start</span></button>
+            <button type="button" class="demo-nav" data-demo-target="service">▣ <span>Serwis</span></button>
+            <button type="button" class="demo-nav" data-demo-target="finance">50% <span>Rozliczenia</span></button>
+            <button type="button" class="demo-nav" data-demo-target="admin">⚙ <span>Administracja</span></button>
           </aside>
           <div class="preview-content">
             <div class="preview-topbar"><div><span>AKTYWNY PUNKT</span><strong>Punkt Nowogard</strong></div><span class="online-dot"><i></i> ONLINE</span></div>
@@ -250,7 +200,7 @@
             <div class="demo-screen active" data-demo-screen="dashboard">
               <div class="preview-page-title"><span>START</span><h3>Co wymaga uwagi?</h3></div>
               <div class="preview-stats"><article><span>Działaj teraz</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
-              <button class="preview-focus" data-demo-jump="service"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small><b>Otwórz zlecenie →</b></button>
+              <button type="button" class="preview-focus" data-demo-jump="service"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small><b>Otwórz zlecenie →</b></button>
             </div>
 
             <div class="demo-screen" data-demo-screen="service">
@@ -264,9 +214,9 @@
             </div>
 
             <div class="demo-screen" data-demo-screen="finance">
-              <div class="preview-page-title"><span>ROZLICZENIA</span><h3>50/50 bez czekania</h3></div>
-              <div class="preview-stats finance"><article><span>Przychód</span><strong>1 840 zł</strong><small>zatwierdzony automatycznie</small></article><article><span>Serwisanci</span><strong>920 zł</strong><small>50%</small></article><article><span>Szef</span><strong>920 zł</strong><small>50%</small></article></div>
-              <div class="preview-settlement"><span>✓ ZLECENIE #1038 ZAKOŃCZONE</span><strong>500,00 zł dodane automatycznie</strong><p>250,00 zł serwisant · 250,00 zł Szef · bez dodatkowej weryfikacji</p></div>
+              <div class="preview-page-title"><span>ROZLICZENIA</span><h3>Procent ustawiany przez serwisanta</h3></div>
+              <div class="preview-stats finance"><article><span>Przychód</span><strong>1 840 zł</strong><small>zapisany automatycznie</small></article><article><span>Serwisant</span><strong>1 104 zł</strong><small>przykład: 60%</small></article><article><span>Szef</span><strong>736 zł</strong><small>przykład: 40%</small></article></div>
+              <div class="preview-settlement"><span>✓ ZLECENIE #1038 ZAKOŃCZONE</span><strong>500,00 zł dodane automatycznie</strong><p>300,00 zł serwisant · 200,00 zł Szef · przykład ustawienia 60/40</p></div>
             </div>
 
             <div class="demo-screen" data-demo-screen="admin">
@@ -291,6 +241,56 @@
           <article><strong>Sesje można natychmiast unieważnić</strong><span>Blokada konta wylogowuje aktywne urządzenia.</span></article>
           <article><strong>Gmail działa automatycznie</strong><span>Punkty bez własnego nadawcy korzystają z aktywnego firmowego nadawcy.</span></article>
           <article><strong>Factory reset jest chroniony</strong><span>OWNER + świeże logowanie + fraza + drugie potwierdzenie.</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="start">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span>NA KONIEC · ZASADY DOSTĘPU</span>
+          <h2>Przeczytaj zasady, zaakceptuj i dopiero wtedy połącz urządzenie.</h2>
+          <p>Najpierw możesz spokojnie obejrzeć cały ServiceOS. Ta sekcja jest ostatnim krokiem przed pobraniem aplikacji i połączeniem telefonu.</p>
+        </div>
+
+        <div class="rule-grid">
+          <article class="rule-card reveal"><b>01</b><div><span>TWOJE KONTO</span><h3>Logujesz się tylko swoim kontem.</h3><p>ServiceOS wykorzystuje role i przypisane punkty. Nie udostępniaj sesji ani kodów innym osobom.</p></div></article>
+          <article class="rule-card reveal delay"><b>02</b><div><span>DANE FIRMY</span><h3>Widzisz wyłącznie dane potrzebne do pracy.</h3><p>Dane klientów, urządzeń i rozliczeń są roboczymi danymi LockOn i nie mogą być używane poza firmą.</p></div></article>
+          <article class="rule-card reveal delay"><b>03</b><div><span>TWÓJ TELEFON</span><h3>Połącz własne urządzenie mobilne.</h3><p>Panel mobilny przejmuje dokładnie Twoją rolę i punkty. Jednorazowy kod nie daje dodatkowych uprawnień.</p></div></article>
+        </div>
+
+        <div class="accept-card reveal" id="onboardingAccept">
+          <div class="accept-intro">
+            <span>WYMAGANE</span>
+            <h3>Potwierdź zasady pracownika.</h3>
+            <p>To potwierdzenie zapisuje się tylko w tej przeglądarce. Konto nadal musi być zatwierdzone przez OWNER.</p>
+          </div>
+          <div class="accept-form">
+            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem / osobą uprawnioną przez LockOn i korzystam z własnego konta.</span></label>
+            <label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> oraz <a href="privacy.html">politykę prywatności</a>.</span></label>
+            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod połączenia jest jednorazowy, a telefon dostaje tylko moje obecne uprawnienia.</span></label>
+            <button id="acceptOnboarding" class="button primary big" type="button" disabled>Akceptuję — odblokuj ServiceOS</button>
+            <small id="onboardingState">Pobieranie i panel są zablokowane do czasu akceptacji.</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section connect-section" id="connect">
+      <div class="wrap connect-grid">
+        <div class="connect-copy reveal">
+          <span class="section-kicker">POŁĄCZ TELEFON</span>
+          <h2>Po akceptacji połącz telefon z aplikacją.</h2>
+          <p>To krok po zaakceptowaniu zasad. Połączony telefon korzysta z tej samej roli, punktów i uprawnień co aplikacja Windows.</p>
+          <div class="site-address"><span>Na telefonie otwórz</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj</button></div>
+          <button class="button primary big requires-onboarding" data-requires-onboarding data-open-login type="button">Mam stronę na telefonie — połącz</button>
+        </div>
+        <div class="connect-steps reveal delay">
+          <article><b>1</b><div><strong>Otwórz app.serviceos.pl na telefonie</strong><span>Przejdź tę instrukcję i zaakceptuj zasady.</span></div></article>
+          <article><b>2</b><div><strong>Zaloguj się do aplikacji Windows</strong><span>Użyj swojego zatwierdzonego konta Google.</span></div></article>
+          <article><b>3</b><div><strong>Otwórz Pomoc → Połącz urządzenie</strong><span>Aplikacja wygeneruje jednorazowy kod WWW ważny kilka minut.</span></div></article>
+          <article><b>4</b><div><strong>Wpisz kod na telefonie</strong><span>Na stronie wybierz „Połącz telefon” i podaj kod z aplikacji.</span></div></article>
+          <article><b>5</b><div><strong>Gotowe</strong><span>Telefon ma tę samą rolę i te same punkty co Twoja aplikacja desktopowa.</span></div></article>
         </div>
       </div>
     </section>
