@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+  <title>Śledzenie serwisu — LockOn ServiceOS</title>
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/track.css">
+</head>
+<body>
+  <header class="track-nav">
+    <a href="index.html" class="track-brand" aria-label="LockOn ServiceOS">
+      <img src="assets/logo.svg" alt="">
+      <span><strong>LockOn</strong><small>ServiceOS</small></span>
+    </a>
+    <span class="track-secure">Bezpieczne śledzenie zlecenia</span>
+  </header>
+
+  <main class="track-shell">
+    <section id="trackLoading" class="track-state">
+      <div class="track-spinner"></div>
+      <h1>Pobieram informacje o serwisie…</h1>
+      <p>Sprawdzamy aktualny etap i historię urządzenia.</p>
+    </section>
+
+    <section id="trackError" class="track-state error" hidden>
+      <div class="track-state-icon">!</div>
+      <h1>Nie można otworzyć śledzenia.</h1>
+      <p id="trackErrorText">Link jest nieprawidłowy albo nieaktywny.</p>
+      <a href="index.html" class="track-button">Przejdź do ServiceOS</a>
+    </section>
+
+    <div id="trackContent" hidden>
+      <section class="track-hero">
+        <div>
+          <span class="track-eyebrow">ZLECENIE <b id="orderNumber">—</b></span>
+          <h1 id="deviceName">Urządzenie</h1>
+          <p id="issueDescription">—</p>
+        </div>
+        <div class="track-current">
+          <span>Aktualny etap</span>
+          <strong id="currentStatus">—</strong>
+          <small id="updatedAt">—</small>
+        </div>
+      </section>
+
+      <section class="track-summary">
+        <article><span>Punkt prowadzący</span><strong id="pointName">—</strong></article>
+        <article><span>Aktualna lokalizacja</span><strong id="currentPoint">—</strong></article>
+        <article><span>Planowany termin</span><strong id="eta">—</strong></article>
+        <article><span>Wycena / koszt</span><strong id="price">—</strong></article>
+      </section>
+
+      <section class="track-card">
+        <div class="track-section-head">
+          <div><span>PRZEBIEG SERWISU</span><h2>Etapy zlecenia</h2></div>
+          <small>Historia statusów bez danych wewnętrznych pracowników.</small>
+        </div>
+        <div id="statusTimeline" class="track-timeline"></div>
+      </section>
+
+      <section class="track-card">
+        <div class="track-section-head">
+          <div><span>PROTOKÓŁ URZĄDZENIA</span><h2>Przekazania między punktami</h2></div>
+          <small>Każdy fizyczny ruch urządzenia pozostaje zapisany.</small>
+        </div>
+        <div id="transferTimeline" class="track-transfers"></div>
+      </section>
+
+      <section class="track-note">
+        <strong>Co widzisz na tej stronie?</strong>
+        <p>Wyłącznie informacje potrzebne do śledzenia Twojego zlecenia: urządzenie, opis zgłoszenia, statusy, ceny podane w zleceniu i ruch urządzenia między punktami. Dane pracowników, dane logowania i notatki wewnętrzne nie są tutaj udostępniane.</p>
+      </section>
+    </div>
+  </main>
+
+  <footer class="track-footer">
+    <span>LockOn ServiceOS</span>
+    <a href="privacy.html">Prywatność</a>
+  </footer>
+
+  <script src="assets/google-config.js"></script>
+  <script src="assets/track.js"></script>
+</body>
+</html>

@@ -405,3 +405,26 @@ body.portal-home *{box-sizing:border-box}
   .product-window,.product-phone{animation:none!important}
   .reveal{opacity:1!important;transform:none!important;transition:none!important}
 }
+
+
+/* preview isolation fix */
+.portal-home #preview .app-preview{position:relative;isolation:isolate;contain:layout paint style}
+.portal-home #preview .preview-content{position:relative;min-height:598px;overflow:clip}
+.portal-home #preview .demo-screen{
+  position:static;
+  inset:auto;
+  width:100%;
+  min-height:0;
+  opacity:1;
+  transform:none;
+  pointer-events:auto;
+}
+.portal-home #preview .demo-screen:not(.active){display:none;opacity:0;pointer-events:none}
+.portal-home #preview .demo-screen.active{display:block;opacity:1;transform:none;pointer-events:auto}
+@media(max-width:760px){
+  .portal-home #preview .preview-content{min-height:0}
+  .portal-home #preview .demo-screen{min-height:540px}
+}
+@media(max-width:470px){
+  .portal-home #preview .demo-screen{min-height:0}
+}

@@ -10,7 +10,24 @@
   const config = window.LOCKON_WEB_AUTH || {};
   const apiBaseUrl = String(config.apiBaseUrl || '').replace(/\/$/, '');
   const tokenKey = 'lockon.web.session';
-  let token = sessionStorage.getItem(tokenKey) || '';
+  const readStoredToken = () => {
+    try {
+      const persistent = localStorage.getItem(tokenKey) || '';
+      if (persistent) return persistent;
+      const legacy = sessionStorage.getItem(tokenKey) || '';
+      if (legacy) {
+        localStorage.setItem(tokenKey, legacy);
+        sessionStorage.removeItem(tokenKey);
+        return legacy;
+      }
+    } catch {}
+    try { return sessionStorage.getItem(tokenKey) || ''; } catch { return ''; }
+  };
+  const clearStoredToken = () => {
+    try { localStorage.removeItem(tokenKey); } catch {}
+    try { sessionStorage.removeItem(tokenKey); } catch {}
+  };
+  let token = readStoredToken();
   let me = null;
   let orders = [];
   let transfers = [];
@@ -66,8 +83,8 @@
     toast.timer = window.setTimeout(() => { el.hidden = true; }, 3600);
   };
 
-  const redirectLogin = () => {
-    sessionStorage.removeItem(tokenKey);
+  const redirectLogin = (clear = true) => {
+    if (clear) clearStoredToken();
     window.location.replace('index.html?login=1');
   };
 
@@ -116,6 +133,17 @@
     } else if (!canEditService()) {
       document.querySelectorAll('[data-panel-nav="new"]').forEach((el) => { el.hidden = true; });
     }
+  };
+
+  const syncMobileHandlingMode = () => {
+    const select=document.getElementById('mobileHandlingMode');
+    const transferOnly=select?.value==='TRANSFER_ONLY';
+    const info=document.getElementById('mobileTransferOnlyInfo');
+    if(info) info.hidden=!transferOnly;
+    document.querySelectorAll('[data-standard-service]').forEach((el)=>{
+      const roleHidden=el.classList.contains('service-edit-only')&&!canEditService();
+      el.hidden=transferOnly||roleHidden;
+    });
   };
 
   const renderPoints = () => {
@@ -282,10 +310,16 @@
     const dialog = document.getElementById('orderDialog');
     const host = document.getElementById('orderDialogContent');
     const activeTransfer = order.openTransfer || (order.latestTransfer && ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(order.latestTransfer.status) ? order.latestTransfer : null);
-    const currentServicePointId = order.currentPointId || order.homePointId || order.pointId;
+    const currentServicePointId = activeTransfer ? '' : (order.currentPointId || order.homePointId || order.pointId);
     const homePointId = order.homePointId || order.pointId;
-    const canOperateCurrentPoint = canOperatePoint(currentServicePointId);
+    const canOperateCurrentPoint = Boolean(currentServicePointId) && canOperatePoint(currentServicePointId);
+    const canEditOrderHere = canEditService() && canOperateCurrentPoint && !activeTransfer;
+    const transferOnly = order.handlingMode === 'TRANSFER_ONLY';
     const availableServices = servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId);
+    const transferOnlyDestinations = [
+      ...(currentServicePointId !== homePointId ? [{id:homePointId,name:order.homePointName || order.pointName,city:'punkt macierzysty',home:true}] : []),
+      ...servicePoints.filter((point) => point.acceptsExternalRepairs && point.id !== currentServicePointId && point.id !== homePointId)
+    ];
 
     let notes = [];
     try { notes = await api('/service/orders/' + encodeURIComponent(order.id) + '/notes'); } catch {}
@@ -294,24 +328,29 @@
       '<div class="order-dialog-head"><span>ZLECENIE #' + esc(order.orderNumber) + '</span><h2>' + esc(order.brand + ' ' + order.model) + '</h2><p>' + esc(order.customerName) + ' · ' + esc(order.pointName) + '</p></div>' +
       (order.workflow ? '<div class="order-dialog-section mobile-workflow-dialog"><span>CO ROBIMY DALEJ</span><div class="mobile-workflow-dialog-grid"><div><small>Etap ' + esc(order.workflow.stageNumber) + '/' + esc(order.workflow.stageTotal) + '</small><strong>' + esc(order.workflow.stageLabel) + '</strong></div><div><small>Następna akcja</small><strong>' + esc(order.workflow.nextAction) + '</strong></div><em class="' + esc(String(order.workflow.attentionCode || '').toLowerCase()) + '">' + esc(order.workflow.attentionLabel) + '</em></div></div>' : '') +
       '<div class="order-detail-grid">' +
-        '<div><span>Status</span><strong>' + esc(order.statusLabel) + '</strong></div>' +
-        '<div><span>Technik</span><strong>' + esc(order.assignedTechnicianName || 'Nieprzypisany') + '</strong></div>' +
+        '<div><span>Tryb</span><strong>' + esc(transferOnly ? 'Tylko przekazanie' : 'Normalny serwis') + '</strong></div>' +
+        '<div><span>Status</span><strong>' + esc(transferOnly && order.status !== 'CANCELLED' ? 'Tylko przekazanie' : order.statusLabel) + '</strong></div>' +
         '<div><span>IMEI</span><strong>' + esc(order.imei || '—') + '</strong></div>' +
-        '<div><span>Termin</span><strong>' + esc(order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : '—') + '</strong></div>' +
         '<div><span>Punkt macierzysty</span><strong>' + esc(order.homePointName || order.pointName) + '</strong></div>' +
         '<div><span>Lokalizacja</span><strong>' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</strong></div>' +
-        '<div><span>Cena orientacyjna</span><strong>' + esc(order.estimatedCost == null ? '—' : Number(order.estimatedCost).toFixed(2) + ' PLN') + '</strong></div>' +
-        '<div><span>Cena końcowa</span><strong>' + esc(order.finalCost == null ? '—' : Number(order.finalCost).toFixed(2) + ' PLN') + '</strong></div>' +
+        (!transferOnly ? '<div><span>Technik</span><strong>' + esc(order.assignedTechnicianName || 'Nieprzypisany') + '</strong></div><div><span>Termin</span><strong>' + esc(order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : '—') + '</strong></div><div><span>Cena orientacyjna</span><strong>' + esc(order.estimatedCost == null ? '—' : Number(order.estimatedCost).toFixed(2) + ' PLN') + '</strong></div><div><span>Cena końcowa</span><strong>' + esc(order.finalCost == null ? '—' : Number(order.finalCost).toFixed(2) + ' PLN') + '</strong></div>' : '') +
       '</div>' +
       '<div class="order-dialog-section"><span>OPIS USTERKI</span><p class="order-note-text">' + esc(order.issueDescription || '—') + '</p></div>' +
-      (canEditService() ? '<div class="order-dialog-section"><span>CENY ZLECENIA</span><div class="mobile-price-grid"><label><small>Cena orientacyjna (PLN)</small><input id="mobileEstimatedCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.estimatedCost == null ? '' : order.estimatedCost) + '"></label><label><small>Cena końcowa (PLN)</small><input id="mobileFinalCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.finalCost == null ? '' : order.finalCost) + '"></label></div><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-prices="' + esc(order.id) + '">Zapisz ceny</button></div></div>' : '') +
-      (canEditService() ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
-        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' && order.canMarkReady === false) || (value === 'COMPLETED' && (order.canMarkReady === false || order.status !== 'READY'))) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
-        '</select><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-status="' + esc(order.id) + '">Zapisz status</button></div></div>' : '') +
+      (canEditOrderHere && !transferOnly ? '<div class="order-dialog-section"><span>CENY ZLECENIA</span><div class="mobile-price-grid"><label><small>Cena orientacyjna (PLN)</small><input id="mobileEstimatedCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.estimatedCost == null ? '' : order.estimatedCost) + '"></label><label><small>Cena końcowa (PLN)</small><input id="mobileFinalCost" class="order-note-input" type="number" min="0" step="0.01" value="' + esc(order.finalCost == null ? '' : order.finalCost) + '"></label></div><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-prices="' + esc(order.id) + '">Zapisz ceny</button></div></div>' : '') +
+      (canEditOrderHere && transferOnly
+        ? '<div class="order-dialog-section transfer-only-mobile"><span>TRYB PRZEKAZANIA</span><p class="order-note-text">Etapy naprawy są zablokowane. Możesz tylko przekazywać urządzenie dalej albo anulować to zlecenie.</p>' + (order.status !== 'CANCELLED' ? '<div class="order-dialog-actions"><button class="mini-action danger" data-cancel-service="' + esc(order.id) + '">Anuluj zlecenie</button></div>' : '') + '</div>'
+        : canEditOrderHere ? '<div class="order-dialog-section"><span>STATUS NAPRAWY</span><select id="mobileOrderStatus" class="order-status-select">' +
+        Object.entries(STATUS_LABELS).map(([value,label]) => '<option value="' + value + '"' + (value === order.status ? ' selected' : '') + (((value === 'READY' && (order.canMarkReady === false || order.status !== 'REPAIR_DONE')) || (value === 'COMPLETED' && order.status !== 'READY')) ? ' disabled' : '') + '>' + esc(label) + '</option>').join('') +
+        '</select><div class="order-dialog-actions"><button class="mini-action primary" data-save-order-status="' + esc(order.id) + '">Zapisz status</button></div></div>'
+        : (canEditService() ? '<div class="order-dialog-section status-readonly-mobile"><span>STATUS NAPRAWY</span><p class="order-note-text"><strong>' + esc(order.statusLabel) + '</strong><br>' + esc(activeTransfer ? 'Status jest zablokowany na czas transportu urządzenia.' : 'Status może zmienić tylko punkt, w którym fizycznie znajduje się urządzenie.') + '</p></div>' : '')) +
       '<div class="order-dialog-section"><span>LOGISTYKA URZĄDZENIA</span>' +
         '<p class="order-note-text"><strong>Macierzysty:</strong> ' + esc(order.homePointName || order.pointName) + '<br><strong>Teraz:</strong> ' + esc(order.currentLocationLabel || order.currentPointName || 'W transporcie') + '</p>' +
         (activeTransfer
           ? '<p class="order-note-text">' + esc(activeTransfer.kind === 'RETURN_HOME' ? 'Powrót do punktu macierzystego' : 'Przekazanie do serwisu') + ' · ' + esc(TRANSFER_LABELS[activeTransfer.status] || activeTransfer.status) + ': ' + esc(activeTransfer.fromPointName) + ' → ' + esc(activeTransfer.toPointName) + '</p>'
+          : transferOnly
+            ? (canEditService() && canOperateCurrentPoint
+                ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz punkt docelowy…</option>' + transferOnlyDestinations.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + (point.city ? ' · ' + point.city : '')) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka do protokołu przekazania (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Przekaż urządzenie dalej</button></div>'
+                : '<p class="order-note-text">Przekazanie może rozpocząć użytkownik obsługujący aktualny punkt.</p>')
           : order.returnRequired
             ? (canEditService() && canOperateCurrentPoint && order.status === 'REPAIR_DONE'
                 ? '<input id="mobileReturnNote" class="order-note-input" maxlength="500" placeholder="Notatka do zwrotu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-return="' + esc(order.id) + '">Odeślij do punktu macierzystego</button></div>'
@@ -330,6 +369,7 @@
   const saveOrderPrices = async (id) => {
     const order = orders.find((item) => item.id === id);
     if (!order) return;
+    if (order.handlingMode === 'TRANSFER_ONLY') return toast('To zlecenie służy wyłącznie do przekazywania urządzenia.','error');
     const estimatedRaw = document.getElementById('mobileEstimatedCost')?.value ?? '';
     const finalRaw = document.getElementById('mobileFinalCost')?.value ?? '';
     const estimatedCost = estimatedRaw === '' ? null : Number(estimatedRaw);
@@ -356,9 +396,11 @@
     } catch (error) { toast(error.message || 'Nie udało się zapisać cen.','error'); }
   };
 
-  const saveOrderStatus = async (id) => {
-    const status = document.getElementById('mobileOrderStatus')?.value;
-    if (!status) return;
+  const saveOrderStatus = async (id, forcedStatus = '') => {
+    const order = orders.find((item) => item.id === id);
+    const status = forcedStatus || document.getElementById('mobileOrderStatus')?.value;
+    if (!status || !order) return;
+    if (order.handlingMode === 'TRANSFER_ONLY' && status !== 'CANCELLED') return toast('W trybie przekazania można jedynie anulować zlecenie.','error');
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/status', {
         method:'POST', body:JSON.stringify({status})
@@ -385,9 +427,14 @@
     const toPointId = document.getElementById('mobileTransferPoint')?.value || '';
     const note = document.getElementById('mobileTransferNote')?.value || '';
     if (!toPointId) return toast('Wybierz serwis docelowy.','error');
+    const order = orders.find((item) => item.id === id);
+    if (!order) return;
+    const currentPointId = order.currentPointId || order.homePointId || order.pointId;
+    const homePointId = order.homePointId || order.pointId;
+    const kind = order.handlingMode === 'TRANSFER_ONLY' && currentPointId !== homePointId && toPointId === homePointId ? 'RETURN_HOME' : 'OUTBOUND_SERVICE';
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/transfer', {
-        method:'POST', body:JSON.stringify({toPointId,note,kind:'OUTBOUND_SERVICE'})
+        method:'POST', body:JSON.stringify({toPointId,note,kind})
       });
       toast(result?.notification?.sent ? 'Urządzenie wysłano. Klient dostał wiadomość.' : 'Urządzenie wysłano do serwisu.');
       document.getElementById('orderDialog')?.close();
@@ -508,10 +555,15 @@
     const payload = Object.fromEntries(form.entries());
     payload.pointId = activePointId;
     payload.imei = String(payload.imei || '').replace(/\D/g,'');
-    if (payload.estimatedCompletionAt) payload.estimatedCompletionAt = new Date(payload.estimatedCompletionAt).toISOString();
-    else delete payload.estimatedCompletionAt;
-    if (payload.estimatedCost !== undefined && payload.estimatedCost !== '') payload.estimatedCost = Number(payload.estimatedCost);
-    else delete payload.estimatedCost;
+    if (payload.handlingMode === 'TRANSFER_ONLY') {
+      delete payload.estimatedCompletionAt;
+      delete payload.estimatedCost;
+    } else {
+      if (payload.estimatedCompletionAt) payload.estimatedCompletionAt = new Date(payload.estimatedCompletionAt).toISOString();
+      else delete payload.estimatedCompletionAt;
+      if (payload.estimatedCost !== undefined && payload.estimatedCost !== '') payload.estimatedCost = Number(payload.estimatedCost);
+      else delete payload.estimatedCost;
+    }
     const status = document.getElementById('newOrderStatus');
     status.className = 'panel-form-status';
     status.textContent = 'Zapisywanie…';
@@ -520,6 +572,7 @@
       status.className = 'panel-form-status ok';
       status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
       event.currentTarget.reset();
+      syncMobileHandlingMode();
       if (result.notification?.sent) {
         toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');
       } else if (result.notification?.queued) {
@@ -569,6 +622,8 @@
       if (saveStatus) { void saveOrderStatus(saveStatus.dataset.saveOrderStatus); return; }
       const savePrices = event.target.closest('[data-save-order-prices]');
       if (savePrices) { void saveOrderPrices(savePrices.dataset.saveOrderPrices); return; }
+      const cancelService = event.target.closest('[data-cancel-service]');
+      if (cancelService) { if (window.confirm('Anulować to zlecenie?')) void saveOrderStatus(cancelService.dataset.cancelService,'CANCELLED'); return; }
       const sendTransfer = event.target.closest('[data-send-transfer]');
       if (sendTransfer) { void sendOrderTransfer(sendTransfer.dataset.sendTransfer); return; }
       const sendReturn = event.target.closest('[data-send-return]');
@@ -600,10 +655,12 @@
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
+    document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
     document.getElementById('mobilePointForm')?.addEventListener('submit',submitPoint);
     document.getElementById('panelLogout')?.addEventListener('click',async()=>{
       try { await api('/auth/logout',{method:'POST',body:'{}'}); } catch {}
-      redirectLogin();
+      clearStoredToken();
+      redirectLogin(false);
     });
     document.getElementById('logoutEveryone')?.addEventListener('click',async()=>{
       if(!window.confirm('Wylogować wszystkich użytkowników poza bieżącą sesją OWNER?')) return;
@@ -631,13 +688,20 @@
   };
 
   const boot = async () => {
-    if (!apiBaseUrl || !token) return redirectLogin();
+    if (!apiBaseUrl || !token) return redirectLogin(false);
     try {
       me = await api('/me');
-    } catch { return redirectLogin(); }
+    } catch (error) {
+      if (error?.status === 401 || error?.status === 403) return redirectLogin(true);
+      const bootLabel = document.querySelector('#panelBoot span');
+      if (bootLabel) bootLabel.textContent = 'Brak połączenia z ServiceOS. Sesja jest zachowana — ponawiam…';
+      window.setTimeout(() => void boot(), 3500);
+      return;
+    }
     renderAccount();
     renderPoints();
     wireEvents();
+    syncMobileHandlingMode();
     try { await refreshData(); }
     catch (error) { toast(error.message || 'Nie udało się pobrać danych.','error'); }
     document.getElementById('panelBoot')?.classList.add('hidden');
