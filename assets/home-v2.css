@@ -408,8 +408,8 @@ body.portal-home *{box-sizing:border-box}
 
 
 /* preview isolation fix */
-.portal-home #preview .app-preview{position:relative}
-.portal-home #preview .preview-content{position:relative;min-height:598px;overflow:hidden}
+.portal-home #preview .app-preview{position:relative;isolation:isolate;contain:layout paint style}
+.portal-home #preview .preview-content{position:relative;min-height:598px;overflow:clip}
 .portal-home #preview .demo-screen{
   position:static;
   inset:auto;
