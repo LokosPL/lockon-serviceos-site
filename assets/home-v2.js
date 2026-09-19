@@ -22,8 +22,18 @@
     protectedElements.forEach((element) => {
       element.classList.toggle('onboarding-action-locked', !accepted);
       element.setAttribute('aria-disabled', accepted ? 'false' : 'true');
-      if (!accepted) element.setAttribute('data-onboarding-lock', '1');
-      else element.removeAttribute('data-onboarding-lock');
+      if (!accepted) {
+        element.setAttribute('data-onboarding-lock', '1');
+        if (element instanceof HTMLAnchorElement && element.classList.contains('download-link')) {
+          if (element.href && !element.href.endsWith('#start')) element.dataset.downloadUrl = element.href;
+          element.href = '#start';
+        }
+      } else {
+        element.removeAttribute('data-onboarding-lock');
+        if (element instanceof HTMLAnchorElement && element.classList.contains('download-link') && element.dataset.downloadUrl) {
+          element.href = element.dataset.downloadUrl;
+        }
+      }
     });
     if (stateLabel) stateLabel.textContent = accepted
       ? 'ServiceOS odblokowany w tej przeglądarce. Nadal obowiązuje weryfikacja konta przez OWNER.'
