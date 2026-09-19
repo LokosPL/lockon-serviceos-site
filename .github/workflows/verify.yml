@@ -35,6 +35,7 @@ jobs:
           node --check assets/home-v2.js
           node --check assets/panel.js
           node --check assets/track.js
+          node --check assets/customer-portal.js
           node --check sw.js
       - name: Verify central auth wiring
         shell: bash
@@ -59,12 +60,19 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' track.html
           grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
           grep -q 'position:static' assets/home-v2.css
-          grep -q "serviceos-shell-v14" sw.js
+          grep -q "serviceos-shell-v15" sw.js
           ! grep -q 'Przejdź do ServiceOS' track.html
           ! grep -q 'href="index.html"' track.html
           ! grep -q 'google-config.js' track.html
           grep -q '\[hidden\]{display:none!important}' assets/track.css
           grep -q 'REFRESH_MS=20000' assets/track.js
+          grep -q 'public/customer-portal/login' assets/customer-portal.js
+          grep -q 'public/customer-portal/quotes' assets/customer-portal.js
+          grep -q 'noindex,nofollow,noarchive' klient.html
+          ! grep -q 'href="index.html"' klient.html
+          ! grep -q 'google-config.js' klient.html
+          grep -q 'customerQuotesList' panel.html
+          grep -q '/service/customer-quotes' assets/panel.js
           grep -q 'workflow' assets/panel.js
           grep -q 'Cena orientacyjna' panel.html
           grep -q 'data-save-order-prices' assets/panel.js
