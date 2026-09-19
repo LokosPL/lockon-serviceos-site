@@ -7,31 +7,30 @@
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex,nofollow,noarchive">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <title>Śledzenie serwisu — LockOn ServiceOS</title>
+  <title>Twoje zlecenie serwisowe — LockOn</title>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/track.css">
 </head>
 <body>
   <header class="track-nav">
-    <a href="index.html" class="track-brand" aria-label="LockOn ServiceOS">
+    <div class="track-brand" aria-label="LockOn ServiceOS">
       <img src="assets/logo.svg" alt="">
-      <span><strong>LockOn</strong><small>ServiceOS</small></span>
-    </a>
-    <span class="track-secure">Bezpieczne śledzenie zlecenia</span>
+      <span><strong>LockOn</strong><small>Serwis</small></span>
+    </div>
+    <span class="track-secure">Bezpieczna karta Twojego zlecenia</span>
   </header>
 
   <main class="track-shell">
     <section id="trackLoading" class="track-state">
-      <div class="track-spinner"></div>
-      <h1>Pobieram informacje o serwisie…</h1>
-      <p>Sprawdzamy aktualny etap i historię urządzenia.</p>
+      <div class="track-spinner" aria-hidden="true"></div>
+      <h1>Pobieram Twoje zlecenie…</h1>
+      <p>Za chwilę pokażemy aktualny status i miejsce, w którym znajduje się urządzenie.</p>
     </section>
 
     <section id="trackError" class="track-state error" hidden>
-      <div class="track-state-icon">!</div>
-      <h1>Nie można otworzyć śledzenia.</h1>
-      <p id="trackErrorText">Link jest nieprawidłowy albo nieaktywny.</p>
-      <a href="index.html" class="track-button">Przejdź do ServiceOS</a>
+      <div class="track-state-icon" aria-hidden="true">!</div>
+      <h1>Nie udało się otworzyć zlecenia.</h1>
+      <p id="trackErrorText">Sprawdź, czy otwierasz dokładnie link otrzymany w wiadomości od LockOn.</p>
     </section>
 
     <div id="trackContent" hidden>
@@ -41,49 +40,50 @@
           <h1 id="deviceName">Urządzenie</h1>
           <p id="issueDescription">—</p>
         </div>
-        <div class="track-current">
-          <span>Aktualny etap</span>
+        <div id="currentCard" class="track-current">
+          <span>Aktualny status</span>
           <strong id="currentStatus">—</strong>
           <small id="updatedAt">—</small>
         </div>
       </section>
 
-      <section class="track-summary">
-        <article><span>Punkt prowadzący</span><strong id="pointName">—</strong></article>
-        <article><span>Aktualna lokalizacja</span><strong id="currentPoint">—</strong></article>
-        <article><span>Planowany termin</span><strong id="eta">—</strong></article>
-        <article><span>Wycena / koszt</span><strong id="price">—</strong></article>
+      <section class="track-card track-service-card">
+        <div class="track-section-head">
+          <div><span>TWOJA KARTA SERWISOWA</span><h2>Najważniejsze informacje</h2></div>
+          <div id="syncState" class="track-sync" aria-live="polite">Aktualizacja danych…</div>
+        </div>
+        <div class="track-details-grid">
+          <article><span>Klient</span><strong id="customerName">—</strong></article>
+          <article><span>Przyjęto</span><strong id="receivedAt">—</strong></article>
+          <article><span>Punkt macierzysty</span><strong id="homePoint">—</strong></article>
+          <article class="location"><span>Urządzenie znajduje się teraz</span><strong id="currentPoint">—</strong></article>
+          <article id="etaCard"><span>Planowany termin</span><strong id="eta">—</strong></article>
+        </div>
       </section>
 
       <section class="track-card">
         <div class="track-section-head">
-          <div><span>PRZEBIEG SERWISU</span><h2>Etapy zlecenia</h2></div>
-          <small>Historia statusów bez danych wewnętrznych pracowników.</small>
+          <div><span>STATUS ZLECENIA</span><h2>Przebieg serwisu</h2></div>
+          <small>Ta historia aktualizuje się automatycznie pod tym samym linkiem.</small>
         </div>
         <div id="statusTimeline" class="track-timeline"></div>
       </section>
 
-      <section class="track-card">
+      <section id="transferCard" class="track-card" hidden>
         <div class="track-section-head">
-          <div><span>PROTOKÓŁ URZĄDZENIA</span><h2>Przekazania między punktami</h2></div>
-          <small>Każdy fizyczny ruch urządzenia pozostaje zapisany.</small>
+          <div><span>LOKALIZACJA URZĄDZENIA</span><h2>Przekazania między punktami</h2></div>
+          <small>Pokazujemy wyłącznie rzeczywiste przekazania urządzenia.</small>
         </div>
         <div id="transferTimeline" class="track-transfers"></div>
-      </section>
-
-      <section class="track-note">
-        <strong>Co widzisz na tej stronie?</strong>
-        <p>Wyłącznie informacje potrzebne do śledzenia Twojego zlecenia: bezpieczny skrót danych klienta i urządzenia, aktualny etap, termin, lokalizacja oraz najważniejsza historia. Dane pracowników, dane logowania i notatki wewnętrzne nie są tutaj udostępniane.</p>
       </section>
     </div>
   </main>
 
   <footer class="track-footer">
-    <span>LockOn ServiceOS</span>
+    <span>LockOn · karta serwisowa klienta</span>
     <a href="privacy.html">Prywatność</a>
   </footer>
 
-  <script src="assets/google-config.js"></script>
   <script src="assets/track.js"></script>
 </body>
 </html>
