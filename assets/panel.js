@@ -186,22 +186,28 @@
 
   const orderCard = (order, compact = false) => {
     const transfer = order.latestTransfer;
-    const meta = [
-      'przyjęto: ' + formatDate(order.receivedAt),
-      'macierzysty: ' + (order.homePointName || order.pointName),
-      'lokalizacja: ' + (order.currentLocationLabel || order.currentPointName || order.pointName),
-      'serwisant: ' + (order.assignedTechnicianName || 'nieprzypisany'),
-      'termin: ' + (order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : 'brak'),
-      order.finalCost != null ? 'cena: ' + Number(order.finalCost).toFixed(2) + ' PLN' : (order.estimatedCost != null ? 'wycena: ~' + Number(order.estimatedCost).toFixed(2) + ' PLN' : ''),
-      transfer ? (transfer.kind === 'RETURN_HOME' ? 'powrót · ' : '') + (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
+    const location = order.currentLocationLabel || order.currentPointName || order.pointName;
+    const context = [
+      {label:'Punkt macierzysty',value:order.homePointName || order.pointName,kind:'home'},
+      {label:'Urządzenie jest teraz',value:location,kind:'location'},
+      {label:'Serwisant',value:order.assignedTechnicianName || 'Nieprzypisany',kind:'technician'},
+      {label:'Termin',value:order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : 'Brak terminu',kind:'eta'},
+      order.finalCost != null ? {label:'Cena',value:Number(order.finalCost).toFixed(2)+' PLN',kind:'price'} :
+        order.estimatedCost != null ? {label:'Wycena',value:'około '+Number(order.estimatedCost).toFixed(2)+' PLN',kind:'price'} : null,
+      transfer ? {label:transfer.kind==='RETURN_HOME'?'Powrót urządzenia':'Przekazanie',value:(TRANSFER_LABELS[transfer.status] || transfer.status)+' → '+(transfer.toPointName || ''),kind:'transfer'} : null
     ].filter(Boolean);
+    const shownContext = compact ? context.slice(0,2) : context;
+    const contextHtml = '<div class="panel-order-context'+(compact?' compact':'')+'">' + shownContext.map((item) =>
+      '<div class="'+esc(item.kind)+'"><span>'+esc(item.label)+'</span><strong>'+esc(item.value)+'</strong></div>'
+    ).join('') + '</div>';
     const workflow = order.workflow || null;
     return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
         '<div class="panel-order-number"><strong>#' + esc(order.orderNumber) + '</strong><small>' + esc(formatDate(order.receivedAt)) + '</small></div>' +
-        '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(meta.join(' · ')) + '</small></div>' +
+        '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(order.handlingMode === 'TRANSFER_ONLY' ? 'Tylko przekazanie' : 'Zlecenie serwisowe') + '</small></div>' +
         '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
       '</div>' +
+      contextHtml +
       (workflow ? '<div class="mobile-workflow-strip">' +
         '<div><span>Etap ' + esc(workflow.stageNumber) + '/' + esc(workflow.stageTotal) + '</span><strong>' + esc(workflow.stageLabel) + '</strong><progress max="100" value="' + esc(workflow.progressPercent) + '"></progress></div>' +
         '<div><span>Następna akcja</span><strong>' + esc(workflow.nextAction) + '</strong></div>' +
@@ -210,10 +216,7 @@
           (workflow.dueInMinutes != null && workflow.dueInMinutes >= 0 && workflow.dueInMinutes <= 1440 ? '<small>' + esc(Math.max(1,Math.ceil(workflow.dueInMinutes/60))) + ' h do terminu</small>' : '') +
         '</em>' +
       '</div>' : '') +
-      (compact ? '' : '<div class="panel-order-meta">' +
-        (order.imei ? '<span>IMEI ' + esc(order.imei) + '</span>' : '') +
-        (order.estimatedCompletionAt ? '<span>Termin ' + esc(formatDate(order.estimatedCompletionAt)) + '</span>' : '') +
-      '</div>') +
+      (!compact && order.imei ? '<div class="panel-order-meta"><span>IMEI ' + esc(order.imei) + '</span></div>' : '') +
       '<button type="button" data-open-order="' + esc(order.id) + '">Otwórz szczegóły →</button>' +
     '</article>';
   };
@@ -614,20 +617,90 @@
     await loadAudit();
   };
 
-  const auditActionLabel = (action) => ({
-    SERVICE_ORDER_CREATED:'Utworzono zlecenie',
-    SERVICE_STATUS_CHANGED:'Zmieniono status zlecenia',
-    SERVICE_TRANSFER_SENT:'Wysłano urządzenie',
-    SERVICE_RETURN_SENT:'Rozpoczęto zwrot urządzenia',
-    USER_ACCESS_UPDATED:'Zmieniono uprawnienia konta',
-    USER_BLOCKED:'Zablokowano konto',
-    USER_UNBLOCKED:'Odblokowano konto',
-    SUPPORT_REQUESTED:'Poproszono konsultanta',
-    SUPPORT_TAKEN:'Konsultant przejął zgłoszenie',
-    SUPPORT_REPLIED:'Konsultant odpowiedział',
-    SUPPORT_CLOSED:'Zamknięto zgłoszenie',
-    NOTIFICATION_RETRIED:'Ponowiono wysyłkę e-mail'
-  }[action] || String(action || '').replaceAll('_',' ').toLowerCase());
+  const AUDIT_STATUS_LABELS={
+    RECEIVED:'Przyjęto urządzenie',DIAGNOSIS:'Diagnoza',WAITING_PARTS:'Oczekiwanie na części',IN_REPAIR:'W naprawie',
+    REPAIR_DONE:'Naprawa zakończona',READY:'Gotowe do odbioru',COMPLETED:'Zakończone',CANCELLED:'Anulowane',REJECTED:'Odrzucone',
+    REQUESTED:'Oczekuje na przekazanie',IN_TRANSIT:'W drodze',DELIVERED:'Dostarczono',ACCEPTED:'Przyjęto',
+    PENDING:'Oczekuje',PROCESSING:'Wysyłanie',SENT:'Wysłano',FAILED:'Błąd wysyłki',APPROVED:'Zatwierdzone',SETTLED:'Rozliczone',
+    OPEN:'Otwarte',CLOSED:'Zamknięte',PAID:'Wypłacone',ACTIVE:'Aktywne'
+  };
+  const AUDIT_ROLE_LABELS={OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'};
+  const AUDIT_ENTITY_LABELS={service_order:'zlecenie serwisowe',notification:'wiadomość e-mail',revenue:'rozliczenie',user:'konto pracownika',point:'punkt',support_conversation:'zgłoszenie wsparcia',customer_quote_request:'zapytanie o wycenę',customer:'klient',auth_session:'sesja'};
+  const auditValue=(value)=>{
+    if(value==null||value==='')return '—';
+    if(typeof value==='boolean')return value?'Tak':'Nie';
+    if(typeof value==='string')return AUDIT_STATUS_LABELS[value]||AUDIT_ROLE_LABELS[value]||value;
+    if(typeof value==='number')return String(value);
+    try{return JSON.stringify(value);}catch{return String(value);}
+  };
+  const auditActionLabel = (action) => {
+    const labels={
+      SERVICE_ORDER_CREATED:'Utworzono zlecenie',SERVICE_STATUS_CHANGED:'Zmieniono status zlecenia',SERVICE_ORDER_DETAILS_UPDATED:'Zmieniono dane zlecenia',
+      SERVICE_TRANSFER_SENT:'Wysłano urządzenie do serwisu',SERVICE_RETURN_SENT:'Rozpoczęto powrót urządzenia',SERVICE_NOTE_ADDED:'Dodano notatkę serwisową',
+      USER_APPROVED:'Aktywowano konto pracownika',USER_REJECTED:'Odrzucono wniosek o dostęp',USER_ACCESS_UPDATED:'Zmieniono dostęp pracownika',
+      USER_BLOCKED:'Zablokowano konto',USER_UNBLOCKED:'Odblokowano konto',USER_SESSIONS_REVOKED:'Wylogowano konto ze wszystkich urządzeń',
+      ALL_SESSIONS_REVOKED:'Wylogowano pozostałe konta',LOGIN_DESKTOP:'Zalogowano w aplikacji desktopowej',LOGIN_WEB:'Zalogowano w panelu WWW',
+      WEBSITE_CODE_CREATED:'Wygenerowano kod do połączenia WWW',GMAIL_CONNECTED:'Połączono firmowy Gmail',GMAIL_DISCONNECTED:'Odłączono firmowy Gmail',
+      GMAIL_TEST_SENT:'Wysłano wiadomość testową Gmail',NOTIFICATION_RETRIED:'Ponowiono wysyłkę e-mail',NOTIFICATION_SETTINGS_UPDATED:'Zmieniono ustawienia powiadomień',
+      SUPPORT_REQUESTED:'Poproszono konsultanta o pomoc',SUPPORT_TAKEN:'Konsultant przejął zgłoszenie',SUPPORT_REPLIED:'Konsultant odpowiedział',SUPPORT_CLOSED:'Zamknięto zgłoszenie wsparcia',
+      REVENUE_AUTO_APPROVED:'Dodano przychód ze zlecenia',REVENUE_REVIEWED:'Sprawdzono wpis rozliczeniowy',TECHNICIAN_SETTLEMENT_UPDATED:'Zmieniono procent rozliczenia serwisanta',
+      POINT_CREATED:'Utworzono punkt',POINT_SERVICE_UPDATED:'Zmieniono ustawienia serwisu punktu',
+      CUSTOMER_QUOTE_CREATED:'Klient poprosił o wycenę',CUSTOMER_QUOTE_REPLIED:'Odpowiedziano klientowi',CUSTOMER_QUOTE_PRICED:'Wysłano klientowi wycenę',
+      CUSTOMER_QUOTE_CLOSED:'Zamknięto zapytanie o wycenę',CUSTOMER_PORTAL_LOGIN:'Klient otworzył swój portal'
+    };
+    if(labels[action])return labels[action];
+    if(String(action||'').startsWith('SERVICE_TRANSFER_')){
+      const status=String(action).slice('SERVICE_TRANSFER_'.length);
+      return {REQUESTED:'Utworzono przekazanie urządzenia',IN_TRANSIT:'Urządzenie jest w drodze',DELIVERED:'Urządzenie dostarczono do punktu',ACCEPTED:'Punkt przyjął urządzenie',REJECTED:'Punkt odrzucił przekazanie',CANCELLED:'Anulowano przekazanie'}[status]||'Zmieniono etap przekazania';
+    }
+    return String(action||'').replaceAll('_',' ').toLowerCase();
+  };
+  const auditDescription=(event)=>{
+    const order=event.orderNumber!=null?' #'+event.orderNumber:'';
+    const point=event.pointName?' w punkcie '+event.pointName:'';
+    const target=event.entityName?' „'+event.entityName+'”':'';
+    const personDevice=[event.customerSummary,event.deviceSummary].filter(Boolean).join(' · ');
+    switch(event.action){
+      case 'SERVICE_ORDER_CREATED':return 'Utworzono zlecenie'+order+(personDevice?' dla '+personDevice:'')+point+'.';
+      case 'SERVICE_STATUS_CHANGED':return 'Zlecenie'+order+' zmieniło etap z „'+auditValue(event.before)+'” na „'+auditValue(event.after)+'”'+point+'.';
+      case 'SERVICE_ORDER_DETAILS_UPDATED':return 'Zaktualizowano dane zlecenia'+order+(personDevice?' · '+personDevice:'')+point+'.';
+      case 'SERVICE_NOTE_ADDED':return 'Dodano wewnętrzną notatkę do zlecenia'+order+point+'.';
+      case 'SERVICE_TRANSFER_SENT':return 'Rozpoczęto przekazanie urządzenia ze zlecenia'+order+' do serwisu.';
+      case 'SERVICE_RETURN_SENT':return 'Rozpoczęto powrót urządzenia ze zlecenia'+order+' do punktu macierzystego.';
+      case 'USER_APPROVED':return 'Konto pracownika'+target+' zostało zaakceptowane i aktywowane.';
+      case 'USER_REJECTED':return 'Odrzucono wniosek o dostęp dla konta'+target+'.';
+      case 'USER_ACCESS_UPDATED':return 'Zmieniono rolę, przypisane punkty lub parametry konta'+target+'.';
+      case 'USER_BLOCKED':return 'Konto'+target+' zostało zablokowane, a jego aktywne sesje unieważniono.';
+      case 'USER_UNBLOCKED':return 'Konto'+target+' zostało odblokowane.';
+      case 'USER_SESSIONS_REVOKED':return 'Konto'+target+' zostało wylogowane ze wszystkich aktywnych urządzeń.';
+      case 'ALL_SESSIONS_REVOKED':return 'Unieważniono aktywne sesje użytkowników zgodnie z poleceniem administratora.';
+      case 'LOGIN_DESKTOP':return 'Zalogowano się do ServiceOS w aplikacji na komputerze.';
+      case 'LOGIN_WEB':return 'Zalogowano się do mobilnego panelu ServiceOS w przeglądarce.';
+      case 'WEBSITE_CODE_CREATED':return 'Wygenerowano jednorazowy kod do połączenia panelu WWW z kontem ServiceOS.';
+      case 'GMAIL_CONNECTED':return 'Połączono firmowe konto Gmail używane do wiadomości serwisowych'+point+'.';
+      case 'GMAIL_DISCONNECTED':return 'Odłączono firmowe konto Gmail'+point+'.';
+      case 'GMAIL_TEST_SENT':return 'Wysłano wiadomość testową z firmowego Gmaila'+point+'.';
+      case 'NOTIFICATION_RETRIED':return 'Ręcznie ponowiono wysyłkę wiadomości do klienta'+order+'.';
+      case 'NOTIFICATION_SETTINGS_UPDATED':return 'Zmieniono ustawienia automatycznych wiadomości do klientów'+point+'.';
+      case 'TECHNICIAN_SETTLEMENT_UPDATED':return 'Zmieniono procent rozliczenia serwisanta'+target+'.';
+      case 'REVENUE_AUTO_APPROVED':return 'Automatycznie zapisano przychód z zakończonego zlecenia'+order+point+'.';
+      case 'REVENUE_REVIEWED':return 'Sprawdzono ręczny wpis rozliczeniowy'+point+'.';
+      case 'POINT_CREATED':return 'Utworzono nowy punkt'+target+'.';
+      case 'POINT_SERVICE_UPDATED':return 'Zmieniono ustawienia obsługi serwisowej punktu'+target+'.';
+      case 'SUPPORT_REQUESTED':return 'Utworzono prośbę o pomoc konsultanta'+point+'.';
+      case 'SUPPORT_TAKEN':return 'Konsultant przejął zgłoszenie pomocy'+point+'.';
+      case 'SUPPORT_REPLIED':return 'Konsultant odpowiedział w zgłoszeniu pomocy'+point+'.';
+      case 'SUPPORT_CLOSED':return 'Zamknięto zgłoszenie pomocy'+point+'.';
+      case 'CUSTOMER_QUOTE_CREATED':return 'Klient'+(event.customerSummary?' '+event.customerSummary:'')+' wysłał prośbę o zdalną wycenę'+point+'.';
+      case 'CUSTOMER_QUOTE_REPLIED':return 'Wysłano odpowiedź do klienta w sprawie zdalnej wyceny'+point+'.';
+      case 'CUSTOMER_QUOTE_PRICED':return 'Przekazano klientowi zdalną wycenę'+point+'.';
+      case 'CUSTOMER_QUOTE_CLOSED':return 'Zamknięto rozmowę o zdalnej wycenie'+point+'.';
+      case 'CUSTOMER_PORTAL_LOGIN':return 'Klient poprawnie otworzył swój prywatny portal historii serwisowej.';
+      default:
+        if(String(event.action||'').startsWith('SERVICE_TRANSFER_'))return 'Zmieniono etap przekazania urządzenia dla zlecenia'+order+': '+auditValue(event.transferStatus||String(event.action).slice('SERVICE_TRANSFER_'.length))+'.';
+        return 'Wykonano działanie: '+auditActionLabel(event.action)+'.';
+    }
+  };
 
   const renderAdminAuditSelectors = () => {
     const users = document.getElementById('adminAuditUser');
@@ -640,21 +713,24 @@
     const host = document.getElementById('adminAudit');
     if (!host) return;
     host.innerHTML = auditEvents.map((event) => {
-      const context = [
-        event.pointName ? 'punkt: ' + event.pointName : '',
-        event.orderNumber != null ? 'zlecenie #' + event.orderNumber : '',
-        event.customerSummary || '',
-        event.deviceSummary || ''
-      ].filter(Boolean).join(' · ');
+      const meta = [
+        event.pointName ? '<span>Punkt: <strong>'+esc(event.pointName)+'</strong></span>' : '',
+        event.orderNumber != null ? '<span>Zlecenie: <strong>#'+esc(event.orderNumber)+'</strong></span>' : '',
+        event.customerSummary ? '<span>Klient: <strong>'+esc(event.customerSummary)+'</strong></span>' : '',
+        event.deviceSummary ? '<span>Urządzenie: <strong>'+esc(event.deviceSummary)+'</strong></span>' : ''
+      ].filter(Boolean).join('');
       const statuses = [
-        event.notificationStatus ? 'e-mail: ' + event.notificationStatus : '',
-        event.transferStatus ? 'transfer: ' + event.transferStatus : '',
-        event.settlementStatus ? 'rozliczenie: ' + event.settlementStatus : ''
-      ].filter(Boolean).join(' · ');
+        event.notificationStatus ? '<span>E-mail: <strong>'+esc(auditValue(event.notificationStatus))+'</strong></span>' : '',
+        event.transferStatus ? '<span>Przekazanie: <strong>'+esc(auditValue(event.transferStatus))+'</strong></span>' : '',
+        event.settlementStatus ? '<span>Rozliczenie: <strong>'+esc(auditValue(event.settlementStatus))+'</strong></span>' : ''
+      ].filter(Boolean).join('');
       const change = event.before != null || event.after != null
-        ? '<div class="mobile-audit-change"><span>'+esc(event.before == null ? '—' : typeof event.before === 'object' ? JSON.stringify(event.before) : event.before)+'</span><b>→</b><span>'+esc(event.after == null ? '—' : typeof event.after === 'object' ? JSON.stringify(event.after) : event.after)+'</span></div>'
+        ? '<div class="mobile-audit-change"><span>'+esc(auditValue(event.before))+'</span><b>→</b><span>'+esc(auditValue(event.after))+'</span></div>'
         : '';
-      return '<article class="mobile-audit-card"><div><strong>'+esc(auditActionLabel(event.action))+'</strong><span>'+esc(event.actorName || 'System')+' · '+esc(roleLabel(event.actorRole))+(event.clientType?' · '+esc(event.clientType==='WEB'?'WWW':'Desktop'):'')+'</span><small>'+esc(formatDate(event.createdAt))+(context?' · '+esc(context):'')+'</small></div>'+change+(statuses?'<p>'+esc(statuses)+'</p>':'')+'<details><summary>Szczegóły techniczne</summary><pre>'+esc(JSON.stringify(event.metadata || {},null,2))+'</pre></details></article>';
+      const source=event.clientType==='WEB'?'panel WWW':event.clientType==='DESKTOP'?'aplikacja desktopowa':'';
+      const actor=[event.actorName||'System',roleLabel(event.actorRole),source].filter(Boolean).join(' · ');
+      const technical='<details><summary>Dane techniczne i identyfikatory</summary><div class="mobile-audit-tech"><span>Typ: <strong>'+esc(AUDIT_ENTITY_LABELS[event.entityType]||String(event.entityType||'').replaceAll('_',' ').toLowerCase())+'</strong></span>'+(event.entityId?'<span>ID: <strong>'+esc(event.entityId)+'</strong></span>':'')+'</div><pre>'+esc(JSON.stringify(event.metadata||{},null,2))+'</pre></details>';
+      return '<article class="mobile-audit-card"><div class="mobile-audit-head"><div><strong>'+esc(auditActionLabel(event.action))+'</strong><span>'+esc(actor)+'</span></div><time>'+esc(formatDate(event.createdAt))+'</time></div><p class="mobile-audit-description">'+esc(auditDescription(event))+'</p>'+(meta?'<div class="mobile-audit-meta">'+meta+'</div>':'')+change+(statuses?'<div class="mobile-audit-status">'+statuses+'</div>':'')+technical+'</article>';
     }).join('') || '<div class="panel-list-empty">Brak zdarzeń dla wybranych filtrów.</div>';
   };
 
@@ -671,7 +747,7 @@
     renderAdminAudit();
   };
 
-  const roleLabel=(role)=>({OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'}[role]||'Bez roli');
+  const roleLabel=(role)=>AUDIT_ROLE_LABELS[role]||'Bez roli';
   const renderAdminUsers = () => {
     const host = document.getElementById('adminUsers');
     const users = admin?.users || [];

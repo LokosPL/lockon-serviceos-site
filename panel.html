@@ -156,7 +156,20 @@
       <form id="adminAuditFilters" class="mobile-audit-filters">
         <select id="adminAuditUser" name="userId" aria-label="Użytkownik"><option value="">Wszyscy użytkownicy</option></select>
         <select id="adminAuditPoint" name="pointId" aria-label="Punkt"><option value="">Wszystkie punkty</option></select>
-        <input name="action" placeholder="Typ zdarzenia, np. SERVICE">
+        <select name="action" aria-label="Rodzaj działania">
+          <option value="">Wszystkie działania</option>
+          <option value="SERVICE_">Serwis i statusy zleceń</option>
+          <option value="CUSTOMER_QUOTE_">Wyceny klientów</option>
+          <option value="USER_">Konta i uprawnienia</option>
+          <option value="LOGIN_">Logowania</option>
+          <option value="GMAIL_">Firmowy Gmail</option>
+          <option value="NOTIFICATION_">Wiadomości do klientów</option>
+          <option value="SUPPORT_">Pomoc konsultanta</option>
+          <option value="REVENUE_">Przychody i rozliczenia</option>
+          <option value="TECHNICIAN_SETTLEMENT_">Ustawienia rozliczeń serwisanta</option>
+          <option value="POINT_">Punkty</option>
+          <option value="WEBSITE_CODE_">Połączenie panelu WWW</option>
+        </select>
         <input name="orderNumber" inputmode="numeric" placeholder="Numer zlecenia">
         <input name="dateFrom" type="date" aria-label="Data od">
         <input name="dateTo" type="date" aria-label="Data do">
@@ -169,8 +182,8 @@
         <form id="mobilePointForm" class="panel-form-card compact">
           <label><span>Nazwa</span><input name="name" required maxlength="90"></label>
           <label><span>Miasto</span><input name="city" required maxlength="90"></label>
-          <label class="check"><input name="serviceEnabled" type="checkbox"><span>Ręczny serwis bez aktywnego TECHNICIAN</span></label>
-          <label class="check"><input name="acceptsExternalRepairs" type="checkbox"><span>Ręcznie przyjmuj przekazania bez aktywnego TECHNICIAN</span></label>
+          <label class="check"><input name="serviceEnabled" type="checkbox"><span>Ręczny serwis bez przypisanego serwisanta</span></label>
+          <label class="check"><input name="acceptsExternalRepairs" type="checkbox"><span>Ręcznie przyjmuj przekazania bez przypisanego serwisanta</span></label>
           <label><span>Notatka</span><textarea name="serviceNote" maxlength="500" rows="2"></textarea></label>
           <button class="panel-primary-button" type="submit">Dodaj lokalizację</button>
         </form>

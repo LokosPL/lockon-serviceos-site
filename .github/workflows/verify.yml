@@ -60,7 +60,7 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' track.html
           grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
           grep -q 'position:static' assets/home-v2.css
-          grep -q "serviceos-shell-v15" sw.js
+          grep -q "serviceos-shell-v16" sw.js
           ! grep -q 'Przejdź do ServiceOS' track.html
           ! grep -q 'href="index.html"' track.html
           ! grep -q 'google-config.js' track.html
@@ -72,6 +72,11 @@ jobs:
           ! grep -q 'href="index.html"' klient.html
           ! grep -q 'google-config.js' klient.html
           grep -q 'customerQuotesList' panel.html
+          grep -q 'id="day"' index.html
+          grep -q 'workday-demo' index.html
+          grep -q 'panel-order-context' assets/panel.js
+          grep -q 'Dane techniczne i identyfikatory' assets/panel.js
+          ! grep -q 'bez aktywnego TECHNICIAN' panel.html
           grep -q '/service/customer-quotes' assets/panel.js
           grep -q 'workflow' assets/panel.js
           grep -q 'Cena orientacyjna' panel.html

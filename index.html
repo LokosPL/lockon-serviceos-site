@@ -36,8 +36,9 @@
         <div><strong>LockOn</strong><span>ServiceOS</span></div>
       </a>
       <nav class="nav-links portal-links" aria-label="Sekcje strony">
+        <a href="#day">Jak pracujesz</a>
         <a href="#modules">Moduły</a>
-        <a href="#workflow">Praca serwisu</a>
+        <a href="#workflow">Przebieg naprawy</a>
         <a href="#preview">UI aplikacji</a>
         <a href="#start">Zasady</a>
         <a href="#download">Pobierz / połącz</a>
@@ -51,8 +52,9 @@
   </header>
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
+    <a href="#day">Jak pracujesz</a>
     <a href="#modules">Moduły</a>
-    <a href="#workflow">Proces</a>
+    <a href="#workflow">Naprawa</a>
     <a href="#preview">Aplikacja</a>
     <a href="#start">Zasady</a>
     <a href="#download">Pobierz</a>
@@ -65,8 +67,8 @@
       <div class="wrap hero-grid">
         <div class="hero-copy reveal">
           <div class="eyebrow-pill"><span></span> OFICJALNY PORTAL PRACOWNIKA LOCKON</div>
-          <h1>Jedno miejsce do<br><em>codziennej pracy serwisu.</em></h1>
-          <p class="hero-description">Przyjmij urządzenie, prowadź naprawę, przekaż je dalej i informuj klienta — bez szukania informacji w kilku miejscach.</p>
+          <h1>Przyjmujesz telefon.<br><em>ServiceOS prowadzi dalej.</em></h1>
+          <p class="hero-description">Na komputerze i telefonie od razu widzisz, co zrobić teraz: przyjąć urządzenie, przekazać je do serwisu, zmienić etap i przygotować odbiór.</p>
           <div class="company-warning">
             <strong>Dostęp dla pracowników i osób uprawnionych przez LockOn.</strong>
             <span>Twoje konto musi zostać zaakceptowane przez osobę uprawnioną.</span>
@@ -76,9 +78,9 @@
             <button class="button secondary big requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz mój telefon</button>
           </div>
           <div class="hero-facts">
-            <div><strong>Komputer + telefon</strong><span>ten sam zakres pracy</span></div>
-            <div><strong>Twój zakres</strong><span>tylko potrzebne punkty</span></div>
-            <div><strong>Wiadomości</strong><span>automatycznie do klienta</span></div>
+            <div><strong>Nowe zlecenie</strong><span>klient i telefon w jednym formularzu</span></div>
+            <div><strong>Co dalej?</strong><span>aktualny etap i następna akcja</span></div>
+            <div><strong>Klient wie</strong><span>ważne zmiany dostaje automatycznie</span></div>
           </div>
         </div>
 
@@ -129,6 +131,30 @@
       </div>
     </section>
 
+    <section class="page-section workday-section" id="day">
+      <div class="wrap workday-layout">
+        <div class="section-heading reveal">
+          <span>TAK WYGLĄDA ZWYKŁA PRACA</span>
+          <h2>Od przyjęcia telefonu do odbioru — wszystko w jednym miejscu.</h2>
+          <p>Nie uczysz się technicznych kodów. ServiceOS pokazuje klienta, urządzenie, miejsce telefonu i następną rzecz do zrobienia.</p>
+        </div>
+        <div class="workday-demo reveal delay" aria-label="Przykładowy dzień pracy w ServiceOS">
+          <div class="workday-live"><i></i><span>Przykładowy przebieg zlecenia #1042</span><b>NA ŻYWO</b></div>
+          <div class="workday-events">
+            <article class="workday-event event-1"><time>08:12</time><i></i><div><span>PRZYJĘCIE</span><strong>Klient zostawia Samsung S25</strong><small>Zlecenie zapisane, klient dostał potwierdzenie.</small></div></article>
+            <article class="workday-event event-2"><time>09:05</time><i></i><div><span>PRZEKAZANIE</span><strong>Telefon jedzie do serwisu</strong><small>Widać punkt macierzysty i aktualne miejsce urządzenia.</small></div></article>
+            <article class="workday-event event-3"><time>11:40</time><i></i><div><span>SERWIS</span><strong>Diagnoza → naprawa</strong><small>Serwisant widzi następną akcję i przewidywany termin.</small></div></article>
+            <article class="workday-event event-4"><time>15:25</time><i></i><div><span>GOTOWE</span><strong>Urządzenie wraca do punktu</strong><small>Po fizycznym powrocie można przygotować odbiór klienta.</small></div></article>
+          </div>
+          <div class="workday-summary">
+            <div><span>Aktualny etap</span><strong>Naprawa zakończona</strong></div>
+            <div><span>Urządzenie</span><strong>Wraca do punktu</strong></div>
+            <div><span>Klient</span><strong>Powiadomiony</strong></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="page-section" id="modules">
       <div class="wrap">
         <div class="section-heading reveal">
@@ -137,12 +163,12 @@
           <p>Każdy moduł ma jedno konkretne zadanie. Poniżej widzisz najważniejsze miejsca w ServiceOS.</p>
         </div>
         <div class="module-grid">
-          <article><div class="module-icon">⌂</div><h3>Start</h3><p>Najważniejsze liczby i rzeczy wymagające reakcji.</p><span>Dashboard</span></article>
-          <article><div class="module-icon">▣</div><h3>Serwis</h3><p>Klienci, telefony, statusy, technicy, terminy i następne akcje.</p><span>Zlecenia</span></article>
-          <article><div class="module-icon">⇄</div><h3>Przekazania</h3><p>Wysyłka do serwisu, dostawa, przyjęcie i obowiązkowy powrót.</p><span>Logistyka</span></article>
-          <article><div class="module-icon">%</div><h3>Rozliczenia</h3><p>Każdy serwisant ustawia własny procent. Zakończone zlecenie zapisuje podział obowiązujący w chwili zamknięcia.</p><span>Indywidualny podział</span></article>
-          <article><div class="module-icon">✉</div><h3>Powiadomienia</h3><p>Statusy zlecenia automatycznie wysyłają klientowi wiadomość e-mail.</p><span>Gmail</span></article>
-          <article><div class="module-icon">⚙</div><h3>Administracja</h3><p>Osoba uprawniona zarządza kontami, punktami i bezpieczeństwem.</p><span>Dla zarządzających</span></article>
+          <article><div class="module-icon">⌂</div><h3>Start</h3><p>Od razu widzisz, co wymaga reakcji i co możesz zrobić później.</p><span>Najpierw to, co ważne</span></article>
+          <article><div class="module-icon">▣</div><h3>Serwis</h3><p>Klient, telefon, etap naprawy, termin i wszystkie potrzebne informacje.</p><span>Cała naprawa w jednej karcie</span></article>
+          <article><div class="module-icon">⇄</div><h3>Przekazania</h3><p>Wiesz, skąd telefon wyjechał, dokąd jedzie i kto go przyjął.</p><span>Bez zgadywania, gdzie jest urządzenie</span></article>
+          <article><div class="module-icon">%</div><h3>Rozliczenia</h3><p>Po zakończeniu naprawy przychód zapisuje się według ustawień danego serwisanta.</p><span>Kwoty i podział w jednym miejscu</span></article>
+          <article><div class="module-icon">✉</div><h3>Wiadomości do klienta</h3><p>Klient dostaje czytelne informacje o ważnych etapach zlecenia.</p><span>Mniej telefonów z pytaniem „co z naprawą?”</span></article>
+          <article><div class="module-icon">⚙</div><h3>Zarządzanie</h3><p>Uprawniona osoba ustawia konta, punkty i dostęp pracowników.</p><span>Widoczne tylko dla osób uprawnionych</span></article>
         </div>
       </div>
     </section>
@@ -155,16 +181,12 @@
           <p>Nie musisz pamiętać całego procesu. Zlecenie ma etap, termin, pilność i następną wymaganą akcję.</p>
         </div>
         <div class="workflow-grid reveal">
-          <article><b>01</b><strong>Przyjęte</strong><span>Klient zostawia urządzenie.</span></article>
-          <article><b>02</b><strong>Diagnoza</strong><span>Sprawdź usterkę i zakres pracy.</span></article>
-          <article><b>03</b><strong>Części / decyzja</strong><span>Jeżeli trzeba — oczekiwanie lub przekazanie.</span></article>
-          <article><b>04</b><strong>W naprawie</strong><span>Technik realizuje zlecenie.</span></article>
-          <article><b>05</b><strong>Naprawa zakończona</strong><span>Praca techniczna jest gotowa.</span></article>
-          <article><b>06</b><strong>Powrót</strong><span>Jeżeli telefon jest poza punktem macierzystym.</span></article>
-          <article><b>07</b><strong>Przyjęty w domu</strong><span>Punkt macierzysty potwierdza fizyczny zwrot.</span></article>
-          <article><b>08</b><strong>Gotowy do odbioru</strong><span>Klient może odebrać urządzenie.</span></article>
-          <article><b>09</b><strong>Zakończone</strong><span>Automatyczne rozliczenie według ustawień serwisanta.</span></article>
-          <article><b>10</b><strong>Historia</strong><span>Wszystkie zmiany pozostają zapisane.</span></article>
+          <article><b>01</b><strong>Przyjmujesz urządzenie</strong><span>Zapisujesz klienta, telefon i opis problemu.</span></article>
+          <article><b>02</b><strong>Diagnozujesz</strong><span>Serwisant sprawdza usterkę i ustala dalszą pracę.</span></article>
+          <article><b>03</b><strong>Naprawiasz albo przekazujesz</strong><span>ServiceOS pokazuje, gdzie fizycznie znajduje się telefon.</span></article>
+          <article><b>04</b><strong>Kończysz naprawę</strong><span>Po pracy technicznej urządzenie wraca do punktu klienta.</span></article>
+          <article><b>05</b><strong>Przygotowujesz odbiór</strong><span>Punkt potwierdza fizyczny powrót i ustawia urządzenie jako gotowe.</span></article>
+          <article><b>06</b><strong>Zamykasz zlecenie</strong><span>Historia zostaje zapisana, a rozliczenie tworzy się automatycznie.</span></article>
         </div>
         <div class="priority-row reveal">
           <span class="danger">Po terminie</span>
