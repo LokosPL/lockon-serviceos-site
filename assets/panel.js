@@ -487,7 +487,17 @@
       status.className = 'panel-form-status ok';
       status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
       event.currentTarget.reset();
-      toast(result.notification?.sent ? 'Zlecenie utworzone. Klient dostał potwierdzenie.' : 'Zlecenie utworzone.');
+      if (result.notification?.sent) {
+        toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');
+      } else if (result.notification?.queued) {
+        toast('Zlecenie utworzone. E-mail czeka na ponowną wysyłkę.');
+      } else if (result.notification?.reason === 'NO_CUSTOMER_EMAIL') {
+        toast('Zlecenie utworzone. Klient nie podał adresu e-mail.');
+      } else if (result.notification?.reason === 'NO_SENDER') {
+        toast('Zlecenie utworzone, ale brak aktywnego firmowego nadawcy Gmail.','error');
+      } else {
+        toast('Zlecenie utworzone.');
+      }
       await loadOrders();
       window.setTimeout(() => showView('orders'),700);
     } catch (error) {
