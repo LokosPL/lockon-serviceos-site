@@ -33,6 +33,7 @@
   let transfers = [];
   let servicePoints = [];
   let admin = null;
+  let auditEvents = [];
   let activePointId = '';
   let transferFilter = '';
   let orderFilter = 'ALL';
@@ -492,7 +493,66 @@
     document.getElementById('adminTransfers').textContent = String(admin.system?.openTransfers ?? 0);
     renderAdminUsers();
     renderAdminPoints();
+    renderAdminAuditSelectors();
     renderKpis();
+    await loadAudit();
+  };
+
+  const auditActionLabel = (action) => ({
+    SERVICE_ORDER_CREATED:'Utworzono zlecenie',
+    SERVICE_STATUS_CHANGED:'Zmieniono status zlecenia',
+    SERVICE_TRANSFER_SENT:'Wysłano urządzenie',
+    SERVICE_RETURN_SENT:'Rozpoczęto zwrot urządzenia',
+    USER_ACCESS_UPDATED:'Zmieniono uprawnienia konta',
+    USER_BLOCKED:'Zablokowano konto',
+    USER_UNBLOCKED:'Odblokowano konto',
+    SUPPORT_REQUESTED:'Poproszono konsultanta',
+    SUPPORT_TAKEN:'Konsultant przejął zgłoszenie',
+    SUPPORT_REPLIED:'Konsultant odpowiedział',
+    SUPPORT_CLOSED:'Zamknięto zgłoszenie',
+    NOTIFICATION_RETRIED:'Ponowiono wysyłkę e-mail'
+  }[action] || String(action || '').replaceAll('_',' ').toLowerCase());
+
+  const renderAdminAuditSelectors = () => {
+    const users = document.getElementById('adminAuditUser');
+    const points = document.getElementById('adminAuditPoint');
+    if (users) users.innerHTML = '<option value="">Wszyscy użytkownicy</option>' + (admin?.users || []).map((user)=>'<option value="'+esc(user.id)+'">'+esc(user.name)+'</option>').join('');
+    if (points) points.innerHTML = '<option value="">Wszystkie punkty</option>' + (admin?.points || []).map((point)=>'<option value="'+esc(point.id)+'">'+esc(point.name)+'</option>').join('');
+  };
+
+  const renderAdminAudit = () => {
+    const host = document.getElementById('adminAudit');
+    if (!host) return;
+    host.innerHTML = auditEvents.map((event) => {
+      const context = [
+        event.pointName ? 'punkt: ' + event.pointName : '',
+        event.orderNumber != null ? 'zlecenie #' + event.orderNumber : '',
+        event.customerSummary || '',
+        event.deviceSummary || ''
+      ].filter(Boolean).join(' · ');
+      const statuses = [
+        event.notificationStatus ? 'e-mail: ' + event.notificationStatus : '',
+        event.transferStatus ? 'transfer: ' + event.transferStatus : '',
+        event.settlementStatus ? 'rozliczenie: ' + event.settlementStatus : ''
+      ].filter(Boolean).join(' · ');
+      const change = event.before != null || event.after != null
+        ? '<div class="mobile-audit-change"><span>'+esc(event.before == null ? '—' : typeof event.before === 'object' ? JSON.stringify(event.before) : event.before)+'</span><b>→</b><span>'+esc(event.after == null ? '—' : typeof event.after === 'object' ? JSON.stringify(event.after) : event.after)+'</span></div>'
+        : '';
+      return '<article class="mobile-audit-card"><div><strong>'+esc(auditActionLabel(event.action))+'</strong><span>'+esc(event.actorName || 'System')+' · '+esc(roleLabel(event.actorRole))+(event.clientType?' · '+esc(event.clientType==='WEB'?'WWW':'Desktop'):'')+'</span><small>'+esc(formatDate(event.createdAt))+(context?' · '+esc(context):'')+'</small></div>'+change+(statuses?'<p>'+esc(statuses)+'</p>':'')+'<details><summary>Szczegóły techniczne</summary><pre>'+esc(JSON.stringify(event.metadata || {},null,2))+'</pre></details></article>';
+    }).join('') || '<div class="panel-list-empty">Brak zdarzeń dla wybranych filtrów.</div>';
+  };
+
+  const loadAudit = async () => {
+    if (!isOwner()) return;
+    const form = document.getElementById('adminAuditFilters');
+    const params = new URLSearchParams();
+    if (form) {
+      const values = new FormData(form);
+      for (const [key,value] of values.entries()) if (String(value).trim()) params.set(key,String(value).trim());
+    }
+    const result = await api('/admin/audit' + (params.toString() ? '?' + params.toString() : ''));
+    auditEvents = result.events || [];
+    renderAdminAudit();
   };
 
   const roleLabel=(role)=>({OWNER:'Właściciel',BOSS:'Szef',COORDINATOR:'Koordynator',SUPPORT:'Konsultant wsparcia',TECHNICIAN:'Serwisant',USER:'Pracownik punktu'}[role]||'Bez roli');
@@ -691,6 +751,7 @@
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
     document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
     document.getElementById('mobilePointForm')?.addEventListener('submit',submitPoint);
+    document.getElementById('adminAuditFilters')?.addEventListener('submit',(event)=>{event.preventDefault();void loadAudit();});
     document.getElementById('panelLogout')?.addEventListener('click',async()=>{
       try { await api('/auth/logout',{method:'POST',body:'{}'}); } catch {}
       clearStoredToken();
