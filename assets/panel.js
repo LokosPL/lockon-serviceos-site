@@ -932,6 +932,9 @@
     document.getElementById('panelBoot')?.classList.add('hidden');
     window.setTimeout(()=>document.getElementById('panelBoot')?.remove(),350);
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>undefined);
+    window.setInterval(()=>{
+      if(canHandleCustomerQuotes()&&document.visibilityState==='visible') void loadCustomerQuotes();
+    },20000);
   };
 
   void boot();
