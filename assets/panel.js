@@ -174,15 +174,18 @@
   const orderCard = (order, compact = false) => {
     const transfer = order.latestTransfer;
     const meta = [
+      'przyjęto: ' + formatDate(order.receivedAt),
       'macierzysty: ' + (order.homePointName || order.pointName),
       'lokalizacja: ' + (order.currentLocationLabel || order.currentPointName || order.pointName),
-      order.assignedTechnicianName ? 'technik: ' + order.assignedTechnicianName : '',
+      'serwisant: ' + (order.assignedTechnicianName || 'nieprzypisany'),
+      'termin: ' + (order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : 'brak'),
+      order.finalCost != null ? 'cena: ' + Number(order.finalCost).toFixed(2) + ' PLN' : (order.estimatedCost != null ? 'wycena: ~' + Number(order.estimatedCost).toFixed(2) + ' PLN' : ''),
       transfer ? (transfer.kind === 'RETURN_HOME' ? 'powrót · ' : '') + (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
     ].filter(Boolean);
     const workflow = order.workflow || null;
     return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
-        '<div class="panel-order-number">#' + esc(order.orderNumber) + '</div>' +
+        '<div class="panel-order-number"><strong>#' + esc(order.orderNumber) + '</strong><small>' + esc(formatDate(order.receivedAt)) + '</small></div>' +
         '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(meta.join(' · ')) + '</small></div>' +
         '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
       '</div>' +
