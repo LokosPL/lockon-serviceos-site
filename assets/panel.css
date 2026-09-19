@@ -43,8 +43,10 @@
 .mobile-workflow-strip>div,.mobile-workflow-strip>em{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:10px;padding:8px;font-style:normal}
 .mobile-workflow-strip span,.mobile-workflow-dialog-grid small{display:block;color:#77818d;font-size:9px;text-transform:uppercase;letter-spacing:.07em}
 .mobile-workflow-strip strong,.mobile-workflow-dialog-grid strong{display:block;color:#eef1f4;font-size:11px;line-height:1.35;margin-top:3px}
-.mobile-workflow-strip i{display:block;height:3px;background:rgba(255,255,255,.07);border-radius:99px;margin-top:6px;overflow:hidden}
-.mobile-workflow-strip i b{display:block;height:100%;background:linear-gradient(90deg,#ff7541,#ffb067);border-radius:inherit}
+.mobile-workflow-strip progress{display:block;width:100%;height:4px;margin-top:6px;border:0;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07);appearance:none}
+.mobile-workflow-strip progress::-webkit-progress-bar{background:rgba(255,255,255,.07);border-radius:99px}
+.mobile-workflow-strip progress::-webkit-progress-value{background:linear-gradient(90deg,#ff7541,#ffb067);border-radius:99px}
+.mobile-workflow-strip progress::-moz-progress-bar{background:linear-gradient(90deg,#ff7541,#ffb067);border-radius:99px}
 .mobile-workflow-strip em{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;font-weight:700;font-size:10px;color:#c7ced6}
 .mobile-workflow-strip em small{font-weight:500;color:#8d97a3;margin-top:3px}
 .mobile-workflow-strip em.overdue,.mobile-workflow-dialog-grid em.overdue{color:#ff8585}
