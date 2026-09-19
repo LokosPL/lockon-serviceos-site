@@ -6,10 +6,11 @@
   <meta name="theme-color" content="#0b0d10">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech https://speed.cloudflare.com; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <title>Panel mobilny — LockOn ServiceOS</title>
+  <title>Panel pracownika — LockOn ServiceOS</title>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/panel.css">
+  <link rel="stylesheet" href="assets/ui-2026.css">
 </head>
 <body class="mobile-panel">
   <div id="panelBoot" class="panel-boot">
@@ -21,7 +22,7 @@
   <header class="panel-header">
     <a class="panel-brand" href="panel.html">
       <img src="assets/logo.svg" alt="">
-      <div><strong>ServiceOS</strong><span>Panel mobilny</span></div>
+      <div><strong>ServiceOS</strong><span>Panel pracownika</span></div>
     </a>
     <div class="panel-point">
       <span>AKTYWNY PUNKT</span>
@@ -35,7 +36,7 @@
       <div class="panel-hero">
         <span class="panel-kicker">SERVICEOS · ONLINE</span>
         <h1 id="panelGreeting">Dzień dobry.</h1>
-        <p>Najpierw zobacz, co wymaga Twojej reakcji.</p>
+        <p>Najpierw pokazujemy to, co wymaga Twojej reakcji.</p>
       </div>
       <div id="panelFocus" class="panel-focus"></div>
       <div class="panel-kpis">
@@ -154,7 +155,7 @@
     </section>
 
     <section id="view-admin" class="panel-view owner-only" hidden>
-      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>OWNER</span><h1>Administracja</h1></div><button id="refreshAdmin" type="button">↻</button></div>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>WŁAŚCICIEL</span><h1>Administracja</h1></div><button id="refreshAdmin" type="button">↻</button></div>
       <div class="admin-mobile-stats">
         <div><span>Aktywne sesje</span><strong id="adminSessions">—</strong></div>
         <div><span>Zablokowane</span><strong id="adminBlocked">—</strong></div>
@@ -222,7 +223,7 @@
     <button class="quote-staff-only" data-panel-nav="quotes" hidden><span>✉</span><b>Wyceny</b></button>
     <button class="finance-only" data-panel-nav="earnings" hidden><span>zł</span><b>Rozliczenia</b></button>
     <button data-panel-nav="support"><span>?</span><b>Pomoc</b></button>
-    <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Admin</b></button>
+    <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Zarządzaj</b></button>
   </nav>
 
   <dialog id="accountDialog" class="panel-dialog">
@@ -245,5 +246,6 @@
 
   <script src="assets/google-config.js"></script>
   <script src="assets/panel.js"></script>
+  <script src="assets/ui-2026.js"></script>
 </body>
 </html>
