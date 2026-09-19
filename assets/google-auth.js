@@ -104,7 +104,7 @@
       renderSignedIn(payload);
       return true;
     } catch (error) {
-      if (error?.status === 401 || error?.status === 403) clearToken();
+      if (error?.status === 401) clearToken();
       renderSignedOut();
       if (error?.status !== 401 && error?.status !== 403) {
         setCodeStatus('Sesja jest zapisana, ale chwilowo nie udało się połączyć z ServiceOS. Odśwież stronę za moment.', true);
