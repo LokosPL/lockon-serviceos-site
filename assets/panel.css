@@ -28,3 +28,31 @@
 
 @media(min-width:680px){.panel-main{padding-top:28px}.panel-kpis{grid-template-columns:repeat(4,1fr)}.panel-quick-grid{grid-template-columns:repeat(4,1fr)}.panel-order-card{padding:14px}.panel-bottom-nav{min-height:72px}.panel-form-card{padding:18px}}
 @media(max-width:480px){.panel-point select{max-width:130px}.panel-brand>div span{display:none}.panel-main{width:min(100% - 18px,900px)}.panel-form-grid{grid-template-columns:1fr}.panel-form-grid label.full{grid-column:auto}.owner-danger-zone{flex-direction:column;align-items:stretch}.owner-danger-zone button{width:100%}.admin-user-card,.admin-point-card{grid-template-columns:1fr}.admin-user-actions,.point-switches{justify-content:flex-start;align-items:flex-start}.order-detail-grid{grid-template-columns:1fr 1fr}}
+
+/* Workflow guidance */
+.order-workflow-filters{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 10px;scrollbar-width:none}
+.order-workflow-filters::-webkit-scrollbar{display:none}
+.order-workflow-filters button{flex:0 0 auto;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:#aeb6c0;border-radius:999px;padding:8px 10px;font:inherit;font-size:11px;display:flex;gap:7px;align-items:center}
+.order-workflow-filters button.active{border-color:rgba(255,126,74,.42);background:rgba(255,126,74,.12);color:#f6f7f8}
+.order-workflow-filters b{display:grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:rgba(255,255,255,.07);font-size:10px}
+.panel-order-card.workflow-overdue{box-shadow:inset 3px 0 0 #ff6f6f}
+.panel-order-card.workflow-due_soon{box-shadow:inset 3px 0 0 #ffc169}
+.panel-order-card.workflow-action_now{box-shadow:inset 3px 0 0 #ff8754}
+.panel-order-card.workflow-ready_for_pickup{box-shadow:inset 3px 0 0 #62d395}
+.mobile-workflow-strip{display:grid;grid-template-columns:1fr 1.45fr auto;gap:8px;margin:10px 0 2px}
+.mobile-workflow-strip>div,.mobile-workflow-strip>em{border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.025);border-radius:10px;padding:8px;font-style:normal}
+.mobile-workflow-strip span,.mobile-workflow-dialog-grid small{display:block;color:#77818d;font-size:9px;text-transform:uppercase;letter-spacing:.07em}
+.mobile-workflow-strip strong,.mobile-workflow-dialog-grid strong{display:block;color:#eef1f4;font-size:11px;line-height:1.35;margin-top:3px}
+.mobile-workflow-strip i{display:block;height:3px;background:rgba(255,255,255,.07);border-radius:99px;margin-top:6px;overflow:hidden}
+.mobile-workflow-strip i b{display:block;height:100%;background:linear-gradient(90deg,#ff7541,#ffb067);border-radius:inherit}
+.mobile-workflow-strip em{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;font-weight:700;font-size:10px;color:#c7ced6}
+.mobile-workflow-strip em small{font-weight:500;color:#8d97a3;margin-top:3px}
+.mobile-workflow-strip em.overdue,.mobile-workflow-dialog-grid em.overdue{color:#ff8585}
+.mobile-workflow-strip em.due_soon,.mobile-workflow-dialog-grid em.due_soon{color:#ffc16b}
+.mobile-workflow-strip em.action_now,.mobile-workflow-dialog-grid em.action_now{color:#ff9a70}
+.mobile-workflow-strip em.ready_for_pickup,.mobile-workflow-dialog-grid em.ready_for_pickup{color:#6bd99d}
+.mobile-workflow-dialog-grid{display:grid;gap:8px;margin-top:8px}
+.mobile-workflow-dialog-grid>div{padding:9px;border-radius:10px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07)}
+.mobile-workflow-dialog-grid em{font-style:normal;font-weight:800;font-size:11px}
+@media(max-width:560px){.mobile-workflow-strip{grid-template-columns:1fr}.mobile-workflow-strip em{align-items:flex-start;text-align:left}}
+
