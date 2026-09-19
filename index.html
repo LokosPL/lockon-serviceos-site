@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/home-v2.css">
   <link rel="stylesheet" href="assets/ui-2026.css">
+  <link rel="stylesheet" href="assets/home-story.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
@@ -36,28 +37,22 @@
         <img src="assets/logo.svg" alt="">
         <div><strong>LockOn</strong><span>ServiceOS</span></div>
       </a>
-      <nav class="nav-links portal-links" aria-label="Sekcje strony">
-        <a href="#day">Jak pracujesz</a>
-        <a href="#modules">Moduły</a>
-        <a href="#workflow">Przebieg naprawy</a>
-        <a href="#preview">UI aplikacji</a>
-        <a href="#start">Zasady</a>
-        <a href="#download">Pobierz / połącz</a>
+      <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
+        <a href="#day">Jak działa</a>
+        <a href="#modules">Poznaj aplikację</a>
+        <a href="#connect">Połącz telefon</a>
       </nav>
       <div class="portal-nav-actions">
         <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
-        <button id="navLoginButton" class="nav-login-button requires-onboarding" data-requires-onboarding type="button">Połącz telefon</button>
         <a class="nav-download download-link requires-onboarding" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz <span>↓</span></a>
       </div>
     </div>
   </header>
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
-    <a href="#day">Jak pracujesz</a>
-    <a href="#modules">Moduły</a>
-    <a href="#workflow">Naprawa</a>
-    <a href="#preview">Aplikacja</a>
-    <a href="#start">Zasady</a>
+    <a href="#day">Jak działa</a>
+    <a href="#modules">Aplikacja</a>
+    <a href="#connect">Telefon</a>
     <a href="#download">Pobierz</a>
   </nav>
 
@@ -68,20 +63,21 @@
       <div class="wrap hero-grid">
         <div class="hero-copy reveal">
           <div class="eyebrow-pill"><span></span> OFICJALNY PORTAL PRACOWNIKA LOCKON</div>
-          <h1>Przyjmujesz telefon.<br><em>ServiceOS prowadzi dalej.</em></h1>
-          <p class="hero-description">Na komputerze i telefonie od razu widzisz, co zrobić teraz: przyjąć urządzenie, przekazać je do serwisu, zmienić etap i przygotować odbiór.</p>
+          <h1>Najpierw poznaj ServiceOS.<br><em>Potem zacznij pracę.</em></h1>
+          <p class="hero-description">Ta strona przeprowadzi Cię przez codzienną pracę: zobaczysz proces naprawy, najważniejsze ekrany i dokładnie nauczysz się, jak bezpiecznie połączyć telefon.</p>
           <div class="company-warning">
-            <strong>Dostęp dla pracowników i osób uprawnionych przez LockOn.</strong>
-            <span>Twoje konto musi zostać zaakceptowane przez osobę uprawnioną.</span>
+            <strong>Nie musisz znać systemu przed pierwszym logowaniem.</strong>
+            <span>Przejdź stronę od góry do dołu. ServiceOS jest pokazany tutaj tak samo logicznie, jak później prowadzi Cię podczas pracy.</span>
           </div>
           <div class="hero-actions">
-            <a class="button primary big" href="#modules">Poznaj ServiceOS</a>
-            <button class="button secondary big requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz mój telefon</button>
+            <a class="button primary big" href="#day">Zobacz jak działa <span>↓</span></a>
+            <a class="button secondary big story-link-secondary" href="#connect">Jak połączyć telefon</a>
           </div>
+          <a class="hero-scroll-hint" href="#day"><i>↓</i><span>Zacznij od krótkiego przebiegu pracy</span></a>
           <div class="hero-facts">
-            <div><strong>Nowe zlecenie</strong><span>klient i telefon w jednym formularzu</span></div>
-            <div><strong>Co dalej?</strong><span>aktualny etap i następna akcja</span></div>
-            <div><strong>Klient wie</strong><span>ważne zmiany dostaje automatycznie</span></div>
+            <div><strong>1 · Poznaj proces</strong><span>zobacz, jak wygląda zwykłe zlecenie</span></div>
+            <div><strong>2 · Poznaj ekran</strong><span>sprawdź, gdzie znajdziesz najważniejsze rzeczy</span></div>
+            <div><strong>3 · Połącz telefon</strong><span>przejdź instrukcję krok po kroku</span></div>
           </div>
         </div>
 
@@ -123,18 +119,26 @@
       </div>
     </section>
 
-    <section class="status-strip">
-      <div class="wrap status-grid">
-        <div><strong data-release-version>—</strong><span>aktualna wersja Windows</span></div>
-        <div><strong>1 konto</strong><span>desktop + panel WWW</span></div>
-        <div><strong>Własny %</strong><span>rozliczenie każdego serwisanta</span></div>
-        <div><strong>24/7</strong><span>dostęp do panelu mobilnego</span></div>
+    <section class="employee-roadmap" aria-label="Jak przejść instrukcję ServiceOS">
+      <div class="wrap roadmap-shell">
+        <div class="roadmap-intro">
+          <span>ZACZNIJ TUTAJ</span>
+          <strong>Jedna strona. Cztery proste etapy.</strong>
+          <small>Aktualna aplikacja Windows: <b data-release-version>—</b></small>
+        </div>
+        <div class="roadmap-steps">
+          <a href="#day"><b>01</b><strong>Zrozum pracę</strong><span>Od przyjęcia telefonu do odbioru.</span></a>
+          <a href="#modules"><b>02</b><strong>Poznaj aplikację</strong><span>Co jest gdzie i do czego służy.</span></a>
+          <a href="#connect"><b>03</b><strong>Połącz telefon</strong><span>Dokładna instrukcja bez zgadywania.</span></a>
+          <a href="#start"><b>04</b><strong>Zaakceptuj zasady</strong><span>Potem możesz pobrać i rozpocząć pracę.</span></a>
+        </div>
       </div>
     </section>
 
-    <section class="page-section workday-section" id="day">
+    <section class="page-section workday-section story-chapter" id="day">
       <div class="wrap workday-layout">
-        <div class="section-heading reveal">
+        <div class="section-heading reveal" data-story-observe>
+          <b class="chapter-number">01</b>
           <span>TAK WYGLĄDA ZWYKŁA PRACA</span>
           <h2>Od przyjęcia telefonu do odbioru — wszystko w jednym miejscu.</h2>
           <p>Nie uczysz się technicznych kodów. ServiceOS pokazuje klienta, urządzenie, miejsce telefonu i następną rzecz do zrobienia.</p>
@@ -156,20 +160,92 @@
       </div>
     </section>
 
-    <section class="page-section" id="modules">
+    <section class="page-section app-story-section story-chapter" id="modules">
       <div class="wrap">
-        <div class="section-heading reveal">
-          <span>ZAKŁADKI I MODUŁY</span>
-          <h2>Wiesz, gdzie wejść i po co.</h2>
-          <p>Każdy moduł ma jedno konkretne zadanie. Poniżej widzisz najważniejsze miejsca w ServiceOS.</p>
+        <div class="app-story-intro reveal" data-story-observe>
+          <b class="chapter-number">02</b>
+          <span class="section-kicker">ZAKŁADKI I MODUŁY</span>
+          <h2>Poznaj aplikację, zanim pierwszy raz jej użyjesz.</h2>
+          <p>Przewijaj spokojnie w dół. Po lewej wyjaśniamy, co robisz w danym miejscu, a podgląd po prawej zmienia się razem z opisem. Dzięki temu po pierwszym logowaniu układ będzie już znajomy.</p>
         </div>
-        <div class="module-grid">
-          <article><div class="module-icon">⌂</div><h3>Start</h3><p>Od razu widzisz, co wymaga reakcji i co możesz zrobić później.</p><span>Najpierw to, co ważne</span></article>
-          <article><div class="module-icon">▣</div><h3>Serwis</h3><p>Klient, telefon, etap naprawy, termin i wszystkie potrzebne informacje.</p><span>Cała naprawa w jednej karcie</span></article>
-          <article><div class="module-icon">⇄</div><h3>Przekazania</h3><p>Wiesz, skąd telefon wyjechał, dokąd jedzie i kto go przyjął.</p><span>Bez zgadywania, gdzie jest urządzenie</span></article>
-          <article><div class="module-icon">%</div><h3>Rozliczenia</h3><p>Po zakończeniu naprawy przychód zapisuje się według ustawień danego serwisanta.</p><span>Kwoty i podział w jednym miejscu</span></article>
-          <article><div class="module-icon">✉</div><h3>Wiadomości do klienta</h3><p>Klient dostaje czytelne informacje o ważnych etapach zlecenia.</p><span>Mniej telefonów z pytaniem „co z naprawą?”</span></article>
-          <article><div class="module-icon">⚙</div><h3>Zarządzanie</h3><p>Uprawniona osoba ustawia konta, punkty i dostęp pracowników.</p><span>Widoczne tylko dla osób uprawnionych</span></article>
+
+        <div class="app-story-layout">
+          <div class="app-story-list">
+            <article class="app-story-item active" data-story-feature="home" data-story-index="01" data-story-observe>
+              <span>START</span>
+              <h3>Najpierw widzisz, co wymaga reakcji.</h3>
+              <p>Ekran główny nie jest raportem. Ma powiedzieć Ci jedną rzecz: co zrobić teraz, a co może poczekać.</p>
+              <ul><li>pilne zlecenia są na górze</li><li>widzisz najbliższą wymaganą akcję</li><li>szybkie przyciski prowadzą prosto do zadania</li></ul>
+            </article>
+            <article class="app-story-item" data-story-feature="service" data-story-index="02" data-story-observe>
+              <span>SERWIS</span>
+              <h3>Cała naprawa jest w jednej karcie.</h3>
+              <p>Nie szukasz informacji w kilku miejscach. Klient, urządzenie, termin, aktualny etap i następna czynność są przy jednym zleceniu.</p>
+              <ul><li>status mówi, na jakim etapie jesteś</li><li>lokalizacja mówi, gdzie fizycznie jest telefon</li><li>historia pokazuje, co wydarzyło się wcześniej</li></ul>
+            </article>
+            <article class="app-story-item" data-story-feature="transfers" data-story-index="03" data-story-observe>
+              <span>PRZEKAZANIA</span>
+              <h3>Gdy telefon jedzie do innego punktu, system prowadzi transport.</h3>
+              <p>ServiceOS oddziela naprawę od fizycznego przekazania urządzenia. Dzięki temu wiadomo, skąd telefon wyjechał, dokąd jedzie i czy został już przyjęty.</p>
+              <ul><li>nadawca rozpoczyna przekazanie</li><li>punkt docelowy potwierdza dostarczenie</li><li>w trakcie transportu statusy naprawy są chronione</li></ul>
+            </article>
+            <article class="app-story-item" data-story-feature="customer" data-story-index="04" data-story-observe>
+              <span>KLIENT</span>
+              <h3>Klient dostaje informacje bez dzwonienia do punktu.</h3>
+              <p>Wiadomości serwisowe zawierają link do konkretnego zlecenia. Klient może też wejść do prywatnego portalu i zobaczyć całą swoją historię.</p>
+              <ul><li>publiczny link pokazuje tylko dane danego zlecenia</li><li>stały kod klienta otwiera prywatny portal</li><li>wyceny i odpowiedzi pojawiają się w jednym miejscu</li></ul>
+            </article>
+            <article class="app-story-item" data-story-feature="admin" data-story-index="05" data-story-observe>
+              <span>ZARZĄDZANIE</span>
+              <h3>Uprawnienia są proste: rola główna i dodatki są oddzielone.</h3>
+              <p>Właściciel zarządza kontami, punktami i bezpieczeństwem. Dodatkowe „Wsparcie LockOn” można nadać bez zmiany głównej roli pracownika.</p>
+              <ul><li>akceptacja nowych kont</li><li>blokowanie kont i unieważnianie sesji</li><li>Rozliczenia oraz administracja są widoczne tylko dla uprawnionych osób</li></ul>
+            </article>
+          </div>
+
+          <div class="app-story-visual reveal delay" data-story-observe aria-label="Animowany podgląd modułów ServiceOS">
+            <div class="story-window">
+              <div class="story-window-top">
+                <div class="story-window-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Punkt Nowogard</span></div></div>
+                <div class="story-window-live"><i></i> ONLINE</div>
+              </div>
+              <div class="story-window-body">
+                <aside class="story-sidebar" aria-hidden="true">
+                  <span class="active" data-story-icon="home">⌂</span>
+                  <span data-story-icon="service">▣</span>
+                  <span data-story-icon="transfers">⇄</span>
+                  <span data-story-icon="customer">✉</span>
+                  <span data-story-icon="admin">⚙</span>
+                </aside>
+                <div class="story-screens">
+                  <div class="story-screen active" data-story-screen="home" aria-hidden="false">
+                    <span class="story-screen-kicker">START</span><h3>Co wymaga uwagi?</h3>
+                    <div class="story-kpis"><article><span>Działaj teraz</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
+                    <div class="story-focus-card"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small></div>
+                  </div>
+                  <div class="story-screen" data-story-screen="service" aria-hidden="true">
+                    <span class="story-screen-kicker">SERWIS</span><h3>Zlecenie #1042</h3>
+                    <div class="story-list"><article><b>Klient</b><div><strong>Anna Kowalska</strong><span>kontakt zapisany przy zleceniu</span></div><em>OK</em></article><article><b>Telefon</b><div><strong>iPhone 14 Pro</strong><span>IMEI i opis usterki w szczegółach</span></div><em>URZĄDZENIE</em></article><article><b>Etap</b><div><strong>Diagnoza</strong><span>następna akcja: rozpocznij naprawę</span></div><em>PILNE</em></article></div>
+                  </div>
+                  <div class="story-screen" data-story-screen="transfers" aria-hidden="true">
+                    <span class="story-screen-kicker">PRZEKAZANIA</span><h3>Telefon jest w drodze</h3>
+                    <div class="story-transfer-route"><div><span>SKĄD</span><strong>Punkt Nowogard</strong></div><b>→</b><div><span>DOKĄD</span><strong>Serwis główny</strong></div></div>
+                    <div class="story-message"><b>CO ROBISZ?</b><p>Po fizycznym dostarczeniu odbiorca potwierdza przyjęcie. Dopiero wtedy urządzenie zmienia aktualną lokalizację.</p></div>
+                  </div>
+                  <div class="story-screen" data-story-screen="customer" aria-hidden="true">
+                    <span class="story-screen-kicker">KLIENT</span><h3>Informacja bez telefonu do punktu</h3>
+                    <div class="story-message"><b>WIADOMOŚĆ SERWISOWA</b><p>„Twoje zlecenie #1042 zmieniło status. Aktualne informacje znajdziesz pod bezpiecznym linkiem.”</p></div>
+                    <div class="story-message"><b>PORTAL KLIENTA</b><p>Stały kod klienta otwiera historię wszystkich jego zleceń i rozmów dotyczących wycen.</p></div>
+                  </div>
+                  <div class="story-screen" data-story-screen="admin" aria-hidden="true">
+                    <span class="story-screen-kicker">ZARZĄDZANIE</span><h3>Konta i bezpieczeństwo</h3>
+                    <div class="story-admin-grid"><article><span>NOWE KONTA</span><strong>Akceptuj wnioski</strong></article><article><span>SESJE</span><strong>Wyloguj urządzenia</strong></article><article><span>ROLA</span><strong>Główna funkcja pracownika</strong></article><article><span>DODATEK</span><strong>Wsparcie LockOn</strong></article></div>
+                  </div>
+                </div>
+              </div>
+              <div class="story-window-caption">Podgląd jest uproszczony — pokazuje logikę interfejsu, którą zobaczysz po zalogowaniu.</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -204,9 +280,9 @@
     <section class="page-section preview-section" id="preview">
       <div class="wrap">
         <div class="section-heading reveal">
-          <span>INTERFEJS APLIKACJI</span>
-          <h2>Poznaj układ zanim zaczniesz pracę.</h2>
-          <p>Przełącz zakładki poniżej. To uproszczony podgląd tego, co zobaczysz po zalogowaniu.</p>
+          <span>INTERAKTYWNY PODGLĄD</span>
+          <h2>Teraz kliknij i sprawdź ekran samodzielnie.</h2>
+          <p>Skoro znasz już logikę systemu, przełącz zakładki poniżej. To ostatni szybki trening przed pierwszym logowaniem.</p>
         </div>
 
         <div class="app-preview reveal">
@@ -247,6 +323,59 @@
               <div class="preview-stats admin"><article><span>Sesje</span><strong>6</strong><small>Windows + WWW</small></article><article><span>Serwisy</span><strong>2</strong><small>aktywne punkty</small></article><article><span>Zablokowane</span><strong>0</strong><small>konta</small></article></div>
               <div class="preview-admin-list"><div><span><strong>Wyspa Gryf</strong><small>aktywny serwisant</small></span><b>AUTO SERWIS</b></div><div><span><strong>Punkt Nowogard</strong><small>firmowy nadawca Gmail</small></span><b>ONLINE</b></div></div>
             </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section connect-story story-chapter" id="connect">
+      <div class="wrap">
+        <div class="connect-story-head reveal" data-story-observe>
+          <b class="chapter-number">03</b>
+          <span class="section-kicker">POŁĄCZ TELEFON</span>
+          <h2>Pięć kroków i telefon jest gotowy do pracy.</h2>
+          <p>Nie skanujesz żadnych podejrzanych kodów i nie nadajesz nowych uprawnień. Telefon przejmuje tylko ten sam zakres dostępu, który masz już zatwierdzony w ServiceOS.</p>
+        </div>
+
+        <div class="connect-story-layout">
+          <div class="connect-device-wrap reveal" data-story-observe>
+            <div class="connect-device-card">
+              <div>
+                <div class="connect-phone" aria-label="Podgląd połączenia telefonu">
+                  <div class="connect-phone-screen">
+                    <div class="connect-phone-top"><span>9:41</span><span>● ● ●</span></div>
+                    <div class="connect-phone-brand"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Połączenie urządzenia</span></div></div>
+                    <div class="connect-phone-stage"><span data-phone-kicker>KROK 1 · TELEFON</span><h3 data-phone-title>Otwórz portal pracownika</h3><p data-phone-copy>Wejdź na app.serviceos.pl w przeglądarce telefonu.</p></div>
+                    <div class="connect-code"><span>NA EKRANIE ZOBACZYSZ</span><strong data-phone-code>app.serviceos.pl</strong></div>
+                    <div class="connect-phone-actions" aria-hidden="true">
+                      <span class="active" data-phone-action="site">Otwórz stronę pracownika</span>
+                      <span data-phone-action="desktop">Zaloguj się na komputerze</span>
+                      <span data-phone-action="code">Pomoc → Połącz urządzenie</span>
+                      <span data-phone-action="pair">Wpisz jednorazowy kod</span>
+                      <span data-phone-action="ready">✓ Telefon gotowy</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="connect-device-note">Podgląd zmienia się podczas przewijania instrukcji po prawej.</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="connect-timeline" data-connect-timeline>
+              <article class="connect-step active" data-connect-step="1" data-story-observe><span>NA TELEFONIE</span><h3>Otwórz app.serviceos.pl</h3><p>Wejdź na tę samą stronę w przeglądarce telefonu. Możesz wcześniej spokojnie przeczytać całą instrukcję.</p><small>Nie musisz instalować osobnej aplikacji mobilnej — panel działa jako WWW/PWA.</small></article>
+              <article class="connect-step" data-connect-step="2" data-story-observe><span>NA KOMPUTERZE</span><h3>Zaloguj się do aplikacji Windows</h3><p>Uruchom ServiceOS i zaloguj się swoim zatwierdzonym kontem Google. To konto określa Twój zakres pracy.</p><small>Jeżeli konto czeka na akceptację, najpierw musi zatwierdzić je osoba uprawniona.</small></article>
+              <article class="connect-step" data-connect-step="3" data-story-observe><span>W SERVICEOS</span><h3>Otwórz Pomoc → Połącz urządzenie</h3><p>Aplikacja wygeneruje krótki, jednorazowy kod WWW. Kod jest ważny tylko przez kilka minut i służy wyłącznie do połączenia telefonu.</p><small>Nie wysyłaj tego kodu innym osobom.</small></article>
+              <article class="connect-step" data-connect-step="4" data-story-observe><span>ZNÓW NA TELEFONIE</span><h3>Wybierz „Połącz telefon” i wpisz kod</h3><p>Przepisz kod dokładnie tak, jak pokazuje go aplikacja na komputerze. Po poprawnej weryfikacji panel otworzy się automatycznie.</p><small>Telefon nie dostaje szerszych uprawnień niż Twoje konto.</small></article>
+              <article class="connect-step" data-connect-step="5" data-story-observe><span>GOTOWE</span><h3>Pracujesz na komputerze i telefonie</h3><p>Na telefonie zobaczysz zlecenia, przekazania i pozostałe moduły dostępne dla Twojej roli. Możesz zacząć od ekranu Start.</p><small>Jeżeli konto zostanie zablokowane albo sesja unieważniona, dostęp telefonu również przestanie działać.</small></article>
+            </div>
+
+            <div class="connect-story-actions reveal" data-story-observe>
+              <strong>Chcesz połączyć telefon teraz?</strong>
+              <p>Najpierw zaakceptuj zasady pracownika niżej. Potem ten przycisk otworzy bezpieczne okno połączenia.</p>
+              <div class="site-address"><span>Adres na telefonie</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj</button></div>
+              <button id="navLoginButton" class="button primary big requires-onboarding" data-requires-onboarding type="button">Połącz telefon</button>
             </div>
           </div>
         </div>
@@ -300,24 +429,7 @@
       </div>
     </section>
 
-    <section class="page-section connect-section" id="connect">
-      <div class="wrap connect-grid">
-        <div class="connect-copy reveal">
-          <span class="section-kicker">POŁĄCZ TELEFON</span>
-          <h2>Po akceptacji połącz telefon.</h2>
-          <p>Na telefonie zobaczysz ten sam zakres pracy co na komputerze.</p>
-          <div class="site-address"><span>Na telefonie otwórz</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj</button></div>
-          <button class="button primary big requires-onboarding" data-requires-onboarding data-open-login type="button">Mam stronę na telefonie — połącz</button>
-        </div>
-        <div class="connect-steps reveal delay">
-          <article><b>1</b><div><strong>Otwórz app.serviceos.pl na telefonie</strong><span>Przejdź tę instrukcję i zaakceptuj zasady.</span></div></article>
-          <article><b>2</b><div><strong>Zaloguj się do aplikacji Windows</strong><span>Użyj swojego zatwierdzonego konta Google.</span></div></article>
-          <article><b>3</b><div><strong>Otwórz Pomoc → Połącz urządzenie</strong><span>Aplikacja wygeneruje jednorazowy kod WWW ważny kilka minut.</span></div></article>
-          <article><b>4</b><div><strong>Wpisz kod na telefonie</strong><span>Na stronie wybierz „Połącz telefon” i podaj kod z aplikacji.</span></div></article>
-          <article><b>5</b><div><strong>Gotowe</strong><span>Telefon jest gotowy do pracy w Twoim obecnym zakresie.</span></div></article>
-        </div>
-      </div>
-    </section>
+    
 
     <section class="download-section" id="download">
       <div class="wrap download-card reveal">
@@ -371,5 +483,6 @@
   <script src="assets/site.js"></script>
   <script src="assets/home-v2.js"></script>
   <script src="assets/ui-2026.js"></script>
+  <script src="assets/home-story.js"></script>
 </body>
 </html>
