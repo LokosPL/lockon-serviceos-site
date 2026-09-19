@@ -36,7 +36,7 @@
       }
     });
     if (stateLabel) stateLabel.textContent = accepted
-      ? 'ServiceOS odblokowany w tej przeglądarce. Nadal obowiązuje weryfikacja konta przez OWNER.'
+      ? 'ServiceOS odblokowany w tej przeglądarce. Twoje konto musi zostać zaakceptowane przez osobę uprawnioną.'
       : 'Pobieranie i panel są jeszcze zablokowane.';
     if (acceptButton) {
       acceptButton.textContent = accepted ? '✓ ServiceOS odblokowany' : 'Rozumiem — odblokuj ServiceOS';
