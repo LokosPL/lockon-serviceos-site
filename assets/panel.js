@@ -118,6 +118,17 @@
     }
   };
 
+  const syncMobileHandlingMode = () => {
+    const select=document.getElementById('mobileHandlingMode');
+    const transferOnly=select?.value==='TRANSFER_ONLY';
+    const info=document.getElementById('mobileTransferOnlyInfo');
+    if(info) info.hidden=!transferOnly;
+    document.querySelectorAll('[data-standard-service]').forEach((el)=>{
+      const roleHidden=el.classList.contains('service-edit-only')&&!canEditService();
+      el.hidden=transferOnly||roleHidden;
+    });
+  };
+
   const renderPoints = () => {
     const select = document.getElementById('panelPointSelect');
     const points = me?.points || [];
@@ -542,6 +553,7 @@
       status.className = 'panel-form-status ok';
       status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
       event.currentTarget.reset();
+      syncMobileHandlingMode();
       if (result.notification?.sent) {
         toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');
       } else if (result.notification?.queued) {
@@ -624,14 +636,7 @@
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
-    document.getElementById('mobileHandlingMode')?.addEventListener('change',(event)=>{
-      const transferOnly=event.target.value==='TRANSFER_ONLY';
-      document.getElementById('mobileTransferOnlyInfo').hidden=!transferOnly;
-      document.querySelectorAll('[data-standard-service]').forEach((el)=>{
-        const roleHidden=el.classList.contains('service-edit-only')&&!canEditService();
-        el.hidden=transferOnly||roleHidden;
-      });
-    });
+    document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
     document.getElementById('mobilePointForm')?.addEventListener('submit',submitPoint);
     document.getElementById('panelLogout')?.addEventListener('click',async()=>{
       try { await api('/auth/logout',{method:'POST',body:'{}'}); } catch {}
@@ -670,6 +675,7 @@
     renderAccount();
     renderPoints();
     wireEvents();
+    syncMobileHandlingMode();
     try { await refreshData(); }
     catch (error) { toast(error.message || 'Nie udało się pobrać danych.','error'); }
     document.getElementById('panelBoot')?.classList.add('hidden');
