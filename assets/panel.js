@@ -40,6 +40,9 @@
   let transferFilter = '';
   let orderFilter = 'ALL';
   let activeOrderId = '';
+  let supportConversation = null;
+  let supportPresence = [];
+  let supportTickets = [];
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
@@ -105,6 +108,7 @@
   const canReadFinance = () => FINANCE_READ.has(role());
   const canHandleCustomerQuotes = () => CUSTOMER_QUOTE_STAFF.has(role());
   const isOwner = () => role() === 'OWNER';
+  const canSupportStaff = () => isOwner() || role() === 'SUPPORT' || me?.user?.supportEnabled === true;
   const pointIds = () => (me?.points || []).map((point) => point.id);
   const canOperatePoint = (pointId) => ['OWNER','BOSS'].includes(role()) || pointIds().includes(pointId);
 
@@ -121,6 +125,7 @@
     if (name === 'earnings') void loadFinance();
     if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
+    if (name === 'support') void loadSupport();
   };
 
   const formatDate = (value) => {
@@ -145,6 +150,7 @@
     document.querySelectorAll('.service-edit-only').forEach((el) => { el.hidden = !canEditService(); });
     document.querySelectorAll('.finance-only').forEach((el) => { el.hidden = !canReadFinance(); });
     document.querySelectorAll('.quote-staff-only').forEach((el) => { el.hidden = !canHandleCustomerQuotes(); });
+    document.querySelectorAll('.support-staff-only').forEach((el) => { el.hidden = !canSupportStaff(); });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
@@ -597,6 +603,133 @@
     }catch(error){toast(error.message||'Nie udało się zamknąć zapytania.','error');}
   };
 
+  const mobileSupportAuthor=(author)=>({user:'Ty',assistant:'Bot ServiceOS',support:'Konsultant',system:'ServiceOS'}[author]||'ServiceOS');
+
+  const runMobileHelpAction = async (action) => {
+    if(!action)return;
+    if(action.type==='OPEN_ORDER'&&action.orderId){
+      showView('orders');
+      await loadOrders();
+      await openOrder(action.orderId);
+      return;
+    }
+    if(action.type==='OPEN_USER'&&action.userId&&isOwner()){
+      showView('admin');
+      await loadAdmin();
+      const card=document.querySelector('[data-mobile-admin-user="'+CSS.escape(action.userId)+'"]');
+      card?.scrollIntoView({behavior:'smooth',block:'center'});
+      card?.querySelector('details')?.setAttribute('open','');
+      return;
+    }
+    if(action.type==='NAVIGATE'&&action.target){
+      const target=String(action.target);
+      if(['service','administration'].includes(target)){
+        showView(target==='service'?'orders':'admin');
+      }else if(target==='earnings')showView('earnings');
+      else if(target==='support')showView('support');
+      else if(target==='settings')document.getElementById('panelAccountButton')?.click();
+    }
+  };
+
+  const renderMobileSupport = () => {
+    const stateHost=document.getElementById('mobileSupportState');
+    const messagesHost=document.getElementById('mobileHelpMessages');
+    if(!stateHost||!messagesHost)return;
+    const state=supportConversation?.consultantState||'BOT';
+    const joinedName=supportConversation?.assignedSupportName||'Konsultant';
+    stateHost.className='mobile-support-state '+state.toLowerCase();
+    stateHost.innerHTML=state==='JOINED'
+      ? '<strong>'+esc(joinedName)+' jest w rozmowie</strong><span>Twoje wiadomości trafiają teraz do konsultanta. Bot nie odpowiada automatycznie.</span>'
+      : state==='WAITING'
+        ? '<strong>Czekasz na konsultanta</strong><span>Możesz nadal korzystać z bota. Gdy konsultant dołączy, pojawi się tutaj automatycznie.</span>'
+        : '<strong>Najpierw pomaga bot ServiceOS</strong><span>Bot zna aplikację, zlecenia w Twoim zakresie i może przenieść Cię do właściwego miejsca.</span>';
+    const request=document.getElementById('mobileRequestConsultant');
+    if(request){
+      request.hidden=state==='JOINED';
+      request.disabled=state==='WAITING';
+      request.textContent=state==='WAITING'?'Prośba wysłana — czekasz na konsultanta':'Poproś konsultanta o dołączenie';
+    }
+    messagesHost.innerHTML=(supportConversation?.messages||[]).map(message=>{
+      const action=message.action&&message.action.type!=='WEBSITE_CODE'
+        ? '<button type="button" class="mobile-help-action" data-mobile-help-action="'+esc(encodeURIComponent(JSON.stringify(message.action)))+'">'+esc(message.action.label||'Otwórz w ServiceOS')+' →</button>'
+        : '';
+      return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
+    }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Możesz zapytać o zlecenie, proces lub obsługę ServiceOS.</div>';
+    messagesHost.scrollTop=messagesHost.scrollHeight;
+  };
+
+  const renderMobileSupportStaff = () => {
+    if(!canSupportStaff())return;
+    const presenceHost=document.getElementById('mobileSupportPresence');
+    const ticketsHost=document.getElementById('mobileSupportTickets');
+    if(presenceHost){
+      presenceHost.innerHTML=supportPresence.map(person=>
+        '<article class="mobile-presence-row '+esc(String(person.consultantState||'BOT').toLowerCase())+'"><i></i><div><strong>'+esc(person.name)+'</strong><span>'+esc(roleLabel(person.role))+' · '+esc((person.clientTypes||[]).map(x=>x==='WEB'?'WWW / telefon':'desktop').join(' + '))+'</span></div><b>'+esc(person.consultantState==='WAITING'?'CZEKA':person.consultantState==='JOINED'?'W ROZMOWIE':'BOT')+'</b></article>'
+      ).join('')||'<div class="panel-list-empty">Brak aktywnych użytkowników.</div>';
+    }
+    if(ticketsHost){
+      ticketsHost.innerHTML=supportTickets.filter(ticket=>ticket.status==='OPEN').map(ticket=>{
+        const msgs=(ticket.messages||[]).map(message=>'<div class="mobile-ticket-message '+esc(message.author)+'"><b>'+esc(mobileSupportAuthor(message.author))+'</b><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p><small>'+esc(formatDate(message.createdAt))+'</small></div>').join('');
+        return '<article class="mobile-support-ticket"><div class="mobile-support-ticket-head"><div><strong>'+esc(ticket.userName)+'</strong><span>'+esc(ticket.userEmail)+' · '+esc(ticket.pointName)+'</span></div><b>'+(ticket.assignedSupportUserId?'DOŁĄCZONO':'CZEKA')+'</b></div>'+
+          '<div class="mobile-ticket-thread">'+msgs+'</div>'+
+          '<div class="mobile-ticket-actions">'+
+            (!ticket.assignedSupportUserId?'<button class="mini-action primary" data-mobile-support-take="'+esc(ticket.id)+'">Dołącz</button>':'')+
+            '<input data-mobile-support-reply-input="'+esc(ticket.id)+'" maxlength="2000" placeholder="Napisz do użytkownika…">'+
+            '<button class="mini-action primary" data-mobile-support-reply="'+esc(ticket.id)+'">Wyślij</button>'+
+            '<button class="mini-action" data-mobile-support-close="'+esc(ticket.id)+'">Zamknij</button>'+
+          '</div></article>';
+      }).join('')||'<div class="panel-list-empty">Nikt nie czeka teraz na konsultanta.</div>';
+    }
+  };
+
+  const loadSupport = async (silent=false) => {
+    try{
+      const jobs=[api('/support/conversation')];
+      if(canSupportStaff())jobs.push(api('/support/presence'),api('/support/tickets'));
+      const result=await Promise.all(jobs);
+      supportConversation=result[0];
+      if(canSupportStaff()){supportPresence=result[1]||[];supportTickets=result[2]||[];}
+      renderMobileSupport();
+      renderMobileSupportStaff();
+    }catch(error){if(!silent)toast(error.message||'Nie udało się pobrać pomocy.','error');}
+  };
+
+  const sendMobileHelp = async (message) => {
+    const value=String(message||'').trim();
+    if(!value)return;
+    try{
+      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value})});
+      if(!supportConversation)supportConversation={id:'',status:'OPEN',messages:[],consultantState:'BOT'};
+      supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
+      supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
+      renderMobileSupport();
+      window.setTimeout(()=>void loadSupport(true),500);
+    }catch(error){toast(error.message||'Nie udało się wysłać wiadomości.','error');}
+  };
+
+  const requestMobileConsultant = async () => {
+    try{
+      await api('/support/request',{method:'POST',body:JSON.stringify({pointId:activePointId||me?.point?.id||'',message:'Proszę konsultanta o dołączenie do rozmowy.'})});
+      toast('Prośba o konsultanta została wysłana.');
+      await loadSupport(true);
+    }catch(error){toast(error.message||'Nie udało się poprosić konsultanta.','error');}
+  };
+
+  const mobileSupportAction = async (id,action) => {
+    try{
+      if(action==='reply'){
+        const input=document.querySelector('[data-mobile-support-reply-input="'+CSS.escape(id)+'"]');
+        const message=String(input?.value||'').trim();
+        if(!message)return;
+        await api('/support/tickets/'+encodeURIComponent(id)+'/reply',{method:'POST',body:JSON.stringify({message})});
+      }else{
+        if(action==='close'&&!window.confirm('Zamknąć tę rozmowę wsparcia?'))return;
+        await api('/support/tickets/'+encodeURIComponent(id)+'/'+action,{method:'POST',body:'{}'});
+      }
+      await loadSupport(true);
+    }catch(error){toast(error.message||'Operacja wsparcia nie powiodła się.','error');}
+  };
+
   const loadFinance = async () => {
     if (!canReadFinance()) return;
     financeData = await api('/finance/revenues');
@@ -965,6 +1098,14 @@
       if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
+      const helpAction=event.target.closest('[data-mobile-help-action]');
+      if(helpAction){try{void runMobileHelpAction(JSON.parse(decodeURIComponent(helpAction.dataset.mobileHelpAction)));}catch{}return;}
+      const supportTake=event.target.closest('[data-mobile-support-take]');
+      if(supportTake){void mobileSupportAction(supportTake.dataset.mobileSupportTake,'take');return;}
+      const supportReply=event.target.closest('[data-mobile-support-reply]');
+      if(supportReply){void mobileSupportAction(supportReply.dataset.mobileSupportReply,'reply');return;}
+      const supportClose=event.target.closest('[data-mobile-support-close]');
+      if(supportClose){void mobileSupportAction(supportClose.dataset.mobileSupportClose,'close');return;}
       const quoteReply=event.target.closest('[data-customer-quote-reply]');
       if(quoteReply){void replyCustomerQuote(quoteReply.dataset.customerQuoteReply);return;}
       const quotePrice=event.target.closest('[data-customer-quote-price]');
@@ -1005,6 +1146,9 @@
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
     document.getElementById('refreshCustomerQuotes')?.addEventListener('click',()=>void loadCustomerQuotes());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
+    document.getElementById('refreshSupport')?.addEventListener('click',()=>void loadSupport());
+    document.getElementById('mobileHelpForm')?.addEventListener('submit',(event)=>{event.preventDefault();const input=document.getElementById('mobileHelpInput');const value=input?.value||'';if(input)input.value='';void sendMobileHelp(value);});
+    document.getElementById('mobileRequestConsultant')?.addEventListener('click',()=>void requestMobileConsultant());
     document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
     document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
@@ -1069,6 +1213,9 @@
     window.setInterval(()=>{
       if(canHandleCustomerQuotes()&&document.visibilityState==='visible') void loadCustomerQuotes();
     },20000);
+    window.setInterval(()=>{
+      if(document.visibilityState==='visible'&&document.getElementById('view-support')?.classList.contains('active')) void loadSupport(true);
+    },4000);
   };
 
   void boot();
