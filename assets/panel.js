@@ -34,6 +34,7 @@
   let servicePoints = [];
   let admin = null;
   let auditEvents = [];
+  let financeData = null;
   let activePointId = '';
   let transferFilter = '';
   let orderFilter = 'ALL';
@@ -53,6 +54,7 @@
   const SERVICE_CREATE = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN','USER']);
   const SERVICE_TRANSFER = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN','USER']);
   const SERVICE_MANAGE = new Set(['OWNER','BOSS','COORDINATOR']);
+  const FINANCE_READ = new Set(['OWNER','BOSS','COORDINATOR','TECHNICIAN']);
 
   const esc = (value) => String(value ?? '')
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -98,18 +100,21 @@
   const canTransferService = () => SERVICE_TRANSFER.has(role());
   const canCancelService = () => canCreateService();
   const canManageService = () => SERVICE_MANAGE.has(role());
+  const canReadFinance = () => FINANCE_READ.has(role());
   const isOwner = () => role() === 'OWNER';
   const pointIds = () => (me?.points || []).map((point) => point.id);
   const canOperatePoint = (pointId) => ['OWNER','BOSS'].includes(role()) || pointIds().includes(pointId);
 
   const showView = (name) => {
     if (name === 'admin' && !isOwner()) name = 'home';
+    if (name === 'earnings' && !canReadFinance()) name = 'home';
     if (['new','orders','transfers'].includes(name) && !canReadService()) name = 'home';
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
     document.querySelectorAll('[data-panel-nav]').forEach((button) => button.classList.toggle('active', button.dataset.panelNav === name));
     window.scrollTo({top:0,behavior:'instant'});
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
+    if (name === 'earnings') void loadFinance();
     if (name === 'admin') void loadAdmin();
   };
 
@@ -133,6 +138,7 @@
     document.querySelectorAll('.owner-only').forEach((el) => { el.hidden = !isOwner(); });
     document.querySelectorAll('.management-only').forEach((el) => { el.hidden = !canManageService(); });
     document.querySelectorAll('.service-edit-only').forEach((el) => { el.hidden = !canEditService(); });
+    document.querySelectorAll('.finance-only').forEach((el) => { el.hidden = !canReadFinance(); });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
@@ -484,6 +490,34 @@
     } catch (error) { toast(error.message || 'Nie udało się dodać notatki.','error'); }
   };
 
+  const money = (value) => new Intl.NumberFormat('pl-PL',{style:'currency',currency:'PLN'}).format(Number(value || 0));
+
+  const renderFinance = () => {
+    if (!financeData) return;
+    const summary = financeData.summary || {};
+    const revenue = document.getElementById('financeRevenue');
+    const technicians = document.getElementById('financeTechnicians');
+    const boss = document.getElementById('financeBoss');
+    if (revenue) revenue.textContent = money(summary.approvedRevenue);
+    if (technicians) technicians.textContent = money(summary.technicianShare);
+    if (boss) boss.textContent = money(summary.bossShare);
+    const host = document.getElementById('financePoints');
+    if (!host) return;
+    host.innerHTML = (financeData.points || []).map((point) =>
+      '<details class="mobile-finance-point"><summary><div><strong>'+esc(point.pointName)+'</strong><span>'+esc(point.pointCity || 'Punkt ServiceOS')+' · '+esc(point.entries?.length || 0)+' wpisów</span></div><div><span>Przychód <b>'+esc(money(point.approvedRevenue))+'</b></span><span>Firma <b>'+esc(money(point.bossShare))+'</b></span></div></summary><div class="mobile-finance-entries">' +
+        (point.entries || []).map((entry) =>
+          '<article><div><strong>'+(entry.orderNumber != null ? 'Zlecenie #'+esc(entry.orderNumber) : 'Wpis ręczny')+'</strong><span>'+esc(entry.technician?.name || 'Serwisant')+' · '+esc(entry.workDate)+'</span></div><b>'+esc(money(entry.amount))+'</b><small>'+esc(entry.splitTechnicianPercent)+'% / '+esc(entry.splitBossPercent)+'% · serwisant '+esc(money(entry.technicianShare))+' · firma '+esc(money(entry.bossShare))+'</small></article>'
+        ).join('') +
+      '</div></details>'
+    ).join('') || '<div class="panel-list-empty">Brak rozliczeń.</div>';
+  };
+
+  const loadFinance = async () => {
+    if (!canReadFinance()) return;
+    financeData = await api('/finance/revenues');
+    renderFinance();
+  };
+
   const loadAdmin = async () => {
     if (!isOwner()) return;
     admin = await api('/admin/overview');
@@ -748,6 +782,7 @@
     document.getElementById('refreshOrders')?.addEventListener('click',()=>void loadOrders());
     document.getElementById('refreshTransfers')?.addEventListener('click',()=>void loadTransfers());
     document.getElementById('refreshAdmin')?.addEventListener('click',()=>void loadAdmin());
+    document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
     document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
     document.getElementById('mobilePointForm')?.addEventListener('submit',submitPoint);
