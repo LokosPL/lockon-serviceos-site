@@ -56,3 +56,23 @@
 .mobile-workflow-dialog-grid em{font-style:normal;font-weight:800;font-size:11px}
 @media(max-width:560px){.mobile-workflow-strip{grid-template-columns:1fr}.mobile-workflow-strip em{align-items:flex-start;text-align:left}}
 
+/* Post-login mobile prominence */
+.panel-header{box-shadow:0 10px 35px rgba(0,0,0,.18)}
+.panel-hero{position:relative;padding:28px 4px 14px}
+.panel-hero::after{content:"";position:absolute;right:-90px;top:-80px;width:230px;height:230px;border-radius:50%;background:radial-gradient(circle,rgba(255,111,45,.075),transparent 68%);pointer-events:none}
+.panel-hero h1{font-size:36px}
+.panel-focus{margin:4px 0 13px}
+.panel-focus>button,.panel-focus-clear{width:100%;border:1px solid rgba(255,126,68,.18);border-radius:15px;background:linear-gradient(135deg,rgba(255,116,52,.08),rgba(17,20,25,.96));padding:15px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;text-align:left;color:inherit;box-shadow:0 18px 45px rgba(0,0,0,.16)}
+.panel-focus>button{cursor:pointer;transition:.18s ease}.panel-focus>button:active{transform:scale(.99)}
+.panel-focus>button>div{display:flex;flex-direction:column}.panel-focus>button span{font-size:7px;color:var(--orange);letter-spacing:.1em;font-weight:850}.panel-focus>button strong{font-size:14px;line-height:1.35;margin-top:5px;letter-spacing:-.015em}.panel-focus>button small{font-size:8px;color:#74808b;margin-top:5px}.panel-focus>button>b{width:34px;height:34px;border-radius:10px;background:rgba(255,117,55,.09);display:grid;place-items:center;color:#ff9566;font-size:15px}
+.panel-focus>button.overdue{border-color:rgba(255,91,91,.28);background:linear-gradient(135deg,rgba(255,91,91,.075),rgba(17,20,25,.96))}.panel-focus>button.overdue span{color:#ff8585}
+.panel-focus>button.due_soon{border-color:rgba(255,190,95,.23)}.panel-focus>button.due_soon span{color:#ffc16b}
+.panel-focus>button.ready_for_pickup{border-color:rgba(98,211,149,.22)}.panel-focus>button.ready_for_pickup span{color:#68d69a}
+.panel-focus-clear{grid-template-columns:28px 1fr;color:#73d99c;font-size:10px}
+.panel-kpis article{background:linear-gradient(160deg,#12161b,#0e1115);transition:.18s ease}.panel-kpis article:active{transform:scale(.985)}
+.panel-quick-grid>button{background:linear-gradient(145deg,#12161b,#0f1216);transition:.18s ease}.panel-quick-grid>button:active{transform:scale(.985);border-color:rgba(255,126,67,.25)}
+.panel-quick-grid>button>b{width:36px;height:36px;border-radius:11px}
+.panel-section-head h2{font-size:19px}
+.panel-bottom-nav button.active{box-shadow:inset 0 0 0 1px rgba(255,126,67,.07)}
+@media(min-width:680px){.panel-focus>button strong{font-size:16px}.panel-hero h1{font-size:40px}}
+
