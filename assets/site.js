@@ -78,14 +78,28 @@
       screen.setAttribute('aria-hidden', active ? 'false' : 'true');
     });
   };
+  let previewManualUntil = 0;
+  const markPreviewManual = () => { previewManualUntil = Date.now() + 15_000; };
   previewRoot?.querySelectorAll('.demo-nav').forEach(btn => btn.addEventListener('click', (event) => {
     event.preventDefault();
+    markPreviewManual();
     showDemo(btn.dataset.demoTarget);
   }));
   previewRoot?.querySelectorAll('[data-demo-jump]').forEach(btn => btn.addEventListener('click', (event) => {
     event.preventDefault();
+    markPreviewManual();
     showDemo(btn.dataset.demoJump);
   }));
+  if (previewRoot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const targets = [...previewRoot.querySelectorAll('.demo-nav')].map((btn) => btn.dataset.demoTarget).filter(Boolean);
+    window.setInterval(() => {
+      if (document.visibilityState !== 'visible' || Date.now() < previewManualUntil || targets.length < 2) return;
+      const rect = previewRoot.getBoundingClientRect();
+      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+      const current = targets.findIndex((target) => previewRoot.querySelector('.demo-nav[data-demo-target="' + target + '"]')?.classList.contains('active'));
+      showDemo(targets[(current + 1 + targets.length) % targets.length]);
+    }, 5_000);
+  }
 
   const formatBytes = (bytes) => {
     const value = Number(bytes);
