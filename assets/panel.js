@@ -186,22 +186,28 @@
 
   const orderCard = (order, compact = false) => {
     const transfer = order.latestTransfer;
-    const meta = [
-      'przyjęto: ' + formatDate(order.receivedAt),
-      'macierzysty: ' + (order.homePointName || order.pointName),
-      'lokalizacja: ' + (order.currentLocationLabel || order.currentPointName || order.pointName),
-      'serwisant: ' + (order.assignedTechnicianName || 'nieprzypisany'),
-      'termin: ' + (order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : 'brak'),
-      order.finalCost != null ? 'cena: ' + Number(order.finalCost).toFixed(2) + ' PLN' : (order.estimatedCost != null ? 'wycena: ~' + Number(order.estimatedCost).toFixed(2) + ' PLN' : ''),
-      transfer ? (transfer.kind === 'RETURN_HOME' ? 'powrót · ' : '') + (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
+    const location = order.currentLocationLabel || order.currentPointName || order.pointName;
+    const context = [
+      {label:'Punkt macierzysty',value:order.homePointName || order.pointName,kind:'home'},
+      {label:'Urządzenie jest teraz',value:location,kind:'location'},
+      {label:'Serwisant',value:order.assignedTechnicianName || 'Nieprzypisany',kind:'technician'},
+      {label:'Termin',value:order.estimatedCompletionAt ? formatDate(order.estimatedCompletionAt) : 'Brak terminu',kind:'eta'},
+      order.finalCost != null ? {label:'Cena',value:Number(order.finalCost).toFixed(2)+' PLN',kind:'price'} :
+        order.estimatedCost != null ? {label:'Wycena',value:'około '+Number(order.estimatedCost).toFixed(2)+' PLN',kind:'price'} : null,
+      transfer ? {label:transfer.kind==='RETURN_HOME'?'Powrót urządzenia':'Przekazanie',value:(TRANSFER_LABELS[transfer.status] || transfer.status)+' → '+(transfer.toPointName || ''),kind:'transfer'} : null
     ].filter(Boolean);
+    const shownContext = compact ? context.slice(0,2) : context;
+    const contextHtml = '<div class="panel-order-context'+(compact?' compact':'')+'">' + shownContext.map((item) =>
+      '<div class="'+esc(item.kind)+'"><span>'+esc(item.label)+'</span><strong>'+esc(item.value)+'</strong></div>'
+    ).join('') + '</div>';
     const workflow = order.workflow || null;
     return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
         '<div class="panel-order-number"><strong>#' + esc(order.orderNumber) + '</strong><small>' + esc(formatDate(order.receivedAt)) + '</small></div>' +
-        '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(meta.join(' · ')) + '</small></div>' +
+        '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(order.handlingMode === 'TRANSFER_ONLY' ? 'Tylko przekazanie' : 'Zlecenie serwisowe') + '</small></div>' +
         '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
       '</div>' +
+      contextHtml +
       (workflow ? '<div class="mobile-workflow-strip">' +
         '<div><span>Etap ' + esc(workflow.stageNumber) + '/' + esc(workflow.stageTotal) + '</span><strong>' + esc(workflow.stageLabel) + '</strong><progress max="100" value="' + esc(workflow.progressPercent) + '"></progress></div>' +
         '<div><span>Następna akcja</span><strong>' + esc(workflow.nextAction) + '</strong></div>' +
@@ -210,10 +216,7 @@
           (workflow.dueInMinutes != null && workflow.dueInMinutes >= 0 && workflow.dueInMinutes <= 1440 ? '<small>' + esc(Math.max(1,Math.ceil(workflow.dueInMinutes/60))) + ' h do terminu</small>' : '') +
         '</em>' +
       '</div>' : '') +
-      (compact ? '' : '<div class="panel-order-meta">' +
-        (order.imei ? '<span>IMEI ' + esc(order.imei) + '</span>' : '') +
-        (order.estimatedCompletionAt ? '<span>Termin ' + esc(formatDate(order.estimatedCompletionAt)) + '</span>' : '') +
-      '</div>') +
+      (!compact && order.imei ? '<div class="panel-order-meta"><span>IMEI ' + esc(order.imei) + '</span></div>' : '') +
       '<button type="button" data-open-order="' + esc(order.id) + '">Otwórz szczegóły →</button>' +
     '</article>';
   };
