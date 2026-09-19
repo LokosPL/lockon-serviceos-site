@@ -10,8 +10,9 @@
   <title>Portal klienta LockOn</title>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/customer-portal.css">
+  <link rel="stylesheet" href="assets/ui-2026.css">
 </head>
-<body>
+<body class="customer-portal-page">
   <header class="customer-nav">
     <div class="customer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>Portal klienta</span></div></div>
     <button id="customerLogout" type="button" hidden>Wyloguj</button>
@@ -20,11 +21,11 @@
   <main class="customer-shell">
     <section id="customerLogin" class="customer-login-card">
       <span class="eyebrow">PRYWATNA STREFA KLIENTA</span>
-      <h1>Twoja historia serwisowa w jednym miejscu</h1>
-      <p>Wpisz stały identyfikator klienta otrzymany w pierwszej wiadomości od LockOn. Ten identyfikator łączy wszystkie Twoje wizyty i zlecenia.</p>
+      <h1>Twoje naprawy i wyceny w jednym miejscu</h1>
+      <p>Wpisz kod klienta z wiadomości e-mail od LockOn. Ten sam kod pokazuje wszystkie Twoje zlecenia, naprawy i wyceny.</p>
       <form id="customerLoginForm">
-        <label><span>Identyfikator klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
-        <button type="submit">Otwórz moje serwisy</button>
+        <label><span>Kod klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
+        <button type="submit">Pokaż moje zlecenia</button>
       </form>
       <div id="customerLoginError" class="customer-error" hidden></div>
     </section>
@@ -47,12 +48,12 @@
       </section>
 
       <section class="customer-card">
-        <div class="customer-section-head"><div><span>HISTORIA</span><h2>Twoje serwisy</h2></div><small>Wszystkie zlecenia powiązane z Twoim stałym ID.</small></div>
+        <div class="customer-section-head"><div><span>HISTORIA</span><h2>Twoje zlecenia</h2></div><small>Wszystkie zlecenia przypisane do Twojego kodu klienta.</small></div>
         <div id="customerOrders" class="customer-orders"></div>
       </section>
 
       <section class="customer-card">
-        <div class="customer-section-head"><div><span>WYCENA ZDALNA</span><h2>Napisz do punktu</h2></div><small>Jeżeli punkt nie ma własnego serwisanta, sprawa zostanie automatycznie przekazana do serwisu, do którego ten punkt najczęściej kieruje naprawy.</small></div>
+        <div class="customer-section-head"><div><span>WYCENA</span><h2>Zapytaj o koszt naprawy</h2></div><small>Wybierz punkt, którego dotyczy sprawa. ServiceOS sam przekaże zapytanie do właściwego serwisu.</small></div>
         <form id="customerQuoteForm" class="customer-quote-form">
           <label><span>Punkt LockOn</span><select name="requestedPointId" id="customerQuotePoint" required></select></label>
           <label><span>Dotyczy zlecenia</span><select name="serviceOrderId" id="customerQuoteOrder"><option value="">Nowa wycena / inne urządzenie</option></select></label>
@@ -64,12 +65,13 @@
       </section>
 
       <section class="customer-card">
-        <div class="customer-section-head"><div><span>WIADOMOŚCI</span><h2>Wyceny i rozmowy</h2></div><small>Odpowiedzi serwisanta pojawią się tutaj automatycznie.</small></div>
+        <div class="customer-section-head"><div><span>WIADOMOŚCI</span><h2>Wyceny i rozmowy</h2></div><small>Odpowiedź pojawi się tutaj automatycznie — nie musisz odświeżać strony.</small></div>
         <div id="customerQuotes" class="customer-quotes"></div>
       </section>
     </div>
   </main>
 
   <script src="assets/customer-portal.js"></script>
+  <script src="assets/ui-2026.js"></script>
 </body>
 </html>
