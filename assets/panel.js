@@ -10,6 +10,7 @@
   let admin = null;
   let activePointId = '';
   let transferFilter = '';
+  let orderFilter = 'ALL';
   let activeOrderId = '';
 
   const STATUS_LABELS = {
@@ -136,12 +137,21 @@
       order.assignedTechnicianName ? 'technik: ' + order.assignedTechnicianName : '',
       transfer ? (transfer.kind === 'RETURN_HOME' ? 'powrót · ' : '') + (TRANSFER_LABELS[transfer.status] || transfer.status) + ' → ' + (transfer.toPointName || '') : ''
     ].filter(Boolean);
-    return '<article class="panel-order-card" data-order-id="' + esc(order.id) + '">' +
+    const workflow = order.workflow || null;
+    return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
         '<div class="panel-order-number">#' + esc(order.orderNumber) + '</div>' +
         '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(meta.join(' · ')) + '</small></div>' +
         '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
       '</div>' +
+      (workflow ? '<div class="mobile-workflow-strip">' +
+        '<div><span>Etap ' + esc(workflow.stageNumber) + '/' + esc(workflow.stageTotal) + '</span><strong>' + esc(workflow.stageLabel) + '</strong><i><b style="width:' + esc(workflow.progressPercent) + '%"></b></i></div>' +
+        '<div><span>Następna akcja</span><strong>' + esc(workflow.nextAction) + '</strong></div>' +
+        '<em class="' + esc(String(workflow.attentionCode || '').toLowerCase()) + '">' + esc(workflow.attentionLabel) +
+          (workflow.dueInMinutes != null && workflow.dueInMinutes < 0 ? '<small>' + esc(Math.ceil(Math.abs(workflow.dueInMinutes)/60)) + ' h po terminie</small>' : '') +
+          (workflow.dueInMinutes != null && workflow.dueInMinutes >= 0 && workflow.dueInMinutes <= 1440 ? '<small>' + esc(Math.max(1,Math.ceil(workflow.dueInMinutes/60))) + ' h do terminu</small>' : '') +
+        '</em>' +
+      '</div>' : '') +
       (compact ? '' : '<div class="panel-order-meta">' +
         (order.imei ? '<span>IMEI ' + esc(order.imei) + '</span>' : '') +
         (order.estimatedCompletionAt ? '<span>Termin ' + esc(formatDate(order.estimatedCompletionAt)) + '</span>' : '') +
@@ -163,12 +173,28 @@
 
   const renderOrders = () => {
     const query = String(document.getElementById('orderSearch')?.value || '').trim().toLowerCase();
+    const filters = [
+      ['ALL','Wszystkie'],
+      ['ACTION_NOW','Działaj teraz'],
+      ['DUE_SOON','Kończy się termin'],
+      ['OVERDUE','Po terminie'],
+      ['IN_TRANSIT','W drodze'],
+      ['WAITING_SERVICE','Czeka na serwis'],
+      ['WAITING_PARTS','Czeka na części'],
+      ['READY_FOR_PICKUP','Gotowe']
+    ];
+    const filterHost = document.getElementById('orderWorkflowFilters');
+    if (filterHost) filterHost.innerHTML = filters.map(([code,label]) => {
+      const count = code === 'ALL' ? orders.length : orders.filter((order)=>order.workflow?.flags?.includes(code)).length;
+      return '<button class="' + (orderFilter === code ? 'active' : '') + '" data-order-filter="' + code + '">' + esc(label) + '<b>' + count + '</b></button>';
+    }).join('');
     const visible = orders.filter((order) => {
+      if (orderFilter !== 'ALL' && !order.workflow?.flags?.includes(orderFilter)) return false;
       if (!query) return true;
-      return [order.orderNumber,order.customerName,order.brand,order.model,order.imei,order.pointName].some((value) => String(value || '').toLowerCase().includes(query));
+      return [order.orderNumber,order.customerName,order.brand,order.model,order.imei,order.pointName,order.workflow?.nextAction].some((value) => String(value || '').toLowerCase().includes(query));
     });
     const host = document.getElementById('ordersList');
-    host.innerHTML = visible.map((order) => orderCard(order,false)).join('') || '<div class="panel-list-empty">Brak zleceń pasujących do wyszukiwania.</div>';
+    host.innerHTML = visible.map((order) => orderCard(order,false)).join('') || '<div class="panel-list-empty">Brak zleceń w tej sekcji.</div>';
   };
 
   const loadOrders = async () => {
@@ -246,6 +272,7 @@
 
     host.innerHTML =
       '<div class="order-dialog-head"><span>ZLECENIE #' + esc(order.orderNumber) + '</span><h2>' + esc(order.brand + ' ' + order.model) + '</h2><p>' + esc(order.customerName) + ' · ' + esc(order.pointName) + '</p></div>' +
+      (order.workflow ? '<div class="order-dialog-section mobile-workflow-dialog"><span>CO ROBIMY DALEJ</span><div class="mobile-workflow-dialog-grid"><div><small>Etap ' + esc(order.workflow.stageNumber) + '/' + esc(order.workflow.stageTotal) + '</small><strong>' + esc(order.workflow.stageLabel) + '</strong></div><div><small>Następna akcja</small><strong>' + esc(order.workflow.nextAction) + '</strong></div><em class="' + esc(String(order.workflow.attentionCode || '').toLowerCase()) + '">' + esc(order.workflow.attentionLabel) + '</em></div></div>' : '') +
       '<div class="order-detail-grid">' +
         '<div><span>Status</span><strong>' + esc(order.statusLabel) + '</strong></div>' +
         '<div><span>Technik</span><strong>' + esc(order.assignedTechnicianName || 'Nieprzypisany') + '</strong></div>' +
@@ -362,10 +389,11 @@
     const host = document.getElementById('adminPoints');
     host.innerHTML = (admin?.points || []).map((point) =>
       '<article class="admin-point-card">' +
-        '<div><strong>' + esc(point.name) + '</strong><span>' + esc(point.city) + '</span><small>' + (point.serviceEnabled ? 'Serwis aktywny' : 'Bez własnego serwisu') + '</small></div>' +
+        '<div><strong>' + esc(point.name) + '</strong><span>' + esc(point.city) + '</span><small>Aktywni technicy: ' + esc(point.activeTechnicianCount || 0) + (point.autoServiceEnabled ? ' · automatyczny cel przekazania' : '') + (point.externalRepairsPaused ? ' · PRZYJĘCIA WSTRZYMANE' : '') + '</small></div>' +
         '<div class="point-switches">' +
-          '<label><input type="checkbox" data-point-service="' + esc(point.id) + '"' + (point.serviceEnabled ? ' checked' : '') + '> Serwis</label>' +
-          '<label><input type="checkbox" data-point-external="' + esc(point.id) + '"' + (point.acceptsExternalRepairs ? ' checked' : '') + (!point.serviceEnabled ? ' disabled' : '') + '> Zewnętrzne</label>' +
+          '<label><input type="checkbox" data-point-service="' + esc(point.id) + '"' + (point.manualServiceEnabled ? ' checked' : '') + '> Ręczny serwis</label>' +
+          '<label><input type="checkbox" data-point-external="' + esc(point.id) + '"' + (point.manualAcceptsExternalRepairs ? ' checked' : '') + (!point.manualServiceEnabled ? ' disabled' : '') + '> Ręczne przekazania</label>' +
+          '<label><input type="checkbox" data-point-pause="' + esc(point.id) + '"' + (point.externalRepairsPaused ? ' checked' : '') + '> Wstrzymaj</label>' +
         '</div>' +
       '</article>'
     ).join('');
@@ -399,9 +427,10 @@
     const serviceEnabled = document.querySelector('[data-point-service="' + CSS.escape(pointId) + '"]')?.checked === true;
     const external = document.querySelector('[data-point-external="' + CSS.escape(pointId) + '"]');
     const acceptsExternalRepairs = serviceEnabled && external?.checked === true;
+    const externalRepairsPaused = document.querySelector('[data-point-pause="' + CSS.escape(pointId) + '"]')?.checked === true;
     try {
       await api('/admin/points/' + encodeURIComponent(pointId) + '/service', {
-        method:'POST', body:JSON.stringify({serviceEnabled,acceptsExternalRepairs})
+        method:'POST', body:JSON.stringify({serviceEnabled,acceptsExternalRepairs,externalRepairsPaused})
       });
       toast('Konfiguracja punktu zapisana.');
       await loadAdmin();
@@ -468,6 +497,8 @@
       if (sendTransfer) { void sendOrderTransfer(sendTransfer.dataset.sendTransfer); return; }
       const sendReturn = event.target.closest('[data-send-return]');
       if (sendReturn) { void sendOrderReturn(sendReturn.dataset.sendReturn); return; }
+      const orderFilterButton = event.target.closest('[data-order-filter]');
+      if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
       const block = event.target.closest('[data-admin-block]');
