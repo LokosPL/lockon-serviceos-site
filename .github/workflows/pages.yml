@@ -3,6 +3,8 @@ name: Deploy LockOn ServiceOS site
 on:
   push:
     branches: ["main"]
+    paths:
+      - "PAGES_READY"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +26,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Verify production deployment gate
+        shell: bash
+        run: |
+          test -f PAGES_READY
+          test "$(tr -d '\r\n' < PAGES_READY)" = "$(tr -d '\r\n' < SITE_VERSION)"
       - name: Setup Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5
       - name: Upload artifact
