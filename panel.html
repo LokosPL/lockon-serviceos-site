@@ -186,6 +186,35 @@
       <div id="invoiceWarehouseList" class="mobile-invoice-list"></div>
     </section>
 
+    <section id="view-support" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="more">←</button><div><span>POMOC</span><h1>Pomoc i infolinia</h1></div><button id="refreshSupport" type="button" aria-label="Odśwież pomoc">↻</button></div>
+      <div class="mobile-help-intro">
+        <strong>Najpierw pomaga bot ServiceOS</strong>
+        <span>Bot jest dostępny cały czas, zna działanie ServiceOS i może prowadzić Cię krok po kroku. Jeśli będzie potrzebna pomoc człowieka, poproś konsultanta — bot nadal pozostanie do dyspozycji.</span>
+      </div>
+      <div class="mobile-help-chat">
+        <div id="mobileSupportState" class="mobile-support-state bot">
+          <strong>Bot ServiceOS jest gotowy do pomocy</strong>
+          <span>Opisz problem własnymi słowami. Bot spróbuje rozwiązać go od razu.</span>
+        </div>
+        <div id="mobileHelpMessages" class="mobile-help-messages">
+          <div class="panel-list-empty">Ładowanie prywatnej rozmowy…</div>
+        </div>
+        <form id="mobileHelpForm" class="mobile-help-compose">
+          <textarea id="mobileHelpInput" maxlength="1500" rows="3" placeholder="Opisz problem albo zapytaj o zlecenie, klienta lub funkcję ServiceOS…" aria-label="Wiadomość do pomocy"></textarea>
+          <button id="mobileHelpSend" type="submit">Wyślij do bota</button>
+        </form>
+        <button id="mobileRequestConsultant" class="mobile-request-consultant" type="button">Poproś konsultanta o dołączenie</button>
+      </div>
+
+      <div class="support-staff-only mobile-support-staff" hidden>
+        <div class="panel-section-head"><div><span>INFOLINIA</span><h2>Aktywni użytkownicy</h2></div><small>Treść prywatnej rozmowy z botem pozostaje ukryta, dopóki użytkownik nie poprosi konsultanta.</small></div>
+        <div id="mobileSupportPresence" class="mobile-support-presence"></div>
+        <div class="panel-section-head mobile-support-queue-head"><div><span>KOLEJKA</span><h2>Prośby o konsultanta</h2></div></div>
+        <div id="mobileSupportTickets" class="mobile-support-tickets"></div>
+      </div>
+    </section>
+
     <section id="view-more" class="panel-view">
       <div class="simple-view-title"><span>WIĘCEJ</span><h1>Więcej</h1><p>Ustawienia i funkcje używane rzadziej.</p></div>
       <div class="mobile-more-grid">
@@ -195,6 +224,7 @@
         <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><span><strong>Wyceny</strong><small>Zapytania klientów</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><span><strong>Rozliczenia</strong><small>Przychód i podział</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><span><strong>Zarządzanie</strong><small>Konta, punkty i bezpieczeństwo</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" data-panel-nav="support"><b>?</b><span><strong>Pomoc i infolinia</strong><small>Bot 24/7 i konsultant na żądanie</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="account-tile" data-open-account><b class="account-avatar">BM</b><span><strong>Moje konto</strong><small>Profil i wylogowanie</small></span><i class="panel-icon" data-icon="chevron"></i></button>
       </div>
     </section>

@@ -56,6 +56,7 @@
   let supportPresence = [];
   let supportTickets = [];
   let mobileHelpToolResult = null;
+  let mobileHelpTarget = 'BOT';
   let technicianWorkspace = null;
   let technicianNotes = [];
   let invoiceWarehouse = [];
@@ -146,7 +147,7 @@
 
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
 
-    const advanced = ['quotes','earnings','admin','scan','workspace','tech-notes','invoices'];
+    const advanced = ['quotes','earnings','admin','scan','workspace','tech-notes','invoices','support'];
     const bottomName = advanced.includes(name) ? 'more' : name;
     document.querySelectorAll('.panel-bottom-nav [data-panel-nav]').forEach((button) => {
       button.classList.toggle('active', button.dataset.panelNav === bottomName);
@@ -162,6 +163,7 @@
     if (name === 'earnings') void loadFinance();
     if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
+    if (name === 'support') void loadSupport();
   };
 
   const formatDate = (value) => {
@@ -1088,28 +1090,60 @@
     if(!stateHost||!messagesHost)return;
     const state=supportConversation?.consultantState||'BOT';
     const joinedName=supportConversation?.assignedSupportName||'Konsultant';
+    if(state==='BOT')mobileHelpTarget='BOT';
+    const consultantLabel=state==='WAITING'?'Konsultant / kolejka':'Konsultant';
+    const targetControls=state==='BOT'?'':(
+      '<div class="mobile-help-targets" role="group" aria-label="Odbiorca wiadomości">'+
+        '<button type="button" data-mobile-help-target="BOT" class="'+(mobileHelpTarget==='BOT'?'active bot':'bot')+'">Bot ServiceOS</button>'+
+        '<button type="button" data-mobile-help-target="CONSULTANT" class="'+(mobileHelpTarget==='CONSULTANT'?'active consultant':'consultant')+'">'+consultantLabel+'</button>'+
+      '</div>'
+    );
     stateHost.className='mobile-support-state '+state.toLowerCase();
-    stateHost.innerHTML=state==='JOINED'
-      ? '<strong>'+esc(joinedName)+' jest w rozmowie</strong><span>Twoje wiadomości trafiają teraz do konsultanta. Bot nie odpowiada automatycznie.</span>'
+    stateHost.innerHTML=(state==='JOINED'
+      ? '<strong>'+esc(joinedName)+' dołączył do rozmowy</strong><span>Bot nadal jest dostępny. Wybierz poniżej, czy kolejna wiadomość ma trafić do bota, czy bezpośrednio do konsultanta.</span>'
       : state==='WAITING'
-        ? '<strong>Czekasz na konsultanta</strong><span>Możesz nadal korzystać z bota. Gdy konsultant dołączy, pojawi się tutaj automatycznie.</span>'
-        : '<strong>Najpierw pomaga bot ServiceOS</strong><span>Bot zna aplikację, zlecenia w Twoim zakresie i może przenieść Cię do właściwego miejsca.</span>';
+        ? '<strong>Prośba trafiła do kolejki konsultanta</strong><span>Nie musisz czekać bezczynnie — bot nadal odpowiada i może pomóc od razu. Wiadomość do konsultanta możesz zostawić w kolejce.</span>'
+        : '<strong>Bot ServiceOS jest gotowy do pomocy</strong><span>Opisz problem. Bot spróbuje go rozwiązać, zaproponuje następny krok i w razie potrzeby możesz poprosić człowieka.</span>')+targetControls;
+    stateHost.querySelectorAll('[data-mobile-help-target]').forEach(button=>{
+      button.addEventListener('click',()=>{
+        mobileHelpTarget=button.dataset.mobileHelpTarget==='CONSULTANT'?'CONSULTANT':'BOT';
+        renderMobileSupport();
+      });
+    });
     const request=document.getElementById('mobileRequestConsultant');
     if(request){
-      request.hidden=state==='JOINED';
-      request.disabled=state==='WAITING';
-      request.textContent=state==='WAITING'?'Prośba wysłana — czekasz na konsultanta':'Poproś konsultanta o dołączenie';
+      request.hidden=false;
+      request.disabled=false;
+      request.textContent=state==='BOT'
+        ? 'Poproś konsultanta o dołączenie'
+        : state==='WAITING'
+          ? 'Anuluj prośbę o konsultanta'
+          : 'Zakończ rozmowę z konsultantem';
     }
+    const input=document.getElementById('mobileHelpInput');
+    const send=document.getElementById('mobileHelpSend');
+    if(input)input.placeholder=mobileHelpTarget==='CONSULTANT'
+      ? (state==='WAITING'?'Zostaw wiadomość dla konsultanta w kolejce…':'Napisz bezpośrednio do konsultanta…')
+      : 'Opisz problem albo zapytaj o zlecenie, klienta lub funkcję ServiceOS…';
+    if(send)send.textContent=mobileHelpTarget==='CONSULTANT'?'Wyślij do konsultanta':'Wyślij do bota';
     const thread=(supportConversation?.messages||[]).map(message=>{
       const action=message.action&&message.action.type!=='WEBSITE_CODE'
         ? '<button type="button" class="mobile-help-action" data-mobile-help-action="'+esc(encodeURIComponent(JSON.stringify(message.action)))+'">'+esc(message.action.label||'Otwórz w ServiceOS')+' →</button>'
         : '';
-      return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div><p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
-    }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Możesz zapytać o zlecenie, proces lub obsługę ServiceOS.</div>';
+      const channel=message.author==='user'&&message.target
+        ? '<small class="mobile-help-channel-badge '+esc(String(message.target).toLowerCase())+'">'+(message.target==='CONSULTANT'?'Do konsultanta':'Do bota')+'</small>'
+        : '';
+      return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div>'+channel+'<p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
+    }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Bot ServiceOS jest dostępny od razu i będzie prowadzić Cię do rozwiązania.</div>';
     const tool=mobileHelpToolResult
       ? '<article class="mobile-help-tool '+esc(mobileHelpToolResult.kind)+'"><strong>'+esc(mobileHelpToolResult.title)+'</strong>'+mobileHelpToolResult.lines.map(line=>'<span>'+esc(line)+'</span>').join('')+'</article>'
       : '';
     messagesHost.innerHTML=thread+tool;
+    messagesHost.querySelectorAll('[data-mobile-help-action]').forEach(button=>{
+      button.addEventListener('click',()=>{
+        try{void runMobileHelpAction(JSON.parse(decodeURIComponent(button.dataset.mobileHelpAction||'')));}catch{}
+      });
+    });
     messagesHost.scrollTop=messagesHost.scrollHeight;
   };
 
@@ -1153,7 +1187,7 @@
     const value=String(message||'').trim();
     if(!value)return;
     try{
-      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value})});
+      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value,target:mobileHelpTarget})});
       if(!supportConversation)supportConversation={id:'',status:'OPEN',messages:[],consultantState:'BOT'};
       supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
       supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
@@ -1164,11 +1198,20 @@
   };
 
   const requestMobileConsultant = async () => {
+    const state=supportConversation?.consultantState||'BOT';
     try{
-      await api('/support/request',{method:'POST',body:JSON.stringify({pointId:activePointId||me?.point?.id||'',message:'Proszę konsultanta o dołączenie do rozmowy.'})});
-      toast('Prośba o konsultanta została wysłana.');
+      if(state==='BOT'){
+        await api('/support/request',{method:'POST',body:JSON.stringify({pointId:activePointId||me?.point?.id||'',message:'Proszę konsultanta o dołączenie do rozmowy.'})});
+        mobileHelpTarget='BOT';
+        toast('Prośba o konsultanta została wysłana. Bot nadal jest dostępny.');
+      }else{
+        if(state==='JOINED'&&!window.confirm('Zakończyć kanał konsultanta? Bot ServiceOS pozostanie dostępny.'))return;
+        await api('/support/leave',{method:'POST',body:'{}'});
+        mobileHelpTarget='BOT';
+        toast(state==='WAITING'?'Prośba o konsultanta została anulowana.':'Rozmowa z konsultantem została zakończona.');
+      }
       await loadSupport(true);
-    }catch(error){toast(error.message||'Nie udało się poprosić konsultanta.','error');}
+    }catch(error){toast(error.message||'Nie udało się zmienić statusu konsultanta.','error');}
   };
 
   const mobileSupportAction = async (id,action) => {
