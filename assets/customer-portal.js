@@ -7,8 +7,8 @@ let portalData=null;
 let refreshTimer=null;
 let googleConfig=null;
 let googleReady=null;
-let googleInitialized=false;
 let googleIntent='LOGIN';
+let pendingGoogleCredential=null;
 
 const q=(s)=>document.querySelector(s);
 const qa=(s)=>[...document.querySelectorAll(s)];
@@ -70,35 +70,50 @@ const loadGoogleSdk=async()=>{
   googleReady=(async()=>{
     googleConfig=await api('/public/customer-portal/config',{},false).catch(()=>({googleEnabled:false,googleClientId:null}));
     if(!googleConfig?.googleEnabled||!googleConfig?.googleClientId)return false;
-    if(window.google?.accounts?.id)return true;
+    if(window.google?.accounts?.oauth2||window.google?.accounts?.id)return true;
     await new Promise((resolve,reject)=>{
       const existing=document.querySelector('script[data-customer-google]');
-      if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return;}
+      if(existing){
+        if(window.google?.accounts){resolve();return;}
+        existing.addEventListener('load',resolve,{once:true});
+        existing.addEventListener('error',reject,{once:true});
+        return;
+      }
       const script=document.createElement('script');
       script.src='https://accounts.google.com/gsi/client';
       script.async=true;script.defer=true;script.dataset.customerGoogle='1';
       script.onload=resolve;script.onerror=reject;
       document.head.appendChild(script);
     });
-    return Boolean(window.google?.accounts?.id);
+    return Boolean(window.google?.accounts?.oauth2||window.google?.accounts?.id);
   })();
   return googleReady;
 };
 
-const handleGoogleCredential=async(credential)=>{
-  if(!credential)return;
-  const intent=googleIntent;
-  const errorBox=intent==='LOGIN'?q('#customerLoginError'):q('#customerAccessError');
+const googleErrorBox=(intent)=>intent==='LOGIN'?q('#customerLoginError'):q('#customerAccessError');
+
+const submitGoogleCredential=async(intent,credential)=>{
+  if(!credential?.accessToken&&!credential?.idToken)return;
+  googleIntent=intent;
+  const errorBox=googleErrorBox(intent);
   if(errorBox){errorBox.hidden=true;errorBox.textContent='';}
   showLoading();
   try{
     const path=intent==='LOGIN'?'/public/customer-portal/google/login':'/public/customer-portal/google/link';
-    const data=await api(path,{method:'POST',body:JSON.stringify({idToken:credential})},intent!=='LOGIN');
+    const data=await api(path,{method:'POST',body:JSON.stringify(credential)},intent!=='LOGIN');
+    pendingGoogleCredential=null;
     sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;
     render();startRefresh();
   }catch(error){
     if(intent==='LOGIN'){
-      showLogin(error.message);
+      if(error.code==='CUSTOMER_GOOGLE_NOT_LINKED'){
+        pendingGoogleCredential=credential;
+        showLogin('Konto Google rozpoznane. Wpisz swój kod klienta jeden raz — połączymy konto automatycznie i następnym razem wejdziesz bez kodu.');
+        const input=q('#customerLoginForm input[name="customerId"]');
+        if(input){input.focus();input.scrollIntoView({behavior:'smooth',block:'center'});}
+      }else{
+        showLogin(error.message);
+      }
     }else{
       setState('choice');
       const box=q('#customerAccessError');box.textContent=error.message;box.hidden=false;
@@ -107,35 +122,79 @@ const handleGoogleCredential=async(credential)=>{
   }
 };
 
-const ensureGoogleInitialized=async()=>{
+const requestGoogle=async(intent)=>{
+  googleIntent=intent;
   const ready=await loadGoogleSdk().catch(()=>false);
-  if(!ready)return false;
-  if(!googleInitialized){
+  const box=googleErrorBox(intent);
+  if(!ready||!googleConfig?.googleClientId){
+    if(box){box.textContent='Logowanie Google jest chwilowo niedostępne. Możesz wejść kodem klienta.';box.hidden=false;}
+    return;
+  }
+  if(window.google?.accounts?.oauth2?.initTokenClient){
+    try{
+      const client=window.google.accounts.oauth2.initTokenClient({
+        client_id:googleConfig.googleClientId,
+        scope:'openid email profile',
+        include_granted_scopes:false,
+        callback:(response)=>{
+          if(response?.error){
+            if(box){box.textContent='Google nie dokończył logowania. Spróbuj ponownie.';box.hidden=false;}
+            return;
+          }
+          if(response?.access_token)void submitGoogleCredential(intent,{accessToken:response.access_token});
+        },
+        error_callback:()=>{
+          if(box){box.textContent='Okno Google zostało zamknięte albo zablokowane przez przeglądarkę. Spróbuj jeszcze raz.';box.hidden=false;}
+        }
+      });
+      client.requestAccessToken({prompt:'select_account'});
+      return;
+    }catch(error){
+      if(box){box.textContent='Nie udało się otworzyć logowania Google. Spróbuj ponownie.';box.hidden=false;}
+    }
+  }
+  if(window.google?.accounts?.id){
     window.google.accounts.id.initialize({
       client_id:googleConfig.googleClientId,
-      callback:(response)=>void handleGoogleCredential(response?.credential||''),
+      callback:(response)=>response?.credential&&void submitGoogleCredential(intent,{idToken:response.credential}),
       auto_select:false,
-      cancel_on_tap_outside:true
+      cancel_on_tap_outside:true,
+      itp_support:true,
+      use_fedcm_for_prompt:true
     });
-    googleInitialized=true;
+    window.google.accounts.id.prompt((notification)=>{
+      if(notification?.isNotDisplayed?.()&&box){
+        box.textContent='Google nie może wyświetlić wyboru konta w tej przeglądarce. Włącz wyskakujące okna albo użyj kodu klienta.';
+        box.hidden=false;
+      }
+    });
   }
-  return true;
 };
 
 const renderGoogleFor=async(intent)=>{
   googleIntent=intent;
-  const ready=await ensureGoogleInitialized();
+  const ready=await loadGoogleSdk().catch(()=>false);
   const hosts=['#customerGoogleLoginHost','#customerGoogleLinkHost','#customerGoogleAccountHost'];
   hosts.forEach(selector=>{const host=q(selector);if(host)host.replaceChildren();});
-  if(!ready)return;
   const selector=intent==='LOGIN'?'#customerGoogleLoginHost':(document.body.dataset.customerState==='choice'?'#customerGoogleLinkHost':'#customerGoogleAccountHost');
   const host=q(selector);if(!host)return;
-  const width=Math.max(220,Math.min(360,Math.floor(host.getBoundingClientRect().width||320)));
-  window.google.accounts.id.renderButton(host,{
-    type:'standard',theme:'filled_black',size:'large',
-    text:intent==='LOGIN'?'signin_with':'continue_with',
-    shape:'rectangular',logo_alignment:'left',width
-  });
+  if(!ready){
+    const unavailable=document.createElement('div');
+    unavailable.className='customer-google-unavailable';
+    unavailable.textContent='Google chwilowo niedostępne — użyj kodu klienta.';
+    host.appendChild(unavailable);
+    return;
+  }
+  const button=document.createElement('button');
+  button.type='button';
+  button.className='customer-google-button';
+  const mark=document.createElement('span');mark.className='customer-google-mark';mark.textContent='G';
+  const label=document.createElement('span');
+  label.textContent=intent==='LOGIN'?'Zaloguj przez Google':'Połącz konto Google';
+  const arrow=document.createElement('b');arrow.textContent='→';
+  button.append(mark,label,arrow);
+  button.addEventListener('click',()=>void requestGoogle(intent));
+  host.appendChild(button);
 };
 
 const showChoice=(data)=>{
@@ -256,7 +315,23 @@ q('#customerLoginForm').addEventListener('submit',async(ev)=>{
   const fd=new FormData(form);
   try{
     const data=await api('/public/customer-portal/login',{method:'POST',body:JSON.stringify({customerId:String(fd.get('customerId')||'')})},false);
-    sessionToken=data.sessionToken;saveSession(sessionToken);showChoice(data);
+    sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;
+    if(pendingGoogleCredential){
+      try{
+        const linked=await api('/public/customer-portal/google/link',{method:'POST',body:JSON.stringify(pendingGoogleCredential)},true);
+        pendingGoogleCredential=null;
+        sessionToken=linked.sessionToken;saveSession(sessionToken);portalData=linked;
+        render();startRefresh();
+        return;
+      }catch(linkError){
+        pendingGoogleCredential=null;
+        showChoice(data);
+        const accessBox=q('#customerAccessError');
+        accessBox.textContent=linkError.message;accessBox.hidden=false;
+        return;
+      }
+    }
+    showChoice(data);
   }catch(error){showLogin(error.message);}
   finally{button.disabled=false;}
 });
@@ -322,7 +397,7 @@ document.addEventListener('click',(ev)=>{
   if(button)showSection(button.dataset.customerSection);
 });
 
-q('#customerLogout').addEventListener('click',()=>showLogin());
+q('#customerLogout').addEventListener('click',()=>{pendingGoogleCredential=null;showLogin();});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&document.body.dataset.customerState==='portal')void load();});
 
 (async()=>{

@@ -140,3 +140,16 @@ button.customer-access-option:active{transform:scale(.992)}
   .customer-inbox-nav button{padding:9px 7px!important}
   .customer-inbox-nav button span{font-size:11px!important}
 }
+
+
+/* Customer Google login v2 */
+.customer-google-host{min-height:46px;display:flex;align-items:center}
+.customer-google-button{width:100%;min-height:46px;display:grid;grid-template-columns:28px minmax(0,1fr) 20px;gap:10px;align-items:center;padding:0 13px;border:1px solid #2b333d;border-radius:12px;background:#f7f8fa;color:#15191e;cursor:pointer;font:inherit;font-size:12px;font-weight:800;text-align:left;box-shadow:0 6px 18px rgba(0,0,0,.12);transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.customer-google-button:hover{transform:translateY(-1px);border-color:#414c58;box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.customer-google-button:active{transform:scale(.995)}
+.customer-google-mark{width:26px;height:26px;display:grid;place-items:center;border:1px solid #d7dce2;border-radius:50%;background:#fff;color:#4285f4;font-size:13px;font-weight:900}
+.customer-google-button>b{color:#59636e;font-size:17px;text-align:right}
+.customer-google-unavailable{width:100%;padding:10px 12px;border:1px dashed #313a44;border-radius:10px;background:#0b1015;color:#7f8b96;font-size:10px;line-height:1.45}
+.customer-login-box .customer-google-entry>p{max-width:360px}
+@media(max-width:680px){.customer-google-button{min-height:48px;border-radius:11px;font-size:12px}}
+@media(prefers-reduced-motion:reduce){.customer-google-button{transition:none}}
