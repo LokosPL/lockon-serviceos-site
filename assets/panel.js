@@ -64,6 +64,7 @@
   let scannerStream = null;
   let scannerFrame = 0;
   let scannerBusy = false;
+  let newOrderBusy = false;
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
@@ -1514,7 +1515,7 @@
 
   const submitNewOrder = async (event) => {
     event.preventDefault();
-    if (!canCreateService()) return;
+    if (!canCreateService() || newOrderBusy) return;
     const submittedForm=event.currentTarget;
     const form = new FormData(submittedForm);
     const payload = Object.fromEntries(form.entries());
@@ -1525,11 +1526,18 @@
     if (!String(payload.email||'').trim() || !String(payload.phone||'').replace(/\D/g,'')) {
       return toast('E-mail i telefon klienta są wymagane.','error');
     }
+    if (!payload.imei || !String(payload.serialNumber||'').trim() || !String(payload.deviceNotes||'').trim()) {
+      return toast('IMEI, numer seryjny i uwagi do urządzenia są wymagane.','error');
+    }
+    if (!/^\d{14,16}$/.test(payload.imei)) return toast('IMEI powinien zawierać 14–16 cyfr.','error');
     if (payload.estimatedCompletionAt) payload.estimatedCompletionAt = new Date(payload.estimatedCompletionAt).toISOString();
     else delete payload.estimatedCompletionAt;
     if (payload.estimatedCost !== undefined && payload.estimatedCost !== '') payload.estimatedCost = Number(payload.estimatedCost);
     else delete payload.estimatedCost;
     const status = document.getElementById('newOrderStatus');
+    const submitButton = submittedForm.querySelector('button[type="submit"]');
+    newOrderBusy = true;
+    if (submitButton) submitButton.disabled = true;
     status.className = 'panel-form-status';
     status.textContent = 'Zapisywanie…';
     try {
@@ -1561,6 +1569,9 @@
     } catch (error) {
       status.className = 'panel-form-status error';
       status.textContent = error.message || 'Nie udało się utworzyć zlecenia.';
+    } finally {
+      newOrderBusy = false;
+      if (submitButton) submitButton.disabled = false;
     }
   };
 
