@@ -1801,3 +1801,46 @@ body.mobile-panel [hidden]{display:none!important}
     padding:0 7px!important;
   }
 }
+
+
+/* v1.0.0.0 hotline viewport fit: keep reply and escalation controls clear of the bottom nav. */
+@media(max-width:620px){
+  .mobile-panel #view-support .mobile-help-intro{display:none!important}
+  .mobile-panel #view-support .mobile-help-messages{
+    min-height:150px!important;
+    height:clamp(150px,24dvh,230px)!important;
+    max-height:230px!important;
+  }
+}
+@media(max-width:360px){
+  .mobile-panel #view-support .mobile-help-messages{
+    min-height:120px!important;
+    height:120px!important;
+    max-height:120px!important;
+  }
+  .mobile-panel #view-support .mobile-help-compose textarea{
+    min-height:48px!important;
+    max-height:82px!important;
+  }
+  .mobile-panel #view-support .mobile-help-compose button{
+    min-height:48px!important;
+  }
+}
+@media(max-width:340px){
+  .mobile-panel #view-support .mobile-help-messages{
+    min-height:104px!important;
+    height:104px!important;
+    max-height:104px!important;
+  }
+  .mobile-panel #view-support .mobile-support-state{
+    padding:10px 11px!important;
+  }
+  .mobile-panel #view-support .mobile-support-state span{
+    font-size:9px!important;
+    line-height:1.35!important;
+  }
+  .mobile-panel #view-support .mobile-request-consultant{
+    min-height:38px!important;
+    font-size:10px!important;
+  }
+}
