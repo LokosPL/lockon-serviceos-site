@@ -154,6 +154,7 @@ jobs:
           ! grep -q 'data-connect-step="5"' index.html
           ! grep -q 'loaderPercent' index.html
           ! grep -q 'setInterval(() => {' assets/site.js
-          grep -q "bindNearest" assets/home-story.js
+          grep -q "makeSelectable" assets/home-story.js
+          ! grep -q "addEventListener('scroll'" assets/home-story.js
           grep -q "homeLimit" assets/panel.js
           grep -q "advanced = \['support','quotes','earnings','admin'\]" assets/panel.js
