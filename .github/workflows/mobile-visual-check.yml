@@ -95,6 +95,7 @@ jobs:
           await panel.screenshot({path:'visual-check/panel-phone-transfers.png'});
 
           await panel.evaluate(()=>{
+            document.getElementById('view-support').hidden=false;
             window.__showPanelView('view-support');
             document.getElementById('mobileHelpMessages').innerHTML='<div class="mobile-help-message assistant"><strong>ServiceOS</strong><p>Napisz numer zlecenia albo opisz, czego szukasz. Pomogę znaleźć właściwy ekran.</p></div><div class="mobile-help-message user"><strong>Ty</strong><p>Co mam zrobić ze zleceniem 1042?</p></div>';
           });
@@ -107,8 +108,24 @@ jobs:
           });
           await panel.screenshot({path:'visual-check/panel-phone-more-owner.png'});
 
-          await panel.evaluate(()=>window.__showPanelView('view-admin'));
+          await panel.evaluate(()=>{
+            document.getElementById('view-admin').hidden=false;
+            window.__showPanelView('view-admin');
+            document.getElementById('adminSessions').textContent='6';
+            document.getElementById('adminBlocked').textContent='0';
+            document.getElementById('adminServices').textContent='2';
+            document.getElementById('adminTransfers').textContent='1';
+          });
           await panel.screenshot({path:'visual-check/panel-phone-admin.png'});
+
+          const login=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+          await login.goto('http://127.0.0.1:4173/index.html?login=1',{waitUntil:'networkidle'});
+          await login.waitForTimeout(250);
+          await login.screenshot({path:'visual-check/landing-phone-login.png'});
+
+          const customer=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+          await customer.goto('http://127.0.0.1:4173/klient.html',{waitUntil:'domcontentloaded'});
+          await customer.screenshot({path:'visual-check/customer-phone-login.png'});
 
           const metrics=await phone.evaluate(()=>({
             width:document.documentElement.clientWidth,
@@ -126,6 +143,8 @@ jobs:
           }));
           if(panelMetrics.scrollWidth>panelMetrics.width+1)throw new Error('Panel horizontal overflow: '+JSON.stringify(panelMetrics));
           if(panelMetrics.navVisible!==5)throw new Error('Expected five mobile tabs: '+JSON.stringify(panelMetrics));
+          const targets=await panel.evaluate(()=>[...document.querySelectorAll('.panel-bottom-nav button')].filter(x=>getComputedStyle(x).display!=='none').map(x=>({w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height})));
+          if(targets.some(x=>x.w<44||x.h<44))throw new Error('Mobile tab target below 44px: '+JSON.stringify(targets));
 
           await browser.close();
           EOF
