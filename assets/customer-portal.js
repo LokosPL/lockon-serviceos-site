@@ -48,7 +48,7 @@ const render=()=>{
   q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
-    return '<article class="customer-order"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></article>';
+    return '<article class="customer-order" tabindex="0"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div><div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></div><div class="customer-order-open">Otwórz <span>›</span></div></article>';
   }).join(''):'<div class="empty">Nie ma jeszcze zapisanych zleceń.</div>';
 
   const point=q('#customerQuotePoint');const currentPoint=point.value;
@@ -67,6 +67,11 @@ const render=()=>{
     return '<article class="quote-thread"><div class="quote-thread-head"><div><strong>'+esc(r.deviceDescription)+'</strong><div>'+esc(r.requestedPointName)+(r.routedPointName!==r.requestedPointName?' → '+esc(r.routedPointName):'')+'</div></div><span class="quote-badge">'+esc(status)+'</span></div>'+price+msgs+form+'</article>';
   }).join(''):'<div class="empty">Nie masz jeszcze zapytań o wycenę.</div>';
   bindMessageForms();
+  document.querySelectorAll('.customer-order').forEach(card=>{
+    const toggle=()=>card.classList.toggle('open');
+    card.addEventListener('click',toggle);
+    card.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle();}});
+  });
 };
 const load=async()=>{
   if(!sessionToken)return;
