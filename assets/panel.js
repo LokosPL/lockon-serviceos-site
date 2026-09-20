@@ -491,6 +491,85 @@
     } catch (error) { toast(error.message || 'Nie udało się zmienić etapu.','error'); }
   };
 
+
+  const mobilePartRowHtml=(part={})=>'<div class="mobile-cost-part-row" data-mobile-part-row>'+
+    '<input data-part-description maxlength="240" placeholder="Część, np. wyświetlacz" value="'+esc(part.description||'')+'">'+
+    '<input data-part-quantity type="number" min="0.01" step="0.01" value="'+esc(part.quantity??1)+'" aria-label="Ilość">'+
+    '<input data-part-cost type="number" min="0" step="0.01" value="'+esc(part.unitCostGross??0)+'" aria-label="Koszt brutto sztuki">'+
+    '<label><input data-part-invoice type="checkbox"'+(part.invoiceReceived?' checked':'')+'> FV</label>'+
+    '<input data-part-invoice-number maxlength="120" placeholder="Numer FV" value="'+esc(part.invoiceNumber||'')+'">'+
+    '<input data-part-supplier maxlength="180" placeholder="Dostawca" value="'+esc(part.supplier||'')+'">'+
+    '<input data-part-purchased type="date" value="'+esc(part.purchasedAt?String(part.purchasedAt).slice(0,10):'')+'">'+
+    '<button type="button" data-mobile-part-remove>×</button>'+
+  '</div>';
+
+  const renderMobileCostingSection=(order,costing,editable)=>{
+    if(!costing)return '';
+    const invoiceRows=(costing.invoices||[]).map((invoice)=>'<article class="mobile-order-invoice"><div><strong>'+esc(invoice.invoiceNumber||invoice.fileName)+'</strong><span>'+esc(invoice.supplier||'Brak dostawcy')+(invoice.invoiceDate?' · '+esc(invoice.invoiceDate):'')+(invoice.grossAmount!=null?' · '+esc(money(invoice.grossAmount)):'')+'</span><small>'+esc(invoice.fileName)+'</small></div><button type="button" data-invoice-download="'+esc(invoice.id)+'">Pobierz</button></article>').join('')||'<div class="panel-list-empty">Brak faktur PDF dla tego zlecenia.</div>';
+    return '<div class="order-dialog-section mobile-order-costing"><span>WYCENA, CZĘŚCI I FAKTURY</span>'+
+      '<div class="mobile-cost-summary"><div><small>Części</small><strong>'+esc(money(costing.partsCostGross))+'</strong></div><div><small>Robocizna</small><strong>'+esc(money(costing.laborCostGross))+'</strong></div><div><small>Koszt wewnętrzny</small><strong>'+esc(money(costing.internalCostGross))+'</strong></div><div><small>Marża</small><strong>'+esc(costing.marginGross==null?'—':money(costing.marginGross))+'</strong></div></div>'+
+      (editable?'<div class="mobile-cost-edit"><label><small>Robocizna (PLN)</small><input id="mobileLaborCost" type="number" min="0" step="0.01" value="'+esc(costing.laborCostGross||0)+'"></label><label><small>Inne koszty (PLN)</small><input id="mobileOtherCost" type="number" min="0" step="0.01" value="'+esc(costing.otherCostGross||0)+'"></label></div>'+
+        '<div id="mobilePartsEditor" class="mobile-parts-editor">'+(costing.parts||[]).map(mobilePartRowHtml).join('')+'</div>'+
+        '<div class="order-dialog-actions"><button class="mini-action" type="button" data-mobile-part-add>+ Część</button><button class="mini-action primary" type="button" data-save-mobile-costing="'+esc(order.id)+'">Zapisz koszty</button></div>'+
+        '<div class="mobile-invoice-upload"><strong>Dodaj fakturę zakupu PDF</strong><div class="mobile-invoice-meta"><input id="mobileInvoiceNumber" maxlength="120" placeholder="Numer faktury"><input id="mobileInvoiceSupplier" maxlength="180" placeholder="Dostawca"><input id="mobileInvoiceDate" type="date"><input id="mobileInvoiceAmount" type="number" min="0" step="0.01" placeholder="Kwota brutto"></div><input id="mobileInvoiceFile" type="file" accept="application/pdf,.pdf"><button class="mini-action primary" type="button" data-upload-mobile-invoice="'+esc(order.id)+'">Dodaj PDF</button></div>'
+      :'')+
+      '<div class="mobile-order-invoices">'+invoiceRows+'</div>'+
+    '</div>';
+  };
+
+  const saveMobileCosting=async(orderId)=>{
+    const rows=[...document.querySelectorAll('[data-mobile-part-row]')];
+    const parts=rows.map((row)=>({
+      description:String(row.querySelector('[data-part-description]')?.value||'').trim(),
+      quantity:Number(row.querySelector('[data-part-quantity]')?.value||1),
+      unitCostGross:Number(row.querySelector('[data-part-cost]')?.value||0),
+      invoiceReceived:row.querySelector('[data-part-invoice]')?.checked===true,
+      invoiceNumber:String(row.querySelector('[data-part-invoice-number]')?.value||'').trim(),
+      supplier:String(row.querySelector('[data-part-supplier]')?.value||'').trim(),
+      purchasedAt:String(row.querySelector('[data-part-purchased]')?.value||'').trim()
+    }));
+    if(parts.some((part)=>!part.description||!Number.isFinite(part.quantity)||part.quantity<=0||!Number.isFinite(part.unitCostGross)||part.unitCostGross<0)){
+      return toast('Sprawdź opis, ilość i koszt każdej części.','error');
+    }
+    try{
+      await api('/service/orders/'+encodeURIComponent(orderId)+'/costing',{method:'POST',body:JSON.stringify({
+        laborCostGross:Number(document.getElementById('mobileLaborCost')?.value||0),
+        otherCostGross:Number(document.getElementById('mobileOtherCost')?.value||0),
+        parts
+      })});
+      toast('Koszty części i robocizny zapisane.');
+      await openOrder(orderId);
+    }catch(error){toast(error.message||'Nie udało się zapisać kosztów.','error');}
+  };
+
+  const uploadMobileInvoice=async(orderId)=>{
+    const input=document.getElementById('mobileInvoiceFile');
+    const file=input?.files?.[0];
+    if(!file)return toast('Wybierz fakturę PDF.','error');
+    if(file.size<=0||file.size>20*1024*1024)return toast('PDF może mieć maksymalnie 20 MB.','error');
+    const bytes=new Uint8Array(await file.arrayBuffer());
+    if(String.fromCharCode(...bytes.slice(0,5))!=='%PDF-')return toast('Wybrany plik nie jest prawidłowym PDF.','error');
+    const digest=await crypto.subtle.digest('SHA-256',bytes);
+    const sha256=[...new Uint8Array(digest)].map((value)=>value.toString(16).padStart(2,'0')).join('');
+    const button=document.querySelector('[data-upload-mobile-invoice="'+CSS.escape(orderId)+'"]');
+    if(button)button.disabled=true;
+    try{
+      const intent=await api('/service/orders/'+encodeURIComponent(orderId)+'/invoices/upload-intent',{method:'POST',body:JSON.stringify({
+        fileName:file.name,sizeBytes:file.size,sha256,
+        invoiceNumber:String(document.getElementById('mobileInvoiceNumber')?.value||'').trim(),
+        supplier:String(document.getElementById('mobileInvoiceSupplier')?.value||'').trim(),
+        invoiceDate:String(document.getElementById('mobileInvoiceDate')?.value||'').trim(),
+        grossAmount:document.getElementById('mobileInvoiceAmount')?.value||null
+      })});
+      const upload=await fetch(intent.uploadUrl,{method:'PUT',headers:intent.requiredHeaders||{'content-type':'application/pdf','x-amz-meta-sha256':sha256},body:bytes,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer'});
+      if(!upload.ok)throw new Error('Magazyn PDF odrzucił plik (HTTP '+upload.status+').');
+      await api('/service/invoices/'+encodeURIComponent(intent.invoiceId)+'/complete',{method:'POST',body:'{}'});
+      toast('Faktura PDF dodana do magazynu.');
+      await openOrder(orderId);
+    }catch(error){toast(error.message||'Nie udało się dodać faktury.','error');}
+    finally{if(button?.isConnected)button.disabled=false;}
+  };
+
   const openOrder = async (id) => {
     const order = orders.find((item) => item.id === id);
     if (!order) return;
@@ -512,7 +591,11 @@
     ];
 
     let notes = [];
+    let costing = null;
     try { notes = await api('/service/orders/' + encodeURIComponent(order.id) + '/notes'); } catch {}
+    if(canEditService()){
+      try { costing = await api('/service/orders/' + encodeURIComponent(order.id) + '/costing'); } catch {}
+    }
 
     host.innerHTML =
       '<div class="order-dialog-head"><span>ZLECENIE #' + esc(order.orderNumber) + '</span><h2>' + esc(order.brand + ' ' + order.model) + '</h2><p>' + esc(order.customerName) + ' · ' + esc(order.pointName) + '</p></div>' +
@@ -551,6 +634,7 @@
               ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz serwis docelowy…</option>' + availableServices.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + ' · ' + point.city) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka dla serwisu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Wyślij do serwisu</button></div>'
               : '<p class="order-note-text">Brak aktywnego transportu.</p>') +
       '</div>' +
+      renderMobileCostingSection(order,costing,canEditOrderHere) +
       '<div class="order-dialog-section mobile-service-card-tools"><span>KARTA SERWISOWA</span><p class="order-note-text">Karta klienta ma QR otwierający jego portal bez wpisywania kodu. Karta urządzenia ma QR i kod ręczny do logistyki pracownika.</p><div class="order-dialog-actions"><button class="mini-action primary" data-service-card-print="PHYSICAL_AND_ONLINE" data-service-card-order="'+esc(order.id)+'">A4: klient + urządzenie</button><button class="mini-action" data-service-card-print="ONLINE_ONLY" data-service-card-order="'+esc(order.id)+'">Tylko karta urządzenia</button></div></div>' +
       '<div class="order-dialog-section"><span>NOTATKI WEWNĘTRZNE</span>' +
         (canEditService() ? '<input id="mobileInternalNote" class="order-note-input" maxlength="2000" placeholder="Dodaj notatkę…"><div class="order-dialog-actions"><button class="mini-action" data-add-note="' + esc(order.id) + '">Dodaj</button></div>' : '') +
