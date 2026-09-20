@@ -3,3 +3,49 @@
 .customer-identity-card>div:first-child{display:flex;flex-direction:column}.customer-identity-card span{font-size:10px;letter-spacing:.08em;color:#ff9564;font-weight:850}.customer-identity-card strong{font-size:23px;letter-spacing:.08em;margin-top:5px}.customer-identity-card small{font-size:11px;color:#78838e;margin-top:5px}
 .customer-identity-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.customer-identity-actions button,.customer-identity-actions a{min-height:40px;padding:0 13px;border:1px solid #303841;border-radius:9px;background:#131920;color:#d7dde2;font-size:12px;font-weight:800;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.customer-identity-actions button{border-color:rgba(255,124,67,.24);color:#ff9b6b}
 @media(max-width:700px){.customer-identity-card{grid-template-columns:1fr}.customer-identity-actions{justify-content:stretch}.customer-identity-actions>*{flex:1}}
+
+
+/* Customer portal: mobile inbox layout */
+.customer-inbox-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:12px 0}
+.customer-inbox-nav button{min-width:0;text-align:left;border:1px solid var(--line);background:#0d1218;color:var(--text);border-radius:15px;padding:15px;display:grid;grid-template-columns:1fr auto;gap:3px 10px;cursor:pointer}
+.customer-inbox-nav button span{font-weight:800;font-size:14px}
+.customer-inbox-nav button b{color:#ff8c61;font-size:16px}
+.customer-inbox-nav button small{grid-column:1/-1;color:#737f8b;font-size:10px}
+.customer-inbox-nav button.active{border-color:rgba(255,123,69,.42);background:rgba(255,123,69,.07)}
+.customer-section-panel{animation:customerPanelIn .22s ease both}
+@keyframes customerPanelIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:680px){
+  .customer-shell{width:100%;padding:18px 14px 42px}
+  .customer-nav{height:58px;padding:0 14px}
+  .customer-login-card{margin:22px auto 0;padding:0;border:0;background:transparent;max-width:440px}
+  .customer-login-intro{padding:14px 2px 18px}
+  .customer-login-intro h1{font-size:29px;margin:6px 0 8px}
+  .customer-login-intro p{font-size:13px;line-height:1.5}
+  .customer-login-box{padding:18px;border:1px solid var(--line);border-radius:18px;background:#0d1218}
+  .customer-login-box>strong{font-size:16px}
+  .customer-login-box>p{font-size:12px;margin-top:4px}
+  .customer-login-card form{margin-top:16px}
+  .customer-login-note{font-size:10px!important;margin-top:12px!important}
+  .customer-hero{padding:14px 2px;border:0;background:transparent;align-items:center}
+  .customer-hero h1{font-size:24px;margin:4px 0}
+  .customer-hero p{font-size:11px}
+  .customer-sync{font-size:9px}
+  .customer-inbox-nav{display:flex;flex-direction:column;gap:7px;margin:8px 0 14px}
+  .customer-inbox-nav button{min-height:66px;padding:12px 14px;border-radius:14px}
+  .customer-inbox-nav button span{font-size:14px}
+  .customer-inbox-nav button small{font-size:10px}
+  .customer-card{margin-top:0;border-radius:17px}
+  .customer-section-head{padding:15px;align-items:center}
+  .customer-section-head h2{font-size:18px}
+  .customer-section-head small{font-size:9px}
+  .customer-orders,.customer-quotes{padding:8px}
+  .customer-order,.quote-thread{border-radius:13px!important;padding:13px!important}
+  .customer-order-top{gap:8px}
+  .customer-order-top strong{font-size:13px}
+  .customer-order-top>div>div{font-size:9px;color:#737f8b}
+  .customer-order .status{font-size:9px!important}
+  .customer-order-meta{font-size:9px!important}
+  .customer-order p{font-size:11px}
+  .customer-quote-form{padding:14px!important}
+}
+@media(prefers-reduced-motion:reduce){.customer-section-panel{animation:none}}
