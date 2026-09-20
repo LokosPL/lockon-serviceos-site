@@ -540,6 +540,7 @@
               ? '<select id="mobileTransferPoint" class="order-transfer-select"><option value="">Wybierz serwis docelowy…</option>' + availableServices.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name + ' · ' + point.city) + '</option>').join('') + '</select><input id="mobileTransferNote" class="order-note-input" maxlength="500" placeholder="Notatka dla serwisu (opcjonalnie)"><div class="order-dialog-actions"><button class="mini-action primary" data-send-transfer="' + esc(order.id) + '">Wyślij do serwisu</button></div>'
               : '<p class="order-note-text">Brak aktywnego transportu.</p>') +
       '</div>' +
+      '<div class="order-dialog-section mobile-service-card-tools"><span>KARTA SERWISOWA</span><p class="order-note-text">Karta klienta ma QR otwierający jego portal bez wpisywania kodu. Karta urządzenia ma QR i kod ręczny do logistyki pracownika.</p><div class="order-dialog-actions"><button class="mini-action primary" data-service-card-print="PHYSICAL_AND_ONLINE" data-service-card-order="'+esc(order.id)+'">A4: klient + urządzenie</button><button class="mini-action" data-service-card-print="ONLINE_ONLY" data-service-card-order="'+esc(order.id)+'">Tylko karta urządzenia</button></div></div>' +
       '<div class="order-dialog-section"><span>NOTATKI WEWNĘTRZNE</span>' +
         (canEditService() ? '<input id="mobileInternalNote" class="order-note-input" maxlength="2000" placeholder="Dodaj notatkę…"><div class="order-dialog-actions"><button class="mini-action" data-add-note="' + esc(order.id) + '">Dodaj</button></div>' : '') +
         '<div class="mobile-note-list">' + (notes.slice(0,5).map((note) => '<div><strong>' + esc(note.authorName) + '</strong><small>' + esc(formatDate(note.createdAt)) + '</small><p>' + esc(note.body) + '</p></div>').join('') || '<p class="order-note-text">Brak notatek.</p>') + '</div>' +
@@ -1367,6 +1368,19 @@
       if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
+      const cardPrint=event.target.closest('[data-service-card-print]');
+      if(cardPrint){
+        const orderId=cardPrint.dataset.serviceCardOrder;
+        const mode=cardPrint.dataset.serviceCardPrint;
+        cardPrint.disabled=true;
+        void openServiceCardPdf(orderId,mode)
+          .then(()=>toast('Karta serwisowa została otwarta do druku.'))
+          .catch(error=>toast(error.message||'Nie udało się przygotować karty.','error'))
+          .finally(()=>{if(cardPrint.isConnected)cardPrint.disabled=false;});
+        return;
+      }
+      const cardChoice=event.target.closest('[data-service-card-choice]');
+      if(cardChoice){void chooseCreatedServiceCard(cardChoice.dataset.serviceCardChoice);return;}
       const helpAction=event.target.closest('[data-mobile-help-action]');
       if(helpAction){try{void runMobileHelpAction(JSON.parse(decodeURIComponent(helpAction.dataset.mobileHelpAction)));}catch{}return;}
       const supportTake=event.target.closest('[data-mobile-support-take]');
@@ -1406,6 +1420,7 @@
 
     document.getElementById('panelPointSelect')?.addEventListener('change',(event) => {
       activePointId=event.target.value;
+      syncMobileIntakeMode();
       renderHome();
       renderOrders();
       if (activeOrderId) void openOrder(activeOrderId);
@@ -1422,7 +1437,13 @@
     document.getElementById('mobileRequestConsultant')?.addEventListener('click',()=>void requestMobileConsultant());
     document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
-    document.getElementById('mobileHandlingMode')?.addEventListener('change',syncMobileHandlingMode);
+    document.getElementById('mobileOrderType')?.addEventListener('change',syncMobileIntakeMode);
+    document.getElementById('mobileScannerStart')?.addEventListener('click',()=>void startServiceScanner());
+    document.getElementById('mobileScannerCode')?.addEventListener('input',(event)=>{event.target.value=formatServiceScanCode(event.target.value);});
+    document.getElementById('mobileScannerForm')?.addEventListener('submit',(event)=>{
+      event.preventDefault();
+      void processServiceScan({codeValue:document.getElementById('mobileScannerCode')?.value||''});
+    });
     document.getElementById('mobilePointForm')?.addEventListener('submit',submitPoint);
     document.getElementById('adminAuditFilters')?.addEventListener('submit',(event)=>{event.preventDefault();void loadAudit();});
     document.getElementById('panelLogout')?.addEventListener('click',async()=>{
@@ -1475,11 +1496,15 @@
     renderAccount();
     renderPoints();
     wireEvents();
-    syncMobileHandlingMode();
+    syncMobileIntakeMode();
     try { await refreshData(); }
     catch (error) { toast(error.message || 'Nie udało się pobrać danych.','error'); }
     document.getElementById('panelBoot')?.classList.add('hidden');
     window.setTimeout(()=>document.getElementById('panelBoot')?.remove(),350);
+    if(pendingScanToken&&canReadService()){
+      showView('scan');
+      void processServiceScan({tokenValue:pendingScanToken});
+    }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>undefined);
     window.setInterval(()=>{
       if(canHandleCustomerQuotes()&&document.visibilityState==='visible') void loadCustomerQuotes();
