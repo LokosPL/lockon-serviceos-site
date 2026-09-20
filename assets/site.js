@@ -4,38 +4,56 @@
   const glow = document.querySelector('.cursor-glow');
   const loader = document.getElementById('siteLoader');
   const progress = document.getElementById('loaderProgress');
-  const percent = document.getElementById('loaderPercent');
   const label = document.getElementById('loaderLabel');
   const started = performance.now();
+  let loaderFinished = false;
 
-  let p = 8;
-  const tick = setInterval(() => {
-    p = Math.min(88, p + Math.max(1, Math.round((90 - p) * .1)));
-    if (progress) progress.style.width = p + '%';
-    if (percent) percent.textContent = p + '%';
-    if (label) {
-      if (p > 68) label.textContent = 'Łączenie z najnowszym wydaniem…';
-      else if (p > 38) label.textContent = 'Przygotowanie interfejsu…';
-    }
-  }, 90);
+  const setLoaderProgress = (value) => {
+    if (progress) progress.style.width = Math.max(0,Math.min(100,value)) + '%';
+  };
+  setLoaderProgress(28);
+  const readyTimer = window.setTimeout(() => {
+    setLoaderProgress(68);
+    if (label) label.textContent = 'Jeszcze moment…';
+  }, 180);
 
   const finishLoader = () => {
-    clearInterval(tick);
-    const wait = Math.max(0, 850 - (performance.now() - started));
-    setTimeout(() => {
-      if (progress) progress.style.width = '100%';
-      if (percent) percent.textContent = '100%';
+    if (loaderFinished) return;
+    loaderFinished = true;
+    window.clearTimeout(readyTimer);
+    const wait = Math.max(0, 420 - (performance.now() - started));
+    window.setTimeout(() => {
+      setLoaderProgress(100);
       if (label) label.textContent = 'Gotowe.';
-      setTimeout(() => body.classList.add('loaded'), 220);
+      window.setTimeout(() => {
+        body.classList.add('loaded');
+        loader?.setAttribute('aria-hidden','true');
+      }, 140);
     }, wait);
   };
 
   if (document.readyState === 'complete') finishLoader();
   else window.addEventListener('load', finishLoader, { once: true });
+  window.setTimeout(finishLoader, 1800);
 
   const onScroll = () => nav?.classList.toggle('scrolled', window.scrollY > 16);
   onScroll();
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      const id = link.getAttribute('href');
+      if (!id || id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        block: 'start'
+      });
+      if (history.replaceState) history.replaceState(null,'',id);
+    });
+  });
 
   if (window.matchMedia('(pointer:fine)').matches) {
     window.addEventListener('pointermove', (e) => {
@@ -90,17 +108,6 @@
     markPreviewManual();
     showDemo(btn.dataset.demoJump);
   }));
-  if (previewRoot && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const targets = [...previewRoot.querySelectorAll('.demo-nav')].map((btn) => btn.dataset.demoTarget).filter(Boolean);
-    window.setInterval(() => {
-      if (document.visibilityState !== 'visible' || Date.now() < previewManualUntil || targets.length < 2) return;
-      const rect = previewRoot.getBoundingClientRect();
-      if (rect.bottom < 0 || rect.top > window.innerHeight) return;
-      const current = targets.findIndex((target) => previewRoot.querySelector('.demo-nav[data-demo-target="' + target + '"]')?.classList.contains('active'));
-      showDemo(targets[(current + 1 + targets.length) % targets.length]);
-    }, 5_000);
-  }
-
   const formatBytes = (bytes) => {
     const value = Number(bytes);
     if (!Number.isFinite(value) || value <= 0) return '—';
