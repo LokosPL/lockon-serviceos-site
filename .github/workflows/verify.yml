@@ -184,4 +184,14 @@ jobs:
           grep -q "readCardHash" assets/customer-portal.js
           grep -q "public/customer-portal/orders/" assets/customer-portal.js
           grep -q "customer-service-card-download" assets/customer-portal.js
-          grep -Fq "advanced = ['quotes','earnings','admin','scan']" assets/panel.js
+          node - <<'NODE'
+          const fs = require('fs');
+          const source = fs.readFileSync('assets/panel.js', 'utf8');
+          const match = source.match(/const advanced\s*=\s*\[([^\]]+)\]/);
+          if (!match) throw new Error('Brak listy widoków zaawansowanych w panel.js');
+          for (const view of ['quotes','earnings','admin','scan','workspace','tech-notes','invoices']) {
+            if (!match[1].includes(`'${view}'`) && !match[1].includes(`"${view}"`)) {
+              throw new Error(`Brak widoku ${view} w liście advanced`);
+            }
+          }
+          NODE
