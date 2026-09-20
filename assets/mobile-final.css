@@ -1149,3 +1149,31 @@ body.mobile-panel [hidden]{display:none!important}
     outline-offset:4px;
   }
 }
+
+@media(max-width:760px){
+  .mobile-panel .panel-view,
+  .mobile-panel .panel-form-card,
+  .mobile-panel .panel-form-grid,
+  .mobile-panel .admin-user-card,
+  .mobile-panel .admin-user-card-v2,
+  .mobile-panel .admin-point-card,
+  .mobile-panel .admin-pending-card,
+  .mobile-panel .mobile-audit-filters,
+  .mobile-panel .mobile-create-point{min-width:0!important;max-width:100%!important}
+  .mobile-panel .mobile-audit-filters{
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .mobile-panel .mobile-audit-filters>*{
+    width:100%!important;
+    min-width:0!important;
+    grid-column:1!important;
+  }
+  .mobile-panel .mobile-audit-change{
+    grid-template-columns:1fr!important;
+  }
+  .mobile-panel .mobile-audit-change b{
+    transform:rotate(90deg)!important;
+    justify-self:start!important;
+  }
+}
