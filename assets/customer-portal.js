@@ -7,6 +7,13 @@ let refreshTimer=null;
 const q=(s)=>document.querySelector(s);
 const esc=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(v)=>{if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('pl-PL',{dateStyle:'medium',timeStyle:'short'});};
+const ts=(v)=>{const d=new Date(v||0);return Number.isNaN(d.getTime())?0:d.getTime();};
+const newestFirst=(a,b)=>ts(b.updatedAt||b.createdAt||b.receivedAt)-ts(a.updatedAt||a.createdAt||a.receivedAt);
+const showSection=(name)=>{
+  document.querySelectorAll('[data-customer-panel]').forEach(el=>{el.hidden=el.dataset.customerPanel!==name;el.classList.toggle('active',el.dataset.customerPanel===name);});
+  document.querySelectorAll('[data-customer-section]').forEach(el=>el.classList.toggle('active',el.dataset.customerSection===name));
+  window.scrollTo({top:0,behavior:'smooth'});
+};
 const money=(v,c='PLN')=>new Intl.NumberFormat('pl-PL',{style:'currency',currency:c||'PLN'}).format(Number(v||0));
 const readSession=()=>{try{return sessionStorage.getItem(sessionKey)||'';}catch{return '';}};
 const saveSession=(v)=>{try{if(v)sessionStorage.setItem(sessionKey,v);else sessionStorage.removeItem(sessionKey);}catch{}};
@@ -37,7 +44,8 @@ const render=()=>{
   q('#customerPortalCode').textContent=d.customerPortalCode||'—';
   q('#customerPortalLink').href=d.customerPortalUrl||'klient.html';
   q('#customerSync').textContent='Dane aktualne · '+new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
-  q('#customerOrders').innerHTML=d.orders.length?d.orders.map(o=>{
+  const sortedOrders=[...d.orders].sort(newestFirst);
+  q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
     return '<article class="customer-order"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></article>';
@@ -50,10 +58,11 @@ const render=()=>{
   order.innerHTML='<option value="">Nowa wycena / inne urządzenie</option>'+d.orders.map(o=>'<option value="'+esc(o.id)+'">#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</option>').join('');
   if(d.orders.some(o=>o.id===currentOrder))order.value=currentOrder;
 
-  q('#customerQuotes').innerHTML=d.quoteRequests.length?d.quoteRequests.map(r=>{
+  const sortedQuotes=[...d.quoteRequests].sort(newestFirst);
+  q('#customerQuotes').innerHTML=sortedQuotes.length?sortedQuotes.map(r=>{
     const status={OPEN:'Oczekuje na odpowiedź',QUOTED:'Wycena gotowa',CLOSED:'Zamknięte',CANCELLED:'Anulowane'}[r.status]||r.status;
     const price=r.quoteAmount!=null?'<div class="quote-price"><span>Wycena zdalna</span><br><strong>'+esc(money(r.quoteAmount,r.currency))+'</strong>'+(r.quoteNote?'<p>'+esc(r.quoteNote)+'</p>':'')+'</div>':'';
-    const msgs=(r.messages||[]).map(m=>'<div class="quote-message '+esc(m.senderKind.toLowerCase())+'"><b>'+esc(m.senderKind==='STAFF'?(m.senderName||'Serwisant'):m.senderKind==='CUSTOMER'?'Ty':'ServiceOS')+':</b> '+esc(m.body)+'<small>'+esc(fmt(m.createdAt))+'</small></div>').join('');
+    const msgs=[...(r.messages||[])].sort((a,b)=>ts(a.createdAt)-ts(b.createdAt)).map(m=>'<div class="quote-message '+esc(m.senderKind.toLowerCase())+'"><b>'+esc(m.senderKind==='STAFF'?(m.senderName||'Serwisant'):m.senderKind==='CUSTOMER'?'Ty':'ServiceOS')+':</b> '+esc(m.body)+'<small>'+esc(fmt(m.createdAt))+'</small></div>').join('');
     const form=['CLOSED','CANCELLED'].includes(r.status)?'':'<form class="customer-message-form" data-request-id="'+esc(r.id)+'"><input name="message" maxlength="1000" placeholder="Napisz wiadomość do serwisu"><button>Wyślij</button></form>';
     return '<article class="quote-thread"><div class="quote-thread-head"><div><strong>'+esc(r.deviceDescription)+'</strong><div>'+esc(r.requestedPointName)+(r.routedPointName!==r.requestedPointName?' → '+esc(r.routedPointName):'')+'</div></div><span class="quote-badge">'+esc(status)+'</span></div>'+price+msgs+form+'</article>';
   }).join(''):'<div class="empty">Nie masz jeszcze zapytań o wycenę.</div>';
@@ -101,6 +110,7 @@ q('#copyCustomerCode').addEventListener('click',async()=>{
   catch{button.textContent=code;}
   window.setTimeout(()=>{button.textContent='Kopiuj kod';},1600);
 });
+document.addEventListener('click',(ev)=>{const button=ev.target.closest('[data-customer-section]');if(button)showSection(button.dataset.customerSection);});
 q('#customerLogout').addEventListener('click',()=>showLogin());
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void load();});
 sessionToken=readSession();if(sessionToken){void load();refreshTimer=setInterval(()=>void load(),20000);}else showLogin();
