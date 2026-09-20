@@ -1585,7 +1585,10 @@
   const wireEvents = () => {
     document.addEventListener('click',(event) => {
       const nav = event.target.closest('[data-panel-nav]');
-      if (nav) { showView(nav.dataset.panelNav); return; }
+      if (nav) {
+        if(nav.dataset.closeDialog)document.getElementById(nav.dataset.closeDialog)?.close();
+        showView(nav.dataset.panelNav); return;
+      }
       const open = event.target.closest('[data-open-order]');
       if (open) { void openOrder(open.dataset.openOrder); return; }
       const transfer = event.target.closest('[data-transfer-action]');
@@ -1602,6 +1605,23 @@
       if (sendReturn) { void sendOrderReturn(sendReturn.dataset.sendReturn); return; }
       const orderFilterButton = event.target.closest('[data-order-filter]');
       if (orderFilterButton) { orderFilter = orderFilterButton.dataset.orderFilter || 'ALL'; renderOrders(); return; }
+      const workspaceOrder=event.target.closest('[data-workspace-order]');
+      if(workspaceOrder){showView('orders');void openOrder(workspaceOrder.dataset.workspaceOrder);return;}
+      const techNoteDelete=event.target.closest('[data-tech-note-delete]');
+      if(techNoteDelete){void deleteTechnicianNote(techNoteDelete.dataset.techNoteDelete);return;}
+      const invoiceDownload=event.target.closest('[data-invoice-download]');
+      if(invoiceDownload){void downloadInvoice(invoiceDownload.dataset.invoiceDownload);return;}
+      const addPart=event.target.closest('[data-mobile-part-add]');
+      if(addPart){
+        document.getElementById('mobilePartsEditor')?.insertAdjacentHTML('beforeend',mobilePartRowHtml());
+        return;
+      }
+      const removePart=event.target.closest('[data-mobile-part-remove]');
+      if(removePart){removePart.closest('[data-mobile-part-row]')?.remove();return;}
+      const saveCosting=event.target.closest('[data-save-mobile-costing]');
+      if(saveCosting){void saveMobileCosting(saveCosting.dataset.saveMobileCosting);return;}
+      const uploadInvoice=event.target.closest('[data-upload-mobile-invoice]');
+      if(uploadInvoice){void uploadMobileInvoice(uploadInvoice.dataset.uploadMobileInvoice);return;}
       const addNote = event.target.closest('[data-add-note]');
       if (addNote) { void addOrderNote(addNote.dataset.addNote); return; }
       const cardPrint=event.target.closest('[data-service-card-print]');
@@ -1672,6 +1692,17 @@
     document.getElementById('mobileHelpForm')?.addEventListener('submit',(event)=>{event.preventDefault();const input=document.getElementById('mobileHelpInput');const value=input?.value||'';if(input)input.value='';void sendMobileHelp(value);});
     document.getElementById('mobileRequestConsultant')?.addEventListener('click',()=>void requestMobileConsultant());
     document.getElementById('refreshEarnings')?.addEventListener('click',()=>void loadFinance());
+    document.getElementById('refreshTechnicianWorkspace')?.addEventListener('click',()=>void loadTechnicianWorkspace());
+    document.getElementById('refreshTechnicianNotes')?.addEventListener('click',()=>void loadTechnicianNotes());
+    document.getElementById('refreshInvoiceWarehouse')?.addEventListener('click',()=>void loadInvoiceWarehouse());
+    document.getElementById('invoiceWarehouseMonth')?.addEventListener('change',()=>void loadInvoiceWarehouse());
+    document.getElementById('downloadInvoiceMonth')?.addEventListener('click',()=>void downloadInvoiceMonth());
+    document.getElementById('technicianNoteForm')?.addEventListener('submit',submitTechnicianNote);
+    document.getElementById('monthlyInvoiceDownload')?.addEventListener('click',async()=>{
+      const count=await downloadInvoiceMonth(monthlyInvoicePeriod);
+      if(count>=0)await dismissMonthlyInvoicePrompt();
+    });
+    document.getElementById('monthlyInvoiceDismiss')?.addEventListener('click',()=>void dismissMonthlyInvoicePrompt());
     document.getElementById('newOrderForm')?.addEventListener('submit',submitNewOrder);
     document.getElementById('mobileOrderType')?.addEventListener('change',syncMobileIntakeMode);
     document.getElementById('mobileScannerStart')?.addEventListener('click',()=>void startServiceScanner());
@@ -1740,6 +1771,9 @@
     if(pendingScanToken&&canReadService()){
       showView('scan');
       void processServiceScan({tokenValue:pendingScanToken});
+    }else if(role()==='TECHNICIAN'){
+      void loadTechnicianWorkspace();
+      void checkMonthlyInvoicePrompt();
     }
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>undefined);
     window.setInterval(()=>{
