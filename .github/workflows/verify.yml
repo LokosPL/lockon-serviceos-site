@@ -112,7 +112,10 @@ jobs:
           grep -q 'Status jest zablokowany na czas transportu' assets/panel.js
           grep -q 'contain:layout paint style' assets/home-v2.css
           grep -q 'preview-stage' index.html
-          grep -q 'actingPointId:activePointId' assets/panel.js
+          ! grep -q 'actingPointId:activePointId' assets/panel.js
+          ! grep -q 'payload.pointId = activePointId' assets/panel.js
+          grep -q '/me/active-point' assets/panel.js
+          grep -q 'updated.activePointId' assets/panel.js
           grep -q 'data-admin-approve' assets/panel.js
           grep -q 'data-admin-block' assets/panel.js
           grep -q 'data-admin-support' assets/panel.js
