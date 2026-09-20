@@ -409,7 +409,11 @@ body.portal-home:not(.loaded){overflow:hidden}
   .portal-home .site-address{
     min-height:48px!important;
     border-radius:12px!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:8px!important;
   }
+  .portal-home .site-address>strong{min-width:0!important;overflow-wrap:anywhere!important}
+  .portal-home .site-address>button{min-width:0!important}
   .portal-home .connect-story-actions .button{min-height:52px!important;border-radius:13px!important}
 
   /* security / acceptance / download */
