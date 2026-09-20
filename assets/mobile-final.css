@@ -1774,3 +1774,28 @@ body.mobile-panel [hidden]{display:none!important}
   0%,60%,100%{opacity:.3;transform:translateY(0)}
   30%{opacity:1;transform:translateY(-2px)}
 }
+
+
+/* Narrow phones: conversation state already explains bot-first support, so prioritize the live thread and reply box. */
+@media(max-width:390px){
+  .mobile-panel #view-support .mobile-help-intro{display:none!important}
+  .mobile-panel #view-support .mobile-help-messages{
+    min-height:150px!important;
+    height:150px!important;
+    max-height:150px!important;
+  }
+}
+@media(max-width:340px){
+  .mobile-panel #view-support .mobile-help-messages{
+    min-height:132px!important;
+    height:132px!important;
+    max-height:132px!important;
+  }
+  .mobile-panel #view-support .mobile-help-compose{
+    grid-template-columns:minmax(0,1fr) 76px!important;
+  }
+  .mobile-panel #view-support .mobile-help-compose button{
+    min-width:76px!important;
+    padding:0 7px!important;
+  }
+}
