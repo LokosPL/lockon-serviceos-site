@@ -151,7 +151,7 @@
     TECHNICIAN:'Serwisant',
     USER:'Pracownik'
   };
-  const roleLabel = (value) => ROLE_LABELS[String(value || '').toUpperCase()] || 'Pracownik';
+  const accountRoleLabel = (value) => ROLE_LABELS[String(value || '').toUpperCase()] || 'Pracownik';
 
   const renderAccount = () => {
     const user = me?.user || {};
@@ -160,7 +160,7 @@
     document.getElementById('accountInitials').textContent = initials(user.name);
     document.getElementById('accountName').textContent = user.name || 'Konto ServiceOS';
     document.getElementById('accountEmail').textContent = user.email || '';
-    document.getElementById('accountRole').textContent = roleLabel(user.role);
+    document.getElementById('accountRole').textContent = accountRoleLabel(user.role);
     document.querySelectorAll('[data-open-account] b').forEach((el) => { el.textContent = initials(user.name); });
 
     document.querySelectorAll('.owner-only').forEach((el) => { el.hidden = !isOwner(); });
