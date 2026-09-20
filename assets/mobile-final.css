@@ -1737,6 +1737,7 @@ body.mobile-panel [hidden]{display:none!important}
     min-height:52px!important;
     padding:0 10px!important;
     font-size:10px!important;
+    touch-action:manipulation;
   }
   .mobile-panel #view-support .mobile-request-consultant{
     margin:0 9px 9px!important;
