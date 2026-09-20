@@ -1135,3 +1135,17 @@ body.portal-home:not(.loaded){overflow:hidden}
 }
 /* Preserve semantic hidden state even when component rules use display:flex/grid. */
 body.mobile-panel [hidden]{display:none!important}
+
+@media(max-width:760px){
+  .mobile-panel .panel-view,
+  .mobile-panel .panel-view.active{animation:none!important}
+}
+@media(min-width:861px){
+  .portal-home [data-story-feature][role="button"],
+  .portal-home [data-connect-step][role="button"]{cursor:pointer}
+  .portal-home [data-story-feature][role="button"]:focus-visible,
+  .portal-home [data-connect-step][role="button"]:focus-visible{
+    outline:2px solid #ff9d78;
+    outline-offset:4px;
+  }
+}
