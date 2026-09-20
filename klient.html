@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#080a0d">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://accounts.google.com; img-src 'self' data: https://lh3.googleusercontent.com; connect-src 'self' https://accounts.google.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src https://accounts.google.com; base-uri 'none'; form-action 'self'; upgrade-insecure-requests">
   <title>Portal klienta LockOn</title>
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/customer-portal.css">
@@ -14,27 +14,32 @@
   <link rel="stylesheet" href="assets/web-polish.css">
   <link rel="stylesheet" href="assets/mobile-final.css">
 </head>
-<body class="customer-portal-page">
+<body class="customer-portal-page" data-customer-state="login">
   <header class="customer-nav">
     <div class="customer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>Portal klienta</span></div></div>
-    <button id="customerLogout" type="button" hidden>Wyloguj</button>
+    <button id="customerLogout" type="button" hidden>Wyjdź</button>
   </header>
 
   <main class="customer-shell">
     <section id="customerLogin" class="customer-login-card">
       <div class="customer-login-intro">
         <span class="eyebrow">PORTAL KLIENTA</span>
-        <h1>Wpisz kod z wiadomości.</h1>
-        <p>Po otwarciu zobaczysz swoje zlecenia, wyceny i wiadomości z serwisem.</p>
+        <h1>Sprawdź swoją naprawę.</h1>
+        <p>Masz kod z wiadomości? Wpisz go. Jeśli wcześniej połączyłeś konto Google, możesz wejść bez kodu.</p>
       </div>
       <div class="customer-login-box">
-        <strong>Twój kod klienta</strong>
-        <p>Wpisz go dokładnie tak, jak w SMS-ie lub e-mailu od LockOn.</p>
+        <strong>Kod klienta</strong>
+        <p>Ma format <b>LK-XXXX-XXXX-XXXX-XXXX</b>.</p>
         <form id="customerLoginForm">
-          <label><span>Kod klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
-          <button type="submit">Pokaż moje zlecenia</button>
+          <label><span>Kod klienta</span><input name="customerId" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
+          <button type="submit">Otwórz portal</button>
         </form>
-        <div class="customer-login-note">Kod jest prywatny. Nie udostępniaj go innym osobom.</div>
+        <div class="customer-login-divider"><span>lub</span></div>
+        <div class="customer-google-entry">
+          <strong>Masz już konto Google?</strong>
+          <p>Wejdź bez przepisywania kodu.</p>
+          <div id="customerGoogleLoginHost" class="customer-google-host"></div>
+        </div>
         <div id="customerLoginError" class="customer-error" hidden></div>
       </div>
     </section>
@@ -42,43 +47,95 @@
     <section id="customerLoading" class="customer-loading" hidden aria-live="polite">
       <div class="customer-loading-mark"><span></span></div>
       <strong>Otwieramy Twój portal</strong>
-      <p>Pobieramy zlecenia, wyceny i wiadomości z serwisem.</p>
+      <p>Pobieramy najnowsze zlecenia i wyceny.</p>
       <div class="customer-loading-bar"><i></i></div>
+    </section>
+
+    <section id="customerAccessChoice" class="customer-access-choice" hidden>
+      <span class="eyebrow">DOSTĘP GOTOWY</span>
+      <h1>Jak chcesz korzystać z portalu?</h1>
+      <p>Kod daje szybki podgląd. Konto Google odblokowuje wiadomości, nowe wyceny i własne ustawienia powiadomień.</p>
+      <div class="customer-access-options">
+        <button id="customerViewOnly" type="button" class="customer-access-option">
+          <b>01</b><span><strong>Tylko podgląd</strong><small>Zlecenia i dotychczasowe wyceny. Bez zmian i wysyłania wiadomości.</small></span><i>→</i>
+        </button>
+        <div class="customer-access-option customer-access-google">
+          <b>02</b><span><strong>Pełne konto Google</strong><small>Wiadomości do serwisu, nowe wyceny i ustawienia powiadomień.</small></span>
+          <div id="customerGoogleLinkHost" class="customer-google-host"></div>
+        </div>
+      </div>
+      <div id="customerAccessError" class="customer-error" hidden></div>
     </section>
 
     <div id="customerPortal" hidden>
       <section class="customer-hero">
-        <div><span class="eyebrow">TWOJE SPRAWY</span><h1 id="customerName">—</h1><p id="customerContact">—</p></div>
+        <div><span class="eyebrow" id="customerAccessLabel">TWOJE SPRAWY</span><h1 id="customerName">—</h1><p id="customerContact">—</p></div>
         <div class="customer-sync"><i></i><span id="customerSync">Aktualizuję…</span></div>
       </section>
 
-      <section class="customer-inbox-nav" aria-label="Sekcje portalu">
-        <button type="button" class="active" data-customer-section="orders"><span>Twoje zlecenia</span><b id="customerOrderCount">0</b><small>Najnowsze statusy napraw</small></button>
-        <button type="button" data-customer-section="quotes"><span>Twoje wyceny</span><b id="customerQuoteCount">0</b><small>Wyceny i rozmowy z serwisem</small></button>
-        <button type="button" data-customer-section="new-quote"><span>Nowa wycena</span><b>＋</b><small>Zapytaj o koszt naprawy</small></button>
-      </section>
-      <span id="customerSince" hidden>—</span><span id="customerPortalCode" hidden>—</span><button id="copyCustomerCode" type="button" hidden>Kopiuj kod</button><a id="customerPortalLink" href="klient.html" hidden>Portal</a>
+      <div id="customerViewOnlyBanner" class="customer-view-only" hidden>
+        <div><strong>Tryb podglądu</strong><span>Możesz czytać swoje zlecenia i wyceny. Połącz Google, aby pisać do serwisu i zmieniać ustawienia.</span></div>
+        <button id="customerUpgradeGoogle" type="button">Połącz Google</button>
+      </div>
+
+      <nav class="customer-inbox-nav" aria-label="Sekcje portalu">
+        <button type="button" class="active" data-customer-section="orders"><span>Zlecenia</span><b id="customerOrderCount">0</b><small>Najnowsze na górze</small></button>
+        <button type="button" data-customer-section="quotes"><span>Wyceny</span><b id="customerQuoteCount">0</b><small>Wyceny i rozmowy</small></button>
+        <button type="button" data-customer-section="account"><span>Konto</span><b>○</b><small>Dostęp i powiadomienia</small></button>
+      </nav>
+
+      <span id="customerSince" hidden>—</span>
+      <span id="customerPortalCode" hidden>—</span>
+      <button id="copyCustomerCode" type="button" hidden>Kopiuj kod</button>
+      <a id="customerPortalLink" href="klient.html" hidden>Portal</a>
 
       <section class="customer-card customer-section-panel active" data-customer-panel="orders">
-        <div class="customer-section-head"><div><span>ZLECENIA</span><h2>Twoje zlecenia</h2></div><small>Od najnowszego.</small></div>
+        <div class="customer-section-head"><div><span>ZLECENIA</span><h2>Twoje zlecenia</h2></div><small>Dotknij, aby rozwinąć szczegóły.</small></div>
         <div id="customerOrders" class="customer-orders"></div>
       </section>
 
+      <section class="customer-card customer-section-panel" data-customer-panel="quotes" hidden>
+        <div class="customer-section-head">
+          <div><span>WYCENY</span><h2>Wyceny i rozmowy</h2></div>
+          <button id="customerNewQuoteButton" type="button" class="customer-section-action" data-customer-section="new-quote">＋ Nowa wycena</button>
+        </div>
+        <div id="customerQuotes" class="customer-quotes"></div>
+      </section>
+
       <section class="customer-card customer-section-panel" data-customer-panel="new-quote" hidden>
-        <div class="customer-section-head"><div><span>NOWA WYCENA</span><h2>Zapytaj o koszt naprawy</h2></div><small>Wybierz punkt, którego dotyczy sprawa. ServiceOS sam przekaże zapytanie do właściwego serwisu.</small></div>
+        <div class="customer-section-head"><div><span>NOWA WYCENA</span><h2>Zapytaj o koszt naprawy</h2></div><button type="button" class="customer-section-action secondary" data-customer-section="quotes">← Wróć</button></div>
         <form id="customerQuoteForm" class="customer-quote-form">
           <label><span>Punkt LockOn</span><select name="requestedPointId" id="customerQuotePoint" required></select></label>
-          <label><span>Dotyczy zlecenia</span><select name="serviceOrderId" id="customerQuoteOrder"><option value="">Nowa wycena / inne urządzenie</option></select></label>
+          <label><span>Dotyczy zlecenia</span><select name="serviceOrderId" id="customerQuoteOrder"><option value="">Inne urządzenie</option></select></label>
           <label class="full"><span>Urządzenie</span><input name="deviceDescription" id="customerQuoteDevice" maxlength="180" placeholder="np. Samsung S25"></label>
-          <label class="full"><span>Co mamy wycenić?</span><textarea name="issueDescription" maxlength="2000" rows="5" required placeholder="Opisz problem, uszkodzenie lub usługę."></textarea></label>
-          <button type="submit">Wyślij zapytanie o wycenę</button>
+          <label class="full"><span>Co mamy wycenić?</span><textarea name="issueDescription" maxlength="2000" rows="5" required placeholder="Krótko opisz problem lub usługę."></textarea></label>
+          <button type="submit">Wyślij zapytanie</button>
         </form>
         <div id="customerQuoteStatus" class="customer-status" hidden></div>
       </section>
 
-      <section class="customer-card customer-section-panel" data-customer-panel="quotes" hidden>
-        <div class="customer-section-head"><div><span>WYCENY</span><h2>Twoje wyceny</h2></div><small>Odpowiedź pojawi się tutaj automatycznie — nie musisz odświeżać strony.</small></div>
-        <div id="customerQuotes" class="customer-quotes"></div>
+      <section class="customer-card customer-section-panel" data-customer-panel="account" hidden>
+        <div class="customer-section-head"><div><span>KONTO</span><h2>Twoje ustawienia</h2></div><small id="customerAccountMode">—</small></div>
+        <div class="customer-account-panel">
+          <div class="customer-account-profile">
+            <div id="customerAccountAvatar" class="customer-account-avatar">LK</div>
+            <div><strong id="customerAccountName">—</strong><span id="customerAccountEmail">—</span></div>
+          </div>
+          <div id="customerAccountViewOnly" class="customer-account-view-only" hidden>
+            <strong>Korzystasz tylko z kodu.</strong>
+            <p>To bezpieczny tryb podglądu. Połącz konto Google, jeśli chcesz pisać do serwisu i ustawić własne powiadomienia.</p>
+            <div id="customerGoogleAccountHost" class="customer-google-host"></div>
+          </div>
+          <form id="customerSettingsForm" class="customer-settings-form" hidden>
+            <div class="customer-settings-title"><strong>Powiadomienia e-mail</strong><span>Sam wybierasz, które wiadomości chcesz dostawać.</span></div>
+            <label><input type="checkbox" name="serviceUpdates"><span><strong>Postęp naprawy</strong><small>Zmiany etapów i logistyka urządzenia.</small></span></label>
+            <label><input type="checkbox" name="readyForPickup"><span><strong>Gotowe do odbioru</strong><small>Osobne powiadomienie, gdy urządzenie czeka w punkcie.</small></span></label>
+            <label><input type="checkbox" name="quoteUpdates"><span><strong>Wyceny</strong><small>Informacja, gdy serwis przygotuje wycenę.</small></span></label>
+            <label><input type="checkbox" name="messages"><span><strong>Wiadomości z serwisu</strong><small>Powiadomienie o nowej odpowiedzi pracownika.</small></span></label>
+            <button type="submit">Zapisz ustawienia</button>
+            <div id="customerSettingsStatus" class="customer-status" hidden></div>
+          </form>
+        </div>
       </section>
     </div>
   </main>

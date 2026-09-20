@@ -1,44 +1,175 @@
 (()=>{'use strict';
+
 const apiBase='https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech';
 const sessionKey='lockon.customer.portal.session';
 let sessionToken='';
 let portalData=null;
 let refreshTimer=null;
+let googleConfig=null;
+let googleReady=null;
+let googleInitialized=false;
+let googleIntent='LOGIN';
+
 const q=(s)=>document.querySelector(s);
+const qa=(s)=>[...document.querySelectorAll(s)];
 const esc=(v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=(v)=>{if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('pl-PL',{dateStyle:'medium',timeStyle:'short'});};
 const ts=(v)=>{const d=new Date(v||0);return Number.isNaN(d.getTime())?0:d.getTime();};
 const newestFirst=(a,b)=>ts(b.updatedAt||b.createdAt||b.receivedAt)-ts(a.updatedAt||a.createdAt||a.receivedAt);
-const showSection=(name)=>{
-  document.querySelectorAll('[data-customer-panel]').forEach(el=>{el.hidden=el.dataset.customerPanel!==name;el.classList.toggle('active',el.dataset.customerPanel===name);});
-  document.querySelectorAll('[data-customer-section]').forEach(el=>el.classList.toggle('active',el.dataset.customerSection===name));
-  window.scrollTo({top:0,behavior:'smooth'});
-};
 const money=(v,c='PLN')=>new Intl.NumberFormat('pl-PL',{style:'currency',currency:c||'PLN'}).format(Number(v||0));
 const readSession=()=>{try{return sessionStorage.getItem(sessionKey)||'';}catch{return '';}};
 const saveSession=(v)=>{try{if(v)sessionStorage.setItem(sessionKey,v);else sessionStorage.removeItem(sessionKey);}catch{}};
-const api=async(path,options={})=>{
+
+const api=async(path,options={},authenticated=true)=>{
   const headers=new Headers(options.headers||{});
   headers.set('Accept','application/json');
   if(options.body&&!headers.has('Content-Type'))headers.set('Content-Type','application/json');
-  if(sessionToken)headers.set('Authorization','Bearer '+sessionToken);
+  if(authenticated&&sessionToken)headers.set('Authorization','Bearer '+sessionToken);
   const res=await fetch(apiBase+path,{...options,headers,credentials:'omit',cache:'no-store',referrerPolicy:'no-referrer'});
   const body=await res.json().catch(()=>({}));
-  if(!res.ok){const e=new Error(body?.message||'Nie udało się pobrać danych.');e.status=res.status;throw e;}
+  if(!res.ok){
+    const e=new Error(body?.message||'Nie udało się pobrać danych.');
+    e.status=res.status;e.code=body?.error||'REQUEST_FAILED';
+    throw e;
+  }
   return body;
 };
-const showLoading=()=>{
-  q('#customerLogin').hidden=true;q('#customerPortal').hidden=true;q('#customerLoading').hidden=false;q('#customerLogout').hidden=true;
+
+const setState=(state)=>{
+  document.body.dataset.customerState=state;
+  q('#customerLogin').hidden=state!=='login';
+  q('#customerLoading').hidden=state!=='loading';
+  q('#customerAccessChoice').hidden=state!=='choice';
+  q('#customerPortal').hidden=state!=='portal';
+  q('#customerLogout').hidden=state!=='portal';
 };
-const showLogin=(message='')=>{
-  portalData=null;sessionToken='';saveSession('');
-  q('#customerPortal').hidden=true;q('#customerLoading').hidden=true;q('#customerLogin').hidden=false;q('#customerLogout').hidden=true;
-  const box=q('#customerLoginError');box.textContent=message;box.hidden=!message;
+
+const stopRefresh=()=>{
   if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}
 };
+const startRefresh=()=>{
+  stopRefresh();
+  refreshTimer=setInterval(()=>{if(document.visibilityState==='visible')void load();},20000);
+};
+
+const clearErrors=()=>{
+  ['#customerLoginError','#customerAccessError','#customerSettingsStatus','#customerQuoteStatus'].forEach(selector=>{
+    const el=q(selector);if(el){el.textContent='';el.hidden=true;}
+  });
+};
+
+const showLoading=()=>{clearErrors();setState('loading');};
+const showLogin=(message='')=>{
+  portalData=null;sessionToken='';saveSession('');stopRefresh();setState('login');
+  const box=q('#customerLoginError');box.textContent=message;box.hidden=!message;
+  void renderGoogleFor('LOGIN');
+};
+
+const loadGoogleSdk=async()=>{
+  if(googleReady)return googleReady;
+  googleReady=(async()=>{
+    googleConfig=await api('/public/customer-portal/config',{},false).catch(()=>({googleEnabled:false,googleClientId:null}));
+    if(!googleConfig?.googleEnabled||!googleConfig?.googleClientId)return false;
+    if(window.google?.accounts?.id)return true;
+    await new Promise((resolve,reject)=>{
+      const existing=document.querySelector('script[data-customer-google]');
+      if(existing){existing.addEventListener('load',resolve,{once:true});existing.addEventListener('error',reject,{once:true});return;}
+      const script=document.createElement('script');
+      script.src='https://accounts.google.com/gsi/client';
+      script.async=true;script.defer=true;script.dataset.customerGoogle='1';
+      script.onload=resolve;script.onerror=reject;
+      document.head.appendChild(script);
+    });
+    return Boolean(window.google?.accounts?.id);
+  })();
+  return googleReady;
+};
+
+const handleGoogleCredential=async(credential)=>{
+  if(!credential)return;
+  const intent=googleIntent;
+  const errorBox=intent==='LOGIN'?q('#customerLoginError'):q('#customerAccessError');
+  if(errorBox){errorBox.hidden=true;errorBox.textContent='';}
+  showLoading();
+  try{
+    const path=intent==='LOGIN'?'/public/customer-portal/google/login':'/public/customer-portal/google/link';
+    const data=await api(path,{method:'POST',body:JSON.stringify({idToken:credential})},intent!=='LOGIN');
+    sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;
+    render();startRefresh();
+  }catch(error){
+    if(intent==='LOGIN'){
+      showLogin(error.message);
+    }else{
+      setState('choice');
+      const box=q('#customerAccessError');box.textContent=error.message;box.hidden=false;
+      void renderGoogleFor('LINK');
+    }
+  }
+};
+
+const ensureGoogleInitialized=async()=>{
+  const ready=await loadGoogleSdk().catch(()=>false);
+  if(!ready)return false;
+  if(!googleInitialized){
+    window.google.accounts.id.initialize({
+      client_id:googleConfig.googleClientId,
+      callback:(response)=>void handleGoogleCredential(response?.credential||''),
+      auto_select:false,
+      cancel_on_tap_outside:true
+    });
+    googleInitialized=true;
+  }
+  return true;
+};
+
+const renderGoogleFor=async(intent)=>{
+  googleIntent=intent;
+  const ready=await ensureGoogleInitialized();
+  const hosts=['#customerGoogleLoginHost','#customerGoogleLinkHost','#customerGoogleAccountHost'];
+  hosts.forEach(selector=>{const host=q(selector);if(host)host.replaceChildren();});
+  if(!ready)return;
+  const selector=intent==='LOGIN'?'#customerGoogleLoginHost':(document.body.dataset.customerState==='choice'?'#customerGoogleLinkHost':'#customerGoogleAccountHost');
+  const host=q(selector);if(!host)return;
+  const width=Math.max(220,Math.min(360,Math.floor(host.getBoundingClientRect().width||320)));
+  window.google.accounts.id.renderButton(host,{
+    type:'standard',theme:'filled_black',size:'large',
+    text:intent==='LOGIN'?'signin_with':'continue_with',
+    shape:'rectangular',logo_alignment:'left',width
+  });
+};
+
+const showChoice=(data)=>{
+  portalData=data;clearErrors();setState('choice');
+  q('#customerAccessChoice h1').textContent=data?.access?.googleLinked?'Kod działa. Chcesz wejść pełnym kontem?':'Kod działa. Jak chcesz korzystać z portalu?';
+  void renderGoogleFor('LINK');
+};
+
+const showSection=(name)=>{
+  if(name==='new-quote'&&!portalData?.access?.canWrite){name='account';}
+  qa('[data-customer-panel]').forEach(el=>{el.hidden=el.dataset.customerPanel!==name;el.classList.toggle('active',el.dataset.customerPanel===name);});
+  qa('[data-customer-section]').forEach(el=>el.classList.toggle('active',el.dataset.customerSection===name));
+  window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  if(name==='account'&&!portalData?.access?.canWrite)void renderGoogleFor('LINK');
+};
+
+const bindMessageForms=()=>{
+  qa('.customer-message-form').forEach(form=>form.addEventListener('submit',async(ev)=>{
+    ev.preventDefault();
+    if(!portalData?.access?.canWrite){showSection('account');return;}
+    const input=form.querySelector('input');const message=input.value.trim();if(!message)return;
+    const button=form.querySelector('button');button.disabled=true;
+    try{
+      portalData=await api('/public/customer-portal/quotes/'+encodeURIComponent(form.dataset.requestId)+'/messages',{method:'POST',body:JSON.stringify({message})});
+      render();showSection('quotes');
+    }catch(error){window.alert(error.message);}
+    finally{if(button.isConnected)button.disabled=false;}
+  }));
+};
+
 const render=()=>{
   const d=portalData;if(!d)return;
-  q('#customerLogin').hidden=true;q('#customerLoading').hidden=true;q('#customerPortal').hidden=false;q('#customerLogout').hidden=false;
+  const full=d.access?.canWrite===true;
+  setState('portal');
   q('#customerName').textContent=[d.customer.firstName,d.customer.lastName].filter(Boolean).join(' ');
   q('#customerContact').textContent=[d.customer.email,d.customer.phone].filter(Boolean).join(' · ')||'Dane klienta zapisane w LockOn';
   q('#customerOrderCount').textContent=String(d.orders.length);
@@ -46,80 +177,164 @@ const render=()=>{
   q('#customerSince').textContent=fmt(d.customer.customerSince).split(',')[0];
   q('#customerPortalCode').textContent=d.customerPortalCode||'—';
   q('#customerPortalLink').href=d.customerPortalUrl||'klient.html';
-  q('#customerSync').textContent='Dane aktualne · '+new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
+  q('#customerSync').textContent='Aktualne · '+new Date().toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'});
+  q('#customerAccessLabel').textContent=full?'PEŁNE KONTO':'TRYB PODGLĄDU';
+  q('#customerViewOnlyBanner').hidden=full;
+  q('#customerNewQuoteButton').hidden=!full;
+
   const sortedOrders=[...d.orders].sort(newestFirst);
   q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
-    return '<article class="customer-order" tabindex="0"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div><div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></div><div class="customer-order-open">Otwórz <span>›</span></div></article>';
+    return '<article class="customer-order" tabindex="0"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div>'+
+      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></div>'+
+      '<div class="customer-order-open">Otwórz <span>›</span></div></article>';
   }).join(''):'<div class="empty">Nie ma jeszcze zapisanych zleceń.</div>';
 
   const point=q('#customerQuotePoint');const currentPoint=point.value;
   point.innerHTML=d.points.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.name+(p.city?' · '+p.city:''))+'</option>').join('');
   if(d.points.some(p=>p.id===currentPoint))point.value=currentPoint;
   const order=q('#customerQuoteOrder');const currentOrder=order.value;
-  order.innerHTML='<option value="">Nowa wycena / inne urządzenie</option>'+d.orders.map(o=>'<option value="'+esc(o.id)+'">#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</option>').join('');
+  order.innerHTML='<option value="">Inne urządzenie</option>'+d.orders.map(o=>'<option value="'+esc(o.id)+'">#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</option>').join('');
   if(d.orders.some(o=>o.id===currentOrder))order.value=currentOrder;
 
   const sortedQuotes=[...d.quoteRequests].sort(newestFirst);
   q('#customerQuotes').innerHTML=sortedQuotes.length?sortedQuotes.map(r=>{
     const status={OPEN:'Oczekuje na odpowiedź',QUOTED:'Wycena gotowa',CLOSED:'Zamknięte',CANCELLED:'Anulowane'}[r.status]||r.status;
-    const price=r.quoteAmount!=null?'<div class="quote-price"><span>Wycena zdalna</span><br><strong>'+esc(money(r.quoteAmount,r.currency))+'</strong>'+(r.quoteNote?'<p>'+esc(r.quoteNote)+'</p>':'')+'</div>':'';
-    const msgs=[...(r.messages||[])].sort((a,b)=>ts(a.createdAt)-ts(b.createdAt)).map(m=>'<div class="quote-message '+esc(m.senderKind.toLowerCase())+'"><b>'+esc(m.senderKind==='STAFF'?(m.senderName||'Serwisant'):m.senderKind==='CUSTOMER'?'Ty':'ServiceOS')+':</b> '+esc(m.body)+'<small>'+esc(fmt(m.createdAt))+'</small></div>').join('');
-    const form=['CLOSED','CANCELLED'].includes(r.status)?'':'<form class="customer-message-form" data-request-id="'+esc(r.id)+'"><input name="message" maxlength="1000" placeholder="Napisz wiadomość do serwisu"><button>Wyślij</button></form>';
-    return '<article class="quote-thread"><div class="quote-thread-head"><div><strong>'+esc(r.deviceDescription)+'</strong><div>'+esc(r.requestedPointName)+(r.routedPointName!==r.requestedPointName?' → '+esc(r.routedPointName):'')+'</div></div><span class="quote-badge">'+esc(status)+'</span></div>'+price+msgs+form+'</article>';
-  }).join(''):'<div class="empty">Nie masz jeszcze zapytań o wycenę.</div>';
+    const price=r.quoteAmount!=null?'<div class="quote-price"><span>Wycena</span><br><strong>'+esc(money(r.quoteAmount,r.currency))+'</strong>'+(r.quoteNote?'<p>'+esc(r.quoteNote)+'</p>':'')+'</div>':'';
+    const msgs=[...(r.messages||[])].sort((a,b)=>ts(a.createdAt)-ts(b.createdAt)).map(m=>'<div class="quote-message '+esc(m.senderKind.toLowerCase())+'"><b>'+esc(m.senderKind==='STAFF'?(m.senderName||'Serwis'):m.senderKind==='CUSTOMER'?'Ty':'ServiceOS')+':</b> '+esc(m.body)+'<small>'+esc(fmt(m.createdAt))+'</small></div>').join('');
+    const closed=['CLOSED','CANCELLED'].includes(r.status);
+    const form=!full||closed?'': '<form class="customer-message-form" data-request-id="'+esc(r.id)+'"><input name="message" maxlength="1000" placeholder="Napisz do serwisu…"><button>Wyślij</button></form>';
+    const locked=!full&&!closed?'<button type="button" class="customer-thread-unlock" data-customer-section="account">Połącz Google, aby odpisać</button>':'';
+    return '<article class="quote-thread"><div class="quote-thread-head"><div><strong>'+esc(r.deviceDescription)+'</strong><div>'+esc(r.requestedPointName)+'</div></div><span class="quote-badge">'+esc(status)+'</span></div>'+price+msgs+form+locked+'</article>';
+  }).join(''):'<div class="empty">Nie masz jeszcze wycen.</div>';
+
+  const account=d.account||{};
+  const displayName=account.googleName||[d.customer.firstName,d.customer.lastName].filter(Boolean).join(' ')||'Klient LockOn';
+  q('#customerAccountName').textContent=displayName;
+  q('#customerAccountEmail').textContent=account.googleEmail||d.customer.email||'Brak adresu e-mail';
+  const avatar=q('#customerAccountAvatar');
+  if(account.googlePicture){
+    avatar.innerHTML='<img src="'+esc(account.googlePicture)+'" alt="">';
+  }else{
+    avatar.textContent=(displayName.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('')||'LK').toUpperCase();
+  }
+  q('#customerAccountMode').textContent=full?'Połączone z Google':'Tylko podgląd';
+  q('#customerAccountViewOnly').hidden=full;
+  q('#customerSettingsForm').hidden=!full;
+  if(full){
+    const prefs=account.notificationPreferences||{};
+    const form=q('#customerSettingsForm');
+    form.elements.serviceUpdates.checked=prefs.serviceUpdates!==false;
+    form.elements.readyForPickup.checked=prefs.readyForPickup!==false;
+    form.elements.quoteUpdates.checked=prefs.quoteUpdates!==false;
+    form.elements.messages.checked=prefs.messages!==false;
+  }
+
   bindMessageForms();
-  document.querySelectorAll('.customer-order').forEach(card=>{
+  qa('.customer-order').forEach(card=>{
     const toggle=()=>card.classList.toggle('open');
     card.addEventListener('click',toggle);
     card.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle();}});
   });
+  showSection(qa('[data-customer-panel].active')[0]?.dataset.customerPanel||'orders');
 };
+
 const load=async()=>{
   if(!sessionToken)return;
   try{portalData=await api('/public/customer-portal/me');render();}
-  catch(e){if(e.status===401)showLogin('Sesja wygasła. Wpisz identyfikator klienta ponownie.');else q('#customerSync').textContent='Chwilowo nie udało się odświeżyć danych.';}
+  catch(error){
+    if(error.status===401||error.status===403)showLogin(error.message);
+    else if(q('#customerSync'))q('#customerSync').textContent='Nie udało się odświeżyć danych.';
+  }
 };
-const bindMessageForms=()=>{
-  document.querySelectorAll('.customer-message-form').forEach(form=>form.addEventListener('submit',async(ev)=>{
-    ev.preventDefault();const input=form.querySelector('input');const message=input.value.trim();if(!message)return;
-    form.querySelector('button').disabled=true;
-    try{portalData=await api('/public/customer-portal/quotes/'+encodeURIComponent(form.dataset.requestId)+'/messages',{method:'POST',body:JSON.stringify({message})});render();}
-    catch(e){alert(e.message);}finally{if(form.isConnected)form.querySelector('button').disabled=false;}
-  }));
-};
+
 q('#customerLoginForm').addEventListener('submit',async(ev)=>{
-  ev.preventDefault();const form=ev.currentTarget;const btn=form.querySelector('button');const box=q('#customerLoginError');box.hidden=true;btn.disabled=true;
-  const fd=new FormData(form);showLoading();
-  try{const data=await api('/public/customer-portal/login',{method:'POST',body:JSON.stringify({customerId:String(fd.get('customerId')||'')})});sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;render();refreshTimer=setInterval(()=>void load(),20000);}
-  catch(e){showLogin(e.message);}finally{btn.disabled=false;}
+  ev.preventDefault();
+  const form=ev.currentTarget;const button=form.querySelector('button');const box=q('#customerLoginError');
+  box.hidden=true;button.disabled=true;showLoading();
+  const fd=new FormData(form);
+  try{
+    const data=await api('/public/customer-portal/login',{method:'POST',body:JSON.stringify({customerId:String(fd.get('customerId')||'')})},false);
+    sessionToken=data.sessionToken;saveSession(sessionToken);showChoice(data);
+  }catch(error){showLogin(error.message);}
+  finally{button.disabled=false;}
 });
+
+q('#customerViewOnly').addEventListener('click',()=>{render();startRefresh();});
+q('#customerUpgradeGoogle').addEventListener('click',()=>showSection('account'));
+
 q('#customerQuoteOrder').addEventListener('change',()=>{
   const o=portalData?.orders.find(x=>x.id===q('#customerQuoteOrder').value);
   if(o){q('#customerQuoteDevice').value=[o.device.brand,o.device.model].filter(Boolean).join(' ');if(o.homePointId)q('#customerQuotePoint').value=o.homePointId;}
 });
+
 q('#customerQuoteForm').addEventListener('submit',async(ev)=>{
-  ev.preventDefault();const btn=ev.currentTarget.querySelector('button');const status=q('#customerQuoteStatus');btn.disabled=true;status.hidden=true;
-  const fd=new FormData(ev.currentTarget);
+  ev.preventDefault();
+  if(!portalData?.access?.canWrite){showSection('account');return;}
+  const form=ev.currentTarget;const button=form.querySelector('button');const status=q('#customerQuoteStatus');
+  button.disabled=true;status.hidden=true;const fd=new FormData(form);
   try{
-    const data=await api('/public/customer-portal/quotes',{method:'POST',body:JSON.stringify({
-      requestedPointId:String(fd.get('requestedPointId')||''),serviceOrderId:String(fd.get('serviceOrderId')||'')||null,
-      deviceDescription:String(fd.get('deviceDescription')||''),issueDescription:String(fd.get('issueDescription')||'')
+    portalData=await api('/public/customer-portal/quotes',{method:'POST',body:JSON.stringify({
+      requestedPointId:String(fd.get('requestedPointId')||''),
+      serviceOrderId:String(fd.get('serviceOrderId')||'')||null,
+      deviceDescription:String(fd.get('deviceDescription')||''),
+      issueDescription:String(fd.get('issueDescription')||'')
     })});
-    portalData=data;render();ev.currentTarget.reset();status.textContent='Zapytanie zostało wysłane. Odpowiedź serwisanta pojawi się w sekcji „Wyceny i rozmowy”.';status.hidden=false;
-  }catch(e){status.textContent=e.message;status.hidden=false;}finally{btn.disabled=false;}
+    form.reset();render();showSection('quotes');
+  }catch(error){status.textContent=error.message;status.hidden=false;}
+  finally{button.disabled=false;}
 });
+
+q('#customerSettingsForm').addEventListener('submit',async(ev)=>{
+  ev.preventDefault();
+  if(!portalData?.access?.canWrite)return;
+  const form=ev.currentTarget;const button=form.querySelector('button');const status=q('#customerSettingsStatus');
+  button.disabled=true;status.hidden=true;
+  try{
+    portalData=await api('/public/customer-portal/settings',{method:'POST',body:JSON.stringify({
+      serviceUpdates:form.elements.serviceUpdates.checked,
+      readyForPickup:form.elements.readyForPickup.checked,
+      quoteUpdates:form.elements.quoteUpdates.checked,
+      messages:form.elements.messages.checked
+    })});
+    render();showSection('account');status.textContent='Ustawienia zapisane.';status.hidden=false;
+  }catch(error){status.textContent=error.message;status.hidden=false;}
+  finally{button.disabled=false;}
+});
+
 q('#copyCustomerCode').addEventListener('click',async()=>{
-  const code=portalData?.customerPortalCode||'';
-  if(!code)return;
+  const code=portalData?.customerPortalCode||'';if(!code)return;
   const button=q('#copyCustomerCode');
-  try{await navigator.clipboard.writeText(code);button.textContent='Skopiowano';}
-  catch{button.textContent=code;}
-  window.setTimeout(()=>{button.textContent='Kopiuj kod';},1600);
+  try{await navigator.clipboard.writeText(code);button.textContent='Skopiowano';}catch{button.textContent=code;}
+  setTimeout(()=>{button.textContent='Kopiuj kod';},1600);
 });
-document.addEventListener('click',(ev)=>{const button=ev.target.closest('[data-customer-section]');if(button)showSection(button.dataset.customerSection);});
+
+q('#customerLoginForm input[name="customerId"]').addEventListener('input',(ev)=>{
+  let raw=String(ev.target.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+  if(raw.startsWith('LK'))raw=raw.slice(2);
+  raw=raw.slice(0,16);
+  ev.target.value=raw?'LK-'+(raw.match(/.{1,4}/g)||[]).join('-'):'';
+});
+
+document.addEventListener('click',(ev)=>{
+  const button=ev.target.closest('[data-customer-section]');
+  if(button)showSection(button.dataset.customerSection);
+});
+
 q('#customerLogout').addEventListener('click',()=>showLogin());
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void load();});
-sessionToken=readSession();if(sessionToken){showLoading();void load();refreshTimer=setInterval(()=>void load(),20000);}else showLogin();
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&document.body.dataset.customerState==='portal')void load();});
+
+(async()=>{
+  await loadGoogleSdk().catch(()=>false);
+  sessionToken=readSession();
+  if(sessionToken){
+    showLoading();await load();if(sessionToken)startRefresh();
+  }else{
+    showLogin();
+    if(new URLSearchParams(location.search).get('google')==='1'){
+      setTimeout(()=>q('#customerGoogleLoginHost')?.scrollIntoView({behavior:'smooth',block:'center'}),120);
+    }
+  }
+})();
 })();
