@@ -347,12 +347,19 @@ body.portal-home:not(.loaded){overflow:hidden}
   .portal-home #preview{display:none!important}
 
   /* pairing: plain steps, no sticky fake phone */
-  .portal-home .connect-story-layout{grid-template-columns:1fr!important;gap:0!important}
+  .portal-home .connect-story-layout{grid-template-columns:minmax(0,1fr)!important;gap:0!important;min-width:0!important;width:100%!important;max-width:100%!important}
+  .portal-home .connect-story-layout>div{min-width:0!important;width:100%!important;max-width:100%!important}
   .portal-home .connect-device-wrap{display:none!important}
   .portal-home .connect-timeline{
     padding-left:0!important;
     gap:9px!important;
+    min-width:0!important;
+    width:100%!important;
+    max-width:100%!important;
   }
+  .portal-home .connect-step,
+  .portal-home .connect-story-actions,
+  .portal-home .site-address{min-width:0!important;max-width:100%!important}
   .portal-home .connect-timeline::before,
   .portal-home .connect-timeline::after{display:none!important}
   .portal-home .connect-step,
