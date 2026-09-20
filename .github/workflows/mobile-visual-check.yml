@@ -1,0 +1,79 @@
+name: Temporary mobile visual check
+
+on:
+  push:
+    paths:
+      - ".github/workflows/mobile-visual-check.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 >/tmp/serviceos-http.log 2>&1 &
+          echo $! > /tmp/serviceos-http.pid
+      - name: Capture
+        run: |
+          cat > /tmp/capture.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import fs from 'node:fs';
+          fs.mkdirSync('visual-check',{recursive:true});
+          const browser=await chromium.launch({headless:true});
+          const phone=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+          await phone.goto('http://127.0.0.1:4173/index.html',{waitUntil:'networkidle'});
+          await phone.waitForTimeout(900);
+          await phone.screenshot({path:'visual-check/landing-phone-top.png'});
+          await phone.locator('#modules').scrollIntoViewIfNeeded();
+          await phone.waitForTimeout(250);
+          await phone.screenshot({path:'visual-check/landing-phone-modules.png'});
+          await phone.locator('#connect').scrollIntoViewIfNeeded();
+          await phone.waitForTimeout(250);
+          await phone.screenshot({path:'visual-check/landing-phone-connect.png'});
+
+          const desktop=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
+          await desktop.goto('http://127.0.0.1:4173/index.html',{waitUntil:'networkidle'});
+          await desktop.waitForTimeout(900);
+          await desktop.locator('#modules').scrollIntoViewIfNeeded();
+          await desktop.waitForTimeout(250);
+          await desktop.screenshot({path:'visual-check/landing-desktop-modules.png'});
+
+          const panel=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+          await panel.route('**/assets/panel.js',route=>route.abort());
+          await panel.goto('http://127.0.0.1:4173/panel.html',{waitUntil:'domcontentloaded'});
+          await panel.evaluate(()=>{
+            document.getElementById('panelBoot')?.remove();
+            document.querySelectorAll('.panel-view').forEach(v=>v.classList.toggle('active',v.id==='view-home'));
+          });
+          await panel.waitForTimeout(150);
+          await panel.screenshot({path:'visual-check/panel-phone-home.png'});
+          await panel.evaluate(()=>{
+            document.querySelectorAll('.panel-view').forEach(v=>v.classList.toggle('active',v.id==='view-more'));
+            document.querySelectorAll('.panel-bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.panelNav==='more'));
+          });
+          await panel.waitForTimeout(100);
+          await panel.screenshot({path:'visual-check/panel-phone-more.png'});
+          await browser.close();
+          EOF
+          node /tmp/capture.mjs
+      - name: Upload screenshots
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        with:
+          name: mobile-visual-check
+          path: visual-check/*.png
+          if-no-files-found: error
+          retention-days: 1
