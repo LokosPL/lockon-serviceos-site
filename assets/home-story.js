@@ -1,12 +1,15 @@
 (()=>{'use strict';
 
 const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
-const desktopMq=window.matchMedia?.('(min-width: 861px)');
-const desktop=()=>desktopMq?.matches!==false;
+const desktop=()=>window.matchMedia?.('(min-width: 861px)').matches===true;
 
 const setStoryFeature=(name)=>{
   if(!name)return;
-  document.querySelectorAll('[data-story-feature]').forEach((item)=>item.classList.toggle('active',item.dataset.storyFeature===name));
+  document.querySelectorAll('[data-story-feature]').forEach((item)=>{
+    const active=item.dataset.storyFeature===name;
+    item.classList.toggle('active',active);
+    item.setAttribute('aria-pressed',active?'true':'false');
+  });
   document.querySelectorAll('[data-story-screen]').forEach((screen)=>{
     const active=screen.dataset.storyScreen===name;
     screen.classList.toggle('active',active);
@@ -32,7 +35,11 @@ const phoneActions=[...document.querySelectorAll('[data-phone-action]')];
 
 const setConnectStep=(step)=>{
   const key=String(step||'1');
-  connectSteps.forEach((item)=>item.classList.toggle('active',item.dataset.connectStep===key));
+  connectSteps.forEach((item)=>{
+    const active=item.dataset.connectStep===key;
+    item.classList.toggle('active',active);
+    item.setAttribute('aria-pressed',active?'true':'false');
+  });
   const index=Math.max(0,connectSteps.findIndex((item)=>item.dataset.connectStep===key));
   if(timeline)timeline.style.setProperty('--connect-progress',String(connectSteps.length>1?index/(connectSteps.length-1):1));
   const state=phoneStates[key]||phoneStates['1'];
@@ -43,52 +50,30 @@ const setConnectStep=(step)=>{
   phoneActions.forEach((item)=>item.classList.toggle('active',item.dataset.phoneAction===state.active));
 };
 
-const bindNearest=(items,onSelect)=>{
-  if(!items.length||!desktop())return()=>{};
-  let raf=0;
-  let current=null;
-  const update=()=>{
-    raf=0;
-    const targetY=window.innerHeight*.46;
-    let best=null;
-    let distance=Infinity;
-    for(const item of items){
-      const rect=item.getBoundingClientRect();
-      if(rect.bottom<0||rect.top>window.innerHeight)continue;
-      const d=Math.abs((rect.top+rect.height*.42)-targetY);
-      if(d<distance){distance=d;best=item;}
-    }
-    if(best&&best!==current){current=best;onSelect(best);}
-  };
-  const request=()=>{
-    if(raf)return;
-    raf=requestAnimationFrame(update);
-  };
-  window.addEventListener('scroll',request,{passive:true});
-  window.addEventListener('resize',request,{passive:true});
-  request();
-  return()=>{
-    window.removeEventListener('scroll',request);
-    window.removeEventListener('resize',request);
-    if(raf)cancelAnimationFrame(raf);
-  };
+const makeSelectable=(items,select)=>{
+  if(!desktop())return;
+  items.forEach((item)=>{
+    item.setAttribute('role','button');
+    item.setAttribute('tabindex','0');
+    const activate=()=>select(item);
+    item.addEventListener('click',activate);
+    item.addEventListener('keydown',(event)=>{
+      if(event.key!=='Enter'&&event.key!==' ')return;
+      event.preventDefault();
+      activate();
+    });
+  });
 };
 
 const featureItems=[...document.querySelectorAll('[data-story-feature]')];
 if(featureItems.length){
   setStoryFeature(featureItems[0].dataset.storyFeature);
-  if(desktop()){
-    bindNearest(featureItems,(item)=>setStoryFeature(item.dataset.storyFeature));
-    featureItems.forEach((item)=>item.addEventListener('mouseenter',()=>setStoryFeature(item.dataset.storyFeature)));
-  }
+  makeSelectable(featureItems,(item)=>setStoryFeature(item.dataset.storyFeature));
 }
 
 if(connectSteps.length){
   setConnectStep('1');
-  if(desktop()){
-    bindNearest(connectSteps,(item)=>setConnectStep(item.dataset.connectStep));
-    connectSteps.forEach((step)=>step.addEventListener('mouseenter',()=>setConnectStep(step.dataset.connectStep)));
-  }
+  makeSelectable(connectSteps,(item)=>setConnectStep(item.dataset.connectStep));
 }
 
 const observed=[...document.querySelectorAll('[data-story-observe]')];
@@ -99,10 +84,9 @@ if(observed.length){
     observed.forEach((el)=>el.classList.add('story-observe'));
     const revealObserver=new IntersectionObserver((entries)=>{
       entries.forEach((entry)=>{
-        if(entry.isIntersecting){
-          entry.target.classList.add('story-visible');
-          revealObserver.unobserve(entry.target);
-        }
+        if(!entry.isIntersecting)return;
+        entry.target.classList.add('story-visible');
+        revealObserver.unobserve(entry.target);
       });
     },{threshold:.08,rootMargin:'0px 0px -40px'});
     observed.forEach((el)=>revealObserver.observe(el));
@@ -110,10 +94,7 @@ if(observed.length){
 }
 
 const navLinks=[...document.querySelectorAll('.portal-links a[href^="#"]')];
-const navPairs=navLinks.map((link)=>({link,section:document.querySelector(link.getAttribute('href'))})).filter((x)=>x.section);
-if(navPairs.length&&desktop()){
-  bindNearest(navPairs.map((x)=>x.section),(section)=>{
-    navPairs.forEach(({link,section:target})=>link.classList.toggle('story-active',target===section));
-  });
-}
+navLinks.forEach((link)=>link.addEventListener('click',()=>{
+  navLinks.forEach((item)=>item.classList.toggle('story-active',item===link));
+}));
 })();
