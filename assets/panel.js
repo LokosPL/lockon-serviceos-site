@@ -56,6 +56,10 @@
   let supportPresence = [];
   let supportTickets = [];
   let mobileHelpToolResult = null;
+  let technicianWorkspace = null;
+  let technicianNotes = [];
+  let invoiceWarehouse = [];
+  let monthlyInvoicePeriod = '';
   let pendingServiceCardOrder = null;
   let scannerStream = null;
   let scannerFrame = 0;
@@ -133,12 +137,15 @@
     if (name === 'admin' && !isOwner()) name = 'more';
     if (name === 'earnings' && !canReadFinance()) name = 'more';
     if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'more';
+    if (name === 'workspace' && role() !== 'TECHNICIAN') name = 'more';
+    if (name === 'tech-notes' && role() !== 'TECHNICIAN') name = 'more';
+    if (name === 'invoices' && !canEditService()) name = 'more';
     if (['new','orders','transfers','scan'].includes(name) && !canReadService()) name = 'home';
     if (name === 'new' && !canCreateService()) name = 'home';
 
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
 
-    const advanced = ['quotes','earnings','admin','scan'];
+    const advanced = ['quotes','earnings','admin','scan','workspace','tech-notes','invoices'];
     const bottomName = advanced.includes(name) ? 'more' : name;
     document.querySelectorAll('.panel-bottom-nav [data-panel-nav]').forEach((button) => {
       button.classList.toggle('active', button.dataset.panelNav === bottomName);
@@ -148,6 +155,9 @@
     if (name !== 'scan') stopServiceScanner();
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
+    if (name === 'workspace') void loadTechnicianWorkspace();
+    if (name === 'tech-notes') void loadTechnicianNotes();
+    if (name === 'invoices') void loadInvoiceWarehouse();
     if (name === 'earnings') void loadFinance();
     if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
@@ -186,6 +196,7 @@
     document.querySelectorAll('.finance-only').forEach((el) => { el.hidden = !canReadFinance(); });
     document.querySelectorAll('.quote-staff-only').forEach((el) => { el.hidden = !canHandleCustomerQuotes(); });
     document.querySelectorAll('.support-staff-only').forEach((el) => { el.hidden = !canSupportStaff(); });
+    document.querySelectorAll('.technician-only').forEach((el) => { el.hidden = role() !== 'TECHNICIAN'; });
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
