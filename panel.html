@@ -138,35 +138,13 @@
       <div id="financePoints" class="mobile-finance-points"></div>
     </section>
 
-    <section id="view-support" class="panel-view" hidden>
-      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>POMOC LOCKON</span><h1>Pomoc i konsultant</h1></div><button id="refreshSupport" type="button">↻</button></div>
-      <div id="mobileSupportState" class="mobile-support-state"></div>
-      <section class="mobile-help-chat">
-        <div id="mobileHelpMessages" class="mobile-help-messages"></div>
-        <form id="mobileHelpForm" class="mobile-help-compose">
-          <textarea id="mobileHelpInput" maxlength="1500" rows="2" placeholder="Np. „zlecenie 123 statusy” albo „jak działają przekazania?”"></textarea>
-          <button type="submit">Wyślij</button>
-        </form>
-        <button id="mobileRequestConsultant" class="mobile-request-consultant" type="button">Poproś konsultanta o dołączenie</button>
-      </section>
-
-      <section class="support-staff-only" hidden>
-        <div class="panel-section-head"><div><span>WSPARCIE LOCKON</span><h2>Aktywni użytkownicy</h2></div><small>Treść rozmowy jest dostępna dopiero po prośbie użytkownika o konsultanta.</small></div>
-        <div id="mobileSupportPresence" class="mobile-support-presence"></div>
-        <div class="panel-section-head"><div><span>KOLEJKA</span><h2>Prośby o konsultanta</h2></div></div>
-        <div id="mobileSupportTickets" class="mobile-support-tickets"></div>
-      </section>
-    </section>
-
     <section id="view-more" class="panel-view">
-      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>WIĘCEJ</span><h1>Pozostałe funkcje</h1></div></div>
-      <div class="mobile-more-intro"><strong>Najważniejsze rzeczy są na dolnym pasku.</strong><span>Tutaj są funkcje używane rzadziej. Widzisz tylko te, do których masz dostęp.</span></div>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home" aria-label="Wróć do startu"><span class="panel-icon" data-icon="back"></span></button><div><span>WIĘCEJ</span><h1>Więcej</h1></div></div>
       <div class="mobile-more-grid">
-        <button type="button" data-panel-nav="support"><b>?</b><strong>Pomoc</strong><span>Bot ServiceOS i konsultant.</span></button>
         <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><strong>Wyceny</strong><span>Zapytania klientów.</span></button>
         <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><strong>Rozliczenia</strong><span>Przychód i podział.</span></button>
         <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><strong>Zarządzanie</strong><span>Konta, punkty i bezpieczeństwo.</span></button>
-        <button type="button" class="full" data-open-account><b>BM</b><strong>Moje konto</strong><span>Rola, e-mail i wylogowanie z panelu.</span></button>
+        <button type="button" class="full account-tile" data-open-account><b class="account-avatar">BM</b><strong>Moje konto</strong><span>Profil i wylogowanie</span><i class="panel-icon" data-icon="chevron"></i></button>
       </div>
     </section>
 
@@ -232,19 +210,19 @@
   </main>
 
   <nav class="panel-bottom-nav" aria-label="Główna nawigacja panelu">
-    <button class="active" data-panel-nav="home"><span>⌂</span><b>Start</b></button>
-    <button data-panel-nav="orders"><span>▣</span><b>Zlecenia</b></button>
-    <button data-panel-nav="new"><span>＋</span><b>Nowe</b></button>
-    <button data-panel-nav="transfers"><span>⇄</span><b>Przekazania</b></button>
-    <button data-panel-nav="more"><span>•••</span><b>Więcej</b></button>
+    <button class="active" data-panel-nav="home"><span class="panel-icon" data-icon="home"></span><b>Start</b></button>
+    <button data-panel-nav="orders"><span class="panel-icon" data-icon="orders"></span><b>Zlecenia</b></button>
+    <button class="primary-nav-action" data-panel-nav="new"><span class="panel-icon" data-icon="plus"></span><b>Nowe</b></button>
+    <button data-panel-nav="transfers"><span class="panel-icon" data-icon="transfer"></span><b>Przekazania</b></button>
+    <button data-panel-nav="more"><span class="panel-icon" data-icon="more"></span><b>Więcej</b></button>
   </nav>
 
-  <dialog id="accountDialog" class="panel-dialog">
+  <dialog id="accountDialog" class="panel-dialog account-dialog">
     <div class="panel-dialog-card">
-      <button class="dialog-close" type="button" data-close-dialog="accountDialog">×</button>
+      <div class="account-dialog-top"><span>Moje konto</span><button class="dialog-close" type="button" data-close-dialog="accountDialog" aria-label="Zamknij"><span class="panel-icon" data-icon="close"></span></button></div>
       <div class="account-dialog-head"><div id="accountInitials">?</div><span><strong id="accountName">Konto</strong><small id="accountEmail"></small></span></div>
       <div class="account-dialog-meta"><span>Rola</span><strong id="accountRole">—</strong></div>
-      <button id="panelLogout" class="panel-danger-button" type="button">Wyloguj z panelu</button>
+      <button id="panelLogout" class="panel-danger-button" type="button"><span class="panel-icon" data-icon="logout"></span>Wyloguj się</button>
     </div>
   </dialog>
 

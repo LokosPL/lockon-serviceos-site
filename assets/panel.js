@@ -122,7 +122,7 @@
 
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
 
-    const advanced = ['support','quotes','earnings','admin'];
+    const advanced = ['quotes','earnings','admin'];
     const bottomName = advanced.includes(name) ? 'more' : name;
     document.querySelectorAll('.panel-bottom-nav [data-panel-nav]').forEach((button) => {
       button.classList.toggle('active', button.dataset.panelNav === bottomName);
@@ -134,7 +134,6 @@
     if (name === 'earnings') void loadFinance();
     if (name === 'quotes') void loadCustomerQuotes();
     if (name === 'admin') void loadAdmin();
-    if (name === 'support') void loadSupport();
   };
 
   const formatDate = (value) => {
@@ -217,11 +216,12 @@
       '<div class="'+esc(item.kind)+'"><span>'+esc(item.label)+'</span><strong>'+esc(item.value)+'</strong></div>'
     ).join('') + '</div>';
     const workflow = order.workflow || null;
+    const cardStatus = order.status === 'RECEIVED' ? 'Przyjęte' : (order.statusLabel || STATUS_LABELS[order.status] || order.status);
     return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
         '<div class="panel-order-number"><strong>#' + esc(order.orderNumber) + '</strong><small>' + esc(formatDate(order.receivedAt)) + '</small></div>' +
         '<div class="panel-order-main"><strong>' + esc(order.customerName) + '</strong><span>' + esc(order.brand + ' ' + order.model) + '</span><small>' + esc(order.handlingMode === 'TRANSFER_ONLY' ? 'Tylko przekazanie' : 'Zlecenie serwisowe') + '</small></div>' +
-        '<div class="panel-status-pill">' + esc(order.statusLabel || STATUS_LABELS[order.status] || order.status) + '</div>' +
+        '<div class="panel-status-pill">' + esc(cardStatus) + '</div>' +
       '</div>' +
       contextHtml +
       (workflow ? '<div class="mobile-workflow-strip">' +
