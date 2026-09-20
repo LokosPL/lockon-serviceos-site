@@ -664,6 +664,147 @@
     } catch (error) { toast(error.message || 'Nie udało się dodać notatki.','error'); }
   };
 
+
+  const localDayKey=(value)=>{
+    const date=value instanceof Date?value:new Date(value);
+    if(Number.isNaN(date.getTime()))return '';
+    return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+  };
+
+  const renderTechnicianWorkspace=()=>{
+    const summary=document.getElementById('technicianWorkspaceSummary');
+    const calendar=document.getElementById('technicianWorkspaceCalendar');
+    const queues=document.getElementById('technicianWorkspaceQueues');
+    if(!summary||!calendar||!queues)return;
+    const data=technicianWorkspace;
+    if(!data){summary.innerHTML='';calendar.innerHTML='<div class="panel-list-empty">Ładowanie planu…</div>';queues.innerHTML='';return;}
+    const counts=data.counts||{};
+    summary.innerHTML=[
+      ['Aktywne',counts.active||0],['W naprawie',counts.inRepair||0],['Czeka na części',counts.waitingParts||0],['Do odbioru',counts.readyForPickup||0],['Po terminie',counts.overdue||0]
+    ].map(([label,value])=>'<article><span>'+esc(label)+'</span><strong>'+esc(value)+'</strong></article>').join('');
+
+    const days=Array.from({length:7},(_,index)=>{const date=new Date();date.setHours(0,0,0,0);date.setDate(date.getDate()+index);return date;});
+    calendar.innerHTML=days.map((date)=>{
+      const key=localDayKey(date);
+      const items=(data.orders||[]).filter((order)=>order.estimatedCompletionAt&&localDayKey(order.estimatedCompletionAt)===key);
+      return '<section><header><strong>'+esc(date.toLocaleDateString('pl-PL',{weekday:'short',day:'2-digit',month:'2-digit'}))+'</strong><b>'+items.length+'</b></header>'+
+        (items.map((order)=>'<button type="button" data-workspace-order="'+esc(order.id)+'"><span>#'+esc(order.orderNumber)+' · '+esc(order.brand)+' '+esc(order.model)+'</span><strong>'+esc(order.customerName)+'</strong><small>'+esc(order.statusLabel||STATUS_LABELS[order.status]||order.status)+'</small></button>').join('')||'<small class="mobile-workspace-empty">Brak terminu</small>')+
+      '</section>';
+    }).join('');
+
+    const groups=[
+      ['Czeka na części',(data.orders||[]).filter((order)=>order.status==='WAITING_PARTS')],
+      ['Gotowe / czeka na odbiór',(data.orders||[]).filter((order)=>['REPAIR_DONE','READY'].includes(order.status))],
+      ['Bez terminu',(data.orders||[]).filter((order)=>!order.estimatedCompletionAt)]
+    ];
+    queues.innerHTML=groups.map(([label,items])=>'<section><h3>'+esc(label)+' <b>'+items.length+'</b></h3>'+
+      (items.slice(0,15).map((order)=>'<button type="button" data-workspace-order="'+esc(order.id)+'"><span>#'+esc(order.orderNumber)+'</span><strong>'+esc(order.brand+' '+order.model)+'</strong><small>'+esc(order.customerName)+'</small></button>').join('')||'<div class="panel-list-empty">Pusto.</div>')+
+    '</section>').join('');
+  };
+
+  const loadTechnicianWorkspace=async()=>{
+    if(role()!=='TECHNICIAN')return;
+    try{technicianWorkspace=await api('/service/technician-workspace');renderTechnicianWorkspace();}
+    catch(error){toast(error.message||'Nie udało się pobrać planu serwisanta.','error');}
+  };
+
+  const renderTechnicianNotes=()=>{
+    const host=document.getElementById('technicianNotesList');if(!host)return;
+    host.innerHTML=technicianNotes.map((note)=>'<article class="'+(note.pinned?'pinned':'')+'"><header><strong>'+(note.pinned?'📌 ':'')+esc(note.title||'Notatka')+'</strong><button type="button" data-tech-note-delete="'+esc(note.id)+'">Usuń</button></header><p>'+esc(note.body).replace(/\n/g,'<br>')+'</p><small>'+esc(formatDate(note.updatedAt))+'</small></article>').join('')||'<div class="panel-list-empty">Twój pokój notatek jest pusty.</div>';
+  };
+
+  const loadTechnicianNotes=async()=>{
+    if(role()!=='TECHNICIAN')return;
+    try{technicianNotes=await api('/service/technician-notes');renderTechnicianNotes();}
+    catch(error){toast(error.message||'Nie udało się pobrać prywatnych notatek.','error');}
+  };
+
+  const submitTechnicianNote=async(event)=>{
+    event.preventDefault();
+    if(role()!=='TECHNICIAN')return;
+    const form=event.currentTarget,button=form.querySelector('button[type="submit"]'),fd=new FormData(form);
+    const body=String(fd.get('body')||'').trim();if(!body)return;
+    button.disabled=true;
+    try{
+      await api('/service/technician-notes',{method:'POST',body:JSON.stringify({
+        title:String(fd.get('title')||'').trim(),body,pinned:fd.get('pinned')==='on'
+      })});
+      form.reset();await loadTechnicianNotes();toast('Prywatna notatka zapisana.');
+    }catch(error){toast(error.message||'Nie udało się zapisać notatki.','error');}
+    finally{button.disabled=false;}
+  };
+
+  const deleteTechnicianNote=async(id)=>{
+    if(!window.confirm('Usunąć tę prywatną notatkę?'))return;
+    try{await api('/service/technician-notes/'+encodeURIComponent(id),{method:'DELETE'});await loadTechnicianNotes();toast('Notatka usunięta.');}
+    catch(error){toast(error.message||'Nie udało się usunąć notatki.','error');}
+  };
+
+  const renderInvoiceWarehouse=()=>{
+    const host=document.getElementById('invoiceWarehouseList');
+    const summary=document.getElementById('invoiceWarehouseSummary');
+    if(!host||!summary)return;
+    const total=invoiceWarehouse.reduce((sum,item)=>sum+Number(item.grossAmount||0),0);
+    summary.innerHTML='<article><span>Dokumenty</span><strong>'+invoiceWarehouse.length+'</strong></article><article><span>Suma opisanych FV</span><strong>'+esc(money(total))+'</strong></article>';
+    host.innerHTML=invoiceWarehouse.map((invoice)=>'<article><div><strong>'+esc(invoice.invoiceNumber||invoice.fileName)+'</strong><span>'+(invoice.orderNumber!=null?'Zlecenie #'+esc(invoice.orderNumber)+' · ':'')+esc(invoice.device||'Urządzenie')+'</span><small>'+esc(invoice.supplier||'Brak dostawcy')+(invoice.invoiceDate?' · '+esc(invoice.invoiceDate):'')+(invoice.grossAmount!=null?' · '+esc(money(invoice.grossAmount)):'')+'</small></div><button type="button" data-invoice-download="'+esc(invoice.id)+'">Pobierz</button></article>').join('')||'<div class="panel-list-empty">Brak faktur w wybranym miesiącu.</div>';
+  };
+
+  const loadInvoiceWarehouse=async()=>{
+    if(!canEditService())return;
+    const input=document.getElementById('invoiceWarehouseMonth');
+    if(input&&!input.value)input.value=new Date().toISOString().slice(0,7);
+    const month=input?.value||new Date().toISOString().slice(0,7);
+    try{
+      const result=await api('/service/invoices?month='+encodeURIComponent(month));
+      invoiceWarehouse=result.invoices||[];renderInvoiceWarehouse();
+    }catch(error){toast(error.message||'Nie udało się pobrać magazynu faktur.','error');}
+  };
+
+  const downloadInvoice=async(id)=>{
+    try{
+      const result=await api('/service/invoices/'+encodeURIComponent(id)+'/download-intent',{method:'POST',body:'{}'});
+      const opened=window.open(result.downloadUrl,'_blank','noopener,noreferrer');
+      if(!opened){const a=document.createElement('a');a.href=result.downloadUrl;a.rel='noopener';a.click();}
+    }catch(error){toast(error.message||'Nie udało się pobrać faktury.','error');}
+  };
+
+  const downloadInvoiceMonth=async(period)=>{
+    const month=period||document.getElementById('invoiceWarehouseMonth')?.value||new Date().toISOString().slice(0,7);
+    try{
+      const batch=await api('/service/invoices/download-batch',{method:'POST',body:JSON.stringify({period:month})});
+      const files=batch.files||[];
+      for(let index=0;index<files.length;index+=1){
+        const item=files[index];
+        const a=document.createElement('a');a.href=item.downloadUrl;a.rel='noopener';a.download=String(item.fileName||('faktura-'+(index+1)+'.pdf')).replace(/[\\/]/g,'_');
+        document.body.appendChild(a);a.click();a.remove();
+        if(index<files.length-1)await new Promise((resolve)=>setTimeout(resolve,120));
+      }
+      toast(files.length?'Uruchomiono pobieranie '+files.length+' faktur PDF.':'Brak faktur do pobrania.');
+      return files.length;
+    }catch(error){toast(error.message||'Nie udało się pobrać faktur.','error');return 0;}
+  };
+
+  const checkMonthlyInvoicePrompt=async()=>{
+    if(role()!=='TECHNICIAN')return;
+    try{
+      const prompt=await api('/service/invoices/monthly-prompt');
+      if(!prompt.show||!prompt.period)return;
+      monthlyInvoicePeriod=prompt.period;
+      const title=document.getElementById('monthlyInvoiceTitle');
+      const text=document.getElementById('monthlyInvoiceText');
+      if(title)title.textContent='Faktury · '+prompt.period;
+      if(text)text.textContent='Masz '+prompt.count+' faktur PDF. Możesz pobrać wszystkie teraz albo wrócić do magazynu później.';
+      document.getElementById('monthlyInvoiceDialog')?.showModal();
+    }catch{}
+  };
+
+  const dismissMonthlyInvoicePrompt=async()=>{
+    if(!monthlyInvoicePeriod)return;
+    try{await api('/service/invoices/monthly-prompt/dismiss',{method:'POST',body:JSON.stringify({period:monthlyInvoicePeriod})});}
+    catch{}
+    document.getElementById('monthlyInvoiceDialog')?.close();
+  };
+
   const money = (value) => new Intl.NumberFormat('pl-PL',{style:'currency',currency:'PLN'}).format(Number(value || 0));
 
   const renderFinance = () => {
