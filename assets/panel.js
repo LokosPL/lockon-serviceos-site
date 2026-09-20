@@ -1192,11 +1192,10 @@
   const sendMobileHelp = async (message) => {
     const value=String(message||'').trim();
     if(!value||mobileHelpSending)return;
-    const target=mobileHelpTarget;
     mobileHelpSending=true;
     renderMobileSupport();
     try{
-      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value,target})});
+      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value,target:mobileHelpTarget})});
       if(!supportConversation)supportConversation={id:'',status:'OPEN',messages:[],consultantState:'BOT'};
       supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
       supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
