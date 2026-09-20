@@ -1398,3 +1398,259 @@ body.mobile-panel [hidden]{display:none!important}
   }
   .mobile-panel .account-dialog .panel-danger-button .panel-icon{width:18px!important;height:18px!important}
 }
+
+
+/* =========================================================
+   MOBILE PANEL POLISH V2 — simpler hierarchy + motion
+   ========================================================= */
+@media(max-width:760px){
+  :root{--panel-mobile-ease:cubic-bezier(.22,.8,.22,1)}
+
+  .mobile-panel .panel-view.active{
+    animation:panelViewIn .28s var(--panel-mobile-ease) both!important;
+  }
+  @keyframes panelViewIn{
+    from{opacity:0;transform:translateY(7px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  @keyframes sheetIn{
+    from{opacity:.6;transform:translateY(28px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(8px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .mobile-panel .panel-bottom-nav button,
+  .mobile-panel button,
+  .mobile-panel .panel-order-card{
+    -webkit-tap-highlight-color:transparent;
+  }
+  .mobile-panel .panel-bottom-nav button{
+    transition:background .2s ease,transform .16s ease,color .2s ease!important;
+  }
+  .mobile-panel .panel-bottom-nav button:active{transform:scale(.96)!important}
+  .mobile-panel .panel-bottom-nav .primary-nav-action:active{transform:scale(.95)!important}
+
+  /* Zlecenia: mniej pudełek, większa czytelność */
+  .mobile-panel .panel-order-card{
+    padding:16px!important;
+    border-radius:20px!important;
+    background:#0c1218!important;
+    animation:cardIn .3s var(--panel-mobile-ease) both!important;
+  }
+  .mobile-panel .panel-order-top{
+    display:grid!important;
+    grid-template-columns:56px minmax(0,1fr)!important;
+    gap:12px!important;
+    align-items:start!important;
+  }
+  .mobile-panel .panel-order-number{
+    width:56px!important;
+    min-width:56px!important;
+    height:58px!important;
+    border:0!important;
+    border-radius:14px!important;
+    background:#080e13!important;
+  }
+  .mobile-panel .panel-order-number strong{font-size:17px!important}
+  .mobile-panel .panel-order-main{min-width:0!important}
+  .mobile-panel .panel-order-main>strong{font-size:16px!important}
+  .mobile-panel .panel-order-main>span{font-size:13px!important}
+  .mobile-panel .panel-order-main>small{font-size:9px!important;letter-spacing:.09em!important}
+  .mobile-panel .panel-status-pill{
+    grid-column:1/-1!important;
+    justify-self:start!important;
+    margin:1px 0 0!important;
+    padding:5px 8px!important;
+    border-radius:8px!important;
+    font-size:9px!important;
+    font-weight:800!important;
+    background:rgba(255,122,76,.075)!important;
+    color:#ff946e!important;
+  }
+  .mobile-panel .mobile-workflow-strip{
+    margin-top:14px!important;
+    padding-top:13px!important;
+    display:block!important;
+  }
+  .mobile-panel .mobile-workflow-strip>div:first-child{
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    column-gap:9px!important;
+  }
+  .mobile-panel .mobile-workflow-strip>div:first-child span{font-size:9px!important}
+  .mobile-panel .mobile-workflow-strip>div:first-child strong{font-size:13px!important}
+  .mobile-panel .mobile-workflow-strip progress{
+    grid-column:1/-1!important;
+    margin-top:9px!important;
+    height:4px!important;
+  }
+  .mobile-panel .mobile-workflow-strip>div+div{
+    margin-top:11px!important;
+    padding-top:11px!important;
+  }
+  .mobile-panel .mobile-workflow-strip>div+div span{font-size:9px!important}
+  .mobile-panel .mobile-workflow-strip>div+div strong{font-size:13px!important;line-height:1.35!important}
+  .mobile-panel .mobile-workflow-strip>em{
+    margin-top:10px!important;
+    color:#ff946e!important;
+    font-size:9px!important;
+  }
+  .mobile-panel .panel-order-card>button[data-open-order]{
+    min-height:44px!important;
+    margin-top:14px!important;
+    border:0!important;
+    border-top:1px solid #202933!important;
+    border-radius:0!important;
+    background:transparent!important;
+    color:#ff8a60!important;
+    font-size:12px!important;
+    justify-content:flex-start!important;
+    padding:13px 0 0!important;
+    transition:opacity .18s ease,transform .18s ease!important;
+  }
+  .mobile-panel .panel-order-card>button[data-open-order]:active{
+    opacity:.7!important;transform:translateX(3px)!important;
+  }
+
+  /* Więcej: jedna czytelna lista zamiast kafelków */
+  .mobile-panel .simple-view-title{
+    padding:8px 2px 14px!important;
+  }
+  .mobile-panel .simple-view-title>span{
+    display:block!important;
+    color:#ff7e52!important;
+    font-size:9px!important;
+    font-weight:900!important;
+    letter-spacing:.13em!important;
+    margin-bottom:4px!important;
+  }
+  .mobile-panel .simple-view-title h1{
+    margin:0!important;font-size:27px!important;line-height:1.05!important;
+  }
+  .mobile-panel .simple-view-title p{
+    margin:7px 0 0!important;color:#75818d!important;font-size:12px!important;
+  }
+  .mobile-panel .mobile-more-grid{
+    display:flex!important;
+    flex-direction:column!important;
+    gap:0!important;
+    overflow:hidden!important;
+    border:1px solid #202933!important;
+    border-radius:18px!important;
+    background:#0c1218!important;
+  }
+  .mobile-panel .mobile-more-grid>button{
+    min-height:68px!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:40px minmax(0,1fr) 18px!important;
+    grid-template-rows:1fr!important;
+    gap:11px!important;
+    align-items:center!important;
+    padding:11px 14px!important;
+    border:0!important;
+    border-bottom:1px solid #202933!important;
+    border-radius:0!important;
+    background:transparent!important;
+    transition:background .18s ease,transform .18s ease!important;
+  }
+  .mobile-panel .mobile-more-grid>button:last-child{border-bottom:0!important}
+  .mobile-panel .mobile-more-grid>button:active{background:#121920!important;transform:scale(.992)!important}
+  .mobile-panel .mobile-more-grid>button>b{
+    grid-row:1!important;
+    width:40px!important;height:40px!important;border-radius:12px!important;
+    font-size:14px!important;
+  }
+  .mobile-panel .mobile-more-grid>button>span{
+    grid-column:2!important;grid-row:1!important;
+    display:flex!important;flex-direction:column!important;gap:2px!important;
+    min-width:0!important;
+  }
+  .mobile-panel .mobile-more-grid>button>span strong{
+    color:#edf1f4!important;font-size:14px!important;line-height:1.2!important;
+  }
+  .mobile-panel .mobile-more-grid>button>span small{
+    color:#74818d!important;font-size:10px!important;line-height:1.25!important;
+  }
+  .mobile-panel .mobile-more-grid>button>.panel-icon,
+  .mobile-panel .mobile-more-grid>button:not(.account-tile)>.panel-icon{
+    display:inline-block!important;
+    grid-column:3!important;grid-row:1!important;
+    width:17px!important;height:17px!important;color:#56626d!important;
+  }
+
+  /* Konto: prawdziwy kompaktowy arkusz dolny */
+  .mobile-panel .account-dialog{
+    padding:0!important;
+    background:rgba(0,0,0,.62)!important;
+  }
+  .mobile-panel .account-dialog[open] .panel-dialog-card{
+    animation:sheetIn .3s var(--panel-mobile-ease) both!important;
+  }
+  .mobile-panel .account-dialog .panel-dialog-card{
+    width:100%!important;
+    max-width:none!important;
+    padding:0 18px calc(16px + env(safe-area-inset-bottom))!important;
+    border-radius:22px 22px 0 0!important;
+  }
+  .mobile-panel .account-dialog-top{
+    height:54px!important;
+    margin-bottom:12px!important;
+  }
+  .mobile-panel .account-dialog-top>strong{
+    font-size:15px!important;
+    color:#edf1f4!important;
+    letter-spacing:0!important;
+    text-transform:none!important;
+  }
+  .mobile-panel .account-dialog .dialog-close{
+    width:36px!important;height:36px!important;
+    border-radius:50%!important;
+    background:#141b22!important;
+  }
+  .mobile-panel .account-dialog-head{
+    padding-bottom:14px!important;
+    align-items:center!important;
+  }
+  .mobile-panel .account-dialog-head>div{
+    width:44px!important;height:44px!important;border-radius:13px!important;
+  }
+  .mobile-panel .account-dialog-head strong{font-size:16px!important}
+  .mobile-panel .account-dialog-head small{
+    margin-top:2px!important;font-size:11px!important;color:#74818d!important;
+  }
+  .mobile-panel .account-dialog-meta{
+    padding:12px 0!important;
+  }
+  .mobile-panel .account-dialog-meta span,
+  .mobile-panel .account-dialog-meta strong{font-size:11px!important}
+  .mobile-panel .account-dialog .panel-danger-button{
+    margin-top:13px!important;height:46px!important;border-radius:13px!important;font-size:12px!important;
+  }
+
+  /* Pasek: ikony mają być zawsze widoczne, etykiety krótkie */
+  .mobile-panel .panel-bottom-nav{
+    border-radius:22px!important;
+    padding:6px!important;
+  }
+  .mobile-panel .panel-bottom-nav button{min-height:60px!important;border-radius:16px!important}
+  .mobile-panel .panel-bottom-nav button .panel-icon{display:inline-block!important;width:21px!important;height:21px!important}
+  .mobile-panel .panel-bottom-nav button b{font-size:9px!important}
+  .mobile-panel .panel-bottom-nav .primary-nav-action{min-height:60px!important;border-radius:16px!important}
+}
+@media(max-width:380px){
+  .mobile-panel .panel-bottom-nav button b{font-size:8px!important}
+  .mobile-panel .panel-bottom-nav button .panel-icon{width:19px!important;height:19px!important}
+  .mobile-panel .panel-bottom-nav{padding:5px 4px!important}
+  .mobile-panel .panel-order-card{padding:14px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .mobile-panel .panel-view.active,
+  .mobile-panel .panel-order-card,
+  .mobile-panel .account-dialog[open] .panel-dialog-card{animation:none!important}
+  .mobile-panel *{scroll-behavior:auto!important}
+}
