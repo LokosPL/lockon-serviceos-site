@@ -180,7 +180,15 @@ jobs:
             {name:'desktop-1920',width:1920,height:1080}
           ];
           const assertNoHorizontalOverflow=async(page,label)=>{
-            const metric=await page.evaluate(()=>({width:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth}));
+            const metric=await page.evaluate(()=>{
+              const width=document.documentElement.clientWidth;
+              const scrollWidth=document.documentElement.scrollWidth;
+              const culprits=[...document.querySelectorAll('body *')].map((el)=>{
+                const r=el.getBoundingClientRect();
+                return {tag:el.tagName.toLowerCase(),id:el.id||'',cls:String(el.className||'').slice(0,100),left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width)};
+              }).filter(x=>x.right>width+1||x.left<-1).sort((a,b)=>Math.max(b.right-width,-b.left)-Math.max(a.right-width,-a.left)).slice(0,12);
+              return {width,scrollWidth,culprits};
+            });
             if(metric.scrollWidth>metric.width+1)throw new Error(label+' horizontal overflow: '+JSON.stringify(metric));
           };
           for(const viewport of responsiveViewports){
