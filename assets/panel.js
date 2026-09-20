@@ -57,6 +57,7 @@
   let supportTickets = [];
   let mobileHelpToolResult = null;
   let mobileHelpTarget = 'BOT';
+  let mobileHelpSending = false;
   let technicianWorkspace = null;
   let technicianNotes = [];
   let invoiceWarehouse = [];
@@ -1125,7 +1126,12 @@
     if(input)input.placeholder=mobileHelpTarget==='CONSULTANT'
       ? (state==='WAITING'?'Zostaw wiadomość dla konsultanta w kolejce…':'Napisz bezpośrednio do konsultanta…')
       : 'Opisz problem albo zapytaj o zlecenie, klienta lub funkcję ServiceOS…';
-    if(send)send.textContent=mobileHelpTarget==='CONSULTANT'?'Wyślij do konsultanta':'Wyślij do bota';
+    if(send){
+      send.textContent=mobileHelpSending?'Wysyłanie…':'Wyślij';
+      send.disabled=mobileHelpSending;
+      send.setAttribute('aria-label',mobileHelpTarget==='CONSULTANT'?'Wyślij wiadomość do konsultanta':'Wyślij wiadomość do bota ServiceOS');
+    }
+    if(input)input.disabled=mobileHelpSending;
     const thread=(supportConversation?.messages||[]).map(message=>{
       const action=message.action&&message.action.type!=='WEBSITE_CODE'
         ? '<button type="button" class="mobile-help-action" data-mobile-help-action="'+esc(encodeURIComponent(JSON.stringify(message.action)))+'">'+esc(message.action.label||'Otwórz w ServiceOS')+' →</button>'
@@ -1135,10 +1141,13 @@
         : '';
       return '<article class="mobile-help-message '+esc(message.author)+'"><div><strong>'+esc(mobileSupportAuthor(message.author))+'</strong><time>'+esc(formatDate(message.createdAt))+'</time></div>'+channel+'<p>'+esc(message.text).replace(/\n/g,'<br>')+'</p>'+action+'</article>';
     }).join('')||'<div class="panel-list-empty">Napisz pierwszą wiadomość. Bot ServiceOS jest dostępny od razu i będzie prowadzić Cię do rozwiązania.</div>';
+    const typing=mobileHelpSending&&mobileHelpTarget==='BOT'
+      ? '<article class="mobile-help-message assistant typing" aria-live="polite"><div><strong>Bot ServiceOS</strong></div><p><span class="mobile-help-typing-dot"></span><span class="mobile-help-typing-dot"></span><span class="mobile-help-typing-dot"></span> Szukam najlepszego rozwiązania…</p></article>'
+      : '';
     const tool=mobileHelpToolResult
       ? '<article class="mobile-help-tool '+esc(mobileHelpToolResult.kind)+'"><strong>'+esc(mobileHelpToolResult.title)+'</strong>'+mobileHelpToolResult.lines.map(line=>'<span>'+esc(line)+'</span>').join('')+'</article>'
       : '';
-    messagesHost.innerHTML=thread+tool;
+    messagesHost.innerHTML=thread+typing+tool;
     messagesHost.scrollTop=messagesHost.scrollHeight;
   };
 
@@ -1180,16 +1189,25 @@
 
   const sendMobileHelp = async (message) => {
     const value=String(message||'').trim();
-    if(!value)return;
+    if(!value||mobileHelpSending)return;
+    const target=mobileHelpTarget;
+    mobileHelpSending=true;
+    renderMobileSupport();
     try{
-      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value,target:mobileHelpTarget})});
+      const result=await api('/assistant/chat',{method:'POST',body:JSON.stringify({message:value,target})});
       if(!supportConversation)supportConversation={id:'',status:'OPEN',messages:[],consultantState:'BOT'};
       supportConversation.messages=[...(supportConversation.messages||[]),result.userMessage,...(result.assistantMessage?[result.assistantMessage]:[])];
       supportConversation.consultantState=result.consultantState||supportConversation.consultantState;
-      renderMobileSupport();
+      const input=document.getElementById('mobileHelpInput');
+      if(input)input.value='';
       if(result.action&&['SPEED_TEST','CONNECTIVITY_TEST'].includes(result.action.type))void runMobileLocalTool(result.action);
       window.setTimeout(()=>void loadSupport(true),500);
     }catch(error){toast(error.message||'Nie udało się wysłać wiadomości.','error');}
+    finally{
+      mobileHelpSending=false;
+      renderMobileSupport();
+      document.getElementById('mobileHelpInput')?.focus();
+    }
   };
 
   const requestMobileConsultant = async () => {
