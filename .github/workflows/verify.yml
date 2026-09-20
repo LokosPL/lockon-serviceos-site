@@ -98,6 +98,10 @@ jobs:
           ! grep -q 'style="' index.html
           ! grep -q 'style="' assets/panel.js
           grep -q '/service/orders' assets/panel.js
+          grep -q 'name="imei".*required' panel.html
+          grep -q 'name="serialNumber".*required' panel.html
+          grep -q 'name="deviceNotes".*required' panel.html
+          grep -q 'newOrderBusy' assets/panel.js
           grep -q '/service/transfers' assets/panel.js
           grep -q 'RETURN_HOME' assets/panel.js
           grep -q 'REPAIR_DONE' assets/panel.js
