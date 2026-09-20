@@ -1114,3 +1114,24 @@ body.portal-home:not(.loaded){overflow:hidden}
   .portal-home *,
   .mobile-panel *{scroll-behavior:auto!important}
 }
+
+
+/* Final mobile QA fixes */
+@media(max-width:860px){
+  .portal-home #day,
+  .portal-home #modules,
+  .portal-home #connect,
+  .portal-home #start,
+  .portal-home #download{scroll-margin-top:86px!important}
+}
+@media(max-width:760px){
+  .mobile-panel .panel-brand img{width:35px!important;height:35px!important}
+  .mobile-panel .panel-point>span{display:block!important;color:#77838e!important}
+  .mobile-panel .panel-hero::after{display:none!important}
+  .mobile-panel .panel-bottom-nav button b{font-size:9px!important}
+  .mobile-more-grid>button strong{font-size:13px!important}
+  .mobile-more-grid>button span{font-size:10px!important;line-height:1.45!important}
+  .mobile-more-intro span{font-size:11px!important}
+}
+/* Preserve semantic hidden state even when component rules use display:flex/grid. */
+body.mobile-panel [hidden]{display:none!important}
