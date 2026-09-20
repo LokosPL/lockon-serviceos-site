@@ -147,6 +147,12 @@ jobs:
           grep -q 'assets/mobile-final.css' track.html
           grep -q 'mobile-final.css' sw.js
           grep -q 'id="view-more"' panel.html
+          ! grep -q 'id="view-support"' panel.html
+          ! grep -q 'data-panel-nav="support"' panel.html
+          grep -q 'data-icon="home"' panel.html
+          grep -q 'data-icon="orders"' panel.html
+          grep -q 'data-icon="transfer"' panel.html
+          grep -q 'account-dialog-top' panel.html
           grep -q 'data-panel-nav="more"' panel.html
           grep -q 'panel-quick-heading' panel.html
           grep -q 'panel-boot-card' panel.html
