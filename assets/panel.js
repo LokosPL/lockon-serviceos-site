@@ -134,7 +134,7 @@
     if (name === 'earnings' && !canReadFinance()) name = 'more';
     if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'more';
     if (['new','orders','transfers','scan'].includes(name) && !canReadService()) name = 'home';
-    if (name === 'new' && !canEditService()) name = 'home';
+    if (name === 'new' && !canCreateService()) name = 'home';
 
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
 
@@ -189,7 +189,7 @@
 
     if (!canReadService()) {
       document.querySelectorAll('[data-panel-nav="new"],[data-panel-nav="orders"],[data-panel-nav="transfers"]').forEach((el) => { el.hidden = true; });
-    } else if (!canEditService()) {
+    } else if (!canCreateService()) {
       document.querySelectorAll('[data-panel-nav="new"]').forEach((el) => { el.hidden = true; });
     }
   };
