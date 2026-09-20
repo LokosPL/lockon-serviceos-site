@@ -1863,9 +1863,10 @@ body.mobile-panel [hidden]{display:none!important}
 }
 @media(min-width:901px) and (max-height:800px){
   .mobile-panel #view-support .mobile-help-messages{
-    min-height:150px!important;
-    height:28vh!important;
-    max-height:220px!important;
+    min-height:120px!important;
+    height:18vh!important;
+    max-height:135px!important;
+    overscroll-behavior:contain;
   }
 }
 
