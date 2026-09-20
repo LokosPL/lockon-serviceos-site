@@ -114,13 +114,21 @@
   const canOperatePoint = (pointId) => ['OWNER','BOSS'].includes(role()) || pointIds().includes(pointId);
 
   const showView = (name) => {
-    if (name === 'admin' && !isOwner()) name = 'home';
-    if (name === 'earnings' && !canReadFinance()) name = 'home';
-    if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'home';
+    if (name === 'admin' && !isOwner()) name = 'more';
+    if (name === 'earnings' && !canReadFinance()) name = 'more';
+    if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'more';
     if (['new','orders','transfers'].includes(name) && !canReadService()) name = 'home';
+    if (name === 'new' && !canEditService()) name = 'home';
+
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
-    document.querySelectorAll('[data-panel-nav]').forEach((button) => button.classList.toggle('active', button.dataset.panelNav === name));
-    window.scrollTo({top:0,behavior:'instant'});
+
+    const advanced = ['support','quotes','earnings','admin'];
+    const bottomName = advanced.includes(name) ? 'more' : name;
+    document.querySelectorAll('.panel-bottom-nav [data-panel-nav]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.panelNav === bottomName);
+    });
+
+    window.scrollTo({top:0,behavior:'auto'});
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
     if (name === 'earnings') void loadFinance();
@@ -145,6 +153,7 @@
     document.getElementById('accountName').textContent = user.name || 'Konto ServiceOS';
     document.getElementById('accountEmail').textContent = user.email || '';
     document.getElementById('accountRole').textContent = user.role || '—';
+    document.querySelectorAll('[data-open-account] b').forEach((el) => { el.textContent = initials(user.name); });
 
     document.querySelectorAll('.owner-only').forEach((el) => { el.hidden = !isOwner(); });
     document.querySelectorAll('.management-only').forEach((el) => { el.hidden = !canManageService(); });
@@ -246,7 +255,8 @@
           '</button>'
         : '<div class="panel-focus-clear"><span>✓</span><strong>Brak pilnych działań w Twoim zakresie.</strong></div>';
     }
-    host.innerHTML = orders.slice(0,4).map((order) => orderCard(order,true)).join('') || '<div class="panel-list-empty">Brak zleceń w Twoim zakresie.</div>';
+    const homeLimit = window.matchMedia?.('(max-width: 760px)').matches ? 2 : 4;
+    host.innerHTML = orders.slice(0,homeLimit).map((order) => orderCard(order,true)).join('') || '<div class="panel-list-empty">Brak zleceń w Twoim zakresie.</div>';
     renderKpis();
   };
 
@@ -1199,6 +1209,8 @@
         renderTransfers();
         return;
       }
+      const openAccount = event.target.closest('[data-open-account]');
+      if (openAccount) { document.getElementById('accountDialog')?.showModal(); return; }
       const close = event.target.closest('[data-close-dialog]');
       if (close) document.getElementById(close.dataset.closeDialog)?.close();
     });
@@ -1262,11 +1274,11 @@
     } catch (error) {
       if (error?.status === 401) return redirectLogin(true);
       if (error?.status === 403) {
-        const bootLabel = document.querySelector('#panelBoot span');
+        const bootLabel = document.querySelector('#panelBoot .panel-boot-copy span');
         if (bootLabel) bootLabel.textContent = error.message || 'Konto nie ma dostępu do panelu. Sesja pozostaje zapisana.';
         return;
       }
-      const bootLabel = document.querySelector('#panelBoot span');
+      const bootLabel = document.querySelector('#panelBoot .panel-boot-copy span');
       if (bootLabel) bootLabel.textContent = 'Brak połączenia z ServiceOS. Sesja jest zachowana — ponawiam…';
       window.setTimeout(() => void boot(), 3500);
       return;

@@ -18,15 +18,16 @@
   <link rel="stylesheet" href="assets/ui-2026.css">
   <link rel="stylesheet" href="assets/home-story.css">
   <link rel="stylesheet" href="assets/web-polish.css">
+  <link rel="stylesheet" href="assets/mobile-final.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
-  <div class="site-loader" id="siteLoader" aria-live="polite">
+  <div class="site-loader" id="siteLoader" aria-live="polite" aria-label="Ładowanie portalu ServiceOS">
     <div class="loader-core">
-      <div class="loader-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></div>
-      <div class="loader-copy"><strong>Uruchamiam portal pracownika.</strong><span id="loaderLabel">Ładowanie ServiceOS…</span></div>
+      <div class="loader-brand"><span class="loader-logo"><img src="assets/logo.svg" alt=""></span><div><strong>LockOn ServiceOS</strong><span>Portal pracownika</span></div></div>
+      <div class="loader-copy"><strong>Chwila — przygotowuję portal.</strong><span id="loaderLabel">Układam najważniejsze rzeczy…</span></div>
+      <div class="loader-dots" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="loader-track"><i id="loaderProgress"></i></div>
-      <div class="loader-meta"><span>SERVICEOS</span><b id="loaderPercent">8%</b></div>
     </div>
   </div>
 
@@ -167,7 +168,7 @@
           <b class="chapter-number">02</b>
           <span class="section-kicker">ZAKŁADKI I MODUŁY</span>
           <h2>Poznaj aplikację, zanim pierwszy raz jej użyjesz.</h2>
-          <p>Przewijaj spokojnie w dół. Po lewej wyjaśniamy, co robisz w danym miejscu, a podgląd po prawej zmienia się razem z opisem. Dzięki temu po pierwszym logowaniu układ będzie już znajomy.</p>
+          <p>Każdy ekran ma jedno zadanie. Najpierw poznasz, co jest najważniejsze w codziennej pracy, a dopiero potem zobaczysz szczegóły. Na telefonie celowo pokazujemy mniej.</p>
         </div>
 
         <div class="app-story-layout">
@@ -335,7 +336,7 @@
         <div class="connect-story-head reveal" data-story-observe>
           <b class="chapter-number">03</b>
           <span class="section-kicker">POŁĄCZ TELEFON</span>
-          <h2>Pięć kroków i telefon jest gotowy do pracy.</h2>
+          <h2>Cztery proste kroki i telefon jest gotowy.</h2>
           <p>Nie skanujesz żadnych podejrzanych kodów i nie nadajesz nowych uprawnień. Telefon przejmuje tylko ten sam zakres dostępu, który masz już zatwierdzony w ServiceOS.</p>
         </div>
 
@@ -358,7 +359,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="connect-device-note">Podgląd zmienia się podczas przewijania instrukcji po prawej.</div>
+                <div class="connect-device-note">Na komputerze kliknij krok instrukcji, aby zmienić podgląd.</div>
               </div>
             </div>
           </div>
@@ -366,10 +367,9 @@
           <div>
             <div class="connect-timeline" data-connect-timeline>
               <article class="connect-step active" data-connect-step="1" data-story-observe><span>NA TELEFONIE</span><h3>Otwórz app.serviceos.pl</h3><p>Wejdź na tę samą stronę w przeglądarce telefonu. Możesz wcześniej spokojnie przeczytać całą instrukcję.</p><small>Nie musisz instalować osobnej aplikacji mobilnej — panel działa jako WWW/PWA.</small></article>
-              <article class="connect-step" data-connect-step="2" data-story-observe><span>NA KOMPUTERZE</span><h3>Zaloguj się do aplikacji Windows</h3><p>Uruchom ServiceOS i zaloguj się swoim zatwierdzonym kontem Google. To konto określa Twój zakres pracy.</p><small>Jeżeli konto czeka na akceptację, najpierw musi zatwierdzić je osoba uprawniona.</small></article>
-              <article class="connect-step" data-connect-step="3" data-story-observe><span>W SERVICEOS</span><h3>Otwórz Pomoc → Połącz urządzenie</h3><p>Aplikacja wygeneruje krótki, jednorazowy kod WWW. Kod jest ważny tylko przez kilka minut i służy wyłącznie do połączenia telefonu.</p><small>Nie wysyłaj tego kodu innym osobom.</small></article>
-              <article class="connect-step" data-connect-step="4" data-story-observe><span>ZNÓW NA TELEFONIE</span><h3>Wybierz „Połącz telefon” i wpisz kod</h3><p>Przepisz kod dokładnie tak, jak pokazuje go aplikacja na komputerze. Po poprawnej weryfikacji panel otworzy się automatycznie.</p><small>Telefon nie dostaje szerszych uprawnień niż Twoje konto.</small></article>
-              <article class="connect-step" data-connect-step="5" data-story-observe><span>GOTOWE</span><h3>Pracujesz na komputerze i telefonie</h3><p>Na telefonie zobaczysz zlecenia, przekazania i pozostałe moduły dostępne dla Twojej roli. Możesz zacząć od ekranu Start.</p><small>Jeżeli konto zostanie zablokowane albo sesja unieważniona, dostęp telefonu również przestanie działać.</small></article>
+              <article class="connect-step" data-connect-step="2" data-story-observe><span>NA KOMPUTERZE</span><h3>Pomoc → Połącz urządzenie</h3><p>Zaloguj się w ServiceOS i otwórz <strong>Pomoc → Połącz urządzenie</strong>. Aplikacja pokaże jednorazowy kod ważny tylko kilka minut.</p><small>Kod służy wyłącznie do połączenia Twojego telefonu.</small></article>
+              <article class="connect-step" data-connect-step="3" data-story-observe><span>NA TELEFONIE</span><h3>Wpisz kod i połącz telefon</h3><p>Wybierz „Połącz telefon” i przepisz kod z komputera. Po poprawnej weryfikacji panel otworzy się automatycznie.</p><small>Telefon nie dostaje szerszych uprawnień niż Twoje konto.</small></article>
+              <article class="connect-step" data-connect-step="4" data-story-observe><span>GOTOWE</span><h3>Zacznij od ekranu Start</h3><p>Telefon pokaże przede wszystkim następną akcję, zlecenia i przekazania. Pozostałe funkcje znajdziesz pod „Więcej”.</p><small>Jeżeli konto zostanie zablokowane albo sesja unieważniona, telefon również straci dostęp.</small></article>
             </div>
 
             <div class="connect-story-actions reveal" data-story-observe>

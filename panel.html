@@ -12,12 +12,15 @@
   <link rel="stylesheet" href="assets/panel.css">
   <link rel="stylesheet" href="assets/ui-2026.css">
   <link rel="stylesheet" href="assets/web-polish.css">
+  <link rel="stylesheet" href="assets/mobile-final.css">
 </head>
 <body class="mobile-panel">
-  <div id="panelBoot" class="panel-boot">
-    <img src="assets/logo.svg" alt="">
-    <strong>ServiceOS</strong>
-    <span>Ładowanie panelu…</span>
+  <div id="panelBoot" class="panel-boot" aria-live="polite">
+    <div class="panel-boot-card">
+      <div class="panel-boot-brand"><span class="panel-boot-logo"><img src="assets/logo.svg" alt=""></span><div><strong>LockOn ServiceOS</strong><span>Panel pracownika</span></div></div>
+      <div class="panel-boot-copy"><strong>Ładuję Twój panel.</strong><span>Najpierw pobieram to, co wymaga działania.</span></div>
+      <div class="panel-boot-pulse" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
   </div>
 
   <header class="panel-header">
@@ -47,7 +50,7 @@
         <article class="owner-only" hidden><span>Zablokowane</span><strong id="kpiBlocked">—</strong><small>konta</small></article>
       </div>
 
-      <div class="panel-section-head">
+      <div class="panel-section-head panel-quick-heading">
         <div><span>SZYBKIE AKCJE</span><h2>Co robisz teraz?</h2></div>
       </div>
       <div class="panel-quick-grid">
@@ -155,6 +158,18 @@
       </section>
     </section>
 
+    <section id="view-more" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>WIĘCEJ</span><h1>Pozostałe funkcje</h1></div></div>
+      <div class="mobile-more-intro"><strong>Najważniejsze rzeczy są na dolnym pasku.</strong><span>Tutaj są funkcje używane rzadziej. Widzisz tylko te, do których masz dostęp.</span></div>
+      <div class="mobile-more-grid">
+        <button type="button" data-panel-nav="support"><b>?</b><strong>Pomoc</strong><span>Bot ServiceOS i konsultant.</span></button>
+        <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><strong>Wyceny</strong><span>Zapytania klientów.</span></button>
+        <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><strong>Rozliczenia</strong><span>Przychód i podział.</span></button>
+        <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><strong>Zarządzanie</strong><span>Konta, punkty i bezpieczeństwo.</span></button>
+        <button type="button" class="full" data-open-account><b>BM</b><strong>Moje konto</strong><span>Rola, e-mail i wylogowanie z panelu.</span></button>
+      </div>
+    </section>
+
     <section id="view-admin" class="panel-view owner-only" hidden>
       <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>WŁAŚCICIEL</span><h1>Administracja</h1></div><button id="refreshAdmin" type="button">↻</button></div>
       <div class="admin-mobile-stats">
@@ -216,15 +231,12 @@
     </section>
   </main>
 
-  <nav class="panel-bottom-nav" aria-label="Nawigacja panelu">
+  <nav class="panel-bottom-nav" aria-label="Główna nawigacja panelu">
     <button class="active" data-panel-nav="home"><span>⌂</span><b>Start</b></button>
-    <button data-panel-nav="new"><span>＋</span><b>Nowe</b></button>
     <button data-panel-nav="orders"><span>▣</span><b>Zlecenia</b></button>
+    <button data-panel-nav="new"><span>＋</span><b>Nowe</b></button>
     <button data-panel-nav="transfers"><span>⇄</span><b>Przekazania</b></button>
-    <button class="quote-staff-only" data-panel-nav="quotes" hidden><span>✉</span><b>Wyceny</b></button>
-    <button class="finance-only" data-panel-nav="earnings" hidden><span>zł</span><b>Rozliczenia</b></button>
-    <button data-panel-nav="support"><span>?</span><b>Pomoc</b></button>
-    <button class="owner-only" data-panel-nav="admin" hidden><span>⚙</span><b>Zarządzaj</b></button>
+    <button data-panel-nav="more"><span>•••</span><b>Więcej</b></button>
   </nav>
 
   <dialog id="accountDialog" class="panel-dialog">

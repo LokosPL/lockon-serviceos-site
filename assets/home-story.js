@@ -1,9 +1,15 @@
 (()=>{'use strict';
+
 const reduce=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches===true;
+const desktop=()=>window.matchMedia?.('(min-width: 861px)').matches===true;
 
 const setStoryFeature=(name)=>{
   if(!name)return;
-  document.querySelectorAll('[data-story-feature]').forEach((item)=>item.classList.toggle('active',item.dataset.storyFeature===name));
+  document.querySelectorAll('[data-story-feature]').forEach((item)=>{
+    const active=item.dataset.storyFeature===name;
+    item.classList.toggle('active',active);
+    item.setAttribute('aria-pressed',active?'true':'false');
+  });
   document.querySelectorAll('[data-story-screen]').forEach((screen)=>{
     const active=screen.dataset.storyScreen===name;
     screen.classList.toggle('active',active);
@@ -12,26 +18,13 @@ const setStoryFeature=(name)=>{
   document.querySelectorAll('[data-story-icon]').forEach((icon)=>icon.classList.toggle('active',icon.dataset.storyIcon===name));
 };
 
-const featureItems=[...document.querySelectorAll('[data-story-feature]')];
-if(featureItems.length){
-  setStoryFeature(featureItems[0].dataset.storyFeature);
-  if(!reduce){
-    const featureObserver=new IntersectionObserver((entries)=>{
-      const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(visible)setStoryFeature(visible.target.dataset.storyFeature);
-    },{threshold:[.32,.5,.68],rootMargin:'-18% 0px -34% 0px'});
-    featureItems.forEach((item)=>featureObserver.observe(item));
-  }
-  featureItems.forEach((item)=>item.addEventListener('mouseenter',()=>setStoryFeature(item.dataset.storyFeature)));
-}
-
 const phoneStates={
   '1':{kicker:'KROK 1 · TELEFON',title:'Otwórz portal pracownika',copy:'Wejdź na app.serviceos.pl w przeglądarce telefonu.',code:'app.serviceos.pl',active:'site'},
-  '2':{kicker:'KROK 2 · KOMPUTER',title:'Zaloguj się do ServiceOS',copy:'Na komputerze użyj swojego zatwierdzonego konta pracownika.',code:'KONTO GOTOWE',active:'desktop'},
-  '3':{kicker:'KROK 3 · KOD',title:'Wygeneruj kod połączenia',copy:'W aplikacji Windows otwórz Pomoc → Połącz urządzenie.',code:'ABCD-EFGH',active:'code'},
-  '4':{kicker:'KROK 4 · TELEFON',title:'Wpisz kod na telefonie',copy:'Wybierz „Połącz telefon” i przepisz jednorazowy kod.',code:'ABCD-EFGH',active:'pair'},
-  '5':{kicker:'KROK 5 · GOTOWE',title:'Telefon jest połączony',copy:'Masz ten sam zakres pracy co na komputerze — bez dodatkowych uprawnień.',code:'POŁĄCZONO ✓',active:'ready'}
+  '2':{kicker:'KROK 2 · KOMPUTER',title:'Wygeneruj kod połączenia',copy:'W ServiceOS otwórz Pomoc → Połącz urządzenie.',code:'ABCD-EFGH',active:'code'},
+  '3':{kicker:'KROK 3 · TELEFON',title:'Wpisz kod na telefonie',copy:'Wybierz „Połącz telefon” i przepisz kod z komputera.',code:'ABCD-EFGH',active:'pair'},
+  '4':{kicker:'KROK 4 · GOTOWE',title:'Zacznij od ekranu Start',copy:'Telefon pokaże najpierw rzeczy wymagające działania.',code:'POŁĄCZONO ✓',active:'ready'}
 };
+
 const timeline=document.querySelector('[data-connect-timeline]');
 const connectSteps=[...document.querySelectorAll('[data-connect-step]')];
 const phoneKicker=document.querySelector('[data-phone-kicker]');
@@ -42,7 +35,11 @@ const phoneActions=[...document.querySelectorAll('[data-phone-action]')];
 
 const setConnectStep=(step)=>{
   const key=String(step||'1');
-  connectSteps.forEach((item)=>item.classList.toggle('active',item.dataset.connectStep===key));
+  connectSteps.forEach((item)=>{
+    const active=item.dataset.connectStep===key;
+    item.classList.toggle('active',active);
+    item.setAttribute('aria-pressed',active?'true':'false');
+  });
   const index=Math.max(0,connectSteps.findIndex((item)=>item.dataset.connectStep===key));
   if(timeline)timeline.style.setProperty('--connect-progress',String(connectSteps.length>1?index/(connectSteps.length-1):1));
   const state=phoneStates[key]||phoneStates['1'];
@@ -52,40 +49,52 @@ const setConnectStep=(step)=>{
   if(phoneCode)phoneCode.textContent=state.code;
   phoneActions.forEach((item)=>item.classList.toggle('active',item.dataset.phoneAction===state.active));
 };
+
+const makeSelectable=(items,select)=>{
+  if(!desktop())return;
+  items.forEach((item)=>{
+    item.setAttribute('role','button');
+    item.setAttribute('tabindex','0');
+    const activate=()=>select(item);
+    item.addEventListener('click',activate);
+    item.addEventListener('keydown',(event)=>{
+      if(event.key!=='Enter'&&event.key!==' ')return;
+      event.preventDefault();
+      activate();
+    });
+  });
+};
+
+const featureItems=[...document.querySelectorAll('[data-story-feature]')];
+if(featureItems.length){
+  setStoryFeature(featureItems[0].dataset.storyFeature);
+  makeSelectable(featureItems,(item)=>setStoryFeature(item.dataset.storyFeature));
+}
+
 if(connectSteps.length){
   setConnectStep('1');
-  if(!reduce){
-    const connectObserver=new IntersectionObserver((entries)=>{
-      const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-      if(visible)setConnectStep(visible.target.dataset.connectStep);
-    },{threshold:[.35,.55,.72],rootMargin:'-22% 0px -32% 0px'});
-    connectSteps.forEach((step)=>connectObserver.observe(step));
-  }
-  connectSteps.forEach((step)=>step.addEventListener('mouseenter',()=>setConnectStep(step.dataset.connectStep)));
+  makeSelectable(connectSteps,(item)=>setConnectStep(item.dataset.connectStep));
 }
 
 const observed=[...document.querySelectorAll('[data-story-observe]')];
 if(observed.length){
-  if(reduce)observed.forEach((el)=>el.classList.add('story-visible'));
-  else{
+  if(reduce||!desktop()){
+    observed.forEach((el)=>el.classList.add('story-visible'));
+  }else{
     observed.forEach((el)=>el.classList.add('story-observe'));
     const revealObserver=new IntersectionObserver((entries)=>{
       entries.forEach((entry)=>{
-        if(entry.isIntersecting){entry.target.classList.add('story-visible');revealObserver.unobserve(entry.target);}
+        if(!entry.isIntersecting)return;
+        entry.target.classList.add('story-visible');
+        revealObserver.unobserve(entry.target);
       });
-    },{threshold:.12,rootMargin:'0px 0px -60px'});
+    },{threshold:.08,rootMargin:'0px 0px -40px'});
     observed.forEach((el)=>revealObserver.observe(el));
   }
 }
 
 const navLinks=[...document.querySelectorAll('.portal-links a[href^="#"]')];
-const navSections=navLinks.map((link)=>document.querySelector(link.getAttribute('href'))).filter(Boolean);
-if(navSections.length){
-  const navObserver=new IntersectionObserver((entries)=>{
-    const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
-    if(!visible)return;
-    navLinks.forEach((link)=>link.classList.toggle('story-active',link.getAttribute('href')==='#'+visible.target.id));
-  },{threshold:[.18,.35],rootMargin:'-18% 0px -62% 0px'});
-  navSections.forEach((section)=>navObserver.observe(section));
-}
+navLinks.forEach((link)=>link.addEventListener('click',()=>{
+  navLinks.forEach((item)=>item.classList.toggle('story-active',item===link));
+}));
 })();
