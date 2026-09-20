@@ -27,15 +27,18 @@ const api=async(path,options={})=>{
   if(!res.ok){const e=new Error(body?.message||'Nie udało się pobrać danych.');e.status=res.status;throw e;}
   return body;
 };
+const showLoading=()=>{
+  q('#customerLogin').hidden=true;q('#customerPortal').hidden=true;q('#customerLoading').hidden=false;q('#customerLogout').hidden=true;
+};
 const showLogin=(message='')=>{
   portalData=null;sessionToken='';saveSession('');
-  q('#customerPortal').hidden=true;q('#customerLogin').hidden=false;q('#customerLogout').hidden=true;
+  q('#customerPortal').hidden=true;q('#customerLoading').hidden=true;q('#customerLogin').hidden=false;q('#customerLogout').hidden=true;
   const box=q('#customerLoginError');box.textContent=message;box.hidden=!message;
   if(refreshTimer){clearInterval(refreshTimer);refreshTimer=null;}
 };
 const render=()=>{
   const d=portalData;if(!d)return;
-  q('#customerLogin').hidden=true;q('#customerPortal').hidden=false;q('#customerLogout').hidden=false;
+  q('#customerLogin').hidden=true;q('#customerLoading').hidden=true;q('#customerPortal').hidden=false;q('#customerLogout').hidden=false;
   q('#customerName').textContent=[d.customer.firstName,d.customer.lastName].filter(Boolean).join(' ');
   q('#customerContact').textContent=[d.customer.email,d.customer.phone].filter(Boolean).join(' · ')||'Dane klienta zapisane w LockOn';
   q('#customerOrderCount').textContent=String(d.orders.length);
@@ -87,10 +90,10 @@ const bindMessageForms=()=>{
   }));
 };
 q('#customerLoginForm').addEventListener('submit',async(ev)=>{
-  ev.preventDefault();const btn=ev.currentTarget.querySelector('button');const box=q('#customerLoginError');box.hidden=true;btn.disabled=true;
-  const fd=new FormData(ev.currentTarget);
+  ev.preventDefault();const form=ev.currentTarget;const btn=form.querySelector('button');const box=q('#customerLoginError');box.hidden=true;btn.disabled=true;
+  const fd=new FormData(form);showLoading();
   try{const data=await api('/public/customer-portal/login',{method:'POST',body:JSON.stringify({customerId:String(fd.get('customerId')||'')})});sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;render();refreshTimer=setInterval(()=>void load(),20000);}
-  catch(e){box.textContent=e.message;box.hidden=false;}finally{btn.disabled=false;}
+  catch(e){showLogin(e.message);}finally{btn.disabled=false;}
 });
 q('#customerQuoteOrder').addEventListener('change',()=>{
   const o=portalData?.orders.find(x=>x.id===q('#customerQuoteOrder').value);
@@ -118,5 +121,5 @@ q('#copyCustomerCode').addEventListener('click',async()=>{
 document.addEventListener('click',(ev)=>{const button=ev.target.closest('[data-customer-section]');if(button)showSection(button.dataset.customerSection);});
 q('#customerLogout').addEventListener('click',()=>showLogin());
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void load();});
-sessionToken=readSession();if(sessionToken){void load();refreshTimer=setInterval(()=>void load(),20000);}else showLogin();
+sessionToken=readSession();if(sessionToken){showLoading();void load();refreshTimer=setInterval(()=>void load(),20000);}else showLogin();
 })();
