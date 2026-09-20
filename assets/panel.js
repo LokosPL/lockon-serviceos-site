@@ -213,6 +213,116 @@
     syncMobileIntakeMode();
   };
 
+
+  const stopServiceScanner = () => {
+    if(scannerFrame){cancelAnimationFrame(scannerFrame);scannerFrame=0;}
+    if(scannerStream){
+      scannerStream.getTracks().forEach((track)=>track.stop());
+      scannerStream=null;
+    }
+    const video=document.getElementById('mobileScannerVideo');
+    if(video)video.srcObject=null;
+  };
+
+  const extractStaffScanToken = (value) => {
+    const raw=String(value||'').trim();
+    try{
+      const url=new URL(raw,location.href);
+      const params=new URLSearchParams(String(url.hash||'').replace(/^#/,''));
+      const tokenValue=String(params.get('scan')||'').trim();
+      if(tokenValue)return tokenValue.slice(0,100);
+    }catch{}
+    return '';
+  };
+
+  const formatServiceScanCode = (value) => {
+    let raw=String(value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+    if(raw.startsWith('SV'))raw=raw.slice(2);
+    raw=raw.slice(0,8);
+    return raw?'SV-'+(raw.match(/.{1,4}/g)||[]).join('-'):'';
+  };
+
+  const processServiceScan = async ({tokenValue='',codeValue=''}={}) => {
+    if(scannerBusy)return;
+    if(!activePointId)return toast('Wybierz aktywny punkt przed skanowaniem.','error');
+    const code=formatServiceScanCode(codeValue);
+    if(!tokenValue&&!code)return toast('Zeskanuj QR albo wpisz kod SV-XXXX-XXXX.','error');
+    scannerBusy=true;
+    const status=document.getElementById('mobileScannerResult');
+    const submit=document.querySelector('#mobileScannerForm button');
+    if(submit)submit.disabled=true;
+    if(status){status.className='panel-form-status';status.textContent='Sprawdzam urządzenie i logistykę…';}
+    try{
+      const result=await api('/service/scan',{
+        method:'POST',
+        body:JSON.stringify({actingPointId:activePointId,token:tokenValue||undefined,code:code||undefined})
+      });
+      try{sessionStorage.removeItem(pendingScanKey);}catch{}
+      pendingScanToken='';
+      stopServiceScanner();
+      const labels={
+        SERVICE_ACCEPTED:'Urządzenie przyjęte w serwisie.',
+        RETURN_ACCEPTED_READY:'Urządzenie wróciło do punktu macierzystego i jest gotowe do odbioru.',
+        RETURN_ACCEPTED:'Przyjęto zwrot urządzenia.',
+        ALREADY_AT_POINT:'Urządzenie jest już przypisane do tego punktu.',
+        OPEN_ORDER:'Otwieram zlecenie.'
+      };
+      if(status){status.className='panel-form-status ok';status.textContent=labels[result.scanAction]||'Skan zapisany.';}
+      toast(labels[result.scanAction]||'Skan zapisany.');
+      await Promise.all([loadOrders(),loadTransfers()]);
+      if(result.order?.id){
+        showView('orders');
+        await openOrder(result.order.id);
+      }
+    }catch(error){
+      if(status){status.className='panel-form-status error';status.textContent=error.message||'Nie udało się przyjąć urządzenia.';}
+      toast(error.message||'Nie udało się przyjąć urządzenia.','error');
+    }finally{
+      scannerBusy=false;
+      if(submit)submit.disabled=false;
+    }
+  };
+
+  const startServiceScanner = async () => {
+    if(scannerStream||scannerBusy)return;
+    const status=document.getElementById('mobileScannerCameraStatus');
+    if(!navigator.mediaDevices?.getUserMedia){
+      if(status)status.textContent='Ta przeglądarka nie udostępnia aparatu. Użyj aparatu telefonu do otwarcia QR albo wpisz kod ręcznie.';
+      return;
+    }
+    if(!('BarcodeDetector' in window)){
+      if(status)status.textContent='Skaner QR w tej przeglądarce nie jest dostępny. Zeskanuj QR zwykłym aparatem telefonu albo wpisz kod ręcznie.';
+      return;
+    }
+    try{
+      scannerStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});
+      const video=document.getElementById('mobileScannerVideo');
+      if(!video)throw new Error('Brak podglądu aparatu.');
+      video.srcObject=scannerStream;
+      await video.play();
+      const detector=new window.BarcodeDetector({formats:['qr_code']});
+      if(status)status.textContent='Skieruj aparat na QR z karty urządzenia.';
+      const detect=async()=>{
+        if(!scannerStream||scannerBusy)return;
+        try{
+          const codes=await detector.detect(video);
+          const raw=codes?.[0]?.rawValue||'';
+          const tokenValue=extractStaffScanToken(raw);
+          if(tokenValue){
+            if(status)status.textContent='QR rozpoznany. Przyjmuję urządzenie…';
+            await processServiceScan({tokenValue});
+            return;
+          }
+        }catch{}
+        if(scannerStream)scannerFrame=requestAnimationFrame(()=>void detect());
+      };
+      scannerFrame=requestAnimationFrame(()=>void detect());
+    }catch(error){
+      stopServiceScanner();
+      if(status)status.textContent=error?.message||'Nie udało się uruchomić aparatu. Użyj kodu ręcznego.';
+    }
+  };
+
   const activeOrders = () => orders.filter((order) => !['COMPLETED','CANCELLED','REJECTED'].includes(order.status));
   const openTransfers = () => transfers.filter((item) => ['REQUESTED','IN_TRANSIT','DELIVERED'].includes(item.status));
 
