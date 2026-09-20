@@ -153,6 +153,10 @@ jobs:
           grep -q 'data-icon="orders"' panel.html
           grep -q 'data-icon="transfer"' panel.html
           grep -q 'account-dialog-top' panel.html
+          grep -q "OWNER:'Właściciel'" assets/panel.js
+          grep -q "TECHNICIAN:'Serwisant'" assets/panel.js
+          grep -q 'simple-view-title' panel.html
+          grep -q 'prefers-reduced-motion' assets/mobile-final.css
           grep -q 'data-panel-nav="more"' panel.html
           grep -q 'panel-quick-heading' panel.html
           grep -q 'panel-boot-card' panel.html

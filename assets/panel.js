@@ -143,6 +143,15 @@
   };
 
   const initials = (name) => String(name || '?').split(/\s+/).filter(Boolean).slice(0,2).map((x) => x[0]).join('').toUpperCase();
+  const ROLE_LABELS = {
+    OWNER:'Właściciel',
+    BOSS:'Kierownik',
+    COORDINATOR:'Koordynator',
+    SUPPORT:'Obsługa',
+    TECHNICIAN:'Serwisant',
+    USER:'Pracownik'
+  };
+  const accountRoleLabel = (value) => ROLE_LABELS[String(value || '').toUpperCase()] || 'Pracownik';
 
   const renderAccount = () => {
     const user = me?.user || {};
@@ -151,7 +160,7 @@
     document.getElementById('accountInitials').textContent = initials(user.name);
     document.getElementById('accountName').textContent = user.name || 'Konto ServiceOS';
     document.getElementById('accountEmail').textContent = user.email || '';
-    document.getElementById('accountRole').textContent = user.role || '—';
+    document.getElementById('accountRole').textContent = accountRoleLabel(user.role);
     document.querySelectorAll('[data-open-account] b').forEach((el) => { el.textContent = initials(user.name); });
 
     document.querySelectorAll('.owner-only').forEach((el) => { el.hidden = !isOwner(); });
@@ -216,7 +225,7 @@
       '<div class="'+esc(item.kind)+'"><span>'+esc(item.label)+'</span><strong>'+esc(item.value)+'</strong></div>'
     ).join('') + '</div>';
     const workflow = order.workflow || null;
-    const cardStatus = order.status === 'RECEIVED' ? 'Przyjęte' : (order.statusLabel || STATUS_LABELS[order.status] || order.status);
+    const cardStatus = STATUS_LABELS[order.status] || order.statusLabel || 'W toku';
     return '<article class="panel-order-card workflow-' + esc(String(workflow?.attentionCode || 'ACTIVE').toLowerCase()) + '" data-order-id="' + esc(order.id) + '">' +
       '<div class="panel-order-top">' +
         '<div class="panel-order-number"><strong>#' + esc(order.orderNumber) + '</strong><small>' + esc(formatDate(order.receivedAt)) + '</small></div>' +

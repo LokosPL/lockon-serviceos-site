@@ -139,12 +139,12 @@
     </section>
 
     <section id="view-more" class="panel-view">
-      <div class="panel-page-head"><button type="button" data-panel-nav="home" aria-label="Wróć do startu"><span class="panel-icon" data-icon="back"></span></button><div><span>WIĘCEJ</span><h1>Więcej</h1></div></div>
+      <div class="simple-view-title"><span>WIĘCEJ</span><h1>Więcej</h1><p>Ustawienia i funkcje używane rzadziej.</p></div>
       <div class="mobile-more-grid">
-        <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><strong>Wyceny</strong><span>Zapytania klientów.</span></button>
-        <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><strong>Rozliczenia</strong><span>Przychód i podział.</span></button>
-        <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><strong>Zarządzanie</strong><span>Konta, punkty i bezpieczeństwo.</span></button>
-        <button type="button" class="full account-tile" data-open-account><b class="account-avatar">BM</b><strong>Moje konto</strong><span>Profil i wylogowanie</span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><span><strong>Wyceny</strong><small>Zapytania klientów</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><span><strong>Rozliczenia</strong><small>Przychód i podział</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><span><strong>Zarządzanie</strong><small>Konta, punkty i bezpieczeństwo</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="account-tile" data-open-account><b class="account-avatar">BM</b><span><strong>Moje konto</strong><small>Profil i wylogowanie</small></span><i class="panel-icon" data-icon="chevron"></i></button>
       </div>
     </section>
 
@@ -219,9 +219,9 @@
 
   <dialog id="accountDialog" class="panel-dialog account-dialog">
     <div class="panel-dialog-card">
-      <div class="account-dialog-top"><span>Moje konto</span><button class="dialog-close" type="button" data-close-dialog="accountDialog" aria-label="Zamknij"><span class="panel-icon" data-icon="close"></span></button></div>
+      <div class="account-dialog-top"><strong>Moje konto</strong><button class="dialog-close" type="button" data-close-dialog="accountDialog" aria-label="Zamknij"><span class="panel-icon" data-icon="close"></span></button></div>
       <div class="account-dialog-head"><div id="accountInitials">?</div><span><strong id="accountName">Konto</strong><small id="accountEmail"></small></span></div>
-      <div class="account-dialog-meta"><span>Rola</span><strong id="accountRole">—</strong></div>
+      <div class="account-dialog-meta"><span>Uprawnienia</span><strong id="accountRole">—</strong></div>
       <button id="panelLogout" class="panel-danger-button" type="button"><span class="panel-icon" data-icon="logout"></span>Wyloguj się</button>
     </div>
   </dialog>
