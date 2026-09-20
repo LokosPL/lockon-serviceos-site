@@ -1654,3 +1654,18 @@ body.mobile-panel [hidden]{display:none!important}
   .mobile-panel .account-dialog[open] .panel-dialog-card{animation:none!important}
   .mobile-panel *{scroll-behavior:auto!important}
 }
+
+/* action feedback: always visible above the app, never hidden behind bottom navigation */
+.mobile-panel .panel-toast{
+  top:calc(12px + env(safe-area-inset-top))!important;
+  bottom:auto!important;left:50%!important;right:auto!important;
+  width:min(calc(100% - 28px),520px)!important;
+  transform:translateX(-50%)!important;
+  padding:13px 16px!important;border-radius:15px!important;
+  z-index:10000!important;font-size:12px!important;font-weight:750!important;
+  animation:panelToastIn .22s cubic-bezier(.2,.8,.2,1) both!important;
+}
+.mobile-panel .panel-toast.ok{background:rgba(12,55,39,.97)!important;border-color:rgba(91,226,155,.45)!important;color:#a8f1c8!important;box-shadow:0 14px 42px rgba(0,0,0,.42),0 0 0 1px rgba(91,226,155,.06)!important}
+.mobile-panel .panel-toast.error{background:rgba(64,24,25,.97)!important;border-color:rgba(255,118,118,.42)!important;color:#ffc0bc!important}
+@keyframes panelToastIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.mobile-panel .panel-toast{animation:none!important}}
