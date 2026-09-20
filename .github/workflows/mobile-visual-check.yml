@@ -117,18 +117,16 @@ jobs:
           await panel.screenshot({path:'visual-check/panel-phone-transfers.png'});
 
           await panel.evaluate(()=>{
-            document.getElementById('view-support').hidden=false;
-            window.__showPanelView('view-support');
-            document.getElementById('mobileHelpMessages').innerHTML='<div class="mobile-help-message assistant"><strong>ServiceOS</strong><p>Napisz numer zlecenia albo opisz, czego szukasz. Pomogę znaleźć właściwy ekran.</p></div><div class="mobile-help-message user"><strong>Ty</strong><p>Co mam zrobić ze zleceniem 1042?</p></div>';
-          });
-          await panel.screenshot({path:'visual-check/panel-phone-support.png'});
-
-          await panel.evaluate(()=>{
             window.__showPanelView('view-more');
             document.querySelectorAll('#view-more [hidden]').forEach(el=>el.hidden=false);
             document.querySelectorAll('.panel-bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.panelNav==='more'));
           });
           await panel.screenshot({path:'visual-check/panel-phone-more-owner.png'});
+
+          await panel.evaluate(()=>document.getElementById('accountDialog').showModal());
+          await panel.waitForTimeout(100);
+          await panel.screenshot({path:'visual-check/panel-phone-account.png'});
+          await panel.evaluate(()=>document.getElementById('accountDialog').close());
 
           await panel.evaluate(()=>{
             document.getElementById('view-admin').hidden=false;
