@@ -1129,7 +1129,9 @@
     if(send){
       send.textContent=mobileHelpSending?'Wysyłanie…':'Wyślij';
       send.disabled=mobileHelpSending;
-      send.setAttribute('aria-label',mobileHelpTarget==='CONSULTANT'?'Wyślij wiadomość do konsultanta':'Wyślij wiadomość do bota ServiceOS');
+      const sendLabel=mobileHelpTarget==='CONSULTANT'?'Wyślij wiadomość do konsultanta':'Wyślij wiadomość do bota ServiceOS';
+      send.setAttribute('aria-label',sendLabel);
+      send.setAttribute('title',sendLabel);
     }
     if(input)input.disabled=mobileHelpSending;
     const thread=(supportConversation?.messages||[]).map(message=>{
