@@ -2,7 +2,7 @@ name: Mobile UI visual smoke
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "release/**"]
     paths:
       - "index.html"
       - "panel.html"
