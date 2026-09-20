@@ -26,6 +26,8 @@ body.mobile-panel{
   overflow-x:clip;
   overscroll-behavior-x:none;
 }
+body.portal-home:not(.loaded){overflow:hidden}
+.mobile-panel:has(.panel-boot:not(.hidden)){overflow:hidden}
 
 /* Stable desktop: less compositor work while scrolling. */
 @media(min-width:861px){
@@ -993,7 +995,9 @@ body.mobile-panel{
     min-height:70px!important;
     padding:6px!important;
     display:grid!important;
-    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    grid-template-columns:none!important;
+    grid-auto-flow:column!important;
+    grid-auto-columns:minmax(0,1fr)!important;
     gap:3px!important;
     overflow:visible!important;
     border:1px solid rgba(255,255,255,.09)!important;
