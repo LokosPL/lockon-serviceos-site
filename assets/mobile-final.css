@@ -1717,6 +1717,7 @@ body.mobile-panel [hidden]{display:none!important}
     height:clamp(180px,28dvh,270px)!important;
     max-height:270px!important;
     overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
     scrollbar-gutter:stable;
   }
   .mobile-panel #view-support .mobile-help-compose{
