@@ -1177,3 +1177,11 @@ body.mobile-panel [hidden]{display:none!important}
     justify-self:start!important;
   }
 }
+
+@media(max-width:760px){
+  .mobile-panel .ui-enter{
+    animation:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
