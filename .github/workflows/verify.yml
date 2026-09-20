@@ -64,13 +64,21 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' track.html
           grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
           grep -q 'position:static' assets/home-v2.css
-          grep -q "serviceos-shell-v22" sw.js
+          grep -q "serviceos-shell-v23" sw.js
           ! grep -q 'Przejdź do ServiceOS' track.html
           ! grep -q 'href="index.html"' track.html
           ! grep -q 'google-config.js' track.html
           grep -q '\[hidden\]{display:none!important}' assets/track.css
           grep -q 'REFRESH_MS=20000' assets/track.js
           grep -q 'public/customer-portal/login' assets/customer-portal.js
+          grep -q 'public/customer-portal/google/login' assets/customer-portal.js
+          grep -q 'public/customer-portal/google/link' assets/customer-portal.js
+          grep -q 'public/customer-portal/settings' assets/customer-portal.js
+          grep -q 'customerAccessChoice' klient.html
+          grep -q 'customerSettingsForm' klient.html
+          grep -q 'accounts.google.com' klient.html
+          grep -q 'data-customer-state' klient.html
+          grep -q 'customer-portal-page \[hidden\]' assets/customer-portal.css
           grep -q 'public/customer-portal/quotes' assets/customer-portal.js
           grep -q 'noindex,nofollow,noarchive' klient.html
           ! grep -q 'href="index.html"' klient.html
