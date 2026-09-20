@@ -56,6 +56,7 @@
       <div class="panel-quick-grid">
         <button type="button" data-panel-nav="new"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></button>
         <button type="button" data-panel-nav="orders"><b>⌕</b><span><strong>Zlecenia</strong><small>Status i szczegóły</small></span></button>
+        <button type="button" data-panel-nav="scan"><b>▣</b><span><strong>Skanuj urządzenie</strong><small>QR lub kod z karty</small></span></button>
         <button type="button" data-panel-nav="transfers"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></button>
         <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><span><strong>Wyceny klientów</strong><small>Zapytania z portalu klienta</small></span></button>
         <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><span><strong>Rozliczenia</strong><small>Przychód i podział</small></span></button>
@@ -73,12 +74,12 @@
       <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>NOWE ZLECENIE</span><h1>Przyjmij telefon</h1></div></div>
       <form id="newOrderForm" class="panel-form-card">
         <div class="panel-form-section">
-          <div class="panel-form-title"><span>01</span><div><strong>Klient</strong><small>Podaj przynajmniej e-mail albo telefon.</small></div></div>
+          <div class="panel-form-title"><span>01</span><div><strong>Klient</strong><small>E-mail i telefon są wymagane. Karta serwisowa PDF jest zawsze wysyłana na e-mail.</small></div></div>
           <div class="panel-form-grid">
             <label><span>Imię</span><input name="firstName" maxlength="80" required autocomplete="given-name"></label>
             <label><span>Nazwisko</span><input name="lastName" maxlength="100" required autocomplete="family-name"></label>
-            <label><span>E-mail</span><input name="email" type="email" maxlength="180" autocomplete="email"></label>
-            <label><span>Telefon</span><input name="phone" maxlength="50" inputmode="tel" autocomplete="tel"></label>
+            <label><span>E-mail</span><input name="email" type="email" maxlength="180" autocomplete="email" required></label>
+            <label><span>Telefon</span><input name="phone" maxlength="50" inputmode="tel" autocomplete="tel" required></label>
           </div>
         </div>
 
@@ -89,11 +90,10 @@
             <label><span>Model</span><input name="model" maxlength="120" required></label>
             <label><span>IMEI</span><input name="imei" maxlength="16" inputmode="numeric"></label>
             <label><span>Numer seryjny</span><input name="serialNumber" maxlength="120"></label>
-            <label><span>Typ</span><select name="orderType"><option value="REPAIR">Naprawa</option><option value="COMPLAINT">Reklamacja</option></select></label>
-            <label class="full"><span>Sposób obsługi</span><select id="mobileHandlingMode" name="handlingMode"><option value="STANDARD">Normalny serwis</option><option value="TRANSFER_ONLY">Tylko przekazanie urządzenia</option></select></label>
-            <div id="mobileTransferOnlyInfo" class="mobile-mode-info full" hidden><strong>Tylko przekazanie</strong><span>Bez etapów diagnozy i naprawy. Możesz przekazywać urządzenie między punktami albo anulować zlecenie.</span></div>
-            <label data-standard-service><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
-            <label class="full service-edit-only" data-standard-service hidden><span>Cena orientacyjna (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
+            <label><span>Typ</span><select id="mobileOrderType" name="orderType"><option value="REPAIR">Naprawa</option><option value="COMPLAINT">Reklamacja</option></select></label>
+            <div id="mobileIntakeAutoInfo" class="mobile-mode-info full"><strong>Punkt i obsługa ustawiają się automatycznie</strong><span id="mobileIntakeAutoText">Zlecenie trafi do aktywnego punktu. Typ naprawy ustala właściwy przepływ.</span></div>
+            <label><span>Przewidywany termin</span><input name="estimatedCompletionAt" type="datetime-local"></label>
+            <label class="full service-edit-only" hidden><span>Cena orientacyjna (PLN)</span><input name="estimatedCost" type="number" min="0" step="0.01"></label>
             <label class="full"><span>Opis usterki</span><textarea name="issueDescription" rows="5" maxlength="2000" required></textarea></label>
             <label class="full"><span>Uwagi do urządzenia</span><textarea name="deviceNotes" rows="3" maxlength="1000"></textarea></label>
           </div>
@@ -101,6 +101,25 @@
         <div id="newOrderStatus" class="panel-form-status"></div>
         <button class="panel-primary-button" type="submit">Utwórz zlecenie</button>
       </form>
+    </section>
+
+    <section id="view-scan" class="panel-view">
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>LOGISTYKA QR</span><h1>Skanuj urządzenie</h1></div></div>
+      <div class="mobile-scan-card">
+        <div class="mobile-scan-copy"><strong>Przyjmij urządzenie do aktywnego punktu</strong><span>QR działa tylko po zalogowaniu pracownika. ServiceOS sprawdzi docelowy punkt i właściwy transfer przed zmianą lokalizacji.</span></div>
+        <div id="mobileScannerCamera" class="mobile-scanner-camera">
+          <video id="mobileScannerVideo" playsinline muted></video>
+          <div class="mobile-scanner-frame"></div>
+          <p id="mobileScannerCameraStatus">Uruchom aparat albo wpisz kod ręcznie.</p>
+        </div>
+        <button id="mobileScannerStart" class="panel-primary-button" type="button">Uruchom aparat QR</button>
+        <div class="mobile-scan-divider"><span>lub wpisz kod z karty</span></div>
+        <form id="mobileScannerForm" class="mobile-scan-form">
+          <input id="mobileScannerCode" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="SV-XXXX-XXXX" required>
+          <button type="submit">Przyjmij urządzenie</button>
+        </form>
+        <div id="mobileScannerResult" class="panel-form-status"></div>
+      </div>
     </section>
 
     <section id="view-orders" class="panel-view">
@@ -216,6 +235,17 @@
     <button data-panel-nav="transfers"><span class="panel-icon" data-icon="transfer"></span><b>Przekazania</b></button>
     <button data-panel-nav="more"><span class="panel-icon" data-icon="more"></span><b>Więcej</b></button>
   </nav>
+
+  <dialog id="serviceCardChoiceDialog" class="panel-dialog service-card-choice-dialog">
+    <div class="panel-dialog-card">
+      <div class="service-card-choice-head"><span>KARTA SERWISOWA</span><h2 id="serviceCardChoiceTitle">Zlecenie utworzone</h2><p>Karta klienta została wysłana e-mailem. Wybierz wydruk przy ladzie.</p></div>
+      <div class="service-card-choice-grid">
+        <button type="button" data-service-card-choice="PHYSICAL_AND_ONLINE"><strong>A4 · fizyczna + online</strong><span>Karta urządzenia i karta klienta na jednej kartce A4 w poziomie, z linią cięcia pośrodku.</span></button>
+        <button type="button" data-service-card-choice="ONLINE_ONLY"><strong>Tylko online</strong><span>Drukuj tylko kartę urządzenia. Klient ma swoją kartę w e-mailu i panelu.</span></button>
+      </div>
+      <div id="serviceCardChoiceStatus" class="panel-form-status"></div>
+    </div>
+  </dialog>
 
   <dialog id="accountDialog" class="panel-dialog account-dialog">
     <div class="panel-dialog-card">
