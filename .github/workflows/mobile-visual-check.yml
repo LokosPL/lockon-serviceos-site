@@ -171,6 +171,62 @@ jobs:
           const targets=await panel.evaluate(()=>[...document.querySelectorAll('.panel-bottom-nav button')].filter(x=>getComputedStyle(x).display!=='none').map(x=>({w:x.getBoundingClientRect().width,h:x.getBoundingClientRect().height})));
           if(targets.some(x=>x.w<44||x.h<44))throw new Error('Mobile tab target below 44px: '+JSON.stringify(targets));
 
+          const responsiveViewports=[
+            {name:'phone-320',width:320,height:720},
+            {name:'phone-360',width:360,height:800},
+            {name:'phone-430',width:430,height:932},
+            {name:'tablet-768',width:768,height:1024},
+            {name:'desktop-1280',width:1280,height:720},
+            {name:'desktop-1920',width:1920,height:1080}
+          ];
+          const assertNoHorizontalOverflow=async(page,label)=>{
+            const metric=await page.evaluate(()=>({width:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth}));
+            if(metric.scrollWidth>metric.width+1)throw new Error(label+' horizontal overflow: '+JSON.stringify(metric));
+          };
+          for(const viewport of responsiveViewports){
+            const landingMatrix=await browser.newPage({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
+            await landingMatrix.goto('http://127.0.0.1:4173/index.html',{waitUntil:'networkidle'});
+            await landingMatrix.waitForTimeout(300);
+            await assertNoHorizontalOverflow(landingMatrix,'Landing '+viewport.name);
+            await landingMatrix.screenshot({path:'visual-check/matrix-'+viewport.name+'-landing.png'});
+            await landingMatrix.close();
+
+            const customerMatrix=await browser.newPage({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
+            await customerMatrix.goto('http://127.0.0.1:4173/klient.html',{waitUntil:'domcontentloaded'});
+            await customerMatrix.waitForTimeout(200);
+            await assertNoHorizontalOverflow(customerMatrix,'Portal klienta '+viewport.name);
+            await customerMatrix.screenshot({path:'visual-check/matrix-'+viewport.name+'-customer.png'});
+            await customerMatrix.close();
+
+            const supportMatrix=await browser.newPage({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
+            await supportMatrix.route('**/assets/panel.js',route=>route.abort());
+            await supportMatrix.goto('http://127.0.0.1:4173/panel.html',{waitUntil:'domcontentloaded'});
+            await supportMatrix.evaluate((showStaff)=>{
+              document.getElementById('panelBoot')?.remove();
+              document.querySelectorAll('.panel-view').forEach(view=>view.classList.toggle('active',view.id==='view-support'));
+              const state=document.getElementById('mobileSupportState');
+              if(state){
+                state.className='mobile-support-state joined';
+                state.innerHTML='<strong>Anna Kowalska dołączyła do rozmowy</strong><span>Bot nadal jest dostępny. Wybierz odbiorcę kolejnej wiadomości.</span><div class="mobile-help-targets"><button class="active bot">Bot ServiceOS</button><button class="consultant">Konsultant</button></div>';
+              }
+              const messages=document.getElementById('mobileHelpMessages');
+              if(messages)messages.innerHTML='<article class="mobile-help-message assistant"><div><strong>Bot ServiceOS</strong><time>21:40</time></div><p>Jasne — pomogę Ci to sprawdzić. Najpierw zweryfikujmy status zlecenia, a jeśli będzie potrzebna decyzja człowieka, konsultant jest już dostępny.</p><button class="mobile-help-action">Otwórz zlecenie →</button></article><article class="mobile-help-message user"><div><strong>Użytkownik</strong><time>21:41</time></div><small class="mobile-help-channel-badge consultant">Do konsultanta</small><p>Proszę sprawdzić wyjątek w tym zleceniu.</p></article>';
+              document.querySelectorAll('.support-staff-only').forEach(el=>{el.hidden=!showStaff;});
+              if(showStaff){
+                const presence=document.getElementById('mobileSupportPresence');
+                if(presence)presence.innerHTML='<article class="mobile-presence-row waiting"><i></i><div><strong>Jan Nowak</strong><span>Serwisant · telefon</span></div><b>CZEKA</b></article>';
+              }
+            },viewport.width>=768);
+            await supportMatrix.waitForTimeout(150);
+            await assertNoHorizontalOverflow(supportMatrix,'Panel pomocy '+viewport.name);
+            if(viewport.width<=430){
+              const targets=await supportMatrix.evaluate(()=>[...document.querySelectorAll('.mobile-help-targets button')].map(el=>({w:el.getBoundingClientRect().width,h:el.getBoundingClientRect().height})));
+              if(targets.some(x=>x.w<44||x.h<44))throw new Error('Hotline target below 44px at '+viewport.name+': '+JSON.stringify(targets));
+            }
+            await supportMatrix.screenshot({path:'visual-check/matrix-'+viewport.name+'-support.png'});
+            await supportMatrix.close();
+          }
+
           await browser.close();
           EOF
           node visual-capture.mjs

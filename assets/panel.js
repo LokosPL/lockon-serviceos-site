@@ -1139,11 +1139,6 @@
       ? '<article class="mobile-help-tool '+esc(mobileHelpToolResult.kind)+'"><strong>'+esc(mobileHelpToolResult.title)+'</strong>'+mobileHelpToolResult.lines.map(line=>'<span>'+esc(line)+'</span>').join('')+'</article>'
       : '';
     messagesHost.innerHTML=thread+tool;
-    messagesHost.querySelectorAll('[data-mobile-help-action]').forEach(button=>{
-      button.addEventListener('click',()=>{
-        try{void runMobileHelpAction(JSON.parse(decodeURIComponent(button.dataset.mobileHelpAction||'')));}catch{}
-      });
-    });
     messagesHost.scrollTop=messagesHost.scrollHeight;
   };
 

@@ -646,7 +646,7 @@ button{color:inherit}
 .mobile-help-intro{margin:0 0 12px;padding:14px 15px;border:1px solid rgba(124,184,255,.16);border-radius:14px;background:linear-gradient(145deg,rgba(124,184,255,.055),rgba(255,124,67,.025));display:flex;flex-direction:column;gap:4px}
 .mobile-help-intro strong{font-size:13px;color:#d9eaff}.mobile-help-intro span{font-size:10px;line-height:1.55;color:#788694}
 .mobile-help-targets{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.mobile-help-targets button{min-height:38px;padding:0 8px;border:1px solid var(--line);border-radius:9px;background:#0b1015;color:#77838e;font-size:10px;font-weight:850}
+.mobile-help-targets button{min-height:44px;padding:0 8px;border:1px solid var(--line);border-radius:9px;background:#0b1015;color:#77838e;font-size:10px;font-weight:850}
 .mobile-help-targets button.active.bot{border-color:rgba(124,184,255,.28);background:rgba(124,184,255,.075);color:#a9d4ff}
 .mobile-help-targets button.active.consultant{border-color:rgba(101,216,154,.25);background:rgba(101,216,154,.065);color:#91e5b7}
 .mobile-help-channel-badge{display:inline-flex;width:max-content;margin-top:5px;padding:2px 6px;border:1px solid var(--line);border-radius:999px;color:#7d8994;font-size:8px;font-weight:850}
