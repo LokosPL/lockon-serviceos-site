@@ -97,10 +97,11 @@ jobs:
             document.getElementById('panelFocus').innerHTML='<button type="button"><div><span>NASTĘPNA AKCJA · #1042</span><strong>Rozpocznij naprawę.</strong><small>iPhone 14 Pro · Diagnoza · termin dzisiaj 14:30</small></div><b>→</b></button>';
             document.getElementById('homeOrders').innerHTML='<article class="panel-order-card workflow-active"><div class="panel-order-top"><div class="panel-order-number"><strong>#1042</strong><small>20.09 09:40</small></div><div class="panel-order-main"><strong>Anna Kowalska</strong><span>iPhone 14 Pro</span><small>Zlecenie serwisowe</small></div><div class="panel-status-pill">Diagnoza</div></div><div class="mobile-workflow-strip"><div><span>Etap 3/10</span><strong>Diagnoza</strong><progress max="100" value="30"></progress></div><div><span>Następna akcja</span><strong>Rozpocznij naprawę</strong></div><em class="action">DZIAŁAJ TERAZ</em></div><button>Otwórz szczegóły →</button></article>';
           });
-          await panel.waitForTimeout(120);
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-home.png'});
 
           await panel.evaluate(()=>window.__showPanelView('view-new'));
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-new.png'});
 
           await panel.evaluate(()=>{
@@ -108,12 +109,14 @@ jobs:
             document.getElementById('orderWorkflowFilters').innerHTML='<button class="active">Wszystkie <b>4</b></button><button>Działaj teraz <b>2</b></button><button>W drodze <b>1</b></button><button>Gotowe <b>1</b></button>';
             document.getElementById('ordersList').innerHTML='<article class="panel-order-card workflow-overdue"><div class="panel-order-top"><div class="panel-order-number"><strong>#1042</strong><small>20.09 09:40</small></div><div class="panel-order-main"><strong>Anna Kowalska</strong><span>iPhone 14 Pro</span><small>Zlecenie serwisowe</small></div><div class="panel-status-pill">Diagnoza</div></div><div class="mobile-workflow-strip"><div><span>Etap 3/10</span><strong>Diagnoza</strong><progress max="100" value="30"></progress></div><div><span>Następna akcja</span><strong>Rozpocznij naprawę</strong></div><em class="overdue">PO TERMINIE</em></div><button>Otwórz szczegóły →</button></article>';
           });
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-orders.png'});
 
           await panel.evaluate(()=>{
             window.__showPanelView('view-transfers');
             document.getElementById('transfersList').innerHTML='<article class="panel-transfer-card"><div class="transfer-icon">⇄</div><div class="transfer-content"><strong>#1041 · Piotr Nowak</strong><span>Samsung S24</span><small>Do serwisu · Punkt Nowogard → Serwis główny · W drodze · dzisiaj 10:12</small></div><div class="transfer-actions"><button class="mini-action primary">Dostarczono</button><button class="mini-action">Anuluj</button></div></article>';
           });
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-transfers.png'});
 
           await panel.evaluate(()=>{
@@ -121,6 +124,7 @@ jobs:
             document.querySelectorAll('#view-more [hidden]').forEach(el=>el.hidden=false);
             document.querySelectorAll('.panel-bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.panelNav==='more'));
           });
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-more-owner.png'});
 
           await panel.evaluate(()=>document.getElementById('accountDialog').showModal());
@@ -136,6 +140,7 @@ jobs:
             document.getElementById('adminServices').textContent='2';
             document.getElementById('adminTransfers').textContent='1';
           });
+          await panel.waitForTimeout(350);
           await panel.screenshot({path:'visual-check/panel-phone-admin.png'});
 
           const login=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
