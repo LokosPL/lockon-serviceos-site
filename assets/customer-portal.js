@@ -9,6 +9,7 @@ let googleConfig=null;
 let googleReady=null;
 let googleIntent='LOGIN';
 let pendingGoogleCredential=null;
+let pendingFocusOrderId='';
 
 const q=(s)=>document.querySelector(s);
 const qa=(s)=>[...document.querySelectorAll(s)];
@@ -19,6 +20,32 @@ const newestFirst=(a,b)=>ts(b.updatedAt||b.createdAt||b.receivedAt)-ts(a.updated
 const money=(v,c='PLN')=>new Intl.NumberFormat('pl-PL',{style:'currency',currency:c||'PLN'}).format(Number(v||0));
 const readSession=()=>{try{return sessionStorage.getItem(sessionKey)||'';}catch{return '';}};
 const saveSession=(v)=>{try{if(v)sessionStorage.setItem(sessionKey,v);else sessionStorage.removeItem(sessionKey);}catch{}};
+
+const readCardHash=()=>{
+  const raw=String(location.hash||'').replace(/^#/,'');
+  if(!raw)return {code:'',orderId:'',auto:false};
+  const params=new URLSearchParams(raw);
+  return {
+    code:String(params.get('code')||'').trim(),
+    orderId:String(params.get('order')||'').trim(),
+    auto:params.get('auto')==='1'
+  };
+};
+const clearCardHash=()=>{
+  if(location.hash)history.replaceState(null,'',location.pathname+location.search);
+};
+const savePdfFromBase64=(payload)=>{
+  const binary=atob(String(payload?.pdfBase64||''));
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i+=1)bytes[i]=binary.charCodeAt(i);
+  if(bytes.length<5||String.fromCharCode(...bytes.slice(0,5))!=='%PDF-')throw new Error('Serwer zwrócił nieprawidłową kartę PDF.');
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=String(payload?.fileName||'karta-serwisowa.pdf').replace(/[\\/]/g,'_');
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+};
 
 const api=async(path,options={},authenticated=true)=>{
   const headers=new Headers(options.headers||{});
@@ -245,9 +272,10 @@ const render=()=>{
   q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
-    return '<article class="customer-order" tabindex="0"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div>'+
-      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p></div>'+
-      '<div class="customer-order-open">Otwórz <span>›</span></div></article>';
+    return '<article class="customer-order'+(pendingFocusOrderId===o.id?' open':'')+'" tabindex="0" data-customer-order-id="'+esc(o.id)+'"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div>'+
+      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p>'+
+      (o.serviceCardAvailable?'<button type="button" class="customer-service-card-download" data-customer-service-card="'+esc(o.id)+'">Pobierz kartę serwisową PDF</button>':'')+
+      '</div><div class="customer-order-open">Otwórz <span>›</span></div></article>';
   }).join(''):'<div class="empty">Nie ma jeszcze zapisanych zleceń.</div>';
 
   const point=q('#customerQuotePoint');const currentPoint=point.value;
@@ -292,11 +320,15 @@ const render=()=>{
 
   bindMessageForms();
   qa('.customer-order').forEach(card=>{
-    const toggle=()=>card.classList.toggle('open');
+    const toggle=(event)=>{if(event?.target?.closest?.('[data-customer-service-card]'))return;card.classList.toggle('open');};
     card.addEventListener('click',toggle);
-    card.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggle();}});
+    card.addEventListener('keydown',ev=>{if((ev.key==='Enter'||ev.key===' ')&&!ev.target.closest?.('[data-customer-service-card]')){ev.preventDefault();card.classList.toggle('open');}});
   });
   showSection(qa('[data-customer-panel].active')[0]?.dataset.customerPanel||'orders');
+  if(pendingFocusOrderId){
+    requestAnimationFrame(()=>document.querySelector('[data-customer-order-id="'+CSS.escape(pendingFocusOrderId)+'"]')?.scrollIntoView({behavior:'smooth',block:'center'}));
+    pendingFocusOrderId='';
+  }
 };
 
 const load=async()=>{
@@ -393,6 +425,18 @@ q('#customerLoginForm input[name="customerId"]').addEventListener('input',(ev)=>
 });
 
 document.addEventListener('click',(ev)=>{
+  const cardButton=ev.target.closest('[data-customer-service-card]');
+  if(cardButton){
+    ev.preventDefault();ev.stopPropagation();
+    const orderId=cardButton.dataset.customerServiceCard;
+    const original=cardButton.textContent;
+    cardButton.disabled=true;cardButton.textContent='Pobieranie…';
+    void api('/public/customer-portal/orders/'+encodeURIComponent(orderId)+'/service-card')
+      .then(savePdfFromBase64)
+      .catch(error=>window.alert(error.message||'Nie udało się pobrać karty serwisowej.'))
+      .finally(()=>{if(cardButton.isConnected){cardButton.disabled=false;cardButton.textContent=original;}});
+    return;
+  }
   const button=ev.target.closest('[data-customer-section]');
   if(button)showSection(button.dataset.customerSection);
 });
@@ -401,8 +445,25 @@ q('#customerLogout').addEventListener('click',()=>{pendingGoogleCredential=null;
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&document.body.dataset.customerState==='portal')void load();});
 
 (async()=>{
+  const cardLink=readCardHash();
+  pendingFocusOrderId=cardLink.orderId;
   await loadGoogleSdk().catch(()=>false);
   sessionToken=readSession();
+
+  if(cardLink.code){
+    showLoading();
+    try{
+      const data=await api('/public/customer-portal/login',{method:'POST',body:JSON.stringify({customerId:cardLink.code})},false);
+      sessionToken=data.sessionToken;saveSession(sessionToken);portalData=data;clearCardHash();render();startRefresh();
+      return;
+    }catch(error){
+      clearCardHash();
+      showLogin(error.message||'Nie udało się otworzyć karty klienta.');
+      const input=q('#customerLoginForm input[name="customerId"]');if(input)input.value=cardLink.code;
+      return;
+    }
+  }
+
   if(sessionToken){
     showLoading();await load();if(sessionToken)startRefresh();
   }else{
