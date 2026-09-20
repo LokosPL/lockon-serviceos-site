@@ -1,4 +1,16 @@
 (() => {
+  const pendingScanKey='lockon.pending.service.scan.v1';
+  let pendingScanToken='';
+  try{
+    const hash=new URLSearchParams(String(location.hash||'').replace(/^#/,''));
+    pendingScanToken=String(hash.get('scan')||'').trim().slice(0,100);
+    if(pendingScanToken){
+      sessionStorage.setItem(pendingScanKey,pendingScanToken);
+      history.replaceState(null,'',location.pathname+location.search);
+    }else{
+      pendingScanToken=sessionStorage.getItem(pendingScanKey)||'';
+    }
+  }catch{}
   const onboardingKey = 'lockon.employee.onboarding.v1';
   let onboardingAccepted = false;
   try { onboardingAccepted = localStorage.getItem(onboardingKey) === 'accepted'; } catch {}
@@ -44,6 +56,10 @@
   let supportPresence = [];
   let supportTickets = [];
   let mobileHelpToolResult = null;
+  let pendingServiceCardOrder = null;
+  let scannerStream = null;
+  let scannerFrame = 0;
+  let scannerBusy = false;
 
   const STATUS_LABELS = {
     RECEIVED:'Przyjęto urządzenie', DIAGNOSIS:'Diagnoza', WAITING_PARTS:'Oczekiwanie na części',
@@ -117,18 +133,19 @@
     if (name === 'admin' && !isOwner()) name = 'more';
     if (name === 'earnings' && !canReadFinance()) name = 'more';
     if (name === 'quotes' && !canHandleCustomerQuotes()) name = 'more';
-    if (['new','orders','transfers'].includes(name) && !canReadService()) name = 'home';
+    if (['new','orders','transfers','scan'].includes(name) && !canReadService()) name = 'home';
     if (name === 'new' && !canEditService()) name = 'home';
 
     document.querySelectorAll('.panel-view').forEach((view) => view.classList.toggle('active', view.id === 'view-' + name));
 
-    const advanced = ['quotes','earnings','admin'];
+    const advanced = ['quotes','earnings','admin','scan'];
     const bottomName = advanced.includes(name) ? 'more' : name;
     document.querySelectorAll('.panel-bottom-nav [data-panel-nav]').forEach((button) => {
       button.classList.toggle('active', button.dataset.panelNav === bottomName);
     });
 
     window.scrollTo({top:0,behavior:'auto'});
+    if (name !== 'scan') stopServiceScanner();
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
     if (name === 'earnings') void loadFinance();
@@ -177,15 +194,14 @@
     }
   };
 
-  const syncMobileHandlingMode = () => {
-    const select=document.getElementById('mobileHandlingMode');
-    const transferOnly=select?.value==='TRANSFER_ONLY';
-    const info=document.getElementById('mobileTransferOnlyInfo');
-    if(info) info.hidden=!transferOnly;
-    document.querySelectorAll('[data-standard-service]').forEach((el)=>{
-      const roleHidden=el.classList.contains('service-edit-only')&&!canEditService();
-      el.hidden=transferOnly||roleHidden;
-    });
+  const syncMobileIntakeMode = () => {
+    const orderType=document.getElementById('mobileOrderType')?.value||'REPAIR';
+    const point=(me?.points||[]).find((item)=>item.id===activePointId);
+    const text=document.getElementById('mobileIntakeAutoText');
+    if(text)text.textContent=(point?'Punkt: '+point.name+(point.city?' · '+point.city:'')+'. ':'')+
+      (orderType==='COMPLAINT'
+        ? 'Reklamacja uruchamia przepływ reklamacyjny automatycznie.'
+        : 'Naprawa uruchamia standardowy przepływ serwisowy automatycznie.');
   };
 
   const renderPoints = () => {
@@ -194,6 +210,7 @@
     if (!activePointId || !points.some((p) => p.id === activePointId)) activePointId = points[0]?.id || '';
     select.innerHTML = points.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name) + (point.city ? ' · ' + esc(point.city) : '') + '</option>').join('');
     select.value = activePointId;
+    syncMobileIntakeMode();
   };
 
   const activeOrders = () => orders.filter((order) => !['COMPLETED','CANCELLED','REJECTED'].includes(order.status));
