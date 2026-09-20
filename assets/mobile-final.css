@@ -52,6 +52,63 @@ body.mobile-panel{
 }
 
 /* =========================================================
+   CALM LOADING
+   ========================================================= */
+.portal-home .site-loader{
+  background:#080b0f!important;
+  transition:opacity .28s ease,visibility .28s ease!important;
+}
+.portal-home .site-loader::before{
+  width:420px!important;height:420px!important;
+  top:-230px!important;right:-160px!important;
+  background:radial-gradient(circle,rgba(255,123,74,.11),transparent 66%)!important;
+}
+.portal-home .loader-core{
+  width:min(430px,calc(100% - 34px))!important;
+  padding:26px!important;
+  border-radius:22px!important;
+  border:1px solid rgba(255,255,255,.08)!important;
+  background:linear-gradient(150deg,#121820,#0b1016)!important;
+  box-shadow:0 30px 90px rgba(0,0,0,.36)!important;
+}
+.portal-home .loader-brand{gap:11px!important}
+.portal-home .loader-logo{
+  width:44px;height:44px;border-radius:14px;
+  border:1px solid rgba(255,123,74,.15);
+  background:rgba(255,123,74,.055);
+  display:grid;place-items:center;
+}
+.portal-home .loader-logo img{width:30px!important;height:30px!important;border-radius:0!important}
+.portal-home .loader-brand>div{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:0!important;
+}
+.portal-home .loader-brand strong{font-size:16px!important}
+.portal-home .loader-brand span{margin-top:3px!important;font-size:10px!important;color:#71808b!important}
+.portal-home .loader-copy{margin:30px 0 18px!important}
+.portal-home .loader-copy strong{
+  font-size:clamp(23px,6vw,29px)!important;
+  line-height:1.08!important;
+  letter-spacing:-.045em!important;
+}
+.portal-home .loader-copy span{font-size:11px!important;color:#7d8994!important}
+.portal-home .loader-dots{display:flex;gap:6px;margin-bottom:14px}
+.portal-home .loader-dots i{
+  width:7px;height:7px;border-radius:50%;background:#35404a;
+  animation:siteLoadDot 1.15s ease-in-out infinite;
+}
+.portal-home .loader-dots i:nth-child(2){animation-delay:.16s}
+.portal-home .loader-dots i:nth-child(3){animation-delay:.32s}
+.portal-home .loader-track{height:3px!important;background:#202832!important}
+.portal-home .loader-track i{
+  width:28%;height:100%;
+  background:linear-gradient(90deg,#ff7b4a,#f05a39)!important;
+  box-shadow:none!important;
+  transition:width .24s ease!important;
+}
+.portal-home .loader-meta{display:none!important}
+@keyframes siteLoadDot{50%{background:#ff8758;transform:translateY(-3px)}}
+
+/* =========================================================
    LANDING — MOBILE IS A GUIDE, NOT A SHRUNK DESKTOP
    ========================================================= */
 @media(max-width:860px){
