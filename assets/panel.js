@@ -1126,7 +1126,7 @@
       const result = await api('/service/orders',{method:'POST',body:JSON.stringify(payload)});
       status.className = 'panel-form-status ok';
       status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
-      event.currentTarget.reset();
+      submittedForm.reset();
       syncMobileHandlingMode();
       if (result.notification?.sent) {
         toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');

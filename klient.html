@@ -23,52 +23,42 @@
   <main class="customer-shell">
     <section id="customerLogin" class="customer-login-card">
       <div class="customer-login-intro">
-        <span class="eyebrow">PRYWATNA STREFA KLIENTA</span>
-        <h1>Twoje naprawy. Jeden prosty portal.</h1>
-        <p>Historia zleceń, aktualne statusy, wyceny i rozmowy z serwisem są w jednym miejscu. Potrzebujesz tylko stałego kodu klienta z wiadomości od LockOn.</p>
-        <div class="customer-login-points">
-          <article><b>01</b><span>Sprawdź wszystkie swoje zlecenia i aktualne etapy napraw.</span></article>
-          <article><b>02</b><span>Poproś o wycenę i odpisuj serwisowi bez szukania osobnego kontaktu.</span></article>
-          <article><b>03</b><span>Ten sam kod działa przy kolejnych wizytach — zachowaj go dla siebie.</span></article>
-        </div>
+        <span class="eyebrow">PORTAL KLIENTA</span>
+        <h1>Wpisz kod z wiadomości.</h1>
+        <p>Po otwarciu zobaczysz swoje zlecenia, wyceny i wiadomości z serwisem.</p>
       </div>
       <div class="customer-login-box">
-        <div class="customer-login-box-icon">LK</div>
-        <strong>Otwórz swój portal</strong>
-        <p>Wpisz kod dokładnie tak, jak otrzymałeś go w wiadomości.</p>
+        <strong>Twój kod klienta</strong>
+        <p>Wpisz go dokładnie tak, jak w SMS-ie lub e-mailu od LockOn.</p>
         <form id="customerLoginForm">
           <label><span>Kod klienta</span><input name="customerId" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="LK-XXXX-XXXX-XXXX-XXXX" maxlength="23" required></label>
           <button type="submit">Pokaż moje zlecenia</button>
         </form>
-        <div class="customer-login-note"><strong>Bezpieczeństwo:</strong> kod otwiera Twoją prywatną historię, dlatego nie udostępniaj go osobom trzecim.</div>
+        <div class="customer-login-note">Kod jest prywatny. Nie udostępniaj go innym osobom.</div>
         <div id="customerLoginError" class="customer-error" hidden></div>
       </div>
     </section>
 
     <div id="customerPortal" hidden>
       <section class="customer-hero">
-        <div><span class="eyebrow">KARTA KLIENTA</span><h1 id="customerName">—</h1><p id="customerContact">—</p></div>
-        <div class="customer-sync"><i></i><span id="customerSync">Aktualizuję dane…</span></div>
+        <div><span class="eyebrow">TWOJE SPRAWY</span><h1 id="customerName">—</h1><p id="customerContact">—</p></div>
+        <div class="customer-sync"><i></i><span id="customerSync">Aktualizuję…</span></div>
       </section>
 
-      <section class="customer-grid">
-        <article><span>Wizyty / zlecenia</span><strong id="customerOrderCount">0</strong></article>
-        <article><span>Otwarte wyceny</span><strong id="customerQuoteCount">0</strong></article>
-        <article><span>Klient od</span><strong id="customerSince">—</strong></article>
+      <section class="customer-inbox-nav" aria-label="Sekcje portalu">
+        <button type="button" class="active" data-customer-section="orders"><span>Twoje zlecenia</span><b id="customerOrderCount">0</b><small>Najnowsze statusy napraw</small></button>
+        <button type="button" data-customer-section="quotes"><span>Twoje wyceny</span><b id="customerQuoteCount">0</b><small>Wyceny i rozmowy z serwisem</small></button>
+        <button type="button" data-customer-section="new-quote"><span>Nowa wycena</span><b>＋</b><small>Zapytaj o koszt naprawy</small></button>
       </section>
+      <span id="customerSince" hidden>—</span><span id="customerPortalCode" hidden>—</span><button id="copyCustomerCode" type="button" hidden>Kopiuj kod</button><a id="customerPortalLink" href="klient.html" hidden>Portal</a>
 
-      <section class="customer-identity-card">
-        <div><span>TWÓJ STAŁY KOD KLIENTA</span><strong id="customerPortalCode">—</strong><small>Ten kod otwiera całą Twoją historię serwisową. Nie udostępniaj go osobom trzecim.</small></div>
-        <div class="customer-identity-actions"><button id="copyCustomerCode" type="button">Kopiuj kod</button><a id="customerPortalLink" href="klient.html">Adres portalu klienta</a></div>
-      </section>
-
-      <section class="customer-card">
-        <div class="customer-section-head"><div><span>HISTORIA</span><h2>Twoje zlecenia</h2></div><small>Wszystkie zlecenia przypisane do Twojego kodu klienta.</small></div>
+      <section class="customer-card customer-section-panel active" data-customer-panel="orders">
+        <div class="customer-section-head"><div><span>ZLECENIA</span><h2>Twoje zlecenia</h2></div><small>Od najnowszego.</small></div>
         <div id="customerOrders" class="customer-orders"></div>
       </section>
 
-      <section class="customer-card">
-        <div class="customer-section-head"><div><span>WYCENA</span><h2>Zapytaj o koszt naprawy</h2></div><small>Wybierz punkt, którego dotyczy sprawa. ServiceOS sam przekaże zapytanie do właściwego serwisu.</small></div>
+      <section class="customer-card customer-section-panel" data-customer-panel="new-quote" hidden>
+        <div class="customer-section-head"><div><span>NOWA WYCENA</span><h2>Zapytaj o koszt naprawy</h2></div><small>Wybierz punkt, którego dotyczy sprawa. ServiceOS sam przekaże zapytanie do właściwego serwisu.</small></div>
         <form id="customerQuoteForm" class="customer-quote-form">
           <label><span>Punkt LockOn</span><select name="requestedPointId" id="customerQuotePoint" required></select></label>
           <label><span>Dotyczy zlecenia</span><select name="serviceOrderId" id="customerQuoteOrder"><option value="">Nowa wycena / inne urządzenie</option></select></label>
@@ -79,8 +69,8 @@
         <div id="customerQuoteStatus" class="customer-status" hidden></div>
       </section>
 
-      <section class="customer-card">
-        <div class="customer-section-head"><div><span>WIADOMOŚCI</span><h2>Wyceny i rozmowy</h2></div><small>Odpowiedź pojawi się tutaj automatycznie — nie musisz odświeżać strony.</small></div>
+      <section class="customer-card customer-section-panel" data-customer-panel="quotes" hidden>
+        <div class="customer-section-head"><div><span>WYCENY</span><h2>Twoje wyceny</h2></div><small>Odpowiedź pojawi się tutaj automatycznie — nie musisz odświeżać strony.</small></div>
         <div id="customerQuotes" class="customer-quotes"></div>
       </section>
     </div>
