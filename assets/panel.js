@@ -219,7 +219,9 @@
   const renderPoints = () => {
     const select = document.getElementById('panelPointSelect');
     const points = me?.points || [];
-    if (!activePointId || !points.some((p) => p.id === activePointId)) activePointId = points[0]?.id || '';
+    if (!activePointId || !points.some((p) => p.id === activePointId)) {
+      activePointId = points.some((p)=>p.id===me?.activePointId) ? me.activePointId : (points[0]?.id || '');
+    }
     select.innerHTML = points.map((point) => '<option value="' + esc(point.id) + '">' + esc(point.name) + (point.city ? ' · ' + esc(point.city) : '') + '</option>').join('');
     select.value = activePointId;
     syncMobileIntakeMode();
@@ -267,7 +269,7 @@
     try{
       const result=await api('/service/scan',{
         method:'POST',
-        body:JSON.stringify({actingPointId:activePointId,token:tokenValue||undefined,code:code||undefined})
+        body:JSON.stringify({token:tokenValue||undefined,code:code||undefined})
       });
       try{sessionStorage.removeItem(pendingScanKey);}catch{}
       pendingScanToken='';
@@ -682,7 +684,7 @@
     if (order.handlingMode === 'TRANSFER_ONLY' && status !== 'CANCELLED') return toast('W trybie przekazania można jedynie anulować zlecenie.','error');
     try {
       const result = await api('/service/orders/' + encodeURIComponent(id) + '/status', {
-        method:'POST', body:JSON.stringify({status,actingPointId:activePointId})
+        method:'POST', body:JSON.stringify({status})
       });
       const settlement = result?.settlement;
       const settlementText = settlement ? ' Rozliczenie ' + Number(settlement.amount || 0).toFixed(2) + ' ' + String(settlement.currency || 'PLN') + ' dodano automatycznie.' : '';
@@ -1519,7 +1521,7 @@
     const submittedForm=event.currentTarget;
     const form = new FormData(submittedForm);
     const payload = Object.fromEntries(form.entries());
-    payload.pointId = activePointId;
+    delete payload.pointId;
     delete payload.handlingMode;
     payload.imei = String(payload.imei || '').replace(/\D/g,'');
     if (!activePointId) return toast('Najpierw wybierz aktywny punkt.','error');
@@ -1685,12 +1687,27 @@
       if (close) document.getElementById(close.dataset.closeDialog)?.close();
     });
 
-    document.getElementById('panelPointSelect')?.addEventListener('change',(event) => {
-      activePointId=event.target.value;
-      syncMobileIntakeMode();
-      renderHome();
-      renderOrders();
-      if (activeOrderId) void openOrder(activeOrderId);
+    document.getElementById('panelPointSelect')?.addEventListener('change',async(event) => {
+      const select=event.currentTarget;
+      const previous=activePointId;
+      const next=String(select.value||'');
+      if(!next||next===previous)return;
+      select.disabled=true;
+      try{
+        const updated=await api('/me/active-point',{method:'POST',body:JSON.stringify({pointId:next})});
+        activePointId=updated.activePointId||next;
+        me={...me,...updated};
+        syncMobileIntakeMode();
+        renderHome();
+        renderOrders();
+        if(activeOrderId)await openOrder(activeOrderId);
+      }catch(error){
+        activePointId=previous;
+        select.value=previous;
+        toast(error.message||'Nie udało się zmienić aktywnego punktu.','error');
+      }finally{
+        select.disabled=false;
+      }
     });
     document.getElementById('panelAccountButton')?.addEventListener('click',()=>document.getElementById('accountDialog')?.showModal());
     document.getElementById('orderSearch')?.addEventListener('input',renderOrders);
