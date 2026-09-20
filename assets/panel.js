@@ -1120,44 +1120,97 @@
     } catch (error) { toast(error.message || 'Nie udało się zapisać punktu.','error'); }
   };
 
+  const pdfPayloadToObjectUrl = (payload) => {
+    const binary=atob(String(payload?.pdfBase64||''));
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i+=1)bytes[i]=binary.charCodeAt(i);
+    if(bytes.length<5||String.fromCharCode(...bytes.slice(0,5))!=='%PDF-')throw new Error('Serwer zwrócił nieprawidłowy PDF.');
+    return URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  };
+
+  const openServiceCardPdf = async (orderId,printMode) => {
+    const popup=window.open('about:blank','_blank');
+    try{
+      const payload=await api('/service/orders/'+encodeURIComponent(orderId)+'/service-card',{
+        method:'POST',body:JSON.stringify({printMode})
+      });
+      const url=pdfPayloadToObjectUrl(payload);
+      if(popup&&!popup.closed){
+        popup.location.replace(url);
+      }else{
+        const a=document.createElement('a');a.href=url;a.download=String(payload.fileName||'karta-serwisowa.pdf').replace(/[\\/]/g,'_');
+        document.body.appendChild(a);a.click();a.remove();
+      }
+      setTimeout(()=>URL.revokeObjectURL(url),60_000);
+      return payload;
+    }catch(error){
+      try{popup?.close();}catch{}
+      throw error;
+    }
+  };
+
+  const chooseCreatedServiceCard = async (printMode) => {
+    if(!pendingServiceCardOrder)return;
+    const status=document.getElementById('serviceCardChoiceStatus');
+    const buttons=[...document.querySelectorAll('[data-service-card-choice]')];
+    buttons.forEach((button)=>button.disabled=true);
+    if(status){status.className='panel-form-status';status.textContent='Generuję kartę serwisową…';}
+    try{
+      await openServiceCardPdf(pendingServiceCardOrder.id,printMode);
+      document.getElementById('serviceCardChoiceDialog')?.close();
+      toast(printMode==='PHYSICAL_AND_ONLINE'?'Otworzono kartę A4 do wydruku.':'Otworzono kartę urządzenia do wydruku.');
+      pendingServiceCardOrder=null;
+    }catch(error){
+      if(status){status.className='panel-form-status error';status.textContent=error.message||'Nie udało się przygotować karty.';}
+    }finally{buttons.forEach((button)=>button.disabled=false);}
+  };
+
   const submitNewOrder = async (event) => {
     event.preventDefault();
     if (!canCreateService()) return;
-    const form = new FormData(event.currentTarget);
+    const submittedForm=event.currentTarget;
+    const form = new FormData(submittedForm);
     const payload = Object.fromEntries(form.entries());
     payload.pointId = activePointId;
+    delete payload.handlingMode;
     payload.imei = String(payload.imei || '').replace(/\D/g,'');
-    if (payload.handlingMode === 'TRANSFER_ONLY') {
-      delete payload.estimatedCompletionAt;
-      delete payload.estimatedCost;
-    } else {
-      if (payload.estimatedCompletionAt) payload.estimatedCompletionAt = new Date(payload.estimatedCompletionAt).toISOString();
-      else delete payload.estimatedCompletionAt;
-      if (payload.estimatedCost !== undefined && payload.estimatedCost !== '') payload.estimatedCost = Number(payload.estimatedCost);
-      else delete payload.estimatedCost;
+    if (!activePointId) return toast('Najpierw wybierz aktywny punkt.','error');
+    if (!String(payload.email||'').trim() || !String(payload.phone||'').replace(/\D/g,'')) {
+      return toast('E-mail i telefon klienta są wymagane.','error');
     }
+    if (payload.estimatedCompletionAt) payload.estimatedCompletionAt = new Date(payload.estimatedCompletionAt).toISOString();
+    else delete payload.estimatedCompletionAt;
+    if (payload.estimatedCost !== undefined && payload.estimatedCost !== '') payload.estimatedCost = Number(payload.estimatedCost);
+    else delete payload.estimatedCost;
     const status = document.getElementById('newOrderStatus');
     status.className = 'panel-form-status';
     status.textContent = 'Zapisywanie…';
     try {
       const result = await api('/service/orders',{method:'POST',body:JSON.stringify(payload)});
       status.className = 'panel-form-status ok';
-      status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '.';
+      status.textContent = 'Utworzono zlecenie #' + String(result.order?.orderNumber || '') + '. Karta klienta jest wysyłana e-mailem.';
       submittedForm.reset();
-      syncMobileHandlingMode();
+      syncMobileIntakeMode();
       if (result.notification?.sent) {
-        toast('Zlecenie utworzone. Klient dostał potwierdzenie e-mail.');
+        toast('Zlecenie utworzone. Klient dostał e-mail z kartą serwisową PDF.');
       } else if (result.notification?.queued) {
-        toast('Zlecenie utworzone. E-mail czeka na ponowną wysyłkę.');
-      } else if (result.notification?.reason === 'NO_CUSTOMER_EMAIL') {
-        toast('Zlecenie utworzone. Klient nie podał adresu e-mail.');
+        toast('Zlecenie utworzone. Karta serwisowa klienta jest w kolejce e-mail.');
       } else if (result.notification?.reason === 'NO_SENDER') {
-        toast('Zlecenie utworzone, ale brak aktywnego firmowego nadawcy Gmail.','error');
+        toast('Zlecenie utworzone, ale brak aktywnego firmowego nadawcy Gmail. E-mail wymaga ponowienia.','error');
       } else {
         toast('Zlecenie utworzone.');
       }
       await loadOrders();
-      window.setTimeout(() => showView('orders'),700);
+      if(result.serviceCard?.required&&result.order?.id){
+        pendingServiceCardOrder={id:result.order.id,orderNumber:result.order.orderNumber};
+        const title=document.getElementById('serviceCardChoiceTitle');
+        if(title)title.textContent='Zlecenie #'+String(result.order.orderNumber||'')+' utworzone';
+        const choice=document.getElementById('serviceCardChoiceStatus');
+        if(choice){choice.textContent='';choice.className='panel-form-status';}
+        document.getElementById('serviceCardChoiceDialog')?.showModal();
+      }else{
+        window.setTimeout(() => showView('orders'),500);
+      }
     } catch (error) {
       status.className = 'panel-form-status error';
       status.textContent = error.message || 'Nie udało się utworzyć zlecenia.';
