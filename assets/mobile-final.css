@@ -1656,3 +1656,23 @@ body.mobile-panel [hidden]{display:none!important}
 }
 
 .mobile-panel .panel-toast{top:calc(12px + env(safe-area-inset-top))!important;bottom:auto!important;left:50%!important;right:auto!important;width:min(calc(100% - 28px),520px)!important;transform:translateX(-50%)!important;padding:13px 16px!important;border-radius:15px!important;z-index:10000!important;font-size:12px!important;font-weight:750!important;animation:panelToastIn .22s cubic-bezier(.2,.8,.2,1) both!important}.mobile-panel .panel-toast.ok{background:rgba(12,55,39,.97)!important;border-color:rgba(91,226,155,.45)!important;color:#a8f1c8!important;box-shadow:0 14px 42px rgba(0,0,0,.42)!important}.mobile-panel .panel-toast.error{background:rgba(64,24,25,.97)!important;border-color:rgba(255,118,118,.42)!important;color:#ffc0bc!important}@keyframes panelToastIn{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+
+
+/* ServiceOS 1.0.0.0 · mobile scan + service-card intake */
+.mobile-scan-card{max-width:720px;margin:0 auto;padding:18px;border:1px solid #252d36;border-radius:18px;background:#0f141a}
+.mobile-scan-copy{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}.mobile-scan-copy strong{font-size:16px}.mobile-scan-copy span{font-size:11px;line-height:1.5;color:#8994a0}
+.mobile-scanner-camera{position:relative;min-height:240px;border:1px solid #28313a;border-radius:15px;overflow:hidden;background:#070a0d;display:grid;place-items:center}
+.mobile-scanner-camera video{width:100%;height:280px;object-fit:cover;background:#070a0d}
+.mobile-scanner-frame{position:absolute;width:min(62vw,220px);aspect-ratio:1;border:2px solid rgba(255,121,67,.75);border-radius:18px;box-shadow:0 0 0 999px rgba(0,0,0,.25);pointer-events:none}
+.mobile-scanner-camera p{position:absolute;left:12px;right:12px;bottom:10px;margin:0;padding:8px 10px;border-radius:9px;background:rgba(4,7,10,.78);font-size:10px;color:#d9dfe5;text-align:center}
+.mobile-scan-card>.panel-primary-button{margin-top:10px}
+.mobile-scan-divider{display:flex;align-items:center;gap:8px;margin:15px 0 10px;color:#6f7984;font-size:9px;text-transform:uppercase;letter-spacing:.08em}.mobile-scan-divider:before,.mobile-scan-divider:after{content:"";height:1px;background:#242c34;flex:1}
+.mobile-scan-form{display:grid;grid-template-columns:1fr auto;gap:8px}.mobile-scan-form input{font-size:16px;letter-spacing:.08em;text-transform:uppercase}.mobile-scan-form button{border:0;border-radius:10px;padding:0 15px;background:#ff6f3c;color:white;font-weight:800}
+.service-card-choice-dialog .panel-dialog-card{max-width:620px}
+.service-card-choice-head>span{font-size:9px;color:#ff8555;font-weight:800;letter-spacing:.1em}.service-card-choice-head h2{margin:7px 0}.service-card-choice-head p{color:#8994a0;font-size:11px;line-height:1.5}
+.service-card-choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0 8px}
+.service-card-choice-grid button{padding:15px;border:1px solid #28313a;border-radius:13px;background:#131920;color:#eef2f5;text-align:left;display:flex;flex-direction:column;gap:7px}
+.service-card-choice-grid button:hover{border-color:rgba(255,116,59,.45);background:#171e26}.service-card-choice-grid strong{font-size:12px}.service-card-choice-grid span{font-size:10px;line-height:1.45;color:#8994a0}
+.mobile-service-card-tools .order-dialog-actions{display:flex;gap:7px;flex-wrap:wrap}
+.customer-service-card-download{margin-top:12px;border:1px solid rgba(255,118,64,.26);border-radius:10px;padding:10px 12px;background:rgba(255,112,52,.07);color:#ff9b76;font-weight:800;font-size:10px}
+@media(max-width:600px){.service-card-choice-grid{grid-template-columns:1fr}.mobile-scan-form{grid-template-columns:1fr}.mobile-scan-form button{min-height:44px}}
