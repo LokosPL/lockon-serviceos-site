@@ -157,9 +157,40 @@
       <div id="financePoints" class="mobile-finance-points"></div>
     </section>
 
+    <section id="view-workspace" class="panel-view technician-only" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="home">←</button><div><span>MÓJ SERWIS</span><h1>Plan pracy</h1></div><button id="refreshTechnicianWorkspace" type="button">↻</button></div>
+      <div id="technicianWorkspaceSummary" class="mobile-workspace-kpis"></div>
+      <div id="technicianWorkspaceCalendar" class="mobile-workspace-calendar"></div>
+      <div id="technicianWorkspaceQueues" class="mobile-workspace-queues"></div>
+    </section>
+
+    <section id="view-tech-notes" class="panel-view technician-only" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="more">←</button><div><span>PRYWATNE</span><h1>Mój pokój notatek</h1></div><button id="refreshTechnicianNotes" type="button">↻</button></div>
+      <form id="technicianNoteForm" class="panel-form-card compact mobile-technician-note-form">
+        <label><span>Tytuł</span><input name="title" maxlength="120" placeholder="Np. Zamówienia na jutro"></label>
+        <label><span>Notatka</span><textarea name="body" maxlength="4000" rows="6" required placeholder="Prywatna notatka serwisanta…"></textarea></label>
+        <label class="check"><input name="pinned" type="checkbox"><span>Przypnij notatkę</span></label>
+        <button class="panel-primary-button" type="submit">Zapisz notatkę</button>
+      </form>
+      <div id="technicianNotesList" class="mobile-technician-notes"></div>
+    </section>
+
+    <section id="view-invoices" class="panel-view finance-only" hidden>
+      <div class="panel-page-head"><button type="button" data-panel-nav="more">←</button><div><span>DOKUMENTY</span><h1>Magazyn faktur</h1></div><button id="refreshInvoiceWarehouse" type="button">↻</button></div>
+      <div class="mobile-invoice-toolbar">
+        <label><span>Miesiąc</span><input id="invoiceWarehouseMonth" type="month"></label>
+        <button id="downloadInvoiceMonth" class="panel-primary-button" type="button">Pobierz wszystkie PDF</button>
+      </div>
+      <div id="invoiceWarehouseSummary" class="mobile-workspace-kpis"></div>
+      <div id="invoiceWarehouseList" class="mobile-invoice-list"></div>
+    </section>
+
     <section id="view-more" class="panel-view">
       <div class="simple-view-title"><span>WIĘCEJ</span><h1>Więcej</h1><p>Ustawienia i funkcje używane rzadziej.</p></div>
       <div class="mobile-more-grid">
+        <button type="button" class="technician-only" data-panel-nav="workspace" hidden><b>▦</b><span><strong>Plan pracy</strong><small>Telefony, terminy i kolejki</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="finance-only" data-panel-nav="invoices" hidden><b>FV</b><span><strong>Magazyn faktur</strong><small>PDF-y części i miesiące</small></span><i class="panel-icon" data-icon="chevron"></i></button>
+        <button type="button" class="technician-only" data-panel-nav="tech-notes" hidden><b>✎</b><span><strong>Moje notatki</strong><small>Prywatny pokój serwisanta</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="quote-staff-only" data-panel-nav="quotes" hidden><b>✉</b><span><strong>Wyceny</strong><small>Zapytania klientów</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="finance-only" data-panel-nav="earnings" hidden><b>zł</b><span><strong>Rozliczenia</strong><small>Przychód i podział</small></span><i class="panel-icon" data-icon="chevron"></i></button>
         <button type="button" class="owner-only" data-panel-nav="admin" hidden><b>⚙</b><span><strong>Zarządzanie</strong><small>Konta, punkty i bezpieczeństwo</small></span><i class="panel-icon" data-icon="chevron"></i></button>
@@ -235,6 +266,17 @@
     <button data-panel-nav="transfers"><span class="panel-icon" data-icon="transfer"></span><b>Przekazania</b></button>
     <button data-panel-nav="more"><span class="panel-icon" data-icon="more"></span><b>Więcej</b></button>
   </nav>
+
+  <dialog id="monthlyInvoiceDialog" class="panel-dialog monthly-invoice-dialog">
+    <div class="panel-dialog-card">
+      <div class="service-card-choice-head"><span>ZAMKNIĘCIE MIESIĄCA</span><h2 id="monthlyInvoiceTitle">Faktury serwisowe</h2><p id="monthlyInvoiceText">Masz faktury do pobrania.</p></div>
+      <div class="order-dialog-actions">
+        <button id="monthlyInvoiceDownload" class="mini-action primary" type="button">Pobierz wszystkie</button>
+        <button type="button" class="mini-action" data-panel-nav="invoices" data-close-dialog="monthlyInvoiceDialog">Magazyn faktur</button>
+        <button id="monthlyInvoiceDismiss" class="mini-action" type="button">Odrzuć na ten miesiąc</button>
+      </div>
+    </div>
+  </dialog>
 
   <dialog id="serviceCardChoiceDialog" class="panel-dialog service-card-choice-dialog">
     <div class="panel-dialog-card">
