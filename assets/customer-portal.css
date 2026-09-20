@@ -49,3 +49,5 @@
   .customer-quote-form{padding:14px!important}
 }
 @media(prefers-reduced-motion:reduce){.customer-section-panel{animation:none}}
+
+.customer-order{cursor:pointer;transition:transform .16s ease,border-color .16s ease}.customer-order:active{transform:scale(.99)}.customer-order-details{display:none;padding-top:10px}.customer-order.open .customer-order-details{display:block;animation:customerReveal .18s ease both}.customer-order-open{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);color:#ff956b;font-size:11px;font-weight:800}.customer-order-open span{font-size:20px;transition:transform .18s ease}.customer-order.open .customer-order-open span{transform:rotate(90deg)}@keyframes customerReveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.customer-order,.customer-order-open span{transition:none}.customer-order.open .customer-order-details{animation:none}}
