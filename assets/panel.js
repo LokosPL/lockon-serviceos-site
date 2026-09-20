@@ -128,7 +128,7 @@
       button.classList.toggle('active', button.dataset.panelNav === bottomName);
     });
 
-    window.scrollTo({top:0,behavior:'instant'});
+    window.scrollTo({top:0,behavior:'auto'});
     if (name === 'orders') renderOrders();
     if (name === 'transfers') void loadTransfers();
     if (name === 'earnings') void loadFinance();
