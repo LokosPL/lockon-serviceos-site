@@ -2,6 +2,19 @@ name: Mobile UI visual smoke
 
 on:
   push:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "panel.html"
+      - "klient.html"
+      - "track.html"
+      - "assets/*.css"
+      - "assets/site.js"
+      - "assets/home-story.js"
+      - "assets/panel.js"
+      - ".github/workflows/mobile-visual-check.yml"
+  pull_request:
+    branches: ["main"]
     paths:
       - "index.html"
       - "panel.html"
