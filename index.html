@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="assets/home-story.css">
   <link rel="stylesheet" href="assets/web-polish.css">
   <link rel="stylesheet" href="assets/mobile-final.css">
+  <link rel="stylesheet" href="assets/release-1.0.11.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
@@ -42,6 +43,7 @@
       <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
         <a href="#day">Jak działa</a>
         <a href="#modules">Aplikacja</a>
+        <a href="#now">Nowości</a>
         <a href="#connect">Telefon</a>
       </nav>
       <div class="portal-nav-actions">
@@ -53,7 +55,7 @@
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
     <a href="#day">Jak działa</a>
-    <a href="#modules">Aplikacja</a>
+    <a href="#now">Nowości</a>
     <a href="#connect">Telefon</a>
     <a href="#download">Pobierz</a>
   </nav>
@@ -66,7 +68,7 @@
         <div class="hero-copy reveal">
           <div class="eyebrow-pill"><span></span> OFICJALNY PORTAL PRACOWNIKA LOCKON</div>
           <h1>Najpierw poznaj ServiceOS.<br><em>Potem zacznij pracę.</em></h1>
-          <p class="hero-description">Ta strona przeprowadzi Cię przez codzienną pracę: zobaczysz proces naprawy, najważniejsze ekrany i dokładnie nauczysz się, jak bezpiecznie połączyć telefon.</p>
+          <p class="hero-description">Ta strona przeprowadzi Cię przez codzienną pracę: przyjęcie telefonu, plan napraw, przekazania, wyceny, dokumenty klienta, faktury i prywatny notatnik serwisanta — a na końcu pokaże, jak bezpiecznie połączyć telefon.</p>
           <div class="company-warning">
             <strong>Nie musisz znać systemu przed pierwszym logowaniem.</strong>
             <span>Przejdź stronę od góry do dołu. ServiceOS jest pokazany tutaj tak samo logicznie, jak później prowadzi Cię podczas pracy.</span>
@@ -150,7 +152,7 @@
           <div class="workday-events">
             <article class="workday-event event-1"><time>08:12</time><i></i><div><span>PRZYJĘCIE</span><strong>Klient zostawia Samsung S25</strong><small>Zlecenie zapisane, klient dostał potwierdzenie.</small></div></article>
             <article class="workday-event event-2"><time>09:05</time><i></i><div><span>PRZEKAZANIE</span><strong>Telefon jedzie do serwisu</strong><small>Widać punkt macierzysty i aktualne miejsce urządzenia.</small></div></article>
-            <article class="workday-event event-3"><time>11:40</time><i></i><div><span>SERWIS</span><strong>Diagnoza → naprawa</strong><small>Serwisant widzi następną akcję i przewidywany termin.</small></div></article>
+            <article class="workday-event event-3"><time>11:40</time><i></i><div><span>SERWIS</span><strong>Diagnoza → naprawa</strong><small>Serwisant widzi następną akcję i może przesunąć przewidywany termin bezpośrednio w planie pracy.</small></div></article>
             <article class="workday-event event-4"><time>15:25</time><i></i><div><span>GOTOWE</span><strong>Urządzenie wraca do punktu</strong><small>Po fizycznym powrocie można przygotować odbiór klienta.</small></div></article>
           </div>
           <div class="workday-summary">
@@ -181,9 +183,9 @@
             </article>
             <article class="app-story-item" data-story-feature="service" data-story-index="02" data-story-observe>
               <span>SERWIS</span>
-              <h3>Cała naprawa jest w jednej karcie.</h3>
-              <p>Nie szukasz informacji w kilku miejscach. Klient, urządzenie, termin, aktualny etap i następna czynność są przy jednym zleceniu.</p>
-              <ul><li>status mówi, na jakim etapie jesteś</li><li>lokalizacja mówi, gdzie fizycznie jest telefon</li><li>historia pokazuje, co wydarzyło się wcześniej</li></ul>
+              <h3>Lista jest lekka, a szczegóły otwierasz dopiero wtedy, gdy ich potrzebujesz.</h3>
+              <p>Na liście widzisz najważniejszy stan zlecenia. Pełne dane, historia, logistyka, koszty i karta klienta otwierają się w osobnym oknie szczegółów.</p>
+              <ul><li>licznik pokazuje telefony przekazane do serwisu</li><li>cena orientacyjna i termin są widoczne przy właściwym zleceniu</li><li>cięższe dane nie obciążają listy dopóki ich nie otworzysz</li></ul>
             </article>
             <article class="app-story-item" data-story-feature="transfers" data-story-index="03" data-story-observe>
               <span>PRZEKAZANIA</span>
@@ -252,6 +254,54 @@
       </div>
     </section>
 
+    <section class="page-section release-now-section" id="now">
+      <div class="wrap release-now-shell">
+        <div class="release-now-head">
+          <div>
+            <span>SERVICEOS 1.0.0.11 · AKTUALNY SPOSÓB PRACY</span>
+            <h2>Mniej klikania. Więcej pracy w jednym rytmie.</h2>
+            <p>Najświeższa wersja porządkuje codzienną obsługę serwisu: szybsze przyjęcie, kalendarz pracy, lekkie szczegóły zlecenia oraz czytelniejsze dokumenty dla klienta.</p>
+          </div>
+          <div class="release-now-version"><span>AKTUALNA WERSJA WINDOWS</span><strong data-release-version>—</strong></div>
+        </div>
+
+        <div class="release-feature-grid">
+          <article>
+            <b>01</b>
+            <strong>Plan pracy, który można przesuwać.</strong>
+            <p>Serwisant ma tygodniowy kalendarz. Telefon można przeciągnąć na inny dzień, a termin zmienia się bez przeklikiwania formularzy.</p>
+            <small>Jest też „Bez terminu”, kolejki „Czeka na części” i „Gotowe do odbioru”.</small>
+          </article>
+          <article>
+            <b>02</b>
+            <strong>Zlecenia bez ciężkiego rozwijania listy.</strong>
+            <p>„Szczegóły” otwierają osobne, lekkie okno. Lista pozostaje szybka, a licznik „Przekazane do serwisu” pokazuje urządzenia poza punktem macierzystym.</p>
+            <small>Pełne dane są pobierane dopiero wtedy, gdy naprawdę ich potrzebujesz.</small>
+          </article>
+          <article>
+            <b>03</b>
+            <strong>Faktury i notatki wreszcie są pod ręką.</strong>
+            <p>Magazyn faktur ma wyszukiwanie i wygodną nawigację miesiącami. Notatnik serwisanta ma filtry, przypięcia i szybkie szablony.</p>
+            <small>Notatki prywatne nie są częścią historii klienta ani zlecenia.</small>
+          </article>
+          <article>
+            <b>04</b>
+            <strong>Klient dostaje czytelniejsze dokumenty.</strong>
+            <p>Przy przyjęciu można podać cenę orientacyjną. Karta klienta wysyłana e-mailem jest przygotowana pionowo, z QR i kodem dostępu do panelu.</p>
+            <small>Wydruk przy ladzie pozostaje fizyczną kartą A4 z dwiema częściami i linią cięcia.</small>
+          </article>
+        </div>
+
+        <div class="release-service-flow" aria-label="Przebieg pracy">
+          <span>Przyjęcie</span>
+          <span>Plan pracy</span>
+          <span>Naprawa</span>
+          <span>Przekazanie</span>
+          <span>Odbiór</span>
+        </div>
+      </div>
+    </section>
+
     <section class="page-section workflow-section" id="workflow">
       <div class="wrap">
         <div class="section-heading reveal">
@@ -306,7 +356,7 @@
 
             <div class="demo-screen" data-demo-screen="service" aria-hidden="true">
               <div class="preview-page-title"><span>SERWIS</span><h3>Kolejka pracy</h3></div>
-              <div class="preview-filters"><span class="active">Działaj teraz <b>4</b></span><span>Po terminie <b>1</b></span><span>W drodze <b>2</b></span><span>Gotowe <b>3</b></span></div>
+              <div class="preview-filters"><span class="active">Działaj teraz <b>4</b></span><span>Po terminie <b>1</b></span><span>Przekazane <b>2</b></span><span>Gotowe <b>3</b></span></div>
               <div class="preview-orders">
                 <article class="danger"><b>#1042</b><div><strong>Anna Kowalska · iPhone 14 Pro</strong><span>Etap 3/10 · Diagnoza</span><p>Następna akcja: <strong>rozpocznij naprawę</strong></p><progress max="100" value="30"></progress></div><em>PO TERMINIE</em></article>
                 <article><b>#1041</b><div><strong>Piotr Nowak · Samsung S24</strong><span>Etap 7/10 · Powrót do Nowogardu</span><p>Następna akcja: <strong>potwierdź dostarczenie</strong></p><progress max="100" value="70"></progress></div><em>W DRODZE</em></article>
