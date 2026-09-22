@@ -18,6 +18,21 @@ const fmt=(v)=>{if(!v)return '—';const d=new Date(v);return Number.isNaN(d.get
 const ts=(v)=>{const d=new Date(v||0);return Number.isNaN(d.getTime())?0:d.getTime();};
 const newestFirst=(a,b)=>ts(b.updatedAt||b.createdAt||b.receivedAt)-ts(a.updatedAt||a.createdAt||a.receivedAt);
 const money=(v,c='PLN')=>new Intl.NumberFormat('pl-PL',{style:'currency',currency:c||'PLN'}).format(Number(v||0));
+const warrantyInfo=(warranty)=>{
+  if(!warranty?.months||!warranty?.expiresAt)return null;
+  const expiry=new Date(warranty.expiresAt);
+  if(Number.isNaN(expiry.getTime()))return null;
+  const now=new Date();
+  const days=Math.max(0,Math.ceil((expiry.getTime()-now.getTime())/86400000));
+  const expired=expiry.getTime()<now.getTime();
+  return {
+    months:Number(warranty.months),
+    expiresAt:expiry,
+    expired,
+    days,
+    label:expired?'Gwarancja wygasła':days===0?'Ostatni dzień gwarancji':`Pozostało ${days} dni`
+  };
+};
 const readSession=()=>{try{return sessionStorage.getItem(sessionKey)||'';}catch{return '';}};
 const saveSession=(v)=>{try{if(v)sessionStorage.setItem(sessionKey,v);else sessionStorage.removeItem(sessionKey);}catch{}};
 
@@ -247,7 +262,10 @@ const bindMessageForms=()=>{
     try{
       portalData=await api('/public/customer-portal/quotes/'+encodeURIComponent(form.dataset.requestId)+'/messages',{method:'POST',body:JSON.stringify({message})});
       render();showSection('quotes');
-    }catch(error){window.alert(error.message);}
+    }catch(error){
+      const box=q('#customerQuoteStatus');
+      if(box){box.textContent=error.message;box.hidden=false;}
+    }
     finally{if(button.isConnected)button.disabled=false;}
   }));
 };
@@ -272,8 +290,12 @@ const render=()=>{
   q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
+    const warranty=warrantyInfo(o.warranty);
+    const warrantyHtml=warranty
+      ? '<div class="customer-warranty '+(warranty.expired?'expired':'active')+'"><div><span>GWARANCJA SERWISOWA</span><strong>'+esc(warranty.months)+' mies.</strong></div><div><span>WAŻNA DO</span><strong>'+esc(warranty.expiresAt.toLocaleDateString('pl-PL'))+'</strong></div><div><span>STATUS</span><strong>'+esc(warranty.label)+'</strong></div></div>'
+      : '<div class="customer-warranty pending"><div><span>GWARANCJA SERWISOWA</span><strong>'+(o.status==='REPAIR_DONE'?'Serwis przygotowuje gwarancję':'Brak aktywnej gwarancji dla tego etapu')+'</strong></div></div>';
     return '<article class="customer-order'+(pendingFocusOrderId===o.id?' open':'')+'" tabindex="0" data-customer-order-id="'+esc(o.id)+'"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div>'+
-      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p>'+
+      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p>'+warrantyHtml+
       (o.serviceCardAvailable?'<button type="button" class="customer-service-card-download" data-customer-service-card="'+esc(o.id)+'">Pobierz kartę serwisową PDF</button>':'')+
       '</div><div class="customer-order-open">Otwórz <span>›</span></div></article>';
   }).join(''):'<div class="empty">Nie ma jeszcze zapisanych zleceń.</div>';
