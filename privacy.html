@@ -29,10 +29,10 @@
     <p>Podczas logowania przez Google aplikacja może otrzymać podstawowe dane profilu udostępnione w ramach procesu uwierzytelnienia, w szczególności identyfikator konta Google, adres e-mail, imię i nazwę lub nazwę profilu oraz zdjęcie profilowe, jeśli jest dostępne. W systemie zapisywane mogą być również rola, przypisane punkty, status konta, sesje i informacje niezbędne do kontroli dostępu.</p>
 
     <h2>3. Dane klientów i zleceń</h2>
-    <p>W związku z obsługą napraw ServiceOS może przetwarzać dane kontaktowe klienta, dane urządzenia, IMEI lub numer seryjny, opis usterki, uwagi o stanie urządzenia, rodzaj zlecenia, statusy, historię zmian, datę i godzinę przyjęcia, przewidywany termin, cenę orientacyjną lub końcową, informacje o przekazaniach oraz dane potrzebne do odbioru urządzenia.</p>
+    <p>W związku z obsługą napraw ServiceOS może przetwarzać dane kontaktowe klienta, dane urządzenia, IMEI lub numer seryjny, opis usterki, uwagi o stanie urządzenia, rodzaj zlecenia, statusy, historię zmian, datę i godzinę przyjęcia, przewidywany termin, kolejność w planie pracy, cenę orientacyjną lub końcową, informacje o przekazaniach oraz dane potrzebne do odbioru urządzenia. Po wykonaniu naprawy system może również zapisać okres gwarancji serwisowej, datę jej rozpoczęcia i zakończenia oraz informację o przygotowaniu karty gwarancyjnej.</p>
 
-    <h2>4. Karty serwisowe, QR i kody dostępu</h2>
-    <p>System może generować dokumenty PDF, kody QR oraz kody ręczne związane z kartą serwisową i panelem klienta. Takie identyfikatory służą do udostępnienia właściwego zakresu danych dotyczących konkretnego klienta lub zlecenia. Powinny być chronione przed przypadkowym udostępnieniem osobom trzecim.</p>
+    <h2>4. Karty serwisowe i gwarancyjne, QR oraz kody dostępu</h2>
+    <p>System może generować dokumenty PDF, w tym kartę serwisową i kartę gwarancyjną, oraz kody QR i kody ręczne związane z panelem klienta. Takie identyfikatory służą do udostępnienia właściwego zakresu danych dotyczących konkretnego klienta lub zlecenia. W panelu klienta może być prezentowany okres gwarancji, data jej zakończenia, informacja czy gwarancja jest aktywna oraz orientacyjna liczba dni pozostałych do jej końca. Kody dostępu powinny być chronione przed przypadkowym udostępnieniem osobom trzecim.</p>
 
     <h2>5. Portal klienta, wyceny i wiadomości</h2>
     <p>Portal klienta może przechowywać historię zleceń, zapytania o wycenę, odpowiedzi serwisu, kwoty wycen oraz ustawienia powiadomień. Dostęp do funkcji aktywnych może wymagać potwierdzenia kodem klienta lub połączenia konta Google, zależnie od używanego trybu.</p>
@@ -44,7 +44,7 @@
     <p>Serwisant może prowadzić prywatny notatnik przypisany do swojego konta. Notatki te nie są częścią historii klienta ani historii zlecenia, ale pozostają danymi przechowywanymi w środowisku ServiceOS. Użytkownik powinien ograniczać ich treść do informacji służbowych potrzebnych do organizacji pracy.</p>
 
     <h2>8. Cele przetwarzania</h2>
-    <p>Dane są wykorzystywane do uwierzytelnienia użytkowników, kontroli uprawnień, obsługi klientów i napraw, planowania pracy, prowadzenia logistyki urządzeń, przygotowania dokumentów, komunikacji z klientami, rozliczeń serwisowych, bezpieczeństwa systemu, audytu oraz wsparcia użytkowników.</p>
+    <p>Dane są wykorzystywane do uwierzytelnienia użytkowników, kontroli uprawnień, obsługi klientów i napraw, planowania kolejności pracy i przewidywanych terminów, prowadzenia logistyki urządzeń, przygotowania kart serwisowych i gwarancyjnych, prezentowania statusu gwarancji w panelu klienta, komunikacji z klientami, rozliczeń serwisowych, bezpieczeństwa systemu, audytu oraz wsparcia użytkowników.</p>
 
     <h2>9. Google i Gmail</h2>
     <p>Podstawowe logowanie pracownika nie wymaga dostępu do treści Gmaila, Dysku Google ani prywatnych wiadomości. Jeżeli punkt konfiguruje automatycznego nadawcę Gmail, ServiceOS korzysta z zakresu <strong>gmail.send</strong> wyłącznie do wysyłania wiadomości. System nie wykorzystuje tej integracji do czytania skrzynki pocztowej.</p>
