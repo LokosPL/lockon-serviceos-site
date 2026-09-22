@@ -153,3 +153,43 @@ button.customer-access-option:active{transform:scale(.992)}
 .customer-login-box .customer-google-entry>p{max-width:360px}
 @media(max-width:680px){.customer-google-button{min-height:48px;border-radius:11px;font-size:12px}}
 @media(prefers-reduced-motion:reduce){.customer-google-button{transition:none}}
+
+
+/* ServiceOS 1.0.0.14 — warranty status in customer orders */
+.customer-warranty{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin-top:12px;
+  padding:10px;
+  border:1px solid rgba(105,217,158,.18);
+  border-radius:11px;
+  background:rgba(105,217,158,.045);
+}
+.customer-warranty>div{min-width:0}
+.customer-warranty span{
+  display:block;
+  color:#71808d;
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.07em;
+}
+.customer-warranty strong{
+  display:block;
+  margin-top:4px;
+  color:#dce5df;
+  font-size:12px;
+  line-height:1.35;
+}
+.customer-warranty.expired{
+  border-color:rgba(255,118,118,.2);
+  background:rgba(255,118,118,.045);
+}
+.customer-warranty.expired strong{color:#ffb0b0}
+.customer-warranty.pending{
+  grid-template-columns:1fr;
+  border-color:rgba(255,152,105,.14);
+  background:rgba(255,152,105,.03);
+}
+.customer-warranty.pending strong{color:#9ba5af;font-weight:650}
+@media(max-width:620px){.customer-warranty{grid-template-columns:1fr}}
