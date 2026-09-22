@@ -20,3 +20,7 @@
 .legal-update-note{margin:18px 0;padding:14px 16px;border:1px solid rgba(255,126,68,.16);border-radius:13px;background:rgba(255,105,42,.045);color:#aeb8c2;line-height:1.65}
 @media(max-width:1050px){.release-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.release-service-flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.release-now-head{grid-template-columns:1fr}.release-now-version{justify-self:start}.release-feature-grid{grid-template-columns:1fr}.release-service-flow{grid-template-columns:1fr 1fr}.release-feature-grid article{min-height:0}}
+
+.customer-legal-footer{max-width:1120px;margin:0 auto;padding:20px 24px 28px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;color:#77828e;font-size:12px}
+.customer-legal-footer a{color:#98a3ae;text-decoration:none}
+.customer-legal-footer a:hover{color:#fff}
