@@ -272,8 +272,11 @@ const render=()=>{
   q('#customerOrders').innerHTML=sortedOrders.length?sortedOrders.map(o=>{
     const price=o.finalCost!=null?'Koszt: '+money(o.finalCost,o.currency):(o.estimatedCost!=null?'Wycena: '+money(o.estimatedCost,o.currency):'Bez zapisanej wyceny');
     const location=o.currentPointName||o.homePointName||o.pointName;
+    const warranty=o.warranty
+      ? '<div class="customer-warranty '+(o.warranty.active?'active':'expired')+'"><div><span>GWARANCJA SERWISOWA</span><strong>'+(o.warranty.active?'Aktywna':'Wygasła')+'</strong></div><div><b>'+esc(o.warranty.months)+' mies.</b><small>ważna do '+esc(new Date(o.warranty.expiresAt).toLocaleDateString('pl-PL'))+'</small></div><div><b>'+(o.warranty.active?esc(o.warranty.daysRemaining)+' dni':'0 dni')+'</b><small>'+(o.warranty.active?'pozostało':'po terminie')+'</small></div></div>'
+      : '';
     return '<article class="customer-order'+(pendingFocusOrderId===o.id?' open':'')+'" tabindex="0" data-customer-order-id="'+esc(o.id)+'"><div class="customer-order-top"><div><strong>#'+esc(o.orderNumber)+' · '+esc(o.device.brand)+' '+esc(o.device.model)+'</strong><div>'+esc(fmt(o.updatedAt||o.receivedAt))+'</div></div><span class="status">'+esc(o.statusLabel)+'</span></div>'+
-      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div><p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p>'+
+      '<div class="customer-order-details"><div class="customer-order-meta"><span>Punkt: '+esc(o.homePointName||o.pointName)+'</span><span>Urządzenie: '+esc(location)+'</span><span>'+esc(price)+'</span><span>Termin: '+esc(o.estimatedCompletionAt?fmt(o.estimatedCompletionAt):'brak')+'</span></div>'+warranty+'<p>'+esc(o.issueDescription||'Brak opisu usterki.')+'</p>'+
       (o.serviceCardAvailable?'<button type="button" class="customer-service-card-download" data-customer-service-card="'+esc(o.id)+'">Pobierz kartę serwisową PDF</button>':'')+
       '</div><div class="customer-order-open">Otwórz <span>›</span></div></article>';
   }).join(''):'<div class="empty">Nie ma jeszcze zapisanych zleceń.</div>';
