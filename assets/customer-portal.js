@@ -455,7 +455,10 @@ document.addEventListener('click',(ev)=>{
     cardButton.disabled=true;cardButton.textContent='Pobieranie…';
     void api('/public/customer-portal/orders/'+encodeURIComponent(orderId)+'/service-card')
       .then(savePdfFromBase64)
-      .catch(error=>window.alert(error.message||'Nie udało się pobrać karty serwisowej.'))
+      .catch(error=>{
+        const box=q('#customerQuoteStatus');
+        if(box){box.textContent=error.message||'Nie udało się pobrać karty serwisowej.';box.hidden=false;}
+      })
       .finally(()=>{if(cardButton.isConnected){cardButton.disabled=false;cardButton.textContent=original;}});
     return;
   }
