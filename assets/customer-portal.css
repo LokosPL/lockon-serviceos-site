@@ -153,3 +153,9 @@ button.customer-access-option:active{transform:scale(.992)}
 .customer-login-box .customer-google-entry>p{max-width:360px}
 @media(max-width:680px){.customer-google-button{min-height:48px;border-radius:11px;font-size:12px}}
 @media(prefers-reduced-motion:reduce){.customer-google-button{transition:none}}
+
+.customer-warranty{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(110px,.7fr));gap:9px;margin:12px 0;padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(255,255,255,.02)}
+.customer-warranty>div{display:flex;flex-direction:column;gap:3px}.customer-warranty span{font-size:9px;font-weight:900;letter-spacing:.08em;color:#8995a2}.customer-warranty strong,.customer-warranty b{font-size:14px}.customer-warranty small{color:#8995a2;font-size:10px}
+.customer-warranty.active{border-color:rgba(86,211,151,.22);background:rgba(86,211,151,.045)}.customer-warranty.active strong,.customer-warranty.active b{color:#74dca8}
+.customer-warranty.expired{border-color:rgba(255,111,82,.2);background:rgba(255,91,65,.035)}.customer-warranty.expired strong,.customer-warranty.expired b{color:#ff876f}
+@media(max-width:620px){.customer-warranty{grid-template-columns:1fr 1fr}.customer-warranty>div:first-child{grid-column:1/-1}}
