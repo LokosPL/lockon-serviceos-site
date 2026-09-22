@@ -153,12 +153,12 @@
             <article class="workday-event event-1"><time>08:12</time><i></i><div><span>PRZYJĘCIE</span><strong>Klient zostawia Samsung S25</strong><small>Zlecenie zapisane, klient dostał potwierdzenie.</small></div></article>
             <article class="workday-event event-2"><time>09:05</time><i></i><div><span>PRZEKAZANIE</span><strong>Telefon jedzie do serwisu</strong><small>Widać punkt macierzysty i aktualne miejsce urządzenia.</small></div></article>
             <article class="workday-event event-3"><time>11:40</time><i></i><div><span>SERWIS</span><strong>Diagnoza → naprawa</strong><small>Serwisant widzi następną akcję i może przesunąć przewidywany termin bezpośrednio w planie pracy.</small></div></article>
-            <article class="workday-event event-4"><time>15:25</time><i></i><div><span>GOTOWE</span><strong>Urządzenie wraca do punktu</strong><small>Po fizycznym powrocie można przygotować odbiór klienta.</small></div></article>
+            <article class="workday-event event-4"><time>15:25</time><i></i><div><span>GWARANCJA → ODBIÓR</span><strong>Serwisant drukuje kartę gwarancyjną</strong><small>Po zapisaniu okresu gwarancji i dołączeniu karty urządzenie może zostać oznaczone jako gotowe.</small></div></article>
           </div>
           <div class="workday-summary">
-            <div><span>Aktualny etap</span><strong>Naprawa zakończona</strong></div>
-            <div><span>Urządzenie</span><strong>Wraca do punktu</strong></div>
-            <div><span>Klient</span><strong>Powiadomiony</strong></div>
+            <div><span>Aktualny etap</span><strong>Gwarancja przygotowana</strong></div>
+            <div><span>Urządzenie</span><strong>Gotowe do odbioru</strong></div>
+            <div><span>Klient</span><strong>Widoczna gwarancja w panelu</strong></div>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
               <span>SERWIS</span>
               <h3>Lista jest lekka, a szczegóły otwierasz dopiero wtedy, gdy ich potrzebujesz.</h3>
               <p>Na liście widzisz najważniejszy stan zlecenia. Pełne dane, historia, logistyka, koszty i karta klienta otwierają się w osobnym oknie szczegółów.</p>
-              <ul><li>licznik pokazuje telefony przekazane do serwisu</li><li>cena orientacyjna i termin są widoczne przy właściwym zleceniu</li><li>cięższe dane nie obciążają listy dopóki ich nie otworzysz</li></ul>
+              <ul><li>licznik pokazuje telefony przekazane do serwisu</li><li>etap zlecenia i obowiązkowa gwarancja są w szczegółach</li><li>cięższe dane nie obciążają listy dopóki ich nie otworzysz</li></ul>
             </article>
             <article class="app-story-item" data-story-feature="transfers" data-story-index="03" data-story-observe>
               <span>PRZEKAZANIA</span>
@@ -258,9 +258,9 @@
       <div class="wrap release-now-shell">
         <div class="release-now-head">
           <div>
-            <span>SERVICEOS 1.0.0.11 · AKTUALNY SPOSÓB PRACY</span>
-            <h2>Mniej klikania. Więcej pracy w jednym rytmie.</h2>
-            <p>Najświeższa wersja porządkuje codzienną obsługę serwisu: szybsze przyjęcie, kalendarz pracy, lekkie szczegóły zlecenia oraz czytelniejsze dokumenty dla klienta.</p>
+            <span>SERVICEOS 1.0.0.14 · AKTUALNY SPOSÓB PRACY</span>
+            <h2>Jedno UI, lżejsze zlecenia i pełna ścieżka gwarancji.</h2>
+            <p>Wersja 1.0.0.14 porządkuje całą pracę serwisu: nowe zlecenia, szczegóły, potwierdzenia i notatki korzystają z tego samego interfejsu, plan pracy pilnuje terminów, a gwarancja jest obowiązkowym krokiem przed odbiorem.</p>
           </div>
           <div class="release-now-version"><span>AKTUALNA WERSJA WINDOWS</span><strong data-release-version>—</strong></div>
         </div>
@@ -268,27 +268,27 @@
         <div class="release-feature-grid">
           <article>
             <b>01</b>
-            <strong>Plan pracy, który można przesuwać.</strong>
-            <p>Serwisant ma tygodniowy kalendarz. Telefon można przeciągnąć na inny dzień, a termin zmienia się bez przeklikiwania formularzy.</p>
-            <small>Jest też „Bez terminu”, kolejki „Czeka na części” i „Gotowe do odbioru”.</small>
+            <strong>Jedno UI w całym serwisie.</strong>
+            <p>Nowe zlecenie lub reklamacja otwiera się w panelu zgodnym ze szczegółami zlecenia. Potwierdzenia i operacje nie wyskakują już jako obce okna systemowe.</p>
+            <small>ServiceOS zachowuje ten sam język wizualny od przyjęcia po zakończenie.</small>
           </article>
           <article>
             <b>02</b>
-            <strong>Zlecenia bez ciężkiego rozwijania listy.</strong>
-            <p>„Szczegóły” otwierają osobne, lekkie okno. Lista pozostaje szybka, a licznik „Przekazane do serwisu” pokazuje urządzenia poza punktem macierzystym.</p>
-            <small>Pełne dane są pobierane dopiero wtedy, gdy naprawdę ich potrzebujesz.</small>
+            <strong>Plan pracy pilnuje kolejności i terminów.</strong>
+            <p>W obrębie dnia możesz przeciągać zlecenia w kolejności „pierwsze, drugie, trzecie”. Ustalony termin można zostawić albo wydłużyć — nie można cofnąć go na wcześniejszy dzień.</p>
+            <small>Zmiana dnia aktualizuje przewidywany termin i uruchamia informację e-mail dla klienta.</small>
           </article>
           <article>
             <b>03</b>
-            <strong>Faktury i notatki wreszcie są pod ręką.</strong>
-            <p>Magazyn faktur ma wyszukiwanie i wygodną nawigację miesiącami. Notatnik serwisanta ma filtry, przypięcia i szybkie szablony.</p>
-            <small>Notatki prywatne nie są częścią historii klienta ani zlecenia.</small>
+            <strong>Gwarancja przed „Gotowe do odbioru”.</strong>
+            <p>Po zakończeniu naprawy serwisant wpisuje liczbę miesięcy gwarancji i drukuje kartę gwarancyjną z QR oraz kodem klienta. Dopiero wtedy system odblokowuje gotowość do odbioru.</p>
+            <small>Panel klienta pokazuje okres, datę końcową oraz liczbę dni pozostałych do końca gwarancji.</small>
           </article>
           <article>
             <b>04</b>
-            <strong>Klient dostaje czytelniejsze dokumenty.</strong>
-            <p>Przy przyjęciu można podać cenę orientacyjną. Karta klienta wysyłana e-mailem jest przygotowana pionowo, z QR i kodem dostępu do panelu.</p>
-            <small>Wydruk przy ladzie pozostaje fizyczną kartą A4 z dwiema częściami i linią cięcia.</small>
+            <strong>Lżejsze zlecenia i wygodniejsze notatki.</strong>
+            <p>Lista zleceń nie rozwija ciężkich danych w tle. Pełne szczegóły oraz prywatne notatki otwierają się dopiero po kliknięciu, w osobnym panelu aplikacji.</p>
+            <small>To ogranicza pracę renderera i lepiej zachowuje się na starszych laptopach.</small>
           </article>
         </div>
 
@@ -296,7 +296,7 @@
           <span>Przyjęcie</span>
           <span>Plan pracy</span>
           <span>Naprawa</span>
-          <span>Przekazanie</span>
+          <span>Gwarancja</span>
           <span>Odbiór</span>
         </div>
       </div>
@@ -313,9 +313,10 @@
           <article><b>01</b><strong>Przyjmujesz urządzenie</strong><span>Zapisujesz klienta, telefon i opis problemu.</span></article>
           <article><b>02</b><strong>Diagnozujesz</strong><span>Serwisant sprawdza usterkę i ustala dalszą pracę.</span></article>
           <article><b>03</b><strong>Naprawiasz albo przekazujesz</strong><span>ServiceOS pokazuje, gdzie fizycznie znajduje się telefon.</span></article>
-          <article><b>04</b><strong>Kończysz naprawę</strong><span>Po pracy technicznej urządzenie wraca do punktu klienta.</span></article>
-          <article><b>05</b><strong>Przygotowujesz odbiór</strong><span>Punkt potwierdza fizyczny powrót i ustawia urządzenie jako gotowe.</span></article>
-          <article><b>06</b><strong>Zamykasz zlecenie</strong><span>Historia zostaje zapisana, a rozliczenie tworzy się automatycznie.</span></article>
+          <article><b>04</b><strong>Kończysz naprawę</strong><span>Po pracy technicznej ustawiasz etap „Naprawa zakończona”.</span></article>
+          <article><b>05</b><strong>Przygotowujesz gwarancję</strong><span>Wpisujesz okres w miesiącach i drukujesz kartę gwarancyjną do urządzenia.</span></article>
+          <article><b>06</b><strong>Przygotowujesz odbiór</strong><span>Po gwarancji i fizycznym powrocie urządzenie może dostać status „Gotowe do odbioru”.</span></article>
+          <article><b>07</b><strong>Zamykasz zlecenie</strong><span>Historia zostaje zapisana, a rozliczenie tworzy się automatycznie.</span></article>
         </div>
         <div class="priority-row reveal">
           <span class="danger">Po terminie</span>
