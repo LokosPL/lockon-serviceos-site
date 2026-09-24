@@ -71,10 +71,21 @@ jobs:
           grep -q 'Spotkania i szkolenia' index.html
           grep -q 'data-preview="start"' index.html
           grep -q 'data-preview-screen="meetings"' index.html
+          grep -q 'data-preview-screen="browser"' index.html
+          grep -q 'data-preview-screen="finance"' index.html
+          grep -q 'data-preview-screen="clients"' index.html
+          grep -q 'data-preview-screen="support"' index.html
+          grep -q 'data-preview-screen="settings"' index.html
+          grep -q 'data-preview-screen="help"' index.html
+          grep -q 'class="hero-live-dock"' index.html
           grep -q 'modules-os-window' index.html
           grep -q 'class="module-mobile-tabs"' index.html
           grep -q 'data-module="service"' index.html
-          grep -q 'data-module-panel="tools"' index.html
+          grep -q 'data-module-panel="start"' index.html
+          grep -q 'data-module-panel="browser"' index.html
+          grep -q 'data-module-panel="support"' index.html
+          grep -q 'data-module-panel="help"' index.html
+          grep -q 'data-module-panel="settings"' index.html
           grep -q 'class="role-simulator' index.html
           grep -q 'data-role-preview="owner"' index.html
           grep -q 'data-role-preview="front"' index.html
@@ -103,6 +114,9 @@ jobs:
           grep -q "activateRoleScreen" assets/serviceos-app-site.js
           grep -q "data-role-account-action" assets/serviceos-app-site.js
           grep -q "data-live-clock" assets/serviceos-app-site.js
+          grep -q "const previewKeys" assets/serviceos-app-site.js
+          grep -q "'support'" assets/serviceos-app-site.js
+          grep -q "'settings'" assets/serviceos-app-site.js
           grep -q "serviceWorker.register" assets/serviceos-app-site.js
           test "$(grep -o '<main[ >]' index.html | wc -l)" -eq 1
           test "$(grep -o '</main>' index.html | wc -l)" -eq 1
@@ -176,7 +190,7 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v38" sw.js
+          grep -q "serviceos-shell-v39" sw.js
           grep -q 'serviceos-site.css' sw.js
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js

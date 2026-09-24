@@ -76,7 +76,7 @@
     revealItems.forEach((element) => revealObserver.observe(element));
   }
 
-  const previewKeys = ['start', 'service', 'meetings', 'admin'];
+  const previewKeys = ['start', 'service', 'clients', 'meetings', 'finance', 'admin', 'browser', 'support', 'settings', 'help'];
   let previewIndex = 0;
   let previewPausedUntil = 0;
 
@@ -105,7 +105,7 @@
     }, 4300);
   }
 
-  const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
+  const moduleKeys = ['start', 'service', 'clients', 'meetings', 'finance', 'admin', 'browser', 'support', 'help', 'settings'];
   let moduleIndex = 0;
   let modulePausedUntil = 0;
   const moduleWorkspace = qs('.modules-os-window');
