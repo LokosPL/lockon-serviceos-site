@@ -33,7 +33,8 @@ jobs:
           node --check assets/google-config.js
           node --check assets/site.js
           node --check assets/home-v2.js
-          node --check assets/home-story.js\n          node --check assets/showcase-meetings-1.0.22.js
+          node --check assets/home-story.js
+          node --check assets/showcase-meetings-1.0.22.js
           node --check assets/panel.js
           node --check assets/track.js
           node --check assets/customer-portal.js
