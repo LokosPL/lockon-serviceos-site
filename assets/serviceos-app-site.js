@@ -50,6 +50,16 @@
         root.style.setProperty('--phone-y', (-ny * 6).toFixed(2) + 'px');
       });
     }, { passive: true });
+
+    qsa('.meetings-wow, .phone-wow, .start-wow').forEach((section) => {
+      section.addEventListener('pointermove', (event) => {
+        const rect = section.getBoundingClientRect();
+        const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / Math.max(1, rect.width)) * 100));
+        const y = Math.max(0, Math.min(100, ((event.clientY - rect.top) / Math.max(1, rect.height)) * 100));
+        section.style.setProperty('--spot-x', x.toFixed(1) + '%');
+        section.style.setProperty('--spot-y', y.toFixed(1) + '%');
+      }, { passive: true });
+    });
   }
 
   const revealItems = qsa('.reveal');
@@ -96,8 +106,14 @@
   }
 
   const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
-  const activateModule = (key) => {
+  let moduleIndex = 0;
+  let modulePausedUntil = 0;
+  const moduleWorkspace = qs('.module-workspace');
+  let moduleWorkspaceVisible = false;
+
+  const activateModule = (key, userAction = false) => {
     if (!moduleKeys.includes(key)) return;
+    moduleIndex = moduleKeys.indexOf(key);
     qsa('[data-module]').forEach((button) => {
       const active = button.dataset.module === key;
       button.classList.toggle('active', active);
@@ -106,12 +122,27 @@
     qsa('[data-module-panel]').forEach((panel) => {
       panel.classList.toggle('active', panel.dataset.modulePanel === key);
     });
+    if (userAction) modulePausedUntil = Date.now() + 14000;
   };
 
   qsa('[data-module]').forEach((button) => {
-    button.addEventListener('click', () => activateModule(button.dataset.module || ''));
+    button.addEventListener('click', () => activateModule(button.dataset.module || '', true));
   });
   activateModule('service');
+
+  if ('IntersectionObserver' in window && moduleWorkspace) {
+    const moduleObserver = new IntersectionObserver((entries) => {
+      moduleWorkspaceVisible = entries.some((entry) => entry.isIntersecting);
+    }, { threshold: .25 });
+    moduleObserver.observe(moduleWorkspace);
+  }
+
+  if (!reducedMotion) {
+    window.setInterval(() => {
+      if (document.hidden || !moduleWorkspaceVisible || Date.now() < modulePausedUntil) return;
+      activateModule(moduleKeys[(moduleIndex + 1) % moduleKeys.length]);
+    }, 5200);
+  }
 
   const activateMeetingSide = (key) => {
     qsa('[data-meeting-side]').forEach((button) => {
@@ -134,6 +165,13 @@
     });
   });
   activateMeetingSide('chat');
+
+  qsa('.meeting-controls button:not([data-meeting-side-open])').forEach((button) => {
+    button.addEventListener('click', () => {
+      button.classList.toggle('active');
+      button.setAttribute('aria-pressed', button.classList.contains('active') ? 'true' : 'false');
+    });
+  });
 
   const meetingRoom = qs('[data-meeting-room]');
   const theaterButton = qs('[data-meeting-theater]');
@@ -215,12 +253,12 @@
 
     if (acceptButton) {
       acceptButton.disabled = accepted || !checks.every((input) => input.checked);
-      acceptButton.textContent = accepted ? '✓ ServiceOS odblokowany' : 'Rozumiem — odblokuj ServiceOS';
+      acceptButton.textContent = accepted ? '✓ ServiceOS odblokowany' : 'Odblokuj ServiceOS →';
     }
     if (onboardingState) {
       onboardingState.textContent = accepted
         ? 'Gotowe. Możesz pobrać aplikację albo połączyć telefon.'
-        : 'Pobieranie i łączenie telefonu odblokują się po potwierdzeniu.';
+        : 'Potwierdź trzy punkty powyżej.';
     }
   };
 
