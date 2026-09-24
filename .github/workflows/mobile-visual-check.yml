@@ -10,7 +10,7 @@ on:
       - "track.html"
       - "assets/*.css"
       - "assets/site.js"
-      - "assets/home-story.js"
+      - "assets/home-story.js"\n      - "assets/showcase-meetings-1.0.22.js"
       - "assets/panel.js"
       - ".github/workflows/mobile-visual-check.yml"
   pull_request:
@@ -73,6 +73,12 @@ jobs:
           await desktop.locator('#modules').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(250);
           await desktop.screenshot({path:'visual-check/landing-desktop-modules.png'});
+          await desktop.locator('#meetings').scrollIntoViewIfNeeded();
+          await desktop.waitForTimeout(250);
+          await desktop.screenshot({path:'visual-check/landing-desktop-meetings.png'});
+          await desktop.locator('[data-meeting22-scene="live"]').click();
+          await desktop.waitForTimeout(120);
+          await desktop.screenshot({path:'visual-check/landing-desktop-meeting-room.png'});
 
           const loaderPage=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
           await loaderPage.goto('http://127.0.0.1:4173/index.html',{waitUntil:'domcontentloaded'});
@@ -177,9 +183,11 @@ jobs:
           const responsiveViewports=[
             {name:'phone-320',width:320,height:720},
             {name:'phone-360',width:360,height:800},
+            {name:'phone-390',width:390,height:844},
             {name:'phone-430',width:430,height:932},
             {name:'tablet-768',width:768,height:1024},
-            {name:'desktop-1280',width:1280,height:720},
+            {name:'desktop-1366',width:1366,height:768},
+            {name:'desktop-1440',width:1440,height:900},
             {name:'desktop-1920',width:1920,height:1080}
           ];
           const assertNoHorizontalOverflow=async(page,label)=>{
