@@ -712,6 +712,14 @@ body.onboarding-accepted .onboarding-card{border-color:rgba(97,217,154,.08)}body
   .phone-frame{width:min(265px,calc(100vw - 32px));height:535px}
 }
 
+/* Pointer-reactive light on the three showcase stages */
+.meetings-wow::after,.phone-wow::after,.start-wow::after{
+  content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
+  background:radial-gradient(circle 360px at var(--spot-x,65%) var(--spot-y,42%),rgba(255,110,42,.055),transparent 72%);
+  opacity:.9;transition:opacity .3s ease;
+}
+.meetings-wow>.site-frame,.phone-wow>.site-frame,.start-wow>.site-frame{position:relative;z-index:1}
+
 /* Login dialog */
 .portal-login-dialog{width:min(620px,calc(100% - 30px));max-height:calc(100vh - 30px);padding:0;border:1px solid rgba(255,255,255,.11);border-radius:20px;background:#101419;color:var(--text);box-shadow:0 40px 110px rgba(0,0,0,.62);overflow:auto}.portal-login-dialog::backdrop{background:rgba(2,4,7,.78);backdrop-filter:blur(14px)}.portal-login-card{padding:22px}.portal-login-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.portal-login-brand{display:flex;align-items:center;gap:9px}.portal-login-brand img{width:34px;height:34px;border-radius:9px}.portal-login-brand>div{display:flex;flex-direction:column}.portal-login-brand strong{font-size:12px}.portal-login-brand span{color:#717c87;font-size:8px}.portal-login-close{width:44px;height:44px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025);color:#85909a;font-size:19px;cursor:pointer}.portal-login-copy{margin-top:25px}.portal-login-copy>span{color:#ff8954;font-size:8px;font-weight:900;letter-spacing:.1em}.portal-login-copy h2{margin:7px 0 7px;font-size:31px;letter-spacing:-.05em}.portal-login-copy p{margin:0;color:#818c97;font-size:11px;line-height:1.6}.portal-login-copy p strong{color:#dfe4e8}
 .portal-login-steps{margin-top:18px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.portal-login-steps article{min-height:106px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#0d1115;display:flex;flex-direction:column}.portal-login-steps article>b{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:rgba(255,114,49,.075);color:#ff8d59;font-size:8px}.portal-login-steps article>span{margin-top:auto;display:flex;flex-direction:column}.portal-login-steps strong{font-size:9px}.portal-login-steps small{margin-top:3px;color:#697580;font-size:7.5px;line-height:1.4}
