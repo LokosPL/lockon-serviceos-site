@@ -324,11 +324,12 @@
   const liveDockReturn = qs('[data-live-dock-return]');
   const meetingsSection = qs('#meetings');
   let meetingSectionVisible = false;
+  let meetingSectionSeen = false;
   let liveDockDismissed = false;
 
   const syncLiveDock = () => {
     if (!liveDock) return;
-    const shouldShow = !liveDockDismissed && !meetingSectionVisible && window.scrollY > 760;
+    const shouldShow = !liveDockDismissed && meetingSectionSeen && !meetingSectionVisible;
     liveDock.hidden = !shouldShow;
   };
 
@@ -349,6 +350,7 @@
   if ('IntersectionObserver' in window && meetingsSection) {
     const liveDockObserver = new IntersectionObserver((entries) => {
       meetingSectionVisible = entries.some((entry) => entry.isIntersecting);
+      if (meetingSectionVisible) meetingSectionSeen = true;
       syncLiveDock();
     }, { threshold: .16 });
     liveDockObserver.observe(meetingsSection);
