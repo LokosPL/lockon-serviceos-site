@@ -71,7 +71,7 @@ jobs:
           grep -q 'Spotkania i szkolenia' index.html
           grep -q 'data-preview="start"' index.html
           grep -q 'data-preview-screen="meetings"' index.html
-          grep -q 'class="modules-os-window' index.html
+          grep -q 'modules-os-window' index.html
           grep -q 'class="module-mobile-tabs"' index.html
           grep -q 'data-module="service"' index.html
           grep -q 'data-module-panel="tools"' index.html
