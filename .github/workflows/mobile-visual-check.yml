@@ -10,7 +10,8 @@ on:
       - "track.html"
       - "assets/*.css"
       - "assets/site.js"
-      - "assets/home-story.js"\n      - "assets/showcase-meetings-1.0.22.js"
+      - "assets/home-story.js"
+      - "assets/showcase-meetings-1.0.22.js"
       - "assets/panel.js"
       - ".github/workflows/mobile-visual-check.yml"
   pull_request:
