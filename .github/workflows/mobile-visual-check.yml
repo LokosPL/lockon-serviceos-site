@@ -160,10 +160,35 @@ jobs:
 
           await desktop.locator('#roles').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
+
+          for(const key of ['browser','service','meetings','earnings','administration','customers','support','settings']){
+            const nav=desktop.locator('[data-role-nav-key="'+key+'"]');
+            if(!await nav.isVisible()) throw new Error('Owner role is missing navigation: '+key);
+            await nav.click();
+            if(!await desktop.locator('[data-role-screen="'+key+'"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Role menu did not open '+key);
+          }
+
+          await desktop.locator('[data-role-help]').click();
+          if(!await desktop.locator('[data-role-screen="help"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Role help did not open');
+
+          await desktop.locator('[data-role-account-action]').click();
+          if(await desktop.locator('[data-role-account-popover]').evaluate((el)=>el.hidden)) throw new Error('Role account popover did not open');
+          await desktop.locator('[data-role-account-close]').click();
+
           await desktop.locator('[data-role-preview="tech"]').click();
           if((await desktop.locator('[data-role-title]').textContent())!=='Serwisant') throw new Error('Role simulator did not switch to technician');
-          if(await desktop.locator('[data-role-nav] > i').filter({hasText:'Administracja'}).isVisible()) throw new Error('Technician role still exposes Administration preview');
+          if(await desktop.locator('[data-role-nav-key="administration"]').isVisible()) throw new Error('Technician role still exposes Administration preview');
+          if(!await desktop.locator('[data-role-nav-key="earnings"]').isVisible()) throw new Error('Technician role lost own earnings');
+          await desktop.locator('[data-role-nav-key="service"]').click();
+          if(!await desktop.locator('[data-role-screen="service"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Technician service screen did not open');
           await desktop.screenshot({path:'visual-check/desktop-role-technician.png'});
+
+          await desktop.locator('[data-role-preview="front"]').click();
+          if(await desktop.locator('[data-role-nav-key="earnings"]').isVisible()) throw new Error('Front desk role still exposes earnings');
+          if(!await desktop.locator('[data-role-nav-key="customers"]').isVisible()) throw new Error('Front desk role lost customers');
+          await desktop.locator('[data-role-nav-key="customers"]').click();
+          await desktop.screenshot({path:'visual-check/desktop-role-frontdesk-customers.png'});
+
           await desktop.locator('[data-role-preview="owner"]').click();
           await desktop.waitForTimeout(180);
           await desktop.screenshot({path:'visual-check/desktop-roles-wow.png'});
