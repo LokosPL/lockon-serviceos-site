@@ -203,58 +203,148 @@
     owner: {
       title: 'Właściciel aplikacji',
       scope: 'Wszystkie punkty',
-      copy: 'Pełny widok punktów, zespołu, administracji i rozliczeń.',
+      branch: 'Wszystkie punkty',
+      copy: 'Pełny widok punktów, zespołu, administracji, klientów, wsparcia i rozliczeń.',
+      status: 'Pełny zakres firmy',
       permissions: ['Wszystkie punkty', 'Zespół', 'Rozliczenia', 'Administracja'],
-      nav: ['Start', 'Serwis', 'Spotkania', 'Rozliczenia', 'Administracja', 'Klienci']
+      nav: ['dashboard', 'browser', 'service', 'meetings', 'earnings', 'administration', 'customers', 'support', 'settings']
     },
     boss: {
       title: 'Szef / Koordynator',
-      scope: 'Przypisane punkty',
-      copy: 'Prowadzi zespół, serwis i organizację pracy w przypisanym zakresie.',
-      permissions: ['Punkty', 'Zespół', 'Serwis', 'Spotkania'],
-      nav: ['Start', 'Serwis', 'Spotkania', 'Administracja', 'Klienci']
+      scope: 'Wszystkie punkty',
+      branch: 'Wszystkie punkty',
+      copy: 'Prowadzi pracę serwisu, spotkania i rozliczenia w zakresie zarządzanych punktów.',
+      status: 'Zakres zarządczy',
+      permissions: ['Wszystkie punkty', 'Serwis', 'Rozliczenia', 'Spotkania'],
+      nav: ['dashboard', 'browser', 'service', 'meetings', 'earnings', 'settings']
     },
     tech: {
       title: 'Serwisant',
-      scope: 'Praca techniczna',
-      copy: 'Dostaje kolejkę napraw, części, terminy i funkcje potrzebne przy urządzeniu.',
-      permissions: ['Zlecenia', 'Części', 'Terminy', 'Spotkania'],
-      nav: ['Start', 'Serwis', 'Spotkania', 'Rozliczenia']
+      scope: 'Nowogard',
+      branch: 'Nowogard',
+      copy: 'Dostaje kolejkę napraw, części, terminy oraz własne rozliczenia.',
+      status: 'Praca techniczna',
+      permissions: ['Zlecenia', 'Części', 'Terminy', 'Własne rozliczenia'],
+      nav: ['dashboard', 'browser', 'service', 'meetings', 'earnings', 'settings']
     },
     front: {
       title: 'Obsługa',
-      scope: 'Front desk',
+      scope: 'Nowogard',
+      branch: 'Nowogard',
       copy: 'Przyjmuje klienta, prowadzi kontakt, przekazania, dokumenty i odbiór.',
+      status: 'Front desk',
       permissions: ['Klient', 'Przyjęcie', 'Przekazania', 'Odbiór'],
-      nav: ['Start', 'Serwis', 'Spotkania', 'Klienci']
+      nav: ['dashboard', 'browser', 'service', 'meetings', 'customers', 'settings']
     }
+  };
+
+  const roleViewLabels = {
+    dashboard: 'Start',
+    browser: 'Przeglądarka',
+    service: 'Serwis',
+    meetings: 'Spotkania i szkolenia',
+    earnings: 'Rozliczenia',
+    administration: 'Administracja',
+    customers: 'Klienci',
+    support: 'Wsparcie',
+    settings: 'Ustawienia',
+    help: 'Pomoc'
+  };
+
+  let activeRolePreview = 'owner';
+  let activeRoleScreen = 'dashboard';
+
+  const closeRoleAccountPopover = () => {
+    const popover = qs('[data-role-account-popover]');
+    if (popover) popover.hidden = true;
+  };
+
+  const activateRoleScreen = (key) => {
+    const profile = roleProfiles[activeRolePreview];
+    if (!profile) return;
+    const allowed = key === 'help' || profile.nav.includes(key);
+    if (!allowed) return;
+
+    activeRoleScreen = key;
+    qsa('[data-role-screen]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.roleScreen === key);
+    });
+    qsa('[data-role-nav-key]').forEach((button) => {
+      const active = button.dataset.roleNavKey === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+
+    const helpButton = qs('[data-role-help]');
+    if (helpButton) {
+      const helpActive = key === 'help';
+      helpButton.classList.toggle('active', helpActive);
+      helpButton.setAttribute('aria-pressed', helpActive ? 'true' : 'false');
+    }
+
+    const currentView = qs('[data-role-current-view]');
+    if (currentView) currentView.textContent = roleViewLabels[key] || 'ServiceOS';
+    closeRoleAccountPopover();
   };
 
   const activateRolePreview = (key) => {
     const profile = roleProfiles[key];
     if (!profile) return;
+    activeRolePreview = key;
+
     qsa('[data-role-preview]').forEach((button) => {
       const active = button.dataset.rolePreview === key;
       button.classList.toggle('active', active);
       button.setAttribute('aria-pressed', active ? 'true' : 'false');
     });
+
+    const select = qs('[data-role-select]');
+    if (select && select.value !== key) select.value = key;
+
     const title = qs('[data-role-title]');
     const copy = qs('[data-role-copy]');
     const scope = qs('[data-role-scope]');
+    const branch = qs('[data-role-branch]');
+    const status = qs('[data-role-status-copy]');
     if (title) title.textContent = profile.title;
     if (copy) copy.textContent = profile.copy;
     if (scope) scope.textContent = profile.scope;
+    if (branch) branch.textContent = profile.branch;
+    if (status) status.textContent = profile.status;
+
     const permissions = qs('[data-role-permissions]');
     if (permissions) permissions.innerHTML = profile.permissions.map((item) => '<i>' + item + '</i>').join('');
-    qsa('[data-role-nav] > i').forEach((item) => {
-      const label = (item.textContent || '').trim();
-      item.classList.toggle('role-nav-hidden', !profile.nav.includes(label));
+
+    qsa('[data-role-nav-key]').forEach((item) => {
+      const navKey = item.dataset.roleNavKey || '';
+      const visible = profile.nav.includes(navKey);
+      item.classList.toggle('role-nav-hidden', !visible);
+      item.hidden = !visible;
     });
+
+    activateRoleScreen('dashboard');
   };
 
   qsa('[data-role-preview]').forEach((button) => {
     button.addEventListener('click', () => activateRolePreview(button.dataset.rolePreview || 'owner'));
   });
+
+  const roleSelect = qs('[data-role-select]');
+  roleSelect?.addEventListener('change', () => activateRolePreview(roleSelect.value || 'owner'));
+
+  qsa('[data-role-nav-key]').forEach((button) => {
+    button.addEventListener('click', () => activateRoleScreen(button.dataset.roleNavKey || 'dashboard'));
+  });
+
+  qs('[data-role-help]')?.addEventListener('click', () => activateRoleScreen('help'));
+
+  qs('[data-role-account-action]')?.addEventListener('click', () => {
+    const popover = qs('[data-role-account-popover]');
+    if (!popover) return;
+    popover.hidden = !popover.hidden;
+  });
+  qs('[data-role-account-close]')?.addEventListener('click', closeRoleAccountPopover);
+
   activateRolePreview('owner');
 
   const liveClocks = qsa('[data-live-clock]');
