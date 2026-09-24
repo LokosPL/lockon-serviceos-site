@@ -168,7 +168,7 @@ jobs:
           await desktop.locator('[data-service-action="create-order"]').click();
           if(!await desktop.locator('[data-service-demo-view="orders"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Creating demo order did not return to orders');
 
-          await desktop.locator('[data-demo-order="1042"]').first().click();
+          await desktop.locator('[data-service-demo-view="orders"] [data-demo-order="1042"]').click();
           if(await desktop.locator('[data-service-order-drawer]').evaluate((el)=>el.hidden)) throw new Error('Order details drawer did not open');
           await desktop.screenshot({path:'visual-check/desktop-service-order-drawer.png'});
           await desktop.locator('[data-service-order-close]').first().click();
