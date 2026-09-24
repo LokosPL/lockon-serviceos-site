@@ -105,7 +105,8 @@
     }, 4300);
   }
 
-  const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
+  const moduleKeys = ['start', 'browser', 'service', 'clients', 'meetings', 'finance', 'admin', 'tools', 'help', 'settings'];
+  const moduleAutoKeys = ['start', 'service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
   let moduleIndex = 0;
   let modulePausedUntil = 0;
   const moduleWorkspace = qs('.modules-os-window');
@@ -113,7 +114,7 @@
 
   const activateModule = (key, userAction = false) => {
     if (!moduleKeys.includes(key)) return;
-    moduleIndex = moduleKeys.indexOf(key);
+    moduleIndex = Math.max(0, moduleAutoKeys.indexOf(key));
     qsa('[data-module]').forEach((button) => {
       const active = button.dataset.module === key;
       button.classList.toggle('active', active);
@@ -140,7 +141,7 @@
   if (!reducedMotion) {
     window.setInterval(() => {
       if (document.hidden || !moduleWorkspaceVisible || Date.now() < modulePausedUntil) return;
-      activateModule(moduleKeys[(moduleIndex + 1) % moduleKeys.length]);
+      activateModule(moduleAutoKeys[(moduleIndex + 1) % moduleAutoKeys.length]);
     }, 5200);
   }
 
@@ -258,7 +259,13 @@
         'pin-note': ['Notatka przypięta', 'Pojawi się na górze prywatnego notatnika serwisanta.'],
         'save-note': ['Notatka zapisana', 'Prywatna notatka została zapisana w ServiceOS.'],
         'add-note': ['Notatka dodana', 'Informacja została dopisana do historii zlecenia.'],
-        'advance-order': ['Diagnoza zakończona', 'Zlecenie przeszło do kolejnego etapu i klient dostał aktualizację.']
+        'advance-order': ['Diagnoza zakończona', 'Zlecenie przeszło do kolejnego etapu i klient dostał aktualizację.'],
+        'browser-open': ['Instrukcja otwarta', 'ServiceOS otworzył dokumentację w swojej przeglądarce.'],
+        'support-join': ['Dołączono do rozmowy', 'Kanał konsultanta jest teraz przypisany do Ciebie.'],
+        'support-reply': ['Odpowiedź wysłana', 'Wiadomość trafiła do pracownika w kanale konsultanta.'],
+        'support-close': ['Kanał zakończony', 'Rozmowa została zamknięta i zapisana w historii wsparcia.'],
+        'help-send': ['Wiadomość wysłana', 'Bot ServiceOS analizuje pytanie.'],
+        'support-request': ['Konsultant poproszony', 'Prośba trafiła do kolejki wsparcia LockOn.']
       };
       const message = messages[action] || ['Gotowe', 'Zmiana została zapisana w ServiceOS.'];
       showDemoToast(message[0], message[1]);
@@ -277,6 +284,37 @@
       qsa('.notes-demo-layout>section>button').forEach((item) => item.classList.remove('active'));
       button.classList.add('active');
       modulePausedUntil = Date.now() + 10000;
+    });
+  });
+
+  qsa('[data-support-demo-ticket]').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('[data-support-demo-ticket]').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      const key = button.dataset.supportDemoTicket || 'jan';
+      const name = qs('[data-support-demo-name]');
+      const state = qs('[data-support-demo-state]');
+      const thread = qs('.support-demo-thread');
+      if (key === 'anna') {
+        if (name) name.textContent = 'Anna Lis';
+        if (state) state.textContent = 'KONSULTANT DOŁĄCZYŁ';
+        if (thread) thread.innerHTML = '<article><b>Anna</b><p>Po aktualizacji nie widzę jednego z przekazań.</p><small>21:29</small></article><article class="bot"><b>Konsultant</b><p>Sprawdzam historię punktu i status urządzenia. Daj mi chwilę.</p><small>21:30</small></article>';
+      } else {
+        if (name) name.textContent = 'Jan Nowak';
+        if (state) state.textContent = 'CZEKA NA KONSULTANTA';
+        if (thread) thread.innerHTML = '<article><b>Jan</b><p>Nie wiem, gdzie potwierdzić odbiór przekazanego urządzenia.</p><small>21:26</small></article><article class="bot"><b>Bot ServiceOS</b><p>To znajdziesz w Serwis → Przekazania. Jeżeli chcesz, konsultant może dołączyć.</p><small>21:27</small></article>';
+      }
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+
+  qsa('[data-theme-demo]').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('[data-theme-demo]').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      const label = button.dataset.themeDemo === 'midnight' ? 'Midnight' : 'Carbon';
+      showDemoToast('Motyw ' + label + ' wybrany', 'W ServiceOS zmiana wyglądu działa natychmiast.');
+      modulePausedUntil = Date.now() + 12000;
     });
   });
 
