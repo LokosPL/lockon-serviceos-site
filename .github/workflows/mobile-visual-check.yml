@@ -177,6 +177,19 @@ jobs:
           if(await desktop.locator('[data-demo-toast]').evaluate((el)=>el.hidden)) throw new Error('Service action toast did not appear');
           await desktop.screenshot({path:'visual-check/desktop-service-notes.png'});
 
+          for(const key of ['start','browser','tools','help','settings']){
+            await desktop.locator('.modules-os-window .os-sidebar [data-module="'+key+'"]').click();
+            if(!await desktop.locator('[data-module-panel="'+key+'"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Modules sidebar did not open '+key);
+          }
+          await desktop.locator('.modules-os-window .os-sidebar [data-module="tools"]').click();
+          await desktop.locator('[data-support-demo-ticket="anna"]').click();
+          if((await desktop.locator('[data-support-demo-name]').textContent())!=='Anna Lis') throw new Error('Support ticket preview did not switch');
+          await desktop.locator('[data-service-action="support-reply"]').click();
+          if(await desktop.locator('[data-demo-toast]').evaluate((el)=>el.hidden)) throw new Error('Support action toast did not appear');
+          await desktop.locator('.modules-os-window .os-sidebar [data-module="settings"]').click();
+          await desktop.locator('[data-theme-demo="midnight"]').click();
+          if(!await desktop.locator('[data-theme-demo="midnight"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Settings theme preview did not switch');
+
           await desktop.locator('.modules-os-window .os-sidebar [data-module="clients"]').click();
           await desktop.waitForTimeout(350);
           if(!await desktop.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Clients module did not activate');
