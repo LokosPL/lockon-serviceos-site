@@ -11,6 +11,7 @@ on:
       - "assets/*.js"
       - "sw.js"
       - ".github/workflows/mobile-visual-check.yml"
+      - ".github/workflows/verify.yml"
   pull_request:
     branches: ["main"]
     paths:
