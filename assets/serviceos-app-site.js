@@ -109,6 +109,7 @@
   const moduleAutoKeys = ['start', 'service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
   let moduleIndex = 0;
   let modulePausedUntil = 0;
+  let moduleUserControlled = false;
   const moduleWorkspace = qs('.modules-os-window');
   let moduleWorkspaceVisible = false;
 
@@ -123,7 +124,10 @@
     qsa('[data-module-panel]').forEach((panel) => {
       panel.classList.toggle('active', panel.dataset.modulePanel === key);
     });
-    if (userAction) modulePausedUntil = Date.now() + 14000;
+    if (userAction) {
+      moduleUserControlled = true;
+      modulePausedUntil = Number.POSITIVE_INFINITY;
+    }
   };
 
   qsa('[data-module]').forEach((button) => {
@@ -140,7 +144,7 @@
 
   if (!reducedMotion) {
     window.setInterval(() => {
-      if (document.hidden || !moduleWorkspaceVisible || Date.now() < modulePausedUntil) return;
+      if (document.hidden || !moduleWorkspaceVisible || moduleUserControlled || Date.now() < modulePausedUntil) return;
       activateModule(moduleAutoKeys[(moduleIndex + 1) % moduleAutoKeys.length]);
     }, 5200);
   }
