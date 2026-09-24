@@ -377,7 +377,7 @@ a{color:inherit;text-decoration:none}::-webkit-scrollbar{width:9px;height:9px}::
 }
 @media(max-width:700px){
   .service-demo-head{display:block}
-  .service-demo-tabs{margin-top:10px;padding:5px}
+  .service-demo-tabs{display:flex!important;margin-top:10px;padding:5px}
   .service-demo-tabs button{min-height:44px;font-size:7px}
   .service-demo-workspace{height:calc(100% - 154px)}
   .workplan-demo-head{flex-direction:column}
