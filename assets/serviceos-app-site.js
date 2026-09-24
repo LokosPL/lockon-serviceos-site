@@ -144,6 +144,180 @@
     }, 5200);
   }
 
+  const serviceDemoTabs = ['plan', 'intake', 'orders', 'transfers', 'quotes', 'invoices', 'notes'];
+  let serviceDemoActive = 'plan';
+
+  const activateServiceDemoView = (key, userAction = false) => {
+    if (!serviceDemoTabs.includes(key)) return;
+    serviceDemoActive = key;
+    qsa('[data-service-demo-tab]').forEach((button) => {
+      const active = button.dataset.serviceDemoTab === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-service-demo-view]').forEach((view) => {
+      view.classList.toggle('active', view.dataset.serviceDemoView === key);
+    });
+    if (userAction) modulePausedUntil = Date.now() + 18000;
+  };
+
+  qsa('[data-service-demo-tab]').forEach((button) => {
+    button.addEventListener('click', () => activateServiceDemoView(button.dataset.serviceDemoTab || 'plan', true));
+  });
+  activateServiceDemoView('plan');
+
+  qsa('.workplan-demo-days button').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('.workplan-demo-days button').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      modulePausedUntil = Date.now() + 10000;
+    });
+  });
+
+  const activateIntakeStep = (key) => {
+    qsa('[data-intake-step]').forEach((button) => {
+      const active = button.dataset.intakeStep === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-intake-panel]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.intakePanel === key);
+    });
+  };
+
+  qsa('[data-intake-step]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activateIntakeStep(button.dataset.intakeStep || '1');
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+  qsa('[data-intake-next]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activateIntakeStep(button.dataset.intakeNext || '1');
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+  activateIntakeStep('1');
+
+  const demoToast = qs('[data-demo-toast]');
+  let demoToastTimer = 0;
+  const showDemoToast = (title, copy) => {
+    if (!demoToast) return;
+    const titleEl = qs('[data-demo-toast-title]', demoToast);
+    const copyEl = qs('[data-demo-toast-copy]', demoToast);
+    if (titleEl) titleEl.textContent = title;
+    if (copyEl) copyEl.textContent = copy;
+    demoToast.hidden = false;
+    window.clearTimeout(demoToastTimer);
+    demoToastTimer = window.setTimeout(() => { demoToast.hidden = true; }, 2800);
+  };
+
+  const demoOrders = {
+    '1042': { title: '#1042 · iPhone 14 Pro', customer: 'Anna Kowalska · Nowogard', status: 'DIAGNOZA', next: 'Najbliższy krok: rozpocznij diagnozę' },
+    '1044': { title: '#1044 · MacBook Air M2', customer: 'Kamil Wójcik · Nowogard', status: 'NAPRAWA', next: 'Najbliższy krok: montaż nowej części' },
+    '1047': { title: '#1047 · Samsung S23', customer: 'Julia Lis · Nowogard', status: 'CZEKA NA CZĘŚCI', next: 'Najbliższy krok: dostawa modułu USB-C' },
+    '1050': { title: '#1050 · iPad Air', customer: 'Paweł Nowak · Nowogard', status: 'NOWE', next: 'Najbliższy krok: rozpocznij przyjęcie techniczne' },
+    '1041': { title: '#1041 · Samsung S24', customer: 'Piotr Nowak · Szczecin', status: 'W DRODZE', next: 'Najbliższy krok: potwierdzenie odbioru w punkcie' },
+    '1038': { title: '#1038 · iPhone 13', customer: 'Marta Lis · Nowogard', status: 'GOTOWE', next: 'Najbliższy krok: wydanie klientowi' },
+    '1036': { title: '#1036 · MacBook Pro', customer: 'Adam Zalewski · Nowogard', status: 'CZEKA NA CZĘŚCI', next: 'Najbliższy krok: dostawa baterii jutro' }
+  };
+
+  const serviceOrderDrawer = qs('[data-service-order-drawer]');
+  const openServiceOrderDrawer = (orderNo) => {
+    if (!serviceOrderDrawer) return;
+    const data = demoOrders[orderNo] || demoOrders['1042'];
+    const heading = qs('header h3', serviceOrderDrawer);
+    const customer = qs('header p', serviceOrderDrawer);
+    const status = qs('.service-order-drawer-status b', serviceOrderDrawer);
+    const next = qs('.service-order-drawer-status span', serviceOrderDrawer);
+    if (heading) heading.textContent = data.title;
+    if (customer) customer.textContent = data.customer;
+    if (status) status.textContent = data.status;
+    if (next) next.textContent = data.next;
+    serviceOrderDrawer.hidden = false;
+    modulePausedUntil = Date.now() + 20000;
+  };
+  const closeServiceOrderDrawer = () => {
+    if (serviceOrderDrawer) serviceOrderDrawer.hidden = true;
+  };
+
+  qsa('[data-demo-order]').forEach((button) => {
+    button.addEventListener('click', () => openServiceOrderDrawer(button.dataset.demoOrder || '1042'));
+  });
+  qsa('[data-service-order-close]').forEach((button) => button.addEventListener('click', closeServiceOrderDrawer));
+
+  qsa('[data-service-action]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.serviceAction || '';
+      const messages = {
+        'create-order': ['Zlecenie #1051 utworzone', 'Klient otrzymał potwierdzenie, a urządzenie trafiło do kolejki serwisu.'],
+        'quote-reply': ['Odpowiedź otwarta', 'ServiceOS przygotował odpowiedź w historii klienta.'],
+        'quote-price': ['Wycena 349 zł wysłana', 'Klient może zaakceptować wycenę ze swojego panelu.'],
+        'download-invoices': ['Paczka faktur gotowa', 'ServiceOS przygotował dokumenty z bieżącego miesiąca.'],
+        'download-one': ['Faktura gotowa', 'Dokument został przygotowany do pobrania.'],
+        'pin-note': ['Notatka przypięta', 'Pojawi się na górze prywatnego notatnika serwisanta.'],
+        'save-note': ['Notatka zapisana', 'Prywatna notatka została zapisana w ServiceOS.'],
+        'add-note': ['Notatka dodana', 'Informacja została dopisana do historii zlecenia.'],
+        'advance-order': ['Diagnoza zakończona', 'Zlecenie przeszło do kolejnego etapu i klient dostał aktualizację.']
+      };
+      const message = messages[action] || ['Gotowe', 'Zmiana została zapisana w ServiceOS.'];
+      showDemoToast(message[0], message[1]);
+      if (action === 'create-order') {
+        activateServiceDemoView('orders', true);
+        activateIntakeStep('1');
+      }
+      if (action === 'advance-order') closeServiceOrderDrawer();
+      if (action === 'pin-note') button.classList.toggle('active');
+      modulePausedUntil = Date.now() + 16000;
+    });
+  });
+
+  qsa('.notes-demo-layout>section>button').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('.notes-demo-layout>section>button').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      modulePausedUntil = Date.now() + 10000;
+    });
+  });
+
+  const liveDock = qs('[data-live-dock]');
+  const liveDockToggle = qs('[data-live-dock-toggle]');
+  const liveDockDismiss = qs('[data-live-dock-dismiss]');
+  const liveDockReturn = qs('[data-live-dock-return]');
+  const meetingsSection = qs('#meetings');
+  let meetingSectionVisible = false;
+  let liveDockDismissed = false;
+
+  const syncLiveDock = () => {
+    if (!liveDock) return;
+    const shouldShow = !liveDockDismissed && !meetingSectionVisible && window.scrollY > 760;
+    liveDock.hidden = !shouldShow;
+  };
+
+  liveDockToggle?.addEventListener('click', () => {
+    const expanded = liveDock?.classList.toggle('expanded') || false;
+    liveDockToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  });
+  liveDockDismiss?.addEventListener('click', () => {
+    liveDockDismissed = true;
+    if (liveDock) liveDock.hidden = true;
+  });
+  liveDockReturn?.addEventListener('click', () => {
+    meetingsSection?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+    if (liveDock) liveDock.classList.remove('expanded');
+    liveDockToggle?.setAttribute('aria-expanded', 'false');
+  });
+
+  if ('IntersectionObserver' in window && meetingsSection) {
+    const liveDockObserver = new IntersectionObserver((entries) => {
+      meetingSectionVisible = entries.some((entry) => entry.isIntersecting);
+      syncLiveDock();
+    }, { threshold: .16 });
+    liveDockObserver.observe(meetingsSection);
+  }
+  window.addEventListener('scroll', syncLiveDock, { passive: true });
+  syncLiveDock();
+
   const activateMeetingSide = (key) => {
     qsa('[data-meeting-side]').forEach((button) => {
       const active = button.dataset.meetingSide === key;
