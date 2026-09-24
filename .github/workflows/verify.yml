@@ -47,11 +47,11 @@ jobs:
           node --check assets/ui-2026.js
           node --check sw.js
 
-      - name: Verify rebuilt landing structure
+      - name: Verify app-parity landing structure
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'assets/serviceos-app-site.css' index.html
+          grep -q 'assets/serviceos-site.css' index.html
           grep -q 'assets/serviceos-app-site.js' index.html
           grep -q 'Cały serwis' index.html
           grep -q 'Bez chaosu' index.html
@@ -62,38 +62,42 @@ jobs:
           grep -q 'id="connect"' index.html
           grep -q 'id="security"' index.html
           grep -q 'id="start"' index.html
-          grep -q 'class="app-demo"' index.html
-          grep -q 'hero-wow' index.html
-          grep -q 'hero-phone-device' index.html
-          grep -q 'hero-metrics' index.html
-          grep -q 'hero-flow-card' index.html
-          grep -q 'preview-switcher' index.html
+          grep -q 'class="os-window hero-os-window"' index.html
+          grep -q 'class="os-titlebar"' index.html
+          grep -q 'class="os-sidebar"' index.html
+          grep -q 'class="os-start-hero"' index.html
+          grep -q 'Wszystkie punkty' index.html
+          grep -q 'Przeglądarka' index.html
+          grep -q 'Spotkania i szkolenia' index.html
           grep -q 'data-preview="start"' index.html
           grep -q 'data-preview-screen="meetings"' index.html
-          grep -q 'class="module-workspace' index.html
+          grep -q 'class="modules-os-window' index.html
+          grep -q 'class="module-mobile-tabs"' index.html
           grep -q 'data-module="service"' index.html
           grep -q 'data-module-panel="tools"' index.html
+          grep -q 'class="role-simulator' index.html
+          grep -q 'data-role-preview="owner"' index.html
+          grep -q 'data-role-preview="front"' index.html
+          grep -q 'data-role-title' index.html
+          grep -q 'class="full-meeting-room"' index.html
           grep -q 'data-meeting-room' index.html
           grep -q 'data-meeting-theater' index.html
           grep -q 'data-meeting-side="chat"' index.html
-          grep -q 'meeting-wow-shell' index.html
-          grep -q 'meeting-speaker-card' index.html
-          grep -q 'role-wow-card' index.html
-          grep -q 'phone-connect-flow' index.html
-          grep -q 'security-strip' index.html
-          grep -q 'start-main-download' index.html
           grep -q 'data-phone-step="4"' index.html
           grep -q 'data-phone-screen="4"' index.html
-          grep -q 'prefers-reduced-motion' assets/serviceos-app-site.css
-          grep -q '@media(max-width:430px)' assets/serviceos-app-site.css
-          grep -q '@media(max-width:360px)' assets/serviceos-app-site.css
+          grep -q 'prefers-reduced-motion' assets/serviceos-site.css
+          grep -q '@media(max-width:430px)' assets/serviceos-site.css
+          grep -q '@media(max-width:360px)' assets/serviceos-site.css
+          grep -q '218px' assets/serviceos-site.css
+          grep -q 'height:38px' assets/serviceos-site.css
           grep -q 'IntersectionObserver' assets/serviceos-app-site.js
           grep -q "lockon.employee.onboarding.v1" assets/serviceos-app-site.js
-          grep -q "data-phone-step" assets/serviceos-app-site.js
+          grep -q "data-role-preview" assets/serviceos-app-site.js
+          grep -q "data-live-clock" assets/serviceos-app-site.js
           grep -q "serviceWorker.register" assets/serviceos-app-site.js
-          ! grep -Eq 'home-(v2|story)|showcase-(1\.0|meetings)' index.html
-          ! grep -q 'mobile-final.css' index.html
-          ! grep -q 'web-polish.css' index.html
+          test "$(grep -o '<main[ >]' index.html | wc -l)" -eq 1
+          test "$(grep -o '</main>' index.html | wc -l)" -eq 1
+          ! grep -q 'assets/serviceos-app-site.css' index.html
           ! grep -q 'style="' index.html
           ! grep -q "'unsafe-inline'" index.html
           test ! -e assets/home-v2.css
@@ -163,7 +167,8 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v36" sw.js
+          grep -q "serviceos-shell-v37" sw.js
+          grep -q 'serviceos-site.css' sw.js
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js
           grep -q 'google-auth.js' sw.js
