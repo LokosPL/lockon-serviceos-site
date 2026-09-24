@@ -158,6 +158,26 @@ jobs:
           if(!await desktop.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Clients module did not activate');
           await desktop.screenshot({path:'visual-check/desktop-modules-clients.png'});
 
+          for(const key of ['browser','service','clients','meetings','finance','admin','support','settings','help']){
+            const heroNav=desktop.locator('.hero-os-window [data-preview="'+key+'"]').first();
+            if(!await heroNav.isVisible()) throw new Error('Hero is missing interactive view: '+key);
+            await heroNav.click();
+            if(!await desktop.locator('.hero-os-window [data-preview-screen="'+key+'"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Hero did not open '+key);
+          }
+          await desktop.locator('.hero-os-window [data-preview="start"]').first().click();
+          if(!await desktop.locator('.hero-live-dock').isVisible()) throw new Error('Persistent meeting dock is missing in hero');
+          await desktop.locator('.hero-live-dock').click();
+          if(!await desktop.locator('.hero-os-window [data-preview-screen="meetings"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Hero live dock did not return to meeting');
+          await desktop.screenshot({path:'visual-check/desktop-hero-full-demo.png'});
+
+          for(const key of ['start','service','clients','meetings','finance','admin','browser','support','help','settings']){
+            const moduleNav=desktop.locator('.modules-os-window [data-module="'+key+'"]').first();
+            if(!await moduleNav.isVisible()) throw new Error('Modules demo is missing '+key);
+            await moduleNav.click();
+            if(!await desktop.locator('.modules-os-window [data-module-panel="'+key+'"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Modules demo did not open '+key);
+          }
+          await desktop.locator('.modules-os-window [data-module="service"]').first().click();
+
           await desktop.locator('#roles').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
 
