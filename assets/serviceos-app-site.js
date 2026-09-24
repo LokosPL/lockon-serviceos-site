@@ -34,20 +34,20 @@
   }, { passive: true });
 
   if (!reducedMotion) {
-    const pointerClasses = [
-      'pointer-x-left', 'pointer-x-mid', 'pointer-x-right',
-      'pointer-y-top', 'pointer-y-mid', 'pointer-y-bottom'
-    ];
     let pointerFrame = 0;
     window.addEventListener('pointermove', (event) => {
       if (pointerFrame) return;
       pointerFrame = window.requestAnimationFrame(() => {
         pointerFrame = 0;
-        document.body.classList.remove(...pointerClasses);
-        const x = event.clientX / Math.max(1, window.innerWidth);
-        const y = event.clientY / Math.max(1, window.innerHeight);
-        document.body.classList.add(x < .34 ? 'pointer-x-left' : x > .66 ? 'pointer-x-right' : 'pointer-x-mid');
-        document.body.classList.add(y < .34 ? 'pointer-y-top' : y > .66 ? 'pointer-y-bottom' : 'pointer-y-mid');
+        const nx = (event.clientX / Math.max(1, window.innerWidth) - .5) * 2;
+        const ny = (event.clientY / Math.max(1, window.innerHeight) - .5) * 2;
+        const root = document.documentElement;
+        root.style.setProperty('--hero-x', (nx * 18).toFixed(2) + 'px');
+        root.style.setProperty('--hero-y', (ny * 12).toFixed(2) + 'px');
+        root.style.setProperty('--tilt-x', (-ny * 1.15).toFixed(2) + 'deg');
+        root.style.setProperty('--tilt-y', (nx * 2.1).toFixed(2) + 'deg');
+        root.style.setProperty('--phone-x', (-nx * 8).toFixed(2) + 'px');
+        root.style.setProperty('--phone-y', (-ny * 6).toFixed(2) + 'px');
       });
     }, { passive: true });
   }
