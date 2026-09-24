@@ -190,8 +190,10 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v39" sw.js
+          grep -q "serviceos-shell-v40" sw.js
           grep -q 'serviceos-site.css' sw.js
+          grep -q 'smartfon otoczony pomarańczową orbitą' assets/logo.svg
+          grep -q 'id="orbit"' assets/logo.svg || true
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js
           grep -q 'google-auth.js' sw.js
