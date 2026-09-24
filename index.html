@@ -87,7 +87,7 @@
   <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
   <nav class="os-nav-list">
     <button class="os-nav-item active" type="button" data-preview="start"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item " type="button" data-module="browser"><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
     <button class="os-nav-item " type="button" data-preview="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
     <button class="os-nav-item " type="button" data-preview="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
     <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
@@ -96,8 +96,8 @@
     <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
   </nav>
   <div class="os-sidebar-spacer"></div>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <button class="os-nav-item " type="button" data-module="help"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" data-module="settings"><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
   <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
   <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
 </aside>
@@ -175,7 +175,7 @@
   <div class="os-brand-block"><div class="os-brand-logo"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
   <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
   <nav class="os-nav-list">
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+    <button class="os-nav-item " type="button" data-module="start"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
     <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
     <button class="os-nav-item active" type="button" data-module="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
     <button class="os-nav-item " type="button" data-module="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
@@ -191,6 +191,24 @@
   <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
 </aside>
           <div class="os-content os-module-content">
+            <section class="module-panel" data-module-panel="start">
+              <div class="module-start-page">
+                <section class="module-start-hero">
+                  <div><span><i class="status-dot"></i> WSZYSTKIE PUNKTY</span><h2>Dobry wieczór, <em>System.</em></h2><p>Najważniejsze rzeczy masz pod ręką. Reszta pojawia się dopiero, gdy jej potrzebujesz.</p><div><button type="button" data-module="browser">Otwórz przeglądarkę →</button><button type="button" data-module="help">Pomoc</button></div></div>
+                  <div class="module-start-clock"><small>Czwartek, 24 września 2026</small><strong data-live-clock>21:42</strong><span>Dobry moment na działanie.</span></div>
+                  <aside><span>POGODA TERAZ</span><strong>Nowogard</strong><b>12°C</b><small>Pochmurnie</small></aside>
+                </section>
+                <section class="module-start-meeting"><div><span>SPOTKANIA I SZKOLENIA</span><strong>Szkolenie serwisowe</strong><small>Dzisiaj · 22:00 · Bartłomiej</small></div><button type="button" data-module="meetings">Otwórz spotkanie →</button></section>
+                <div class="module-start-shortcuts"><button type="button" data-module="service"><b><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg></b><span><strong>Serwis</strong><small>Zlecenia i bieżąca praca</small></span></button><button type="button" data-module="admin"><b><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg></b><span><strong>Administracja</strong><small>Pracownicy i dostępy</small></span></button><button type="button" data-module="finance"><b><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg></b><span><strong>Rozliczenia</strong><small>Przychody i koszty</small></span></button></div>
+              </div>
+            </section>
+            <section class="module-panel" data-module-panel="browser">
+              <div class="module-browser-page">
+                <header><div><span>PRZEGLĄDARKA</span><h2>Internet bez wychodzenia z ServiceOS.</h2></div><b>🔒 Bezpieczna karta</b></header>
+                <div class="module-browser-toolbar"><button type="button">←</button><button type="button">→</button><button type="button">↻</button><label><span>🔒</span><strong>https://serviceos.pl/pomoc</strong></label><button type="button">↗</button></div>
+                <div class="module-browser-canvas"><div class="browser-canvas-logo"><img src="assets/logo.svg" alt=""><span>LOCKON SERVICEOS</span></div><h3>Dokumentacja i narzędzia w jednej karcie.</h3><p>Serwisant nie musi skakać między aplikacjami. Strona otwiera się wewnątrz ServiceOS.</p><div><button type="button" data-service-action="browser-open">Otwórz instrukcję serwisową</button><button type="button" data-module="service">Wróć do Serwisu</button></div></div>
+              </div>
+            </section>
             <section class="module-panel active" data-module-panel="service">
               <div class="os-service-page large service-demo-shell">
                 <header class="os-service-head service-demo-head">
@@ -374,7 +392,39 @@
 <section class="os-screen module-admin-screen active">
   <div class="os-admin-page"><header><span>ADMINISTRACJA</span><h2>Pracownicy, punkty i dostępy</h2><p>Dokładnie taki zakres, jaki wynika z roli.</p></header><div class="os-admin-grid"><article><span>AKTYWNE KONTA</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article><article><span>PUNKTY</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article><article><span>DO DECYZJI</span><strong data-count="1">1</strong><small>konto oczekujące</small></article><article><span>AKTYWNE SESJE</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article></div><div class="os-user-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div></div>
 </section></section>
-            <section class="module-panel" data-module-panel="tools"><div class="os-module-page"><header><span>NARZĘDZIA</span><h2>Wszystko w jednym środowisku.</h2><p>Przeglądarka, pomoc i ustawienia są częścią ServiceOS.</p></header><div class="tool-list"><article><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span><strong>Przeglądarka</strong><small>Internet wewnątrz ServiceOS</small></span><b>OTWÓRZ</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span><strong>Pomoc</strong><small>Chat i kontakt z pomocą</small></span><b>POMOC</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span><strong>Ustawienia</strong><small>Wygląd, konto i integracje</small></span><b>USTAW</b></article></div></div></section>
+            <section class="module-panel" data-module-panel="tools">
+              <div class="support-demo-page">
+                <header><div><span><i class="status-dot"></i> WSPARCIE LOCKON</span><h2>Centrum pomocy zespołu</h2><p>Widzisz aktywnych pracowników i kolejkę konsultanta — bez podglądania prywatnej rozmowy z botem.</p></div><button type="button" data-module="help">Otwórz własnego bota</button></header>
+                <div class="support-demo-stats"><article><b>2</b><span><strong>Czekają na człowieka</strong><small>wymagają odpowiedzi</small></span></article><article><b>4</b><span><strong>Użytkownicy online</strong><small>w Twoim zakresie</small></span></article><article><b>1</b><span><strong>Konsultant dołączył</strong><small>aktywna rozmowa</small></span></article></div>
+                <div class="support-demo-workspace">
+                  <aside><header><span>AKTYWNOŚĆ</span><strong>Użytkownicy online</strong></header><button class="active" type="button" data-support-demo-ticket="jan"><b>JN</b><span><strong>Jan Nowak</strong><small>Nowogard · czeka na konsultanta</small></span><em>NOWA</em></button><button type="button" data-support-demo-ticket="anna"><b>AL</b><span><strong>Anna Lis</strong><small>Szczecin · konsultant dołączył</small></span><em class="ok">LIVE</em></button><button type="button"><b>MK</b><span><strong>Marek Kowal</strong><small>Nowogard · przy bocie</small></span><em>BOT</em></button><p><svg class="os-icon" aria-hidden="true"><use href="#i-shield"></use></svg> Rozmowa z botem pozostaje prywatna do chwili prośby o konsultanta.</p></aside>
+                  <section>
+                    <header><div><span>ROZMOWA</span><strong data-support-demo-name>Jan Nowak</strong></div><b data-support-demo-state>CZEKA NA KONSULTANTA</b></header>
+                    <div class="support-demo-thread"><article><b>Jan</b><p>Nie wiem, gdzie potwierdzić odbiór przekazanego urządzenia.</p><small>21:26</small></article><article class="bot"><b>Bot ServiceOS</b><p>To znajdziesz w Serwis → Przekazania. Jeżeli chcesz, konsultant może dołączyć.</p><small>21:27</small></article></div>
+                    <div class="support-demo-actions"><button type="button" data-service-action="support-join">Dołącz do rozmowy</button><button type="button" data-service-action="support-reply">Wyślij odpowiedź</button><button type="button" data-service-action="support-close">Zakończ kanał</button></div>
+                  </section>
+                </div>
+              </div>
+            </section>
+            <section class="module-panel" data-module-panel="help">
+              <div class="help-demo-page">
+                <header><span>POMOC LOCKON</span><h2>Najpierw bot. Potem człowiek.</h2><p>Ta sama pomoc, którą pracownik ma w aplikacji.</p></header>
+                <div class="help-demo-layout"><section><article><b>Bot ServiceOS</b><p>Cześć. Mogę znaleźć zlecenie, wyjaśnić status albo otworzyć właściwy ekran.</p></article><article class="mine"><b>Ty</b><p>Gdzie znajdę zlecenia czekające na części?</p></article><article><b>Bot ServiceOS</b><p>Otwórz Serwis → Plan pracy. Po prawej stronie masz kolejkę „Czeka na części”.</p></article><div><span>Napisz wiadomość…</span><button type="button" data-service-action="help-send">→</button></div></section><aside><b><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg></b><strong>Potrzebujesz człowieka?</strong><small>Poproś konsultanta o dołączenie do tej rozmowy.</small><button type="button" data-service-action="support-request">Poproś konsultanta</button></aside></div>
+              </div>
+            </section>
+            <section class="module-panel" data-module-panel="settings">
+              <div class="settings-demo-page">
+                <header><span>USTAWIENIA</span><h2>Dopasuj ServiceOS do siebie.</h2><p>Wygląd, skala, konto i integracje. Bez osobnego panelu administracyjnego.</p></header>
+                <div class="settings-demo-grid">
+                  <button class="active" type="button" data-theme-demo="carbon"><span>WYGLĄD</span><strong>Carbon</strong><small>Domyślny ciemny motyw</small><i></i></button>
+                  <button type="button" data-theme-demo="midnight"><span>WYGLĄD</span><strong>Midnight</strong><small>Chłodniejszy wariant</small><i></i></button>
+                  <article><span>SKALA</span><strong>100%</strong><small>Standardowy interfejs</small></article>
+                  <article><span>KONTO</span><strong>Bartłomiej</strong><small>Właściciel aplikacji</small></article>
+                  <article><span>GOOGLE</span><strong>Połączono</strong><small>konto firmowe</small></article>
+                  <article><span>AKTUALIZACJE</span><strong>Automatyczne</strong><small>ServiceOS aktualny</small></article>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
         <div class="module-mobile-tabs" aria-label="Moduły ServiceOS">
