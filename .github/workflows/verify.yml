@@ -13,6 +13,7 @@ on:
       - "assets/**"
       - "sw.js"
       - ".github/workflows/verify.yml"
+      - ".github/workflows/mobile-visual-check.yml"
   pull_request:
     branches: ["main"]
 
