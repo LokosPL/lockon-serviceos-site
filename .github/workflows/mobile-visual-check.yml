@@ -149,10 +149,18 @@ jobs:
           if(!await desktop.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Clients module did not activate');
           await desktop.screenshot({path:'visual-check/desktop-modules-clients.png'});
 
+          await desktop.locator('#roles').scrollIntoViewIfNeeded();
+          await desktop.waitForTimeout(750);
+          await desktop.screenshot({path:'visual-check/desktop-roles-wow.png'});
+
           await desktop.locator('#meetings').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
           await desktop.locator('[data-meeting-theater]').click();
           if(!await desktop.locator('[data-meeting-room]').evaluate((el)=>el.classList.contains('theater-mode'))) throw new Error('Meeting theater mode did not activate');
+          const micButton=desktop.locator('.meeting-controls button').first();
+          await micButton.click();
+          if(await micButton.evaluate((el)=>el.classList.contains('active'))) throw new Error('Meeting microphone control did not toggle');
+          await micButton.click();
           await desktop.locator('[data-meeting-side="people"]').click();
           await desktop.waitForTimeout(350);
           if(!await desktop.locator('[data-meeting-side-panel="people"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Meeting participants panel did not activate');
@@ -164,6 +172,15 @@ jobs:
           await desktop.waitForTimeout(350);
           if(!await desktop.locator('[data-phone-screen="4"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Phone step 4 did not activate');
           await desktop.screenshot({path:'visual-check/desktop-phone-step4.png'});
+
+          await desktop.locator('#security').scrollIntoViewIfNeeded();
+          await desktop.waitForTimeout(750);
+          await desktop.screenshot({path:'visual-check/desktop-security-wow.png'});
+
+          await desktop.locator('#start').scrollIntoViewIfNeeded();
+          await desktop.waitForTimeout(750);
+          await desktop.screenshot({path:'visual-check/desktop-start-wow.png'});
+          await desktop.screenshot({path:'visual-check/desktop-full-page.png',fullPage:true});
           await assertNoHorizontalOverflow(desktop,'Landing interactions');
           await desktop.close();
 
@@ -178,7 +195,7 @@ jobs:
           await mobile.screenshot({path:'visual-check/mobile-menu.png'});
           await mobile.locator('[data-menu-toggle]').click();
 
-          for(const [id,name] of [['modules','modules'],['meetings','meetings'],['connect','phone'],['start','start']]){
+          for(const [id,name] of [['modules','modules'],['roles','roles'],['meetings','meetings'],['connect','phone'],['security','security'],['start','start']]){
             await mobile.locator('#'+id).scrollIntoViewIfNeeded();
             await mobile.waitForTimeout(750);
             await assertNoHorizontalOverflow(mobile,'Mobile '+name);

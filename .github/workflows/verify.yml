@@ -76,6 +76,12 @@ jobs:
           grep -q 'data-meeting-room' index.html
           grep -q 'data-meeting-theater' index.html
           grep -q 'data-meeting-side="chat"' index.html
+          grep -q 'meeting-wow-shell' index.html
+          grep -q 'meeting-speaker-card' index.html
+          grep -q 'role-wow-card' index.html
+          grep -q 'phone-connect-flow' index.html
+          grep -q 'security-strip' index.html
+          grep -q 'start-main-download' index.html
           grep -q 'data-phone-step="4"' index.html
           grep -q 'data-phone-screen="4"' index.html
           grep -q 'prefers-reduced-motion' assets/serviceos-app-site.css
@@ -157,7 +163,7 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v35" sw.js
+          grep -q "serviceos-shell-v36" sw.js
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js
           grep -q 'google-auth.js' sw.js
