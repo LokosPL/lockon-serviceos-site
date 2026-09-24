@@ -3,512 +3,357 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#080a0d">
+  <meta name="theme-color" content="#080d12">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <title>LockOn ServiceOS — zobacz jak działa cały serwis</title>
+  <title>LockOn ServiceOS — serwis, zespół i klienci w jednym miejscu</title>
   <link rel="canonical" href="https://app.serviceos.pl/">
-  <meta name="description" content="Poznaj LockOn ServiceOS od wizyty klienta po odbiór urządzenia: zlecenia, karty serwisowe, przekazania, naprawy, dokumenty, spotkania, role i panel mobilny.">
-  <meta property="og:title" content="LockOn ServiceOS — cały serwis w jednym systemie">
-  <meta property="og:description" content="Zobacz krok po kroku, jak ServiceOS prowadzi zespół od przyjęcia klienta do zakończenia naprawy.">
+  <meta name="description" content="LockOn ServiceOS porządkuje serwis od przyjęcia urządzenia do odbioru: zlecenia, klienci, przekazania, spotkania, rozliczenia i panel mobilny.">
+  <meta property="og:title" content="LockOn ServiceOS">
+  <meta property="og:description" content="Jedno miejsce do prowadzenia serwisu, zespołu, spotkań i obsługi klienta.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://app.serviceos.pl/">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="assets/styles.css">
-  <link rel="stylesheet" href="assets/home-v2.css">
-  <link rel="stylesheet" href="assets/ui-2026.css">
-  <link rel="stylesheet" href="assets/home-story.css">
-  <link rel="stylesheet" href="assets/web-polish.css">
-  <link rel="stylesheet" href="assets/mobile-final.css">
-  <link rel="stylesheet" href="assets/release-1.0.11.css">
-  <link rel="stylesheet" href="assets/showcase-1.0.21.css">
-  <link rel="stylesheet" href="assets/showcase-1.0.22.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/serviceos-app-site.css">
 </head>
-<body class="portal-home onboarding-locked">
-  <div class="site-loader" id="siteLoader" aria-live="polite" aria-label="Ładowanie strony ServiceOS">
-    <div class="loader-core">
-      <div class="loader-brand"><span class="loader-logo"><img src="assets/logo.svg" alt=""></span><div><strong>LockOn ServiceOS</strong><span>Przewodnik po systemie</span></div></div>
-      <div class="loader-copy"><strong>Chwila — przygotowuję ServiceOS.</strong><span id="loaderLabel">Układam najważniejsze informacje…</span></div>
-      <div class="loader-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="loader-track"><i id="loaderProgress"></i></div>
-    </div>
-  </div>
-
-  <div class="cursor-glow" aria-hidden="true"></div>
-
-  <header class="nav portal-nav">
+<body class="site-home">
+  <header class="site-nav">
     <div class="wrap nav-inner">
-      <a class="brand" href="#top" aria-label="LockOn ServiceOS">
+      <a class="site-brand" href="#top" aria-label="LockOn ServiceOS">
         <img src="assets/logo.svg" alt="">
-        <div><strong>LockOn</strong><span>ServiceOS</span></div>
+        <span><strong>LockOn ServiceOS</strong><small>system pracy serwisu</small></span>
       </a>
-      <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
-        <a href="#day">Od klienta do odbioru</a>
-        <a href="#modules">Funkcje</a>
-        <a href="#roles">Role</a>
+
+      <nav class="site-links" aria-label="Główna nawigacja">
+        <a href="#day">Jak działa</a>
+        <a href="#modules">Moduły</a>
+        <a href="#roles">Dla kogo</a>
         <a href="#meetings">Spotkania</a>
         <a href="#connect">Telefon</a>
+        <a href="#security">Bezpieczeństwo</a>
       </nav>
-      <div class="portal-nav-actions">
-        <a id="navPanelLink" class="nav-panel-link requires-onboarding" data-requires-onboarding href="panel.html" hidden>Panel <span>→</span></a>
-        <a class="nav-download download-link requires-onboarding" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz <span>↓</span></a>
+
+      <button class="mobile-menu-button" type="button" aria-label="Otwórz menu" aria-expanded="false"><span></span></button>
+
+      <div class="site-nav-actions">
+        <a id="navPanelLink" href="panel.html" hidden>Panel →</a>
+        <button id="navLoginButton" data-requires-onboarding type="button">Połącz telefon</button>
+        <a class="primary download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz ↓</a>
       </div>
     </div>
   </header>
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
     <a href="#day">Jak działa</a>
-    <a href="#modules">Funkcje</a>
-    <a href="#roles">Role</a>
+    <a href="#modules">Moduły</a>
+    <a href="#meetings">Spotkania</a>
     <a href="#connect">Telefon</a>
-    <a href="#download">Pobierz</a>
+    <a href="#start">Start</a>
   </nav>
 
   <main id="top">
-    <section class="showcase-hero-v3">
-      <div class="showcase-hero-halo halo-one" aria-hidden="true"></div>
-      <div class="showcase-hero-halo halo-two" aria-hidden="true"></div>
-      <div class="wrap showcase-hero-grid">
-        <div class="showcase-hero-copy reveal">
-          <div class="eyebrow-pill"><span></span> LOCKON SERVICEOS · CAŁY PROCES SERWISOWY</div>
-          <h1>Od wejścia klienta<br><em>do wydania naprawionego urządzenia.</em></h1>
-          <p class="showcase-hero-lead">ServiceOS łączy punkt obsługi, serwis, przekazania, dokumenty, kontakt z klientem, spotkania zespołu i rozliczenia. Na tej stronie zobaczysz dokładnie, co dzieje się krok po kroku i kto za co odpowiada.</p>
-          <div class="showcase-hero-actions">
-            <a class="button primary big" href="#day">Zobacz cały proces <span>↓</span></a>
-            <a class="button secondary big" href="#preview">Podejrzyj aplikację</a>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy reveal">
+          <div class="eyebrow"><i></i> LOCKON SERVICEOS · PROSTY SYSTEM DO CODZIENNEJ PRACY</div>
+          <h1>Cały serwis.<br><em>Bez chaosu.</em></h1>
+          <p class="hero-lead">Klient przychodzi z urządzeniem, zespół prowadzi naprawę, system pilnuje historii, przekazań, dokumentów i kontaktu. Każdy widzi tylko to, czego potrzebuje.</p>
+          <div class="hero-actions">
+            <a class="action-button primary" href="#day">Zobacz jak działa ↓</a>
+            <a class="action-button ghost" href="#modules">Podejrzyj moduły</a>
           </div>
-          <div class="showcase-hero-proof">
-            <div><b>01</b><span><strong>Klient i urządzenie</strong><small>jedna karta sprawy od pierwszej wizyty</small></span></div>
-            <div><b>02</b><span><strong>Serwis i logistyka</strong><small>widać kto działa i gdzie jest telefon</small></span></div>
-            <div><b>03</b><span><strong>Dokumenty i kontakt</strong><small>karty, gwarancje, faktury i wiadomości</small></span></div>
+          <div class="hero-mini-proof">
+            <span><b>1.</b> przyjmij urządzenie</span>
+            <span><b>2.</b> prowadź naprawę</span>
+            <span><b>3.</b> wydaj klientowi</span>
           </div>
         </div>
 
-        <div class="showcase-device-stage reveal delay" aria-label="Przykładowy widok ServiceOS na laptopie i telefonie">
-          <div class="showcase-laptop">
-            <div class="showcase-laptop-bar"><span><i></i><i></i><i></i></span><strong>LockOn ServiceOS</strong><em>ONLINE</em></div>
-            <div class="showcase-laptop-body">
-              <aside><img src="assets/logo.svg" alt=""><span class="active">⌂</span><span>▣</span><span>⇄</span><span>◫</span><span>⚙</span></aside>
-              <div class="showcase-laptop-screen">
-                <div class="showcase-screen-head"><span>SERWIS · PUNKT NOWOGARD</span><h2>Co wymaga działania?</h2></div>
-                <div class="showcase-kpi-row"><article><small>Działaj teraz</small><strong>4</strong></article><article><small>W drodze</small><strong>2</strong></article><article><small>Do odbioru</small><strong>3</strong></article></div>
-                <div class="showcase-order-card hot"><b>#1042</b><div><strong>iPhone 14 Pro</strong><span>Diagnoza · termin dzisiaj</span></div><em>TERAZ</em></div>
-                <div class="showcase-order-card"><b>#1041</b><div><strong>Samsung S24</strong><span>Wraca do punktu klienta</span></div><em>W DRODZE</em></div>
-                <div class="showcase-order-card ready"><b>#1038</b><div><strong>iPhone 13</strong><span>Naprawa zakończona</span></div><em>GOTOWE</em></div>
-              </div>
-            </div>
-          </div>
-          <div class="showcase-phone">
-            <div class="showcase-phone-notch"></div>
-            <div class="showcase-phone-brand"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Twój punkt</span></div></div>
-            <span class="showcase-phone-kicker">NASTĘPNA AKCJA</span>
-            <h3>Zakończ diagnozę #1042</h3>
-            <p>iPhone 14 Pro · termin dzisiaj 14:30</p>
-            <div class="showcase-phone-action"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></div>
-            <div class="showcase-phone-action"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="showcase-value-strip">
-      <div class="wrap">
-        <article><strong>Jedna historia zlecenia</strong><span>Nie trzeba szukać informacji po wiadomościach i kartkach.</span></article>
-        <article><strong>Wiele punktów</strong><span>Przekazanie urządzenia nie oznacza utraty kontroli nad sprawą.</span></article>
-        <article><strong>Jasne role</strong><span>Każdy pracownik widzi funkcje potrzebne do swojej pracy.</span></article>
-        <article><strong>Telefon + laptop</strong><span>Ten sam zakres pracy jest dostępny na komputerze i w panelu mobilnym.</span></article>
-      </div>
-    </section>
-
-    <section class="page-section showcase-journey-section story-chapter" id="day">
-      <div class="wrap">
-        <div class="section-heading reveal" data-story-observe>
-          <b class="chapter-number">01</b>
-          <span>OD KLIENTA DO ODBIORU</span>
-          <h2>Tak wygląda zwykła wizyta i cały dalszy serwis.</h2>
-          <p>ServiceOS prowadzi sprawę przez kolejne etapy. Pracownik widzi, co już się wydarzyło, co dzieje się teraz i jaka jest następna czynność.</p>
-        </div>
-
-        <div class="workday-demo showcase-journey-grid reveal delay" aria-label="Przebieg obsługi klienta w ServiceOS">
-          <article><b>01</b><span>PRZYJĘCIE</span><h3>Klient zostawia urządzenie.</h3><p>Pracownik wyszukuje klienta lub tworzy jego kartę, zapisuje telefon, usterkę, dane kontaktowe, przewidywany termin i cenę orientacyjną.</p></article>
-          <article><b>02</b><span>KARTA SERWISOWA</span><h3>System przygotowuje dokument przyjęcia.</h3><p>Zlecenie dostaje własny numer. Karta serwisowa może zostać wydrukowana, otwarta ponownie i przekazana klientowi wraz z jego bezpiecznym dostępem.</p></article>
-          <article><b>03</b><span>PRZEKAZANIE</span><h3>Telefon trafia do właściwego serwisu.</h3><p>Jeżeli naprawa odbywa się w innym punkcie, nadawca tworzy przekazanie. Odbiorca potwierdza fizyczne przyjęcie urządzenia.</p></article>
-          <article><b>04</b><span>DIAGNOZA I NAPRAWA</span><h3>Serwisant prowadzi pracę krok po kroku.</h3><p>Diagnoza, części, oczekiwanie, naprawa i gotowość są widoczne w jednym miejscu razem z historią zmian i notatkami.</p></article>
-          <article><b>05</b><span>KOSZTY I CZĘŚCI</span><h3>Wewnętrzne koszty zostają przy zleceniu.</h3><p>Serwis może zapisać części, koszt zakupu, robociznę, cenę końcową i dokumenty zakupowe bez pokazywania danych wewnętrznych klientowi.</p></article>
-          <article><b>06</b><span>KONTAKT Z KLIENTEM</span><h3>Klient dostaje informacje o ważnych zmianach.</h3><p>Wiadomości serwisowe mogą wychodzić z Gmaila pracownika obsługującego sprawę. Klient może też sprawdzić swoje zlecenie w prywatnym portalu.</p></article>
-          <article><b>07</b><span>POWRÓT</span><h3>Urządzenie wraca do punktu odbioru.</h3><p>System pokazuje drogę powrotną. Dopiero po prawidłowym przyjęciu w punkcie macierzystym urządzenie może czekać na klienta.</p></article>
-          <article><b>08</b><span>ODBIÓR I GWARANCJA</span><h3>Sprawa kończy się kompletną historią.</h3><p>Przy wydaniu zostają status końcowy, wykonane prace, dokumenty, karta gwarancyjna i pełny zapis tego, kto oraz kiedy obsługiwał sprawę.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-modules-section story-chapter" id="modules">
-      <div class="wrap">
-        <div class="section-heading reveal" data-story-observe>
-          <b class="chapter-number">02</b>
-          <span>ZAKŁADKI I MODUŁY</span>
-          <h2>Wszystko, czego zespół potrzebuje do pracy.</h2>
-          <p>Nie jest to tylko lista napraw. ServiceOS łączy obsługę klienta, pracę serwisu, logistykę, dokumenty, zespół i komunikację.</p>
-        </div>
-
-        <div class="showcase-feature-grid">
-          <article><div class="feature-mark">01</div><span>SERWIS</span><h3>Zlecenia i historia naprawy</h3><p>Przyjęcie urządzenia, statusy, technik, terminy, notatki, wykonane czynności i pełna historia zmian.</p></article>
-          <article><div class="feature-mark">02</div><span>KARTY I QR</span><h3>Karta serwisowa przy zleceniu</h3><p>Dokument dla urządzenia i klienta, ponowny wydruk, bezpieczny kod klienta oraz skan urządzenia przy przekazaniach.</p></article>
-          <article><div class="feature-mark">03</div><span>PRZEKAZANIA</span><h3>Kontrola nad fizyczną lokalizacją</h3><p>Wiadomo skąd telefon wyjechał, dokąd jedzie, kto go przyjął i czy może już wrócić do punktu klienta.</p></article>
-          <article><div class="feature-mark">04</div><span>SERWISANT</span><h3>Plan pracy i prywatne notatki</h3><p>Serwisant widzi kolejkę, terminy, zadania wymagające działania oraz własny notatnik do organizacji pracy.</p></article>
-          <article><div class="feature-mark">05</div><span>CZĘŚCI I FAKTURY</span><h3>Koszty przy właściwym zleceniu</h3><p>Części, koszt zakupu, robocizna, cena orientacyjna, cena końcowa i magazyn faktur zakupowych.</p></article>
-          <article><div class="feature-mark">06</div><span>KLIENT</span><h3>Karta klienta i prywatny portal</h3><p>Historia urządzeń, zlecenia, wyceny, wiadomości i dokumenty dostępne bez pokazywania wewnętrznych kosztów serwisu.</p></article>
-          <article><div class="feature-mark">07</div><span>WIADOMOŚCI</span><h3>Powiadomienia z konta pracownika</h3><p>Pracownik wykonuje akcję serwisową, a wiadomość może wyjść z jego Gmaila. Zaproszenia na spotkania pozostają oddzielone.</p></article>
-          <article><div class="feature-mark">08</div><span>SPOTKANIA</span><h3>Szkolenia i odprawy w ServiceOS</h3><p>Planowanie, zapisy, prowadzący, audio, udostępnianie ekranu, moderacja oraz frekwencja po zakończeniu.</p></article>
-          <article><div class="feature-mark">09</div><span>POMOC</span><h3>Bot i konsultant w jednym miejscu</h3><p>Pracownik najpierw korzysta z pomocy w aplikacji, a gdy potrzebuje człowieka, sam prosi konsultanta o dołączenie.</p></article>
-          <article><div class="feature-mark">10</div><span>ROZLICZENIA</span><h3>Przychód i udział serwisanta</h3><p>Osoby uprawnione widzą rozliczenia punktów, a serwisant może sprawdzić własną część zgodnie z ustawieniami.</p></article>
-          <article><div class="feature-mark">11</div><span>ZESPÓŁ</span><h3>Role, punkty i zakresy dostępu</h3><p>Właściciel zarządza kontami i punktami. Każda rola ma własny zakres, którego nie można samodzielnie zwiększyć.</p></article>
-          <article><div class="feature-mark">12</div><span>NARZĘDZIA</span><h3>Przeglądarka, aktualizacje i ustawienia</h3><p>Codzienne narzędzia są w tej samej aplikacji, a aktualizacje Windows trafiają przez wbudowany mechanizm ServiceOS.</p></article>
-        </div>
-
-        <div class="app-story-layout showcase-story-layout">
-          <div class="app-story-list">
-            <article class="app-story-item active" data-story-feature="home" data-story-index="01" data-story-observe>
-              <span>START</span><h3>Najważniejsze rzeczy na początku dnia.</h3><p>Spotkania, skróty i podsumowanie są pod ręką, bez wchodzenia w techniczne szczegóły.</p>
-            </article>
-            <article class="app-story-item" data-story-feature="service" data-story-index="02" data-story-observe>
-              <span>SERWIS</span><h3>Zlecenie prowadzi całą sprawę.</h3><p>Klient, urządzenie, status, serwisant, logistyka, dokumenty, koszty i historia spotykają się w jednym miejscu.</p>
-            </article>
-            <article class="app-story-item" data-story-feature="transfers" data-story-index="03" data-story-observe>
-              <span>PRZEKAZANIA</span><h3>Fizyczna droga urządzenia jest widoczna.</h3><p>Telefon nie „znika” między punktami — każda wysyłka i każde przyjęcie ma swój etap.</p>
-            </article>
-            <article class="app-story-item" data-story-feature="customer" data-story-index="04" data-story-observe>
-              <span>KLIENT</span><h3>Klient ma dostęp do swojej sprawy.</h3><p>Może śledzić zlecenia, wyceny i dokumenty bez dostępu do wewnętrznych danych firmy.</p>
-            </article>
-            <article class="app-story-item" data-story-feature="admin" data-story-index="05" data-story-observe>
-              <span>ZARZĄDZANIE</span><h3>Firma ustala, kto widzi jaki zakres.</h3><p>Konta, punkty, role i dodatkowy dostęp do wsparcia są kontrolowane przez osoby uprawnione.</p>
-            </article>
-          </div>
-
-          <div class="app-story-visual reveal delay" data-story-observe aria-label="Podgląd logiki modułów ServiceOS">
-            <div class="story-window">
-              <div class="story-window-top">
-                <div class="story-window-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Podgląd działania</span></div></div>
-                <div class="story-window-live"><i></i> ONLINE</div>
-              </div>
-              <div class="story-window-body">
-                <aside class="story-sidebar" aria-hidden="true">
-                  <span class="active" data-story-icon="home">⌂</span><span data-story-icon="service">▣</span><span data-story-icon="transfers">⇄</span><span data-story-icon="customer">✉</span><span data-story-icon="admin">⚙</span>
-                </aside>
-                <div class="story-screens">
-                  <div class="story-screen active" data-story-screen="home" aria-hidden="false"><span class="story-screen-kicker">START</span><h3>Dzień pracy w jednym widoku</h3><div class="story-kpis"><article><span>Spotkania</span><strong>2</strong><small>jedno dzisiaj</small></article><article><span>Punkty</span><strong>3</strong><small>w Twoim zakresie</small></article><article><span>Zespół</span><strong>12</strong><small>aktywnych kont</small></article></div><div class="story-focus-card"><span>NAJBLIŻSZE</span><strong>Szkolenie: przyjęcie urządzenia</strong><small>15:00 · prowadzący: Koordynator</small></div></div>
-                  <div class="story-screen" data-story-screen="service" aria-hidden="true"><span class="story-screen-kicker">SERWIS</span><h3>Zlecenie #1042</h3><div class="story-list"><article><b>Klient</b><div><strong>Anna Kowalska</strong><span>dane kontaktowe przy zleceniu</span></div><em>OK</em></article><article><b>Urządzenie</b><div><strong>iPhone 14 Pro</strong><span>IMEI, opis i karta serwisowa</span></div><em>KARTA</em></article><article><b>Etap</b><div><strong>Diagnoza</strong><span>następna czynność: rozpocznij naprawę</span></div><em>TERAZ</em></article></div></div>
-                  <div class="story-screen" data-story-screen="transfers" aria-hidden="true"><span class="story-screen-kicker">PRZEKAZANIA</span><h3>Urządzenie w drodze</h3><div class="story-transfer-route"><div><span>SKĄD</span><strong>Punkt klienta</strong></div><b>→</b><div><span>DOKĄD</span><strong>Serwis główny</strong></div></div><div class="story-message"><b>CO DALEJ?</b><p>Punkt docelowy potwierdza fizyczne przyjęcie. Dopiero wtedy ServiceOS zmienia aktualne miejsce urządzenia.</p></div></div>
-                  <div class="story-screen" data-story-screen="customer" aria-hidden="true"><span class="story-screen-kicker">KLIENT</span><h3>Własna historia serwisowa</h3><div class="story-message"><b>ZLECENIE #1042</b><p>Aktualny etap, wycena, wiadomości i karta serwisowa są dostępne w prywatnym panelu klienta.</p></div><div class="story-message"><b>PRYWATNOŚĆ</b><p>Klient nie widzi kosztów zakupu, marży ani prywatnych notatek serwisanta.</p></div></div>
-                  <div class="story-screen" data-story-screen="admin" aria-hidden="true"><span class="story-screen-kicker">ZARZĄDZANIE</span><h3>Role i punkty</h3><div class="story-admin-grid"><article><span>WŁAŚCICIEL</span><strong>cała firma</strong></article><article><span>SZEF</span><strong>wszystkie punkty</strong></article><article><span>KOORDYNATOR</span><strong>przypisane punkty</strong></article><article><span>PRACOWNIK</span><strong>codzienna obsługa</strong></article></div></div>
-                </div>
-              </div>
-              <div class="story-window-caption">To uproszczony podgląd. Prawdziwy zakres funkcji zależy od roli pracownika.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-roles-section" id="roles">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>ROLE W ZESPOLE</span>
-          <h2>Każdy ma własny zakres pracy — bez przypadkowego dostępu do wszystkiego.</h2>
-          <p>Uprawnienia są sprawdzane przez ServiceOS, a nie tylko ukrywane na ekranie. Pracownik nie może sam zmienić swojej roli.</p>
-        </div>
-        <div class="showcase-role-grid">
-          <article><div>01</div><span>CAŁA FIRMA</span><h3>Właściciel</h3><p>Administracja, użytkownicy, punkty, klienci, serwis, rozliczenia, wsparcie, ustawienia i aktualizacje.</p></article>
-          <article><div>02</div><span>ZARZĄDZANIE</span><h3>Szef</h3><p>Nadzór nad serwisem i wszystkimi punktami, rozliczenia oraz możliwość planowania i prowadzenia spotkań.</p></article>
-          <article><div>03</div><span>SWOJE PUNKTY</span><h3>Koordynator</h3><p>Organizacja pracy przypisanych punktów, zlecenia, przekazania oraz spotkania kierowane do swojego zakresu.</p></article>
-          <article><div>04</div><span>NAPRAWA</span><h3>Serwisant</h3><p>Zlecenia, plan pracy, terminy, części, koszty, faktury, prywatne notatki i własne Rozliczenia.</p></article>
-          <article><div>05</div><span>OBSŁUGA KLIENTA</span><h3>Pracownik punktu</h3><p>Przyjęcie urządzenia, karta klienta, zlecenie, przekazania, odbiór i bezpieczne akcje w swoim punkcie.</p></article>
-          <article><div>06</div><span>POMOC</span><h3>Wsparcie / konsultant</h3><p>Pomaga pracownikom w swoim zakresie. Prywatna rozmowa z botem pozostaje niewidoczna, dopóki użytkownik nie poprosi człowieka.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-meeting-section" id="meetings" data-meeting22>
-      <div class="wrap meeting22-shell">
-        <div class="meeting22-copy">
-          <div class="section-heading reveal">
-            <span>SPOTKANIA I SZKOLENIA</span>
-            <h2>Od zaproszenia do frekwencji — cały przebieg w jednym miejscu.</h2>
-            <p>Spotkanie nie jest dodatkiem do Startu. Ma własny moduł, własny link, jasny status i pokój do rozmowy, chatu oraz udostępniania ekranu. Uczestnik zawsze wie, czy czeka na prowadzącego, czy spotkanie naprawdę trwa.</p>
-          </div>
-          <div class="meeting22-checks reveal delay">
-            <div><b>01</b><span><strong>Świadome wiadomości e-mail</strong><span>Organizator decyduje, czy wysłać zaproszenie i późniejsze zmiany terminu.</span></span></div>
-            <div><b>02</b><span><strong>SCHEDULED to nie LIVE</strong><span>Upływ godziny nie uruchamia pokoju. Spotkanie rozpoczyna prowadzący.</span></span></div>
-            <div><b>03</b><span><strong>Rozmowa bez zgadywania</strong><span>Widać, kto mówi, kto ma wyciszony mikrofon i kto podniósł rękę.</span></span></div>
-            <div><b>04</b><span><strong>Udostępnianie pod kontrolą</strong><span>Własny podgląd, nazwa źródła, szybka zmiana i jednoznaczne zatrzymanie.</span></span></div>
-          </div>
-        </div>
-
-        <div class="meeting22-stage reveal delay">
-          <div class="meeting22-window">
-            <div class="meeting22-windowbar"><div class="meeting22-dots"><i></i><i></i><i></i></div><span>LOCKON SERVICEOS · SPOTKANIA I SZKOLENIA</span></div>
-            <div class="meeting22-scenes">
-              <div class="meeting22-scene-nav" role="tablist" aria-label="Przebieg spotkania">
-                <button class="active" type="button" data-meeting22-scene="invite">1 · E-mail</button>
-                <button type="button" data-meeting22-scene="details">2 · Szczegóły</button>
-                <button type="button" data-meeting22-scene="live">3 · Pokój LIVE</button>
-                <button type="button" data-meeting22-scene="after">4 · Po spotkaniu</button>
-              </div>
-
-              <div class="meeting22-scene active" data-meeting22-panel="invite">
-                <div class="meeting22-mail">
-                  <span>LOCKON SERVICEOS · ZAPROSZENIE NA SZKOLENIE</span>
-                  <h3>Nowy standard przyjęcia urządzenia</h3>
-                  <p>Przyjęcie klienta, karta serwisowa i poprawne przekazanie urządzenia.</p>
-                  <dl>
-                    <div><dt>Termin</dt><dd>24 września 2026 · 15:00</dd></div>
-                    <div><dt>Czas</dt><dd>około 45 minut</dd></div>
-                    <div><dt>Prowadzący</dt><dd>Koordynator</dd></div>
-                    <div><dt>Zespół</dt><dd>Nowogard · Szczecin · Goleniów</dd></div>
-                  </dl>
-                  <div class="meeting22-cta">OTWÓRZ SPOTKANIE W SERVICEOS</div>
-                  <p>Link prowadzi do karty spotkania. Nie zawiera tokenu pokoju, sesji ani prywatnych danych.</p>
-                </div>
-              </div>
-
-              <div class="meeting22-scene" data-meeting22-panel="details">
-                <div class="meeting22-detail">
-                  <article><span class="meeting22-kicker">KARTA SPOTKANIA</span><h3>Nowy standard przyjęcia urządzenia</h3><p>Prowadzący: Koordynator<br>24 września · 15:00 · 45 min<br>12 / 20 zapisanych</p><span class="meeting22-status">Zaplanowane</span></article>
-                  <article><span class="meeting22-kicker">PRZED STARTEM</span><h3>Spotkanie jeszcze się nie rozpoczęło.</h3><p>Jeżeli termin minie, status pozostaje zaplanowany i pojawia się informacja „oczekiwanie na prowadzącego”.</p><span class="meeting22-status">SCHEDULED ≠ LIVE</span></article>
-                  <article class="meeting22-route"><div><span>E-MAIL</span><b>Otwórz spotkanie</b></div><i></i><div><span>SERVICEOS</span><b>Sprawdza konto i dostęp</b></div><i></i><div><span>PROWADZĄCY</span><b>Rozpoczyna</b></div><i></i><div><span>LIVE</span><b>Dołącz</b></div></article>
-                </div>
-              </div>
-
-              <div class="meeting22-scene" data-meeting22-panel="live">
-                <div class="meeting22-room">
-                  <div class="meeting22-main">
-                    <div class="meeting22-shared"><header><span>● EKRAN PROWADZĄCEGO</span><span>Materiały szkoleniowe</span></header><div class="fake-slide"><span class="meeting22-kicker">PRZYJĘCIE URZĄDZENIA</span><h4>Klient → urządzenie → zlecenie</h4><p>Pracownik widzi następny krok i nie musi pamiętać całej procedury.</p></div></div>
-                    <div class="meeting22-local" data-demo-local><span>● UDOSTĘPNIASZ EKRAN</span><div class="meeting22-local-preview">Twój rzeczywisty podgląd</div></div>
-                    <div class="meeting22-controls"><button class="active" type="button">🎙 Mikrofon</button><button class="active" type="button" data-demo-share>▣ Zmień ekran / okno</button><button type="button" data-demo-hand>✋ Podnieś rękę</button><button type="button">Wyjdź</button></div>
+        <div class="app-preview-wrap reveal delay" id="preview">
+          <div class="app-preview-glow" aria-hidden="true"></div>
+          <div class="app-window showcase-laptop" aria-label="Interaktywny podgląd ServiceOS">
+            <div class="app-titlebar"><span class="app-dot"></span><strong>LockOn ServiceOS</strong><small>Wszystkie punkty</small></div>
+            <div class="app-shell">
+              <aside class="app-sidebar">
+                <div class="app-logo"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></div>
+                <nav class="app-nav" aria-label="Podgląd modułów">
+                  <button class="active" data-app-nav="start" type="button"><i>⌂</i> Start</button>
+                  <button data-app-nav="service" type="button"><i>⌕</i> Serwis</button>
+                  <button data-app-nav="meetings" type="button"><i>◫</i> Spotkania</button>
+                  <button data-app-nav="admin" type="button"><i>◎</i> Administracja</button>
+                </nav>
+              </aside>
+              <div class="app-content">
+                <section class="app-screen active" data-preview-screen="start">
+                  <div class="app-screen-top">
+                    <div><span class="app-kicker">● WSZYSTKIE PUNKTY</span><h3>Dobry wieczór, <em>System.</em></h3><div class="app-sub">Najważniejsze rzeczy na jednej stronie.</div></div>
+                    <div class="app-clock">19:51<small>czwartek · dobry moment na działanie</small></div>
                   </div>
-                  <aside class="meeting22-side">
-                    <div class="meeting22-side-tabs"><button class="active" type="button" data-meeting22-side="people">Uczestnicy</button><button type="button" data-meeting22-side="chat">Chat</button></div>
-                    <div class="meeting22-people">
-                      <div class="meeting22-person speaking"><span class="meeting22-avatar">KO</span><div><strong>Koordynator</strong><small>Mówi</small><span class="meeting22-meter"><i></i><i></i><i></i><i></i></span></div><em>🎙</em></div>
-                      <div class="meeting22-person" data-demo-self><span class="meeting22-avatar">TY</span><div><strong>Ty</strong><small>Mikrofon wyciszony</small></div><em>🔇</em></div>
-                      <div class="meeting22-person"><span class="meeting22-avatar">S1</span><div><strong>Serwisant</strong><small>Uczestnik</small></div><em>🔇</em></div>
-                      <div class="meeting22-hand-queue" data-demo-hand-queue hidden><b>1</b> Ty chcesz zabrać głos</div>
-                    </div>
-                    <div class="meeting22-chat">
-                      <div class="meeting22-message">Koordynator: zaczynamy od wyszukania klienta.</div>
-                      <div class="meeting22-message mine">Jasne, mam otwartą kartę przyjęcia.</div>
-                    </div>
-                    <form class="meeting22-chat-form"><input maxlength="160" placeholder="Napisz wiadomość…" aria-label="Wiadomość na czacie"><button type="submit" aria-label="Wyślij">→</button></form>
-                  </aside>
-                </div>
-              </div>
-
-              <div class="meeting22-scene" data-meeting22-panel="after">
-                <div class="meeting22-after">
-                  <article><span>STATUS</span><strong>Spotkanie zakończone</strong><p>Po zakończeniu nie można ponownie wejść do pokoju. Zostaje historia spotkania i frekwencja.</p></article>
-                  <article><span>FREKWENCJA</span><strong>11 uczestników</strong><p>Widać zapis, faktyczne dołączenie i liczbę wejść. Dane nie mieszają się między spotkaniami.</p></article>
-                </div>
-                <div class="meeting22-flow" aria-label="Przebieg spotkania"><span>E-mail</span><span>Otwórz spotkanie</span><span>Szczegóły</span><span>Rozpocznij</span><span>Rozmowa / chat / ekran / ręka</span><span>Zakończ</span><span>Frekwencja</span></div>
-                <p class="meeting22-note">To demonstracja oparta na rzeczywistym układzie i funkcjach ServiceOS. Dane osób są przykładowe.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-management-section" id="now">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>DLA SZEFA I WŁAŚCICIELA</span>
-          <h2>Co widać z perspektywy zarządzania?</h2>
-          <p>ServiceOS nie zastępuje pracy ludzi. Porządkuje informacje tak, żeby było wiadomo co się dzieje, kto odpowiada za sprawę i gdzie trzeba zareagować.</p>
-        </div>
-        <div class="showcase-management-grid">
-          <article><b>01</b><h3>Pełna historia</h3><p>Każda ważna zmiana zlecenia zostaje w historii razem z czasem i osobą, która ją wykonała.</p></article>
-          <article><b>02</b><h3>Praca wielu punktów</h3><p>Przekazania pokazują faktyczną drogę urządzenia, zamiast udawać, że cały serwis odbywa się w jednym miejscu.</p></article>
-          <article><b>03</b><h3>Odpowiedzialność</h3><p>Role i zakres punktów ograniczają dostęp, a zlecenie pokazuje prowadzącego, serwisanta i kolejne działania.</p></article>
-          <article><b>04</b><h3>Dokumenty przy sprawie</h3><p>Karty serwisowe, faktury, gwarancje, notatki i wiadomości są powiązane z właściwym klientem i urządzeniem.</p></article>
-          <article><b>05</b><h3>Szkolenia zespołu</h3><p>Spotkania mają zapisy, prowadzącego, uprawnienia i frekwencję, więc można prowadzić odprawy w tym samym środowisku.</p></article>
-          <article><b>06</b><h3>Rozliczenia</h3><p>Osoby uprawnione widzą zatwierdzone wartości, a serwisant swoją część — bez mieszania danych finansowych z portalem klienta.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-workflow-section" id="workflow">
-      <div class="wrap showcase-workflow-shell">
-        <div>
-          <span class="section-kicker">JEDNA SPRAWA · WIELE OSÓB</span>
-          <h2>Informacja przechodzi razem z urządzeniem.</h2>
-          <p>Pracownik punktu nie musi opowiadać serwisantowi wszystkiego od nowa. Serwisant nie musi dzwonić po numer klienta. Punkt odbioru widzi, kiedy urządzenie naprawdę wróciło.</p>
-        </div>
-        <div class="showcase-handoff">
-          <article><strong>Pracownik punktu</strong><span>przyjmuje klienta i przygotowuje zlecenie</span></article>
-          <i>→</i>
-          <article><strong>Serwis</strong><span>diagnozuje, naprawia i uzupełnia wykonane prace</span></article>
-          <i>→</i>
-          <article><strong>Punkt klienta</strong><span>przyjmuje powrót i wydaje urządzenie</span></article>
-          <i>→</i>
-          <article><strong>Klient</strong><span>ma dokumenty i historię swojej sprawy</span></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section showcase-preview-section" id="preview">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>PODGLĄD APLIKACJI</span>
-          <h2>Laptop daje pełny warsztat. Telefon pokazuje najważniejsze rzeczy w ruchu.</h2>
-          <p>Układ jest responsywny: na małym ekranie funkcje nie są ściskane, tylko ustawiane w kolejności wygodnej do dotyku.</p>
-        </div>
-        <div class="preview-stage showcase-preview-stage">
-          <div class="showcase-demo-tabs">
-            <button class="demo-nav active" data-demo-target="dashboard">Start</button>
-            <button class="demo-nav" data-demo-target="service">Serwis</button>
-            <button class="demo-nav" data-demo-target="meeting">Spotkania</button>
-            <button class="demo-nav" data-demo-target="roles">Role</button>
-          </div>
-          <div class="showcase-demo-window">
-            <div class="demo-screen active" data-demo-screen="dashboard" aria-hidden="false">
-              <div class="showcase-demo-heading"><span>START</span><h3>Najbliższe spotkania i szybki dostęp</h3></div>
-              <div class="showcase-demo-row"><strong>Szkolenie z przyjęcia urządzenia</strong><span>Zaplanowane · dzisiaj 15:00</span><b>✓ zapisany</b></div>
-              <div class="showcase-demo-cards"><article><span>Serwis</span><strong>Zlecenia i bieżąca praca</strong></article><article><span>Klienci</span><strong>Karty i historia</strong></article><article><span>Pomoc</span><strong>Bot i konsultant</strong></article></div>
-            </div>
-            <div class="demo-screen" data-demo-screen="service" aria-hidden="true">
-              <div class="showcase-demo-heading"><span>SERWIS</span><h3>#1042 · iPhone 14 Pro</h3></div>
-              <div class="showcase-demo-progress"><span class="done">Przyjęto</span><span class="done">Wysłano do serwisu</span><span class="active">Naprawa</span><span>Powrót</span><span>Odbiór</span></div>
-              <div class="showcase-demo-row"><strong>Wymiana wyświetlacza</strong><span>Serwisant: Jan Kowalski · termin: dzisiaj</span><b>W NAPRAWIE</b></div>
-            </div>
-            <div class="demo-screen" data-demo-screen="meeting" aria-hidden="true">
-              <div class="showcase-demo-heading"><span>SPOTKANIE</span><h3>Odprawa punktów</h3></div>
-              <div class="showcase-demo-call"><div><strong>Udostępniany ekran</strong><span>Materiały szkoleniowe prowadzącego</span></div><aside><b>Uczestnicy · 8</b><span>🎙 Prowadzący</span><span>🔇 Pracownik 1</span><span>🔇 Pracownik 2</span></aside></div>
-            </div>
-            <div class="demo-screen" data-demo-screen="roles" aria-hidden="true">
-              <div class="showcase-demo-heading"><span>ROLE</span><h3>Zakres wynika z pracy użytkownika</h3></div>
-              <div class="showcase-demo-rolelist"><article><b>Właściciel</b><span>cała firma</span></article><article><b>Koordynator</b><span>przypisane punkty</span></article><article><b>Serwisant</b><span>naprawy i własny plan</span></article><article><b>Pracownik</b><span>obsługa klienta i logistyka</span></article></div>
-            </div>
-          </div>
-          <p class="showcase-preview-note">Podgląd pokazuje sposób pracy i układ informacji. Dane są przykładowe.</p>
-        </div>
-      </div>
-    </section>
-
-<section class="page-section connect-story story-chapter" id="connect">
-      <div class="wrap">
-        <div class="connect-story-head reveal" data-story-observe>
-          <b class="chapter-number">03</b>
-          <span class="section-kicker">POŁĄCZ TELEFON</span>
-          <h2>Cztery proste kroki i telefon jest gotowy.</h2>
-          <p>Nie skanujesz żadnych podejrzanych kodów i nie nadajesz nowych uprawnień. Telefon przejmuje tylko ten sam zakres dostępu, który masz już zatwierdzony w ServiceOS.</p>
-        </div>
-
-        <div class="connect-story-layout">
-          <div class="connect-device-wrap reveal" data-story-observe>
-            <div class="connect-device-card">
-              <div>
-                <div class="connect-phone" aria-label="Podgląd połączenia telefonu">
-                  <div class="connect-phone-screen">
-                    <div class="connect-phone-top"><span>9:41</span><span>● ● ●</span></div>
-                    <div class="connect-phone-brand"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Połączenie urządzenia</span></div></div>
-                    <div class="connect-phone-stage"><span data-phone-kicker>KROK 1 · TELEFON</span><h3 data-phone-title>Otwórz portal pracownika</h3><p data-phone-copy>Wejdź na app.serviceos.pl w przeglądarce telefonu.</p></div>
-                    <div class="connect-code"><span>NA EKRANIE ZOBACZYSZ</span><strong data-phone-code>app.serviceos.pl</strong></div>
-                    <div class="connect-phone-actions" aria-hidden="true">
-                      <span class="active" data-phone-action="site">Otwórz stronę pracownika</span>
-                      <span data-phone-action="desktop">Zaloguj się na komputerze</span>
-                      <span data-phone-action="code">Pomoc → Połącz urządzenie</span>
-                      <span data-phone-action="pair">Wpisz jednorazowy kod</span>
-                      <span data-phone-action="ready">✓ Telefon gotowy</span>
-                    </div>
+                  <div class="app-hero-card">
+                    <div><h4>Spotkania i szkolenia</h4><p>Najbliższy termin, aktywne spotkanie i szybki powrót — bez szukania po menu.</p></div>
+                    <div class="app-weather"><b>Serwis online</b><span>Wszystkie usługi działają prawidłowo.</span></div>
                   </div>
-                </div>
-                <div class="connect-device-note">Na komputerze kliknij krok instrukcji, aby zmienić podgląd.</div>
+                  <div class="app-section-label">Szybki dostęp</div>
+                  <div class="app-card-grid">
+                    <article class="app-card"><b>Serwis</b><span>Zlecenia, urządzenia i bieżąca praca.</span></article>
+                    <article class="app-card"><b>Administracja</b><span>Pracownicy, punkty i dostępy.</span></article>
+                    <article class="app-card"><b>Rozliczenia</b><span>Przychód i rozliczenia pracy.</span></article>
+                  </div>
+                </section>
+
+                <section class="app-screen" data-preview-screen="service">
+                  <div class="app-screen-top"><div><span class="app-kicker">SERWIS</span><h3>Co wymaga działania?</h3><div class="app-sub">Najpierw rzeczy pilne, potem reszta kolejki.</div></div><div class="app-clock">4<small>aktywne zlecenia</small></div></div>
+                  <div class="app-service-layout">
+                    <div class="app-list">
+                      <article class="app-order"><b>#1042</b><div><strong>iPhone 14 Pro</strong><span>Diagnoza · termin dzisiaj</span></div><em>TERAZ</em></article>
+                      <article class="app-order"><b>#1041</b><div><strong>Samsung S24</strong><span>Wraca do punktu klienta</span></div><em>W DRODZE</em></article>
+                      <article class="app-order"><b>#1038</b><div><strong>iPhone 13</strong><span>Naprawa zakończona</span></div><em>GOTOWE</em></article>
+                    </div>
+                    <div class="app-side-card"><b>PLAN DNIA</b><strong>3</strong><span>rzeczy do wykonania przed zamknięciem punktu</span></div>
+                  </div>
+                </section>
+
+                <section class="app-screen" data-preview-screen="meetings">
+                  <div class="app-screen-top"><div><span class="app-kicker">SPOTKANIA I SZKOLENIA</span><h3>Zespół w jednym miejscu.</h3><div class="app-sub">Planowanie, czat, ekran i frekwencja.</div></div><div class="app-clock">02:03<small>czas aktywnego spotkania</small></div></div>
+                  <div class="app-meeting-card">
+                    <div class="app-live-row"><span class="app-live"><i></i> TRWA TERAZ</span><span class="app-sub">1 uczestnik</span></div>
+                    <h4>Szkolenie serwisowe</h4><p>Udostępnianie ekranu, chat i podniesione ręce działają w tej samej sesji.</p>
+                    <div class="app-meeting-actions"><span>▣ Tryb kinowy</span><span>◫ Czat po prawej</span></div>
+                  </div>
+                </section>
+
+                <section class="app-screen" data-preview-screen="admin">
+                  <div class="app-screen-top"><div><span class="app-kicker">ADMINISTRACJA</span><h3>Firma pod kontrolą.</h3><div class="app-sub">Role i zakresy dostępu są widoczne od razu.</div></div></div>
+                  <div class="app-admin-grid">
+                    <article><span>Aktywne konta</span><b data-count="12">12</b></article>
+                    <article><span>Punkty</span><b data-count="3">3</b></article>
+                    <article><span>Oczekuje na decyzję</span><b data-count="1">1</b></article>
+                    <article><span>Aktywne sesje</span><b data-count="6">6</b></article>
+                  </div>
+                </section>
               </div>
             </div>
           </div>
+          <div class="preview-tabs">
+            <button class="active" data-preview-tab="start" type="button">Start</button>
+            <button data-preview-tab="service" type="button">Serwis</button>
+            <button data-preview-tab="meetings" type="button">Spotkania</button>
+            <button data-preview-tab="admin" type="button">Administracja</button>
+          </div>
+          <div class="showcase-phone" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
 
-          <div>
-            <div class="connect-timeline" data-connect-timeline>
-              <article class="connect-step active" data-connect-step="1" data-story-observe><span>NA TELEFONIE</span><h3>Otwórz app.serviceos.pl</h3><p>Wejdź na tę samą stronę w przeglądarce telefonu. Możesz wcześniej spokojnie przeczytać całą instrukcję.</p><small>Nie musisz instalować osobnej aplikacji mobilnej — panel działa jako WWW/PWA.</small></article>
-              <article class="connect-step" data-connect-step="2" data-story-observe><span>NA KOMPUTERZE</span><h3>Pomoc → Połącz urządzenie</h3><p>Zaloguj się w ServiceOS i otwórz <strong>Pomoc → Połącz urządzenie</strong>. Aplikacja pokaże jednorazowy kod ważny tylko kilka minut.</p><small>Kod służy wyłącznie do połączenia Twojego telefonu.</small></article>
-              <article class="connect-step" data-connect-step="3" data-story-observe><span>NA TELEFONIE</span><h3>Wpisz kod i połącz telefon</h3><p>Wybierz „Połącz telefon” i przepisz kod z komputera. Po poprawnej weryfikacji panel otworzy się automatycznie.</p><small>Telefon nie dostaje szerszych uprawnień niż Twoje konto.</small></article>
-              <article class="connect-step" data-connect-step="4" data-story-observe><span>GOTOWE</span><h3>Zacznij od ekranu Start</h3><p>Telefon pokaże przede wszystkim następną akcję, zlecenia i przekazania. Pozostałe funkcje znajdziesz pod „Więcej”.</p><small>Jeżeli konto zostanie zablokowane albo sesja unieważniona, telefon również straci dostęp.</small></article>
+    <section class="stat-strip" aria-label="Najważniejsze zasady ServiceOS">
+      <div class="wrap">
+        <div class="stat-item"><strong>Jedna historia</strong><span>całe zlecenie w jednym miejscu</span></div>
+        <div class="stat-item"><strong>Jasna kolejka</strong><span>wiesz, co robić teraz</span></div>
+        <div class="stat-item"><strong>Role i punkty</strong><span>każdy ma własny zakres</span></div>
+        <div class="stat-item"><strong>Komputer + telefon</strong><span>ta sama praca w dwóch widokach</span></div>
+      </div>
+    </section>
+
+    <section class="page-section" id="day">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="section-tag">JAK DZIAŁA</span>
+          <h2>Od wejścia klienta do odbioru. Cztery kroki.</h2>
+          <p>Zamiast kilkunastu opisów — jeden prosty proces. ServiceOS dopina szczegóły w tle, a pracownik widzi następną czynność.</p>
+        </div>
+        <div class="process-grid workday-demo showcase-journey-grid">
+          <article class="process-card reveal"><span class="process-number">01 · PRZYJĘCIE</span><h3>Zapisz klienta i urządzenie.</h3><p>Dane kontaktowe, model, IMEI lub numer seryjny, opis usterki, termin i cena orientacyjna.</p><small>Karta serwisowa powstaje przy zleceniu.</small></article>
+          <article class="process-card reveal delay"><span class="process-number">02 · SERWIS</span><h3>Pracuj według kolejki.</h3><p>Diagnoza, części, naprawa i notatki są przy jednej sprawie. System pokazuje, co jest pilne.</p><small>Historia zmian zapisuje się automatycznie.</small></article>
+          <article class="process-card reveal delay"><span class="process-number">03 · PRZEKAZANIE</span><h3>Wiesz, gdzie jest urządzenie.</h3><p>Jeśli telefon jedzie do innego punktu, każda wysyłka i każde przyjęcie mają własny etap.</p><small>Status naprawy nie miesza się z logistyką.</small></article>
+          <article class="process-card reveal delay2"><span class="process-number">04 · ODBIÓR</span><h3>Zamknij sprawę kompletnie.</h3><p>Klient dostaje gotowe urządzenie, dokumenty i gwarancję. W systemie zostaje pełna historia.</p><small>Bez szukania informacji po wiadomościach.</small></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="modules">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="section-tag">ZAKŁADKI I MODUŁY</span>
+          <h2>W aplikacji widzisz tylko to, czego potrzebujesz.</h2>
+          <p>Kliknij moduł. Podgląd pokazuje, do czego służy bez technicznego opisu.</p>
+        </div>
+        <div class="module-shell reveal delay">
+          <nav class="module-menu" aria-label="Moduły ServiceOS">
+            <h3>ServiceOS</h3>
+            <button class="active" data-module-button="service" type="button"><i>⌕</i> Serwis</button>
+            <button data-module-button="clients" type="button"><i>◎</i> Klienci</button>
+            <button data-module-button="meetings" type="button"><i>◫</i> Spotkania</button>
+            <button data-module-button="finance" type="button"><i>₿</i> Rozliczenia</button>
+            <button data-module-button="admin" type="button"><i>⚙</i> Administracja</button>
+            <button data-module-button="tools" type="button"><i>↗</i> Narzędzia</button>
+          </nav>
+          <div class="module-canvas showcase-feature-grid">
+            <section class="module-panel active" data-module-panel="service">
+              <div class="module-panel-head"><div><span>SERWIS</span><h3>Zlecenia i codzienna praca.</h3><p>Najpierw widzisz rzeczy wymagające działania. Potem otwierasz jedną sprawę i masz klienta, urządzenie, historię, dokumenty i koszty.</p></div></div>
+              <div class="module-kpis"><article><small>Działaj teraz</small><strong>4</strong></article><article><small>W drodze</small><strong>2</strong></article><article><small>Do odbioru</small><strong>3</strong></article></div>
+              <div class="module-list"><div class="module-row"><div><strong>#1042 · iPhone 14 Pro</strong><span>Diagnoza · termin dzisiaj</span></div><em>OTWÓRZ →</em></div><div class="module-row"><div><strong>#1041 · Samsung S24</strong><span>Przekazanie do punktu klienta</span></div><em>W DRODZE</em></div></div>
+            </section>
+            <section class="module-panel" data-module-panel="clients">
+              <div class="module-panel-head"><div><span>KLIENCI</span><h3>Historia osoby, nie luźne kartki.</h3><p>Dane kontaktowe, urządzenia, wcześniejsze zlecenia, wyceny i dokumenty są pod ręką, ale prywatne koszty serwisu nie trafiają do klienta.</p></div></div>
+              <div class="module-kpis"><article><small>Klienci</small><strong>248</strong></article><article><small>Aktywne sprawy</small><strong>17</strong></article><article><small>Wyceny</small><strong>3</strong></article></div>
+            </section>
+            <section class="module-panel" data-module-panel="meetings">
+              <div class="module-panel-head"><div><span>SPOTKANIA I SZKOLENIA</span><h3>Odprawa bez wychodzenia z ServiceOS.</h3><p>Chat, mikrofon, udostępnianie ekranu, podniesione ręce i frekwencja działają w jednym pokoju. Prowadzący może przejść do innych modułów bez zrywania sesji.</p></div></div>
+              <div class="module-list"><div class="module-row"><div><strong>Szkolenie serwisowe</strong><span>Trwa teraz · 02:03 / 60 min</span></div><em>WRÓĆ →</em></div><div class="module-row"><div><strong>Tryb kinowy</strong><span>Duży ekran + chat po prawej</span></div><em>NOWE</em></div></div>
+            </section>
+            <section class="module-panel" data-module-panel="finance">
+              <div class="module-panel-head"><div><span>ROZLICZENIA</span><h3>Wynik jest przy pracy, która go stworzyła.</h3><p>Osoby uprawnione widzą przychód, koszty i rozliczenia. Serwisant może sprawdzić własny udział bez dostępu do administracji firmy.</p></div></div>
+              <div class="module-kpis"><article><small>Przychód</small><strong>12 840 zł</strong></article><article><small>Koszty</small><strong>4 120 zł</strong></article><article><small>Zamknięte</small><strong>31</strong></article></div>
+            </section>
+            <section class="module-panel" data-module-panel="admin">
+              <div class="module-panel-head"><div><span>ADMINISTRACJA</span><h3>Role, punkty i dostęp bez zgadywania.</h3><p>Właściciel i uprawnione role zarządzają kontami, punktami i zakresem pracy. Zablokowanie konta odbiera dostęp również aktywnym sesjom.</p></div></div>
+              <div class="module-kpis"><article><small>Aktywne konta</small><strong>12</strong></article><article><small>Punkty</small><strong>3</strong></article><article><small>Do decyzji</small><strong>1</strong></article></div>
+            </section>
+            <section class="module-panel" data-module-panel="tools">
+              <div class="module-panel-head"><div><span>NARZĘDZIA</span><h3>Mniej przełączania między programami.</h3><p>Przeglądarka, pomoc, ustawienia i szybkie narzędzia są częścią tej samej aplikacji. Aktywne spotkanie może działać w tle podczas pracy.</p></div></div>
+              <div class="module-list"><div class="module-row"><div><strong>Przeglądarka</strong><span>Internet bez wychodzenia z ServiceOS</span></div><em>OTWÓRZ →</em></div><div class="module-row"><div><strong>Pomoc</strong><span>Bot, konsultant i połączenie telefonu</span></div><em>POMOC →</em></div></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="roles">
+      <div class="wrap">
+        <div class="section-head center reveal">
+          <span class="section-tag">ROLE W ZESPOLE</span>
+          <h2>Inny ekran dla właściciela. Inny dla serwisanta.</h2>
+          <p>ServiceOS nie pokazuje każdemu wszystkiego. Menu i akcje wynikają z roli oraz przypisanych punktów.</p>
+        </div>
+        <div class="role-grid showcase-role-grid">
+          <article class="role-card reveal"><span>WŁAŚCICIEL</span><h3>Cała firma.</h3><p>Pełny obraz punktów, zespołu, rozliczeń i ustawień.</p><ul><li>konta i role</li><li>wszystkie punkty</li><li>pełna administracja</li></ul></article>
+          <article class="role-card reveal delay"><span>SZEF / KOORDYNATOR</span><h3>Zespół i zakres punktów.</h3><p>Zarządzanie bieżącą pracą bez dostępu poza przypisanym zakresem.</p><ul><li>organizacja pracy</li><li>spotkania i szkolenia</li><li>podgląd zespołu</li></ul></article>
+          <article class="role-card reveal delay"><span>SERWISANT</span><h3>Naprawy bez administracyjnego bałaganu.</h3><p>Widok skupiony na urządzeniach, kolejce, terminach i częściach.</p><ul><li>zlecenia</li><li>plan dnia</li><li>prywatne notatki</li></ul></article>
+          <article class="role-card reveal delay2"><span>OBSŁUGA</span><h3>Klient od wejścia do wydania.</h3><p>Przyjęcie urządzenia, kontakt, dokumenty i wydanie bez funkcji technicznych.</p><ul><li>klienci</li><li>karty serwisowe</li><li>status sprawy</li></ul></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section" id="meetings">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <span class="section-tag">SPOTKANIA I SZKOLENIA</span>
+          <h2>Duży ekran, chat po prawej. Bez zbędnych paneli.</h2>
+          <p>Tryb kinowy maksymalizuje udostępniany ekran, ale czat i uczestnicy pozostają widoczni. Po przejściu do Serwisu lub Przeglądarki sesja nadal działa.</p>
+        </div>
+        <div class="meeting-showcase reveal delay" data-meeting22 data-meeting22-scene="live">
+          <div class="meeting-main">
+            <div class="meeting-top"><div class="meeting-title"><span class="meeting-live-pill">● TRWA TERAZ</span><strong>Szkolenie serwisowe</strong></div><span class="app-sub">02:03 / 60 min · 4K / 60</span></div>
+            <div class="meeting-screen">
+              <div class="meeting-screen-content">
+                <div class="meeting-stream">
+                  <aside><span class="active"></span><span></span><span></span><span></span><span></span></aside>
+                  <div class="meeting-stream-body"><div class="meeting-stream-head"></div><div class="meeting-stream-card"></div><div class="meeting-stream-row"><span></span><span></span><span></span></div></div>
+                </div>
+              </div>
             </div>
+            <div class="meeting-bottom">
+              <span class="meeting-control-pill active">◉ Mikrofon</span>
+              <span class="meeting-control-pill active">↗ Zmień ekran</span>
+              <span class="meeting-control-pill">✋ Podnieś rękę</span>
+              <span class="meeting-control-pill">▣ Tryb kinowy</span>
+            </div>
+          </div>
+          <aside class="meeting-side">
+            <div class="meeting-tabs"><button class="active" type="button">Czat</button><button type="button">Uczestnicy · 4</button></div>
+            <div class="meeting-chat">
+              <div class="meeting-bubble">Czy widzicie ekran?</div>
+              <div class="meeting-bubble mine">Tak, wszystko czytelne.</div>
+              <div class="meeting-bubble">Możemy przejść do kolejnego przykładu.</div>
+              <div class="meeting-compose">Napisz wiadomość…</div>
+            </div>
+          </aside>
+        </div>
+        <p class="meeting-note reveal"><b>SCHEDULED ≠ LIVE.</b> Zaplanowane spotkanie staje się aktywne dopiero wtedy, gdy prowadzący je uruchomi.</p>
+      </div>
+    </section>
 
-            <div class="connect-story-actions reveal" data-story-observe>
-              <strong>Chcesz połączyć telefon teraz?</strong>
-              <p>Najpierw zaakceptuj zasady pracownika niżej. Potem ten przycisk otworzy bezpieczne okno połączenia.</p>
-              <div class="site-address"><span>Adres na telefonie</span><strong>app.serviceos.pl</strong><button type="button" data-copy-site>Kopiuj</button></div>
-              <button id="navLoginButton" class="button primary big requires-onboarding" data-requires-onboarding type="button">Połącz telefon</button>
+    <section class="page-section" id="connect">
+      <div class="wrap mobile-showcase">
+        <div class="reveal">
+          <div class="section-head">
+            <span class="section-tag">TELEFON</span>
+            <h2>Połącz telefon w mniej niż minutę.</h2>
+            <p>Nie instalujesz osobnej aplikacji mobilnej. Otwierasz stronę, wpisujesz kod z ServiceOS i dostajesz ten sam zakres uprawnień co na komputerze.</p>
+          </div>
+          <div class="mobile-copy-list">
+            <article data-connect-step="1"><strong>1. Otwórz app.serviceos.pl</strong><span>Na telefonie wejdź na tę stronę i wybierz „Połącz telefon”.</span></article>
+            <article data-connect-step="2"><strong>2. W ServiceOS: Pomoc → Połącz urządzenie</strong><span>Komputer wygeneruje jednorazowy kod ważny tylko przez kilka minut.</span></article>
+            <article data-connect-step="3"><strong>3. Przepisz kod</strong><span>Po poprawnej weryfikacji telefon otworzy panel automatycznie.</span></article>
+            <article data-connect-step="4"><strong>4. Gotowe</strong><span>Telefon nie dostaje żadnych dodatkowych uprawnień ponad Twoją rolę.</span></article>
+          </div>
+          <div class="hero-actions">
+            <button class="action-button primary" data-requires-onboarding data-open-login type="button">Połącz telefon</button>
+            <button class="action-button ghost" data-copy-site type="button">Kopiuj adres strony</button>
+          </div>
+        </div>
+        <div class="reveal delay">
+          <div class="phone-shell">
+            <div class="phone-screen">
+              <div class="phone-top"><div><img src="assets/logo.svg" alt=""><strong>ServiceOS</strong></div><span>● ONLINE</span></div>
+              <div class="phone-body">
+                <span class="phone-kicker">DZIEŃ DOBRY</span><h3>Co teraz?</h3><p>Najważniejsze akcje masz od razu pod ręką.</p>
+                <div class="phone-focus"><span>NASTĘPNA AKCJA</span><strong>Rozpocznij diagnozę #1042</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small></div>
+                <div class="phone-actions"><article><b>Nowe zlecenie</b><span>Przyjmij urządzenie</span></article><article><b>Przekazania</b><span>Wysyłki i dostawy</span></article><article><b>Zlecenia</b><span>Twoja kolejka</span></article><article><b>Więcej</b><span>Pozostałe moduły</span></article></div>
+                <div class="phone-nav"><span class="active">Start</span><span>Zlecenia</span><span>Przekaż</span><span>Więcej</span></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="page-section security-section" id="security">
-      <div class="wrap security-grid">
-        <div class="section-heading reveal">
-          <span>BEZPIECZEŃSTWO</span>
-          <h2>Widzisz tylko to, czego potrzebujesz do pracy.</h2>
-          <p>Po akceptacji pracujesz w swoim zakresie. Ten sam zakres obowiązuje na komputerze i telefonie.</p>
+    <section class="page-section" id="security">
+      <div class="wrap">
+        <div class="section-head center reveal">
+          <span class="section-tag">BEZPIECZEŃSTWO</span>
+          <h2>Proste zasady, mocne ograniczenia.</h2>
+          <p>Użytkownik nie powinien zastanawiać się nad technicznymi mechanizmami bezpieczeństwa. System pilnuje zakresu dostępu po stronie serwera.</p>
         </div>
-        <div class="security-cards reveal delay">
-          <article><strong>Konto wymaga akceptacji</strong><span>Dostęp zaczyna działać dopiero po zatwierdzeniu przez osobę uprawnioną.</span></article>
-          <article><strong>Blokada wylogowuje urządzenia</strong><span>Zablokowane konto od razu traci dostęp.</span></article>
-          <article><strong>Wiadomości działają automatycznie</strong><span>Klient dostaje informacje o ważnych etapach zlecenia.</span></article>
-          <article><strong>Dane są chronione po stronie ServiceOS</strong><span>Panel nie zwiększa dostępu ponad zakres Twojego konta.</span></article>
+        <div class="security-row">
+          <article class="security-card reveal"><i>✓</i><h3>Konto wymaga akceptacji.</h3><p>Samo logowanie nie daje dostępu do danych firmy. Konto musi zostać zatwierdzone przez uprawnioną osobę.</p></article>
+          <article class="security-card reveal delay"><i>⌁</i><h3>Rola nie rozszerza się na telefonie.</h3><p>Jednorazowy kod przenosi bieżącą sesję i zakres uprawnień. Nie tworzy nowego poziomu dostępu.</p></article>
+          <article class="security-card reveal delay2"><i>◉</i><h3>Blokada kończy dostęp.</h3><p>Zablokowanie konta lub unieważnienie sesji odcina dostęp również z połączonych urządzeń.</p></article>
         </div>
       </div>
     </section>
 
     <section class="page-section" id="start">
       <div class="wrap">
-        <div class="section-heading reveal">
-          <span>NA KONIEC · ZASADY DOSTĘPU</span>
-          <h2>Przeczytaj zasady, zaakceptuj i dopiero wtedy połącz urządzenie.</h2>
-          <p>Najpierw możesz spokojnie obejrzeć cały ServiceOS. Ta sekcja jest ostatnim krokiem przed pobraniem aplikacji i połączeniem telefonu.</p>
-        </div>
-
-        <div class="rule-grid">
-          <article class="rule-card reveal"><b>01</b><div><span>TWOJE KONTO</span><h3>Logujesz się tylko swoim kontem.</h3><p>Korzystaj tylko ze swojego konta. Nie udostępniaj sesji ani kodów innym osobom.</p></div></article>
-          <article class="rule-card reveal delay"><b>02</b><div><span>DANE FIRMY</span><h3>Widzisz wyłącznie dane potrzebne do pracy.</h3><p>Dane klientów, urządzeń i rozliczeń są roboczymi danymi LockOn i nie mogą być używane poza firmą.</p></div></article>
-          <article class="rule-card reveal delay"><b>03</b><div><span>TWÓJ TELEFON</span><h3>Połącz własne urządzenie mobilne.</h3><p>Telefon pokazuje ten sam zakres pracy co aplikacja na komputerze. Kod służy tylko do połączenia urządzenia.</p></div></article>
-        </div>
-
-        <div class="accept-card reveal" id="onboardingAccept">
-          <div class="accept-intro">
-            <span>WYMAGANE</span>
-            <h3>Potwierdź zasady pracownika.</h3>
-            <p>To potwierdzenie zapisuje się tylko w tej przeglądarce. Twoje konto musi zostać zaakceptowane przez osobę uprawnioną.</p>
+        <div class="start-card reveal" id="onboardingAccept">
+          <div class="start-copy">
+            <span class="section-tag">ZACZNIJ PRACĘ</span>
+            <h2>Jedna minuta i jesteś gotowy.</h2>
+            <p>ServiceOS jest narzędziem wewnętrznym LockOn. Potwierdź podstawowe zasady, a pobieranie aplikacji i połączenie telefonu zostaną odblokowane w tej przeglądarce.</p>
+            <div class="start-points">
+              <span>korzystasz tylko z własnego konta</span>
+              <span>dane klientów wykorzystujesz wyłącznie służbowo</span>
+              <span>jednorazowego kodu telefonu nie przekazujesz innej osobie</span>
+            </div>
           </div>
           <div class="accept-form">
-            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem / osobą uprawnioną przez LockOn i korzystam z własnego konta.</span></label>
-            <label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> oraz <a href="privacy.html">politykę prywatności</a>.</span></label>
-            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod połączenia jest jednorazowy i służy tylko do połączenia mojego telefonu.</span></label>
-            <button id="acceptOnboarding" class="button primary big" type="button" disabled>Akceptuję — odblokuj ServiceOS</button>
-            <small id="onboardingState">Pobieranie i panel są zablokowane do czasu akceptacji.</small>
+            <span>WYMAGANE</span>
+            <h3>Potwierdź zasady pracownika.</h3>
+            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem lub osobą uprawnioną przez LockOn.</span></label>
+            <label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> i <a href="privacy.html">politykę prywatności</a>.</span></label>
+            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod z „Połącz urządzenie” jest jednorazowy.</span></label>
+            <button id="acceptOnboarding" class="action-button primary" type="button" disabled>Rozumiem — odblokuj ServiceOS</button>
+            <small id="onboardingState">Pobieranie i łączenie telefonu odblokują się po potwierdzeniu.</small>
           </div>
         </div>
-      </div>
-    </section>
 
-    
-
-    <section class="download-section" id="download">
-      <div class="wrap download-card reveal">
-        <div class="download-copy">
-          <span>GOTOWY DO PRACY</span>
-          <h2>Pobierz aplikację albo połącz telefon.</h2>
-          <p>Akcje są dostępne po przejściu sekcji „Zanim zaczniesz”.</p>
-          <div id="downloadLockState" class="download-lock-state"><span>🔒</span><strong>Najpierw zaakceptuj zasady pracownika.</strong></div>
-        </div>
-        <div class="download-actions">
-          <a class="button primary big download-link requires-onboarding" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz dla Windows <span>↓</span></a>
-          <button class="button secondary big requires-onboarding" data-requires-onboarding data-open-login type="button">Połącz telefon</button>
-          <small>Windows 64-bit · <b data-release-size>sprawdzam…</b></small>
-          <code data-release-digest>sprawdzam SHA-256…</code>
-          <button class="copy-hash" type="button" data-copy-digest>Kopiuj SHA-256</button>
+        <div class="download-panel reveal delay" id="download">
+          <div><strong>LockOn ServiceOS <span data-release-version>najnowsza</span></strong><span>Pobierz aplikację Windows albo połącz telefon z istniejącą sesją.</span><div class="download-meta"><span data-release-size>instalator Windows</span> · <code data-release-digest>SHA-256 w GitHub Release</code></div></div>
+          <div class="download-actions">
+            <a class="action-button primary download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz Windows ↓</a>
+            <button class="action-button ghost" data-requires-onboarding data-open-login type="button">Połącz telefon</button>
+          </div>
         </div>
       </div>
     </section>
@@ -520,47 +365,31 @@
         <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połączenie telefonu</span></div></div>
         <button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button>
       </div>
-
-      <div class="portal-login-body">
-        <div class="portal-login-copy">
-          <span class="portal-login-kicker">TYLKO KOD Z APLIKACJI</span>
-          <h2 id="webLoginTitle">Połącz telefon z ServiceOS.</h2>
-          <p>Na komputerze w aplikacji Windows otwórz <strong>Pomoc → Połącz urządzenie</strong>. Wygeneruj jednorazowy kod i wpisz go poniżej.</p>
-        </div>
-
-        <div class="portal-login-guide" aria-label="Jak uzyskać kod">
-          <article><b>1</b><strong>Otwórz ServiceOS na komputerze</strong><span>Zaloguj się swoim zatwierdzonym kontem pracownika.</span></article>
-          <article><b>2</b><strong>Wejdź w Pomoc → Połącz urządzenie</strong><span>Aplikacja pokaże kod ważny tylko przez kilka minut.</span></article>
-          <article><b>3</b><strong>Wpisz kod tutaj</strong><span>Po poprawnym kodzie telefon otworzy panel automatycznie.</span></article>
-        </div>
-
-        <form id="webAuthCodeForm" class="portal-code-form">
-          <label for="webAuthCode"><span>Jednorazowy kod</span><span>format: ABCD-EFGH</span></label>
-          <div class="portal-code-field">
-            <input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required>
-            <button id="webAuthCodeSubmit" type="submit" disabled>Połącz telefon</button>
-          </div>
-          <small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small>
-        </form>
-
-        <div class="portal-login-security"><span>✓</span><span>Telefon otrzyma dokładnie ten sam zakres dostępu, który jest przypisany do Twojego konta w ServiceOS. Nie ma osobnego logowania Google na stronie WWW.</span></div>
-        <div class="portal-login-help">Nie masz kodu? W aplikacji Windows otwórz <strong>Pomoc → Połącz urządzenie</strong>.</div>
+      <div class="portal-login-copy"><span class="portal-login-kicker">KOD Z APLIKACJI WINDOWS</span><h2 id="webLoginTitle">Połącz telefon.</h2><p>W ServiceOS na komputerze otwórz <strong>Pomoc → Połącz urządzenie</strong>. Przepisz jednorazowy kod poniżej.</p></div>
+      <div class="portal-login-guide">
+        <article><b>1</b><strong>Otwórz ServiceOS</strong><span>Zaloguj się swoim zatwierdzonym kontem.</span></article>
+        <article><b>2</b><strong>Pomoc → Połącz urządzenie</strong><span>Wygeneruj kod ważny przez kilka minut.</span></article>
+        <article><b>3</b><strong>Wpisz kod</strong><span>Panel telefonu otworzy się automatycznie.</span></article>
       </div>
+      <form id="webAuthCodeForm" class="portal-code-form">
+        <label for="webAuthCode"><span>Jednorazowy kod</span><span>ABCD-EFGH</span></label>
+        <div class="portal-code-field"><input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required><button id="webAuthCodeSubmit" type="submit" disabled>Połącz</button></div>
+        <small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small>
+      </form>
+      <div class="portal-login-security"><span>✓</span><span>Telefon otrzyma dokładnie ten sam zakres dostępu, który ma Twoje konto w ServiceOS.</span></div>
+      <div class="portal-login-help">Nie masz kodu? W aplikacji Windows wybierz <strong>Pomoc → Połącz urządzenie</strong>.</div>
     </div>
   </dialog>
-  <footer class="footer portal-footer">
+
+  <footer class="site-footer">
     <div class="wrap footer-inner">
-      <div class="footer-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Portal pracownika</span></div></div>
-      <div class="footer-links"><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a><a href="signing.html">Code signing</a><a href="mailto:bartekmotloch@wp.pl">Kontakt</a></div>
+      <div class="footer-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn ServiceOS</strong><small>jedno miejsce do pracy serwisu</small></span></div>
+      <div class="footer-links"><a href="panel.html">Panel</a><a href="klient.html">Panel klienta</a><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a><a href="signing.html">Code signing</a><a href="mailto:bartekmotloch@wp.pl">Kontakt</a></div>
     </div>
   </footer>
 
   <script src="assets/google-config.js"></script>
   <script src="assets/google-auth.js"></script>
-  <script src="assets/site.js"></script>
-  <script src="assets/home-v2.js"></script>
-  <script src="assets/ui-2026.js"></script>
-  <script src="assets/home-story.js"></script>
-  <script src="assets/showcase-meetings-1.0.22.js"></script>
+  <script src="assets/serviceos-app-site.js"></script>
 </body>
 </html>
