@@ -171,6 +171,7 @@ jobs:
           await mobile.goto(base+'/index.html',{waitUntil:'domcontentloaded'});
           await mobile.waitForTimeout(550);
           await mobile.locator('[data-menu-toggle]').click();
+          await mobile.waitForTimeout(350);
           if(!await mobile.locator('[data-site-nav]').evaluate((el)=>el.classList.contains('menu-open'))) throw new Error('Mobile menu did not open');
           await assertMobileTargets(mobile,'Mobile menu');
           await mobile.screenshot({path:'visual-check/mobile-menu.png'});
