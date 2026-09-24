@@ -51,7 +51,7 @@
       });
     }, { passive: true });
 
-    qsa('.meetings-wow, .phone-wow, .start-wow').forEach((section) => {
+    qsa('.meetings-section, .phone-section, .start-section').forEach((section) => {
       section.addEventListener('pointermove', (event) => {
         const rect = section.getBoundingClientRect();
         const x = Math.max(0, Math.min(100, ((event.clientX - rect.left) / Math.max(1, rect.width)) * 100));
@@ -108,7 +108,7 @@
   const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
   let moduleIndex = 0;
   let modulePausedUntil = 0;
-  const moduleWorkspace = qs('.module-workspace');
+  const moduleWorkspace = qs('.modules-os-window');
   let moduleWorkspaceVisible = false;
 
   const activateModule = (key, userAction = false) => {
@@ -181,13 +181,14 @@
     theaterButton.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
 
-  const meetingElapsed = qs('[data-meeting-elapsed]');
+  const meetingElapsed = qsa('[data-meeting-elapsed]');
   let meetingSeconds = 123;
   const renderMeetingElapsed = () => {
-    if (!meetingElapsed) return;
+    if (!meetingElapsed.length) return;
     const minutes = Math.floor(meetingSeconds / 60);
     const seconds = meetingSeconds % 60;
-    meetingElapsed.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    const value = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+    meetingElapsed.forEach((element) => { element.textContent = value; });
   };
   renderMeetingElapsed();
   if (!reducedMotion) {
@@ -198,7 +199,75 @@
     }, 1000);
   }
 
-  const phoneKeys = ['1', '2', '3', '4'];
+  const roleProfiles = {
+    owner: {
+      title: 'Właściciel aplikacji',
+      scope: 'Wszystkie punkty',
+      copy: 'Pełny widok punktów, zespołu, administracji i rozliczeń.',
+      permissions: ['Wszystkie punkty', 'Zespół', 'Rozliczenia', 'Administracja'],
+      nav: ['Start', 'Serwis', 'Spotkania', 'Rozliczenia', 'Administracja', 'Klienci']
+    },
+    boss: {
+      title: 'Szef / Koordynator',
+      scope: 'Przypisane punkty',
+      copy: 'Prowadzi zespół, serwis i organizację pracy w przypisanym zakresie.',
+      permissions: ['Punkty', 'Zespół', 'Serwis', 'Spotkania'],
+      nav: ['Start', 'Serwis', 'Spotkania', 'Administracja', 'Klienci']
+    },
+    tech: {
+      title: 'Serwisant',
+      scope: 'Praca techniczna',
+      copy: 'Dostaje kolejkę napraw, części, terminy i funkcje potrzebne przy urządzeniu.',
+      permissions: ['Zlecenia', 'Części', 'Terminy', 'Spotkania'],
+      nav: ['Start', 'Serwis', 'Spotkania', 'Rozliczenia']
+    },
+    front: {
+      title: 'Obsługa',
+      scope: 'Front desk',
+      copy: 'Przyjmuje klienta, prowadzi kontakt, przekazania, dokumenty i odbiór.',
+      permissions: ['Klient', 'Przyjęcie', 'Przekazania', 'Odbiór'],
+      nav: ['Start', 'Serwis', 'Spotkania', 'Klienci']
+    }
+  };
+
+  const activateRolePreview = (key) => {
+    const profile = roleProfiles[key];
+    if (!profile) return;
+    qsa('[data-role-preview]').forEach((button) => {
+      const active = button.dataset.rolePreview === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    const title = qs('[data-role-title]');
+    const copy = qs('[data-role-copy]');
+    const scope = qs('[data-role-scope]');
+    if (title) title.textContent = profile.title;
+    if (copy) copy.textContent = profile.copy;
+    if (scope) scope.textContent = profile.scope;
+    const permissions = qs('[data-role-permissions]');
+    if (permissions) permissions.innerHTML = profile.permissions.map((item) => '<i>' + item + '</i>').join('');
+    qsa('[data-role-nav] > i').forEach((item) => {
+      const label = (item.textContent || '').trim();
+      item.classList.toggle('role-nav-hidden', !profile.nav.includes(label));
+    });
+  };
+
+  qsa('[data-role-preview]').forEach((button) => {
+    button.addEventListener('click', () => activateRolePreview(button.dataset.rolePreview || 'owner'));
+  });
+  activateRolePreview('owner');
+
+  const liveClocks = qsa('[data-live-clock]');
+  const renderLiveClock = () => {
+    if (!liveClocks.length) return;
+    const now = new Date();
+    const value = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+    liveClocks.forEach((clock) => { clock.textContent = value; });
+  };
+  renderLiveClock();
+  window.setInterval(renderLiveClock, 15000);
+
+    const phoneKeys = ['1', '2', '3', '4'];
   let phoneIndex = 0;
   let phonePausedUntil = 0;
 
