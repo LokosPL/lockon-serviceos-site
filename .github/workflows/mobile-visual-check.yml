@@ -153,6 +153,7 @@ jobs:
           if(!await desktop.locator('[data-preview-screen="meetings"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Meetings preview did not activate');
           await desktop.locator('#modules').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
+          await desktop.locator('.modules-os-window .os-sidebar [data-module="service"]').click();
 
           for(const key of ['plan','intake','orders','transfers','quotes','invoices','notes']){
             await desktop.locator('[data-service-demo-tab="'+key+'"]').click();
