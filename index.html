@@ -59,130 +59,176 @@
   </header>
 
   <main id="top">
-    <section class="hero-section">
-      <div class="site-frame hero-layout">
+    <section class="hero-section hero-wow">
+      <div class="hero-ambient" aria-hidden="true">
+        <span class="hero-orb hero-orb-a"></span>
+        <span class="hero-orb hero-orb-b"></span>
+        <span class="hero-grid-plane"></span>
+        <span class="hero-ridge hero-ridge-a"></span>
+        <span class="hero-ridge hero-ridge-b"></span>
+        <span class="hero-horizon"></span>
+      </div>
+
+      <div class="site-frame hero-wow-grid">
         <div class="hero-copy reveal">
           <div class="product-kicker"><span class="status-dot"></span> LOCKON SERVICEOS · SYSTEM PRACY SERWISU</div>
           <h1>Cały serwis.<br><span>Bez chaosu.</span></h1>
-          <p class="hero-lead">Przyjmij urządzenie, poprowadź naprawę, przekaż je między punktami i wydaj klientowi — bez rozrzucania informacji po wiadomościach, kartkach i kilku programach. ServiceOS pokazuje każdej osobie tylko to, czego potrzebuje do pracy.</p>
+          <p class="hero-lead">Klient przychodzi z urządzeniem, zespół prowadzi naprawę, a ServiceOS pilnuje historii, przekazań, dokumentów i kontaktu. Każdy widzi tylko to, czego potrzebuje do swojej pracy.</p>
+
           <div class="hero-actions">
-            <a class="button button-primary button-large" href="#day">Zobacz jak działa <span aria-hidden="true">↓</span></a>
-            <a class="button button-secondary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz ServiceOS</a>
+            <a class="button button-primary button-large hero-primary" href="#day"><span class="button-play">▶</span> Zobacz jak działa <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><span aria-hidden="true">↓</span> Pobierz ServiceOS</a>
           </div>
-          <div class="hero-proof" aria-label="Najważniejsze cechy">
-            <span><i></i> Jedna historia zlecenia</span>
-            <span><i></i> Role i punkty dostępu</span>
-            <span><i></i> Komputer + telefon</span>
+
+          <div class="hero-trust" aria-label="Najważniejsze informacje">
+            <span><i>✓</i> Windows</span>
+            <span><i>✓</i> Aktualny release</span>
+            <span><i>✓</i> Telefon bez dodatkowej aplikacji</span>
           </div>
         </div>
 
-        <div class="hero-product reveal reveal-delay" aria-label="Interaktywny podgląd aplikacji ServiceOS">
-          <div class="hero-product-glow" aria-hidden="true"></div>
-          <div class="app-demo">
-            <div class="demo-titlebar">
-              <div class="demo-title"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><small>Wszystkie punkty</small></div>
-              <div class="demo-window-actions" aria-hidden="true"><i></i><i></i><i></i></div>
-            </div>
+        <div class="hero-showcase reveal reveal-delay" data-hero-stage aria-label="Interaktywny podgląd LockOn ServiceOS">
+          <div class="showcase-halo" aria-hidden="true"></div>
+          <div class="showcase-ring showcase-ring-one" aria-hidden="true"></div>
+          <div class="showcase-ring showcase-ring-two" aria-hidden="true"></div>
 
-            <div class="demo-shell">
-              <aside class="demo-sidebar">
-                <div class="demo-brand">
-                  <img src="assets/logo.svg" alt="">
-                  <span><strong>LockOn</strong><small>ServiceOS</small></span>
+          <div class="desktop-device">
+            <div class="device-camera" aria-hidden="true"></div>
+            <div class="app-demo">
+              <div class="demo-titlebar">
+                <div class="demo-title"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><small>Wszystkie punkty</small></div>
+                <div class="demo-window-actions" aria-hidden="true"><i></i><i></i><i></i></div>
+              </div>
+
+              <div class="demo-shell">
+                <aside class="demo-sidebar">
+                  <div class="demo-brand">
+                    <img src="assets/logo.svg" alt="">
+                    <span><strong>LockOn</strong><small>ServiceOS</small></span>
+                  </div>
+                  <div class="demo-branch"><span class="status-dot"></span> Wszystkie punkty</div>
+                  <nav class="demo-nav" aria-label="Widoki podglądu aplikacji">
+                    <button class="active" type="button" data-preview="start"><span>⌂</span> Start</button>
+                    <button type="button" data-preview="service"><span>⌕</span> Serwis</button>
+                    <button type="button" data-preview="meetings"><span>▣</span> Spotkania</button>
+                    <button type="button" data-preview="admin"><span>◎</span> Administracja</button>
+                  </nav>
+                  <div class="demo-account"><b>BM</b><span><strong>Bartłomiej</strong><small>Właściciel</small></span></div>
+                </aside>
+
+                <div class="demo-content">
+                  <section class="demo-screen active" data-preview-screen="start">
+                    <div class="demo-start-head">
+                      <div>
+                        <span class="demo-eyebrow"><i class="status-dot"></i> WSZYSTKIE PUNKTY</span>
+                        <h2>Dobry wieczór, <em>Bartek.</em></h2>
+                        <p>Wszystko gotowe do pracy.</p>
+                      </div>
+                      <div class="demo-clock"><strong>21:42</strong><span>24 września · czwartek</span></div>
+                    </div>
+                    <div class="demo-start-hero">
+                      <div>
+                        <small>SPOTKANIA I SZKOLENIA</small>
+                        <strong>Najbliższe rzeczy w jednym miejscu</strong>
+                        <span>Szkolenia, spotkania i aktywne sesje zespołu</span>
+                      </div>
+                      <button type="button" tabindex="-1">Zarządzaj →</button>
+                    </div>
+                    <div class="demo-section-label">Szybki dostęp</div>
+                    <div class="demo-shortcuts">
+                      <article><b>⌕</b><span><strong>Serwis</strong><small>Zlecenia i bieżąca praca</small></span></article>
+                      <article><b>◎</b><span><strong>Administracja</strong><small>Pracownicy i punkty</small></span></article>
+                      <article><b>₿</b><span><strong>Rozliczenia</strong><small>Przychody i koszty</small></span></article>
+                    </div>
+                  </section>
+
+                  <section class="demo-screen" data-preview-screen="service">
+                    <div class="demo-screen-header">
+                      <div><span class="demo-eyebrow">SERWIS</span><h2>Co wymaga działania?</h2><p>Najpierw pilne, potem reszta kolejki.</p></div>
+                      <div class="demo-metric"><strong>4</strong><span>aktywne</span></div>
+                    </div>
+                    <div class="demo-service-grid">
+                      <div class="demo-order-list">
+                        <article class="demo-order hot"><span>#1042</span><div><strong>iPhone 14 Pro</strong><small>Diagnoza · termin dzisiaj</small></div><b>TERAZ</b></article>
+                        <article class="demo-order"><span>#1041</span><div><strong>Samsung S24</strong><small>Wraca do punktu klienta</small></div><b>W DRODZE</b></article>
+                        <article class="demo-order ready"><span>#1038</span><div><strong>iPhone 13</strong><small>Naprawa zakończona</small></div><b>GOTOWE</b></article>
+                      </div>
+                      <aside class="demo-focus-card"><small>PLAN DNIA</small><strong>3</strong><span>czynności przed zamknięciem punktu</span></aside>
+                    </div>
+                  </section>
+
+                  <section class="demo-screen" data-preview-screen="meetings">
+                    <div class="demo-screen-header">
+                      <div><span class="demo-eyebrow">SPOTKANIA I SZKOLENIA</span><h2>Zespół w jednym pokoju.</h2><p>Ekran, mikrofon i czat działają razem.</p></div>
+                      <div class="live-badge"><i></i> LIVE</div>
+                    </div>
+                    <div class="demo-meeting">
+                      <div class="demo-meeting-stage">
+                        <div class="mini-shared-app"><span></span><span></span><span></span><span></span></div>
+                        <div class="demo-stage-label"><i class="status-dot"></i> Ekran prowadzącego</div>
+                      </div>
+                      <aside class="demo-meeting-side">
+                        <strong>Czat</strong>
+                        <p>Czy widzicie ekran?</p>
+                        <p class="mine">Tak, wszystko czytelne.</p>
+                        <span>4 uczestników</span>
+                      </aside>
+                    </div>
+                  </section>
+
+                  <section class="demo-screen" data-preview-screen="admin">
+                    <div class="demo-screen-header">
+                      <div><span class="demo-eyebrow">ADMINISTRACJA</span><h2>Firma pod kontrolą.</h2><p>Role, punkty i dostęp w jednym miejscu.</p></div>
+                    </div>
+                    <div class="demo-admin-grid">
+                      <article><span>Aktywne konta</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article>
+                      <article><span>Punkty</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article>
+                      <article><span>Oczekuje</span><strong data-count="1">1</strong><small>konto do decyzji</small></article>
+                      <article><span>Aktywne sesje</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article>
+                    </div>
+                  </section>
                 </div>
-                <div class="demo-branch"><span class="status-dot"></span> Wszystkie punkty</div>
-                <nav class="demo-nav" aria-label="Widoki podglądu aplikacji">
-                  <button class="active" type="button" data-preview="start"><span>⌂</span> Start</button>
-                  <button type="button" data-preview="service"><span>⌕</span> Serwis</button>
-                  <button type="button" data-preview="meetings"><span>▣</span> Spotkania</button>
-                  <button type="button" data-preview="admin"><span>◎</span> Administracja</button>
-                </nav>
-                <div class="demo-account"><b>BM</b><span><strong>Bartłomiej</strong><small>Właściciel</small></span></div>
-              </aside>
+              </div>
 
-              <div class="demo-content">
-                <section class="demo-screen active" data-preview-screen="start">
-                  <div class="demo-start-head">
-                    <div>
-                      <span class="demo-eyebrow"><i class="status-dot"></i> WSZYSTKIE PUNKTY</span>
-                      <h2>Dobry wieczór, <em>Bartek.</em></h2>
-                      <p>Wszystko gotowe do pracy.</p>
-                    </div>
-                    <div class="demo-clock"><strong>21:15</strong><span>24 września · czwartek</span></div>
-                  </div>
-                  <div class="demo-start-hero">
-                    <div>
-                      <small>NAJBLIŻSZE SPOTKANIE</small>
-                      <strong>Odprawa zespołu</strong>
-                      <span>Dzisiaj · 21:30 · 8 osób</span>
-                    </div>
-                    <button type="button" tabindex="-1">Otwórz →</button>
-                  </div>
-                  <div class="demo-section-label">Szybki dostęp</div>
-                  <div class="demo-shortcuts">
-                    <article><b>⌕</b><span><strong>Serwis</strong><small>Zlecenia i bieżąca praca</small></span></article>
-                    <article><b>◎</b><span><strong>Administracja</strong><small>Pracownicy i punkty</small></span></article>
-                    <article><b>₿</b><span><strong>Rozliczenia</strong><small>Przychody i koszty</small></span></article>
-                  </div>
-                </section>
-
-                <section class="demo-screen" data-preview-screen="service">
-                  <div class="demo-screen-header">
-                    <div><span class="demo-eyebrow">SERWIS</span><h2>Co wymaga działania?</h2><p>Najpierw rzeczy pilne, potem reszta kolejki.</p></div>
-                    <div class="demo-metric"><strong>4</strong><span>aktywne</span></div>
-                  </div>
-                  <div class="demo-service-grid">
-                    <div class="demo-order-list">
-                      <article class="demo-order hot"><span>#1042</span><div><strong>iPhone 14 Pro</strong><small>Diagnoza · termin dzisiaj</small></div><b>TERAZ</b></article>
-                      <article class="demo-order"><span>#1041</span><div><strong>Samsung S24</strong><small>Wraca do punktu klienta</small></div><b>W DRODZE</b></article>
-                      <article class="demo-order ready"><span>#1038</span><div><strong>iPhone 13</strong><small>Naprawa zakończona</small></div><b>GOTOWE</b></article>
-                    </div>
-                    <aside class="demo-focus-card"><small>PLAN DNIA</small><strong>3</strong><span>czynności przed zamknięciem punktu</span></aside>
-                  </div>
-                </section>
-
-                <section class="demo-screen" data-preview-screen="meetings">
-                  <div class="demo-screen-header">
-                    <div><span class="demo-eyebrow">SPOTKANIA I SZKOLENIA</span><h2>Zespół w jednym pokoju.</h2><p>Ekran, mikrofon i czat działają razem.</p></div>
-                    <div class="live-badge"><i></i> LIVE</div>
-                  </div>
-                  <div class="demo-meeting">
-                    <div class="demo-meeting-stage">
-                      <div class="mini-shared-app"><span></span><span></span><span></span><span></span></div>
-                      <div class="demo-stage-label"><i class="status-dot"></i> Ekran prowadzącego</div>
-                    </div>
-                    <aside class="demo-meeting-side">
-                      <strong>Czat</strong>
-                      <p>Czy widzicie ekran?</p>
-                      <p class="mine">Tak, wszystko czytelne.</p>
-                      <span>4 uczestników</span>
-                    </aside>
-                  </div>
-                </section>
-
-                <section class="demo-screen" data-preview-screen="admin">
-                  <div class="demo-screen-header">
-                    <div><span class="demo-eyebrow">ADMINISTRACJA</span><h2>Firma pod kontrolą.</h2><p>Role, punkty i dostęp w jednym miejscu.</p></div>
-                  </div>
-                  <div class="demo-admin-grid">
-                    <article><span>Aktywne konta</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article>
-                    <article><span>Punkty</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article>
-                    <article><span>Oczekuje</span><strong data-count="1">1</strong><small>konto do decyzji</small></article>
-                    <article><span>Aktywne sesje</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article>
-                  </div>
-                </section>
+              <div class="demo-mobile-tabs" aria-label="Przełącz widok podglądu">
+                <button class="active" type="button" data-preview="start">Start</button>
+                <button type="button" data-preview="service">Serwis</button>
+                <button type="button" data-preview="meetings">Spotkania</button>
+                <button type="button" data-preview="admin">Admin</button>
               </div>
             </div>
+            <div class="device-base" aria-hidden="true"><span></span></div>
+          </div>
 
-            <div class="demo-mobile-tabs" aria-label="Przełącz widok podglądu">
-              <button class="active" type="button" data-preview="start">Start</button>
-              <button type="button" data-preview="service">Serwis</button>
-              <button type="button" data-preview="meetings">Spotkania</button>
-              <button type="button" data-preview="admin">Admin</button>
+          <div class="hero-phone-device" aria-label="Podgląd połączenia telefonu">
+            <div class="hero-phone-notch"></div>
+            <div class="hero-phone-screen">
+              <div class="hero-phone-brand"><img src="assets/logo.svg" alt=""><strong>LockOn</strong></div>
+              <div class="hero-phone-copy"><span>POŁĄCZ URZĄDZENIE</span><h3>Telefon gotowy.</h3><p>Wpisz kod wyświetlony w ServiceOS.</p></div>
+              <div class="hero-phone-code"><i>1</i><i>2</i><i>3</i><i>4</i></div>
+              <div class="hero-phone-action">Połącz</div>
+              <div class="hero-phone-secure"><span>✓</span> Ten sam zakres uprawnień</div>
             </div>
+          </div>
+
+          <div class="floating-status floating-live"><span class="status-dot"></span><div><strong>SYSTEM ONLINE</strong><small>sesja aktywna</small></div></div>
+          <div class="floating-status floating-work"><span>4</span><div><strong>Do działania</strong><small>bieżąca kolejka</small></div></div>
+          <div class="preview-switcher" aria-label="Szybka zmiana podglądu">
+            <button class="active" type="button" data-preview="start">Start</button>
+            <button type="button" data-preview="service">Serwis</button>
+            <button type="button" data-preview="meetings">Spotkania</button>
+            <button type="button" data-preview="admin">Administracja</button>
           </div>
         </div>
       </div>
+
+      <div class="site-frame hero-metrics reveal reveal-delay-2">
+        <article><span>01</span><div><strong>Jedna historia</strong><small>całe zlecenie w jednym miejscu</small></div></article>
+        <article><span>04</span><div><strong>Jasny workflow</strong><small>przyjęcie → serwis → przekazanie → odbiór</small></div></article>
+        <article><span>↯</span><div><strong>Role i punkty</strong><small>każdy ma właściwy zakres</small></div></article>
+        <article><span>⌁</span><div><strong>Komputer + telefon</strong><small>ta sama praca w dwóch widokach</small></div></article>
+      </div>
+      <a class="hero-scroll" href="#day" aria-label="Przewiń do sekcji Jak działa"><span></span></a>
     </section>
 
     <section class="workflow-section" id="day">
