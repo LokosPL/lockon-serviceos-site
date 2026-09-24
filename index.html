@@ -192,7 +192,136 @@
 </aside>
           <div class="os-content os-module-content">
             <section class="module-panel active" data-module-panel="service">
-              <div class="os-service-page large"><header class="os-service-head"><div><span>SERWIS</span><h2>Klienci i naprawy</h2><p>Przyjęcie telefonu, reklamacje, statusy oraz centralne powiadomienia klienta.</p></div><div class="os-service-tabs"><i>Plan pracy</i><i>Nowe zlecenie</i><i class="active">Zlecenia</i><i>Przekazania</i></div></header><div class="os-orders-card"><div class="os-orders-top"><div><span>AKTYWNE ZLECENIA</span><strong>Co wymaga działania?</strong></div><b>4 aktywne</b></div><div class="os-order-row"><strong>#1042</strong><div><b>iPhone 14 Pro</b><span>Anna Kowalska · Diagnoza</span><small>Najbliższy krok: rozpocznij diagnozę</small></div><em>TERAZ</em></div><div class="os-order-row"><strong>#1041</strong><div><b>Samsung S24</b><span>Piotr Nowak · W drodze</span><small>Urządzenie wraca do punktu klienta</small></div><em>W DRODZE</em></div><div class="os-order-row"><strong>#1038</strong><div><b>iPhone 13</b><span>Marta Lis · Gotowe</span><small>Telefon czeka na odbiór</small></div><em class="ok">GOTOWE</em></div></div></div>
+              <div class="os-service-page large service-demo-shell">
+                <header class="os-service-head service-demo-head">
+                  <div>
+                    <span>SERWIS</span>
+                    <h2>Klienci i naprawy</h2>
+                    <p>Nie tylko lista. Klikaj po prawdziwych obszarach pracy ServiceOS.</p>
+                  </div>
+                  <div class="os-service-tabs service-demo-tabs" aria-label="Widoki modułu Serwis">
+                    <button class="active" type="button" data-service-demo-tab="plan">Plan pracy</button>
+                    <button type="button" data-service-demo-tab="intake">Nowe zlecenie</button>
+                    <button type="button" data-service-demo-tab="orders">Zlecenia <b>4</b></button>
+                    <button type="button" data-service-demo-tab="transfers">Przekazania <b>2</b></button>
+                    <button type="button" data-service-demo-tab="quotes">Wyceny <b>1</b></button>
+                    <button type="button" data-service-demo-tab="invoices">Magazyn faktur</button>
+                    <button type="button" data-service-demo-tab="notes">Moje notatki</button>
+                  </div>
+                </header>
+
+                <div class="service-demo-workspace">
+                  <section class="service-demo-view active" data-service-demo-view="plan">
+                    <div class="workplan-demo-head">
+                      <div><span>PLAN PRACY</span><strong>Twój tydzień — dokładnie w Twojej kolejności.</strong><small>Serwisant widzi terminy, kolejność i kolejki specjalne.</small></div>
+                      <div><button type="button" aria-label="Poprzedni tydzień">‹</button><b>21–27 września</b><button type="button" aria-label="Następny tydzień">›</button></div>
+                    </div>
+                    <div class="workplan-demo-kpis">
+                      <article><span>DZIŚ</span><strong>4</strong><small>zlecenia</small></article>
+                      <article><span>CZEKA NA CZĘŚCI</span><strong>2</strong><small>urządzenia</small></article>
+                      <article><span>GOTOWE</span><strong>3</strong><small>do odbioru</small></article>
+                    </div>
+                    <div class="workplan-demo-days">
+                      <button type="button"><span>PN</span><b>21</b><small>2</small></button>
+                      <button type="button"><span>WT</span><b>22</b><small>3</small></button>
+                      <button class="active" type="button"><span>ŚR</span><b>23</b><small>4</small></button>
+                      <button type="button"><span>CZW</span><b>24</b><small>3</small></button>
+                      <button type="button"><span>PT</span><b>25</b><small>2</small></button>
+                      <button type="button"><span>SB</span><b>26</b><small>0</small></button>
+                      <button type="button"><span>ND</span><b>27</b><small>0</small></button>
+                    </div>
+                    <div class="workplan-demo-main">
+                      <section>
+                        <header><span>ŚRODA · KOLEJNOŚĆ PRACY</span><b>4 pozycje</b></header>
+                        <div class="workplan-demo-list">
+                          <button type="button" data-demo-order="1042"><i>1</i><b>#1042</b><span><strong>iPhone 14 Pro</strong><small>Anna Kowalska</small></span><em>DIAGNOZA</em></button>
+                          <button type="button" data-demo-order="1044"><i>2</i><b>#1044</b><span><strong>MacBook Air M2</strong><small>Kamil Wójcik</small></span><em>NAPRAWA</em></button>
+                          <button type="button" data-demo-order="1047"><i>3</i><b>#1047</b><span><strong>Samsung S23</strong><small>Julia Lis</small></span><em>CZĘŚCI</em></button>
+                          <button type="button" data-demo-order="1050"><i>4</i><b>#1050</b><span><strong>iPad Air</strong><small>Paweł Nowak</small></span><em>START</em></button>
+                        </div>
+                      </section>
+                      <aside>
+                        <article><header><span>CZEKA NA CZĘŚCI</span><b>2</b></header><p>#1047 · Samsung S23</p><p>#1039 · iPhone 12 mini</p></article>
+                        <article><header><span>GOTOWE DO ODBIORU</span><b>3</b></header><p>#1038 · iPhone 13</p><p>#1035 · Pixel 8</p></article>
+                      </aside>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="intake">
+                    <div class="intake-demo">
+                      <div class="intake-demo-progress">
+                        <button class="active" type="button" data-intake-step="1"><b>1</b><span>Klient</span></button>
+                        <i></i>
+                        <button type="button" data-intake-step="2"><b>2</b><span>Urządzenie</span></button>
+                        <i></i>
+                        <button type="button" data-intake-step="3"><b>3</b><span>Usterka</span></button>
+                        <i></i>
+                        <button type="button" data-intake-step="4"><b>4</b><span>Podsumowanie</span></button>
+                      </div>
+                      <div class="intake-demo-card">
+                        <section class="active" data-intake-panel="1"><span>01 · KLIENT</span><h3>Kto zostawia urządzenie?</h3><div class="intake-demo-fields"><label><small>IMIĘ I NAZWISKO</small><strong>Anna Kowalska</strong></label><label><small>TELEFON</small><strong>+48 500 123 456</strong></label><label><small>E-MAIL</small><strong>anna@przyklad.pl</strong></label><label><small>HISTORIA</small><strong>5 wcześniejszych zleceń</strong></label></div><button type="button" data-intake-next="2">Dalej: urządzenie →</button></section>
+                        <section data-intake-panel="2"><span>02 · URZĄDZENIE</span><h3>Co trafia do serwisu?</h3><div class="intake-demo-fields"><label><small>MARKA</small><strong>Apple</strong></label><label><small>MODEL</small><strong>iPhone 14 Pro</strong></label><label><small>IMEI</small><strong>3567••••••1042</strong></label><label><small>STAN</small><strong>Rysa na ramce</strong></label></div><button type="button" data-intake-next="3">Dalej: usterka →</button></section>
+                        <section data-intake-panel="3"><span>03 · USTERKA</span><h3>Co trzeba zrobić?</h3><div class="intake-demo-fields"><label class="wide"><small>OPIS</small><strong>Telefon nie uruchamia się po zalaniu. Klient prosi o diagnozę i wycenę przed naprawą.</strong></label><label><small>TERMIN</small><strong>25.09 · 16:00</strong></label><label><small>WYCENA WSTĘPNA</small><strong>149–399 zł</strong></label></div><button type="button" data-intake-next="4">Pokaż podsumowanie →</button></section>
+                        <section data-intake-panel="4"><span>04 · PODSUMOWANIE</span><h3>Gotowe do przyjęcia.</h3><div class="intake-summary"><b><svg class="os-icon" aria-hidden="true"><use href="#i-check"></use></svg></b><div><strong>Anna Kowalska · iPhone 14 Pro</strong><small>Diagnoza po zalaniu · termin 25.09 · klient otrzyma powiadomienia</small></div></div><button type="button" data-service-action="create-order">Utwórz zlecenie #1051</button></section>
+                      </div>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="orders">
+                    <div class="os-orders-card service-orders-live">
+                      <div class="os-orders-top"><div><span>AKTYWNE ZLECENIA</span><strong>Co wymaga działania?</strong></div><b>4 aktywne</b></div>
+                      <button class="os-order-row" type="button" data-demo-order="1042"><strong>#1042</strong><div><b>iPhone 14 Pro</b><span>Anna Kowalska · Diagnoza</span><small>Najbliższy krok: rozpocznij diagnozę</small></div><em>TERAZ</em></button>
+                      <button class="os-order-row" type="button" data-demo-order="1041"><strong>#1041</strong><div><b>Samsung S24</b><span>Piotr Nowak · W drodze</span><small>Urządzenie wraca do punktu klienta</small></div><em>W DRODZE</em></button>
+                      <button class="os-order-row" type="button" data-demo-order="1038"><strong>#1038</strong><div><b>iPhone 13</b><span>Marta Lis · Gotowe</span><small>Telefon czeka na odbiór</small></div><em class="ok">GOTOWE</em></button>
+                      <button class="os-order-row" type="button" data-demo-order="1036"><strong>#1036</strong><div><b>MacBook Pro</b><span>Adam Zalewski · Czeka na części</span><small>Dostawa baterii: jutro</small></div><em>CZĘŚCI</em></button>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="transfers">
+                    <div class="transfer-demo-head"><span>PRZEKAZANIA</span><strong>Urządzenie nie ginie między punktami.</strong><small>Każdy etap ma właściciela, czas i potwierdzenie.</small></div>
+                    <div class="transfer-demo-grid">
+                      <article><div><b>#1041</b><span>Samsung S24</span><small>Nowogard → Szczecin</small></div><em>W DRODZE</em><div class="transfer-track"><i class="done"></i><i class="done"></i><i class="active"></i><i></i></div><footer><span>Nadano 18:42</span><strong>Kurier · GLS</strong></footer></article>
+                      <article><div><b>#1032</b><span>iPhone 15</span><small>Szczecin → Nowogard</small></div><em class="ok">ODEBRANO</em><div class="transfer-track"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i></div><footer><span>Zakończono 16:18</span><strong>Potwierdziła: Anna</strong></footer></article>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="quotes">
+                    <div class="quote-demo-head"><span>WYCENY KLIENTÓW</span><strong>Jedna odpowiedź. Od razu w historii klienta.</strong></div>
+                    <div class="quote-demo-list">
+                      <article><div><b>NOWA</b><span><strong>#1042 · iPhone 14 Pro</strong><small>„Ile będzie kosztować wymiana płyty po zalaniu?”</small></span></div><footer><button type="button" data-service-action="quote-reply">Odpowiedz klientowi</button><button type="button" data-service-action="quote-price">Wyceń 349 zł</button></footer></article>
+                      <article class="resolved"><div><b>WYSŁANA</b><span><strong>#1037 · Xiaomi 13</strong><small>Wycena 229 zł · zaakceptowana przez klienta</small></span></div><em><svg class="os-icon" aria-hidden="true"><use href="#i-check"></use></svg> ZAAKCEPTOWANA</em></article>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="invoices">
+                    <div class="invoice-demo-head"><div><span>MAGAZYN FAKTUR</span><strong>Faktury przypisane do punktu.</strong><small>Wrzesień 2026 · Nowogard</small></div><button type="button" data-service-action="download-invoices"><svg class="os-icon" aria-hidden="true"><use href="#i-download"></use></svg> Pobierz miesiąc</button></div>
+                    <div class="invoice-demo-stats"><article><span>DOKUMENTY</span><strong>12</strong></article><article><span>BRUTTO</span><strong>18 420 zł</strong></article><article><span>DOSTAWCY</span><strong>5</strong></article></div>
+                    <div class="invoice-demo-list">
+                      <article><b>FV/09/1842</b><span><strong>North Parts Sp. z o.o.</strong><small>#1042 · iPhone 14 Pro · płyta główna</small></span><em>1 249 zł</em><button type="button" data-service-action="download-one">↓</button></article>
+                      <article><b>FV/09/1804</b><span><strong>Mobile Parts EU</strong><small>#1038 · iPhone 13 · ekran OLED</small></span><em>689 zł</em><button type="button" data-service-action="download-one">↓</button></article>
+                      <article><b>FV/09/1771</b><span><strong>TechSupply</strong><small>#1031 · MacBook Air · bateria</small></span><em>429 zł</em><button type="button" data-service-action="download-one">↓</button></article>
+                    </div>
+                  </section>
+
+                  <section class="service-demo-view" data-service-demo-view="notes">
+                    <div class="notes-demo-layout">
+                      <aside><span>MOJE NOTATKI</span><h3>Prywatny notatnik serwisanta.</h3><div class="note-compose"><b>＋ Nowa notatka</b><p data-note-draft>Sprawdzić jeszcze raz pobór prądu przed zamówieniem płyty.</p><div><button type="button" data-service-action="pin-note">📌 Przypnij</button><button type="button" data-service-action="save-note">Zapisz</button></div></div></aside>
+                      <section><header><span>3 notatki</span><small>2 przypięte</small></header><button class="active" type="button"><b>📌 #1042 · diagnoza</b><span>Sprawdzić pobór prądu po czyszczeniu płyty.</span><small>dzisiaj, 19:42</small></button><button type="button"><b>📌 Części do sprawdzenia</b><span>Porównać dostawców przed jutrzejszym zamówieniem.</span><small>dzisiaj, 17:15</small></button><button type="button"><b>Szkolenie</b><span>Dodać pytania o nowe statusy przekazań.</span><small>wczoraj, 21:04</small></button></section>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="service-order-drawer" data-service-order-drawer hidden>
+                  <div class="service-order-drawer-backdrop" data-service-order-close></div>
+                  <section>
+                    <header><div><span>SZCZEGÓŁY ZLECENIA</span><h3>#1042 · iPhone 14 Pro</h3><p>Anna Kowalska · Nowogard</p></div><button type="button" data-service-order-close aria-label="Zamknij">×</button></header>
+                    <div class="service-order-drawer-status"><b>DIAGNOZA</b><span>Najbliższy krok: rozpocznij diagnozę</span><em>TERAZ</em></div>
+                    <div class="service-order-drawer-grid"><article><span>KLIENT</span><strong>Anna Kowalska</strong><small>+48 500 123 456</small></article><article><span>URZĄDZENIE</span><strong>iPhone 14 Pro</strong><small>IMEI 3567••••1042</small></article><article><span>WYCENA</span><strong>149–399 zł</strong><small>przed naprawą</small></article><article><span>TERMIN</span><strong>25.09 · 16:00</strong><small>ustalony z klientem</small></article></div>
+                    <div class="service-order-timeline"><span>HISTORIA</span><article><i></i><div><strong>Diagnoza rozpoczęta</strong><small>dzisiaj · 14:12</small></div></article><article><i></i><div><strong>Przyjęto urządzenie</strong><small>dzisiaj · 13:48</small></div></article><article><i></i><div><strong>Potwierdzenie wysłane klientowi</strong><small>dzisiaj · 13:49</small></div></article></div>
+                    <footer><button type="button" data-service-action="add-note">＋ Dodaj notatkę</button><button type="button" data-service-action="advance-order">Zakończ diagnozę →</button></footer>
+                  </section>
+                </div>
+              </div>
             </section>
             <section class="module-panel" data-module-panel="clients">
               <div class="os-module-page customer-module-page">
@@ -497,6 +626,26 @@
     <div class="site-frame"><div class="start-panel reveal"><div class="start-download"><span class="section-label">START / DOWNLOAD</span><h2>ServiceOS jest gotowy.<br><em>Ty też.</em></h2><p>Pobierz aktualną wersję dla Windows albo połącz telefon z już zalogowaną sesją.</p><div class="release-card"><div class="release-mark"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn ServiceOS <span data-release-version>najnowsza</span></strong><span><span data-release-size>instalator Windows</span> · aktualny GitHub Release</span><code data-release-digest>SHA-256 w GitHub Release</code></div><b><span class="status-dot"></span> GOTOWE</b></div><div class="start-actions"><a class="button button-primary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><svg class="os-icon" aria-hidden="true"><use href="#i-download"></use></svg> Pobierz ServiceOS</a><button class="button button-secondary button-large" type="button" data-open-login data-requires-onboarding><svg class="os-icon" aria-hidden="true"><use href="#i-phone"></use></svg> Połącz telefon</button></div><div class="release-links"><a href="signing.html">Code signing</a><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a></div></div><div class="onboarding-card" id="onboardingAccept"><span>PIERWSZE URUCHOMIENIE</span><h3>Jedno krótkie potwierdzenie.</h3><p>Potwierdź zasady pracownika, a pobieranie i połączenie telefonu odblokują się w tej przeglądarce.</p><label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem lub osobą uprawnioną przez LockOn.</span></label><label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> i <a href="privacy.html">politykę prywatności</a>.</span></label><label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod „Połącz urządzenie” jest jednorazowy.</span></label><button id="acceptOnboarding" class="button button-primary onboarding-submit" type="button" disabled>Odblokuj ServiceOS →</button><small id="onboardingState">Potwierdź trzy punkty powyżej.</small></div></div></div>
   </section>
 </main>
+<aside class="serviceos-live-dock" data-live-dock hidden aria-live="polite">
+  <div class="live-dock-head">
+    <button class="live-dock-summary" type="button" data-live-dock-toggle aria-expanded="false">
+      <span class="live-dock-badge">● TRWA TERAZ</span>
+      <span class="live-dock-title"><strong>Szkolenie serwisowe</strong><small>spotkanie działa w tle</small></span>
+      <span class="live-dock-counter"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg> <b data-meeting-elapsed>02:03</b></span>
+      <span class="live-dock-counter"><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg> <b>4</b></span>
+      <span class="live-dock-chevron">⌄</span>
+    </button>
+    <button class="live-dock-close" type="button" data-live-dock-dismiss aria-label="Ukryj panel spotkania">×</button>
+  </div>
+  <div class="live-dock-body" data-live-dock-body>
+    <div class="live-dock-livebar"><span><svg class="os-icon" aria-hidden="true"><use href="#i-mic"></use></svg> Mikrofon włączony</span><span><svg class="os-icon" aria-hidden="true"><use href="#i-screen"></use></svg> Udostępniasz ekran</span><b><span class="status-dot"></span> Mówi Bartłomiej</b></div>
+    <div class="live-dock-columns">
+      <section><header><span><svg class="os-icon" aria-hidden="true"><use href="#i-message"></use></svg> Czat</span><small>3 wiadomości</small></header><article><b>Jan</b><p>Widać ekran, możemy zaczynać.</p></article><article class="mine"><b>Ty</b><p>Super. Pokażę teraz statusy przekazań.</p></article><div class="live-dock-compose"><span>Napisz na czacie…</span><b>→</b></div></section>
+      <section><header><span>✋ Podniesione ręce</span><small>1</small></header><div class="live-hand"><b>1</b><span>Anna Lis</span><em>✋</em></div><button type="button" data-live-dock-return><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg> Wróć do spotkania →</button></section>
+    </div>
+  </div>
+</aside>
+<div class="serviceos-demo-toast" data-demo-toast role="status" aria-live="polite" hidden><span class="status-dot"></span><div><strong data-demo-toast-title>Zapisano</strong><small data-demo-toast-copy>Zmiana została zapisana w ServiceOS.</small></div></div>
 <dialog id="webLoginDialog" class="portal-login-dialog" aria-labelledby="webLoginTitle">
   <div class="portal-login-card">
     <div class="portal-login-head"><div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połączenie telefonu</span></div></div><button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button></div>
