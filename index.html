@@ -87,17 +87,17 @@
   <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
   <nav class="os-nav-list">
     <button class="os-nav-item active" type="button" data-preview="start"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item " type="button" data-preview="browser"><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
     <button class="os-nav-item " type="button" data-preview="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
     <button class="os-nav-item " type="button" data-preview="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
+    <button class="os-nav-item " type="button" data-preview="finance"><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
     <button class="os-nav-item " type="button" data-preview="admin"><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+    <button class="os-nav-item " type="button" data-preview="clients"><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
+    <button class="os-nav-item " type="button" data-preview="support"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
   </nav>
   <div class="os-sidebar-spacer"></div>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <button class="os-nav-item " type="button" data-preview="help"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" data-preview="settings"><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
   <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
   <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
 </aside>
@@ -142,19 +142,66 @@
     </div>
   </div>
 </section>
+<section class="os-screen" data-preview-screen="browser">
+  <div class="hero-browser-screen">
+    <header><span>PRZEGLĄDARKA</span><h2>Internet bez wychodzenia z ServiceOS.</h2><p>Ta sama aplikacja, ten sam kontekst pracy.</p></header>
+    <div class="hero-browser-toolbar"><button>←</button><button>→</button><button>↻</button><div><span>🔒</span><strong>serviceos.pl</strong></div><button>↗</button></div>
+    <div class="hero-browser-canvas"><img src="assets/logo.svg" alt=""><strong>LockOn ServiceOS</strong><span>Bezpieczna karta wewnątrz aplikacji</span></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="finance">
+  <div class="hero-finance-screen">
+    <header><span>ROZLICZENIA</span><h2>Wynik serwisu bez Excela.</h2><p>Przychód, koszty i rozliczenia w jednym widoku.</p></header>
+    <div class="hero-finance-kpis"><article><span>PRZYCHÓD</span><strong>12 840 zł</strong><small>31 zleceń</small></article><article><span>KOSZTY</span><strong>4 120 zł</strong><small>części i zakupy</small></article><article><span>DO ROZLICZENIA</span><strong>2 460 zł</strong><small>bieżący okres</small></article></div>
+    <div class="hero-finance-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="clients">
+  <div class="hero-clients-screen">
+    <header><span>KLIENCI</span><h2>Cała historia klienta.</h2><p>Kontakt, urządzenia, zlecenia i dostęp do portalu.</p></header>
+    <div class="hero-client-card"><b>AK</b><span><strong>Anna Kowalska</strong><small>anna@przyklad.pl · +48 500 123 456</small></span><em>AKTYWNA</em></div>
+    <div class="hero-client-grid"><article><span>NAPRAWY</span><strong>5</strong><small>1 aktywna</small></article><article><span>URZĄDZENIA</span><strong>3</strong><small>w historii</small></article><article><span>PORTAL</span><strong>Online</strong><small>Google + kod</small></article></div>
+    <div class="hero-client-order"><b>#1042</b><span><strong>iPhone 14 Pro</strong><small>Diagnoza · dzisiaj 14:12</small></span><em>TERAZ</em></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="support">
+  <div class="hero-support-screen">
+    <header><span>WSPARCIE LOCKON</span><h2>Zespół nie zostaje sam.</h2><p>Bot, kolejka konsultanta i obecność użytkowników.</p></header>
+    <div class="hero-support-stats"><article><strong>4</strong><span>online</span></article><article><strong>2</strong><span>czeka na człowieka</span></article><article><strong>1</strong><span>rozmowa przejęta</span></article></div>
+    <div class="hero-support-workspace"><aside><b>AKTYWNOŚĆ</b><p><span class="status-dot"></span> Jan Nowak <small>przy bocie</small></p><p><span class="status-dot"></span> Anna Lis <small>online</small></p></aside><section><b>NOWA PROŚBA</b><p>„Potrzebuję pomocy z przekazaniem urządzenia.”</p><span>DOŁĄCZ DO ROZMOWY →</span></section></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="settings">
+  <div class="hero-settings-screen">
+    <header><span>USTAWIENIA</span><h2>ServiceOS dopasowany do pracy.</h2><p>Wygląd, konto, skala i informacje o aplikacji.</p></header>
+    <div class="hero-settings-grid"><article class="active"><span>WYGLĄD</span><strong>Carbon</strong><small>Ciemny motyw</small></article><article><span>SKALA</span><strong>100%</strong><small>Standardowa</small></article><article><span>KONTO</span><strong>Bartłomiej</strong><small>Właściciel</small></article><article><span>WERSJA</span><strong>Aktualna</strong><small>GitHub Release</small></article></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="help">
+  <div class="hero-help-screen">
+    <header><span>POMOC</span><h2>Zapytaj ServiceOS.</h2><p>Najpierw bot zna aplikację. Gdy trzeba, dołącza człowiek.</p></header>
+    <div class="hero-help-chat"><article><b>Bot ServiceOS</b><p>Cześć. Mogę znaleźć zlecenie albo otworzyć właściwy ekran.</p></article><article class="mine"><b>Ty</b><p>Pokaż mi przekazania urządzeń.</p></article><div><span>Napisz wiadomość…</span><b>→</b></div></div>
+  </div>
+</section>
 <section class="os-screen" data-preview-screen="admin">
   <div class="os-admin-page"><header><span>ADMINISTRACJA</span><h2>Pracownicy, punkty i dostępy</h2><p>Dokładnie taki zakres, jaki wynika z roli.</p></header><div class="os-admin-grid"><article><span>AKTYWNE KONTA</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article><article><span>PUNKTY</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article><article><span>DO DECYZJI</span><strong data-count="1">1</strong><small>konto oczekujące</small></article><article><span>AKTYWNE SESJE</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article></div><div class="os-user-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div></div>
 </section>
             </div>
+            <button class="hero-live-dock" type="button" data-preview="meetings">
+              <span class="os-live">● LIVE</span>
+              <span><strong>Szkolenie serwisowe</strong><small>spotkanie działa w tle</small></span>
+              <b data-meeting-elapsed>02:03</b>
+              <i>WRÓĆ →</i>
+            </button>
           </div>
-          <div class="os-mobile-tabs"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="meetings" type="button">Spotkania</button><button data-preview="admin" type="button">Admin</button></div>
+          <div class="os-mobile-tabs"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="clients" type="button">Klienci</button><button data-preview="meetings" type="button">Spotkania</button></div>
         </div>
         <div class="hero-phone-mini">
           <div class="phone-notch"></div><img src="assets/logo.svg" alt=""><span>POŁĄCZ URZĄDZENIE</span><strong>Telefon gotowy.</strong><p>Wpisz kod z aplikacji ServiceOS.</p><div class="mini-code"><i>1</i><i>2</i><i>3</i><i>4</i></div><b>Połącz</b><small>✓ Ten sam zakres uprawnień</small>
         </div>
         <div class="hero-chip hero-chip-online"><span class="status-dot"></span><div><strong>SYSTEM ONLINE</strong><small>sesja aktywna</small></div></div>
         <div class="hero-chip hero-chip-actions"><b>4</b><div><strong>Do działania</strong><small>bieżąca kolejka</small></div></div>
-        <div class="preview-switcher"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="meetings" type="button">Spotkania</button><button data-preview="admin" type="button">Administracja</button></div>
+        <div class="preview-switcher"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="clients" type="button">Klienci</button><button data-preview="meetings" type="button">Spotkania</button><button data-preview="finance" type="button">Rozliczenia</button><button data-preview="admin" type="button">Admin</button><button data-preview="support" type="button">Wsparcie</button></div>
       </div>
     </div>
 
@@ -175,18 +222,18 @@
   <div class="os-brand-block"><div class="os-brand-logo"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
   <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
   <nav class="os-nav-list">
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
-    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item " type="button" data-module="start"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+    <button class="os-nav-item " type="button" data-module="browser"><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
     <button class="os-nav-item active" type="button" data-module="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
     <button class="os-nav-item " type="button" data-module="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
     <button class="os-nav-item " type="button" data-module="finance"><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
     <button class="os-nav-item " type="button" data-module="admin"><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
     <button class="os-nav-item " type="button" data-module="clients"><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
-    <button class="os-nav-item " type="button" data-module="tools"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+    <button class="os-nav-item " type="button" data-module="support"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
   </nav>
   <div class="os-sidebar-spacer"></div>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
-  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <button class="os-nav-item " type="button" data-module="help"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" data-module="settings"><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
   <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
   <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
 </aside>
@@ -245,16 +292,24 @@
 <section class="os-screen module-admin-screen active">
   <div class="os-admin-page"><header><span>ADMINISTRACJA</span><h2>Pracownicy, punkty i dostępy</h2><p>Dokładnie taki zakres, jaki wynika z roli.</p></header><div class="os-admin-grid"><article><span>AKTYWNE KONTA</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article><article><span>PUNKTY</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article><article><span>DO DECYZJI</span><strong data-count="1">1</strong><small>konto oczekujące</small></article><article><span>AKTYWNE SESJE</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article></div><div class="os-user-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div></div>
 </section></section>
-            <section class="module-panel" data-module-panel="tools"><div class="os-module-page"><header><span>NARZĘDZIA</span><h2>Wszystko w jednym środowisku.</h2><p>Przeglądarka, pomoc i ustawienia są częścią ServiceOS.</p></header><div class="tool-list"><article><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span><strong>Przeglądarka</strong><small>Internet wewnątrz ServiceOS</small></span><b>OTWÓRZ</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span><strong>Pomoc</strong><small>Chat i kontakt z pomocą</small></span><b>POMOC</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span><strong>Ustawienia</strong><small>Wygląd, konto i integracje</small></span><b>USTAW</b></article></div></div></section>
+            <section class="module-panel" data-module-panel="support"><div class="os-module-page support-module-page"><header><span>WSPARCIE LOCKON</span><h2>Centrum pomocy zespołu.</h2><p>Obecność, bot i kolejka konsultanta — tak jak w aplikacji.</p></header><div class="support-module-stats"><article><strong>4</strong><span>Aktywni teraz</span></article><article><strong>2</strong><span>Czekają na człowieka</span></article><article><strong>1</strong><span>Rozmowa przejęta</span></article></div><div class="support-module-workspace"><aside><span>AKTYWNOŚĆ</span><article><b>JN</b><div><strong>Jan Nowak</strong><small>rozmawia z botem</small></div><em>ONLINE</em></article><article><b>AL</b><div><strong>Anna Lis</strong><small>czeka na konsultanta</small></div><em class="wait">CZEKA</em></article></aside><section><span>KOLEJKA KONSULTANTA</span><article><b>Anna Lis</b><p>Potrzebuję pomocy z przekazaniem urządzenia do innego punktu.</p><button type="button">Dołącz do rozmowy →</button></article></section></div></div></section>
+            <section class="module-panel" data-module-panel="start"><div class="os-module-page module-start-page"><header><span>START</span><h2>Wszystko, co ważne, od razu po uruchomieniu.</h2><p>Powitanie, czas, spotkania, skróty i liczby dokładnie w rytmie aplikacji.</p></header><div class="module-start-grid"><article class="wide"><span>Wszystkie punkty</span><strong>Dobry wieczór, Bartłomiej.</strong><small>System gotowy do pracy.</small></article><article><span>CZAS</span><strong data-live-clock>21:42</strong><small>Dzisiaj</small></article><article><span>STATUS</span><strong>Online</strong><small>Wszystkie usługi działają</small></article><article><span>ZLECENIA</span><strong>4</strong><small>do działania</small></article><article><span>SPOTKANIE</span><strong>LIVE</strong><small>szkolenie serwisowe</small></article></div></div></section>
+            <section class="module-panel" data-module-panel="browser"><div class="os-module-page"><header><span>PRZEGLĄDARKA</span><h2>Internet wewnątrz ServiceOS.</h2><p>Bezpieczna karta bez wychodzenia z programu.</p></header><div class="module-browser-shell"><div class="hero-browser-toolbar"><button>←</button><button>→</button><button>↻</button><div><span>🔒</span><strong>serviceos.pl</strong></div><button>↗</button></div><div class="hero-browser-canvas"><img src="assets/logo.svg" alt=""><strong>LockOn ServiceOS</strong><span>Przeglądarka gotowa</span></div></div></div></section>
+            <section class="module-panel" data-module-panel="help"><div class="os-module-page"><header><span>POMOC LOCKON</span><h2>Bot zna ServiceOS.</h2><p>Pomoc trafia do człowieka dopiero wtedy, gdy tego potrzebujesz.</p></header><div class="module-help-chat"><article><b>Bot ServiceOS</b><p>W czym mogę pomóc?</p></article><article class="mine"><b>Ty</b><p>Gdzie mam przekazać urządzenie?</p></article><article><b>Bot ServiceOS</b><p>Otwórz Serwis → Przekazania. Mogę też otworzyć ten ekran za Ciebie.</p></article><div><span>Napisz wiadomość…</span><b>→</b></div></div></div></section>
+            <section class="module-panel" data-module-panel="settings"><div class="os-module-page"><header><span>USTAWIENIA</span><h2>Twoje ServiceOS.</h2><p>Motyw, skala, konto i stan aktualizacji.</p></header><div class="module-settings-grid"><article class="active"><span>WYGLĄD</span><strong>Carbon</strong><small>Ciemny interfejs</small></article><article><span>SKALA</span><strong>100%</strong><small>Standardowa</small></article><article><span>KONTO</span><strong>Bartłomiej</strong><small>Właściciel aplikacji</small></article><article><span>AKTUALIZACJE</span><strong>Gotowe</strong><small>GitHub Release</small></article></div></div></section>
           </div>
         </div>
         <div class="module-mobile-tabs" aria-label="Moduły ServiceOS">
+          <button type="button" data-module="start">Start</button>
           <button class="active" type="button" data-module="service">Serwis</button>
           <button type="button" data-module="clients">Klienci</button>
           <button type="button" data-module="meetings">Spotkania</button>
           <button type="button" data-module="finance">Rozliczenia</button>
           <button type="button" data-module="admin">Admin</button>
-          <button type="button" data-module="tools">Narzędzia</button>
+          <button type="button" data-module="browser">Przeglądarka</button>
+          <button type="button" data-module="support">Wsparcie</button>
+          <button type="button" data-module="help">Pomoc</button>
+          <button type="button" data-module="settings">Ustawienia</button>
         </div>
       </div>
     </div>
