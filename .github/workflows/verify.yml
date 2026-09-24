@@ -7,9 +7,13 @@ on:
       - "privacy.html"
       - "terms.html"
       - "signing.html"
+      - "panel.html"
+      - "klient.html"
+      - "track.html"
       - "assets/**"
       - "sw.js"
       - ".github/workflows/verify.yml"
+      - ".github/workflows/mobile-visual-check.yml"
   pull_request:
     branches: ["main"]
 
@@ -23,7 +27,7 @@ concurrency:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - name: Checkout
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -43,13 +47,14 @@ jobs:
           node --check assets/ui-2026.js
           node --check sw.js
 
-      - name: Verify rebuilt landing contracts
+      - name: Verify rebuilt landing structure
         shell: bash
         run: |
+          set -euo pipefail
           grep -q 'assets/serviceos-app-site.css' index.html
           grep -q 'assets/serviceos-app-site.js' index.html
           grep -q 'Cały serwis' index.html
-          grep -q 'Od wejścia klienta' index.html
+          grep -q 'Bez chaosu' index.html
           grep -q 'id="day"' index.html
           grep -q 'id="modules"' index.html
           grep -q 'id="roles"' index.html
@@ -57,28 +62,46 @@ jobs:
           grep -q 'id="connect"' index.html
           grep -q 'id="security"' index.html
           grep -q 'id="start"' index.html
-          grep -q 'mobile-anchor-nav' index.html
-          grep -q 'showcase-laptop' index.html
-          grep -q 'showcase-phone' index.html
-          grep -q 'workday-demo' index.html
-          grep -q 'showcase-journey-grid' index.html
-          grep -q 'showcase-role-grid' index.html
-          grep -q 'data-meeting22-scene="live"' index.html
-          grep -q 'Tryb kinowy' index.html
-          grep -q 'SCHEDULED ≠ LIVE' index.html
-          grep -q 'Połącz urządzenie' index.html
-          grep -q 'data-preview-screen="start"' index.html
-          grep -q 'data-module-panel="service"' index.html
+          grep -q 'class="app-demo"' index.html
+          grep -q 'hero-wow' index.html
+          grep -q 'hero-phone-device' index.html
+          grep -q 'hero-metrics' index.html
+          grep -q 'hero-flow-card' index.html
+          grep -q 'preview-switcher' index.html
+          grep -q 'data-preview="start"' index.html
+          grep -q 'data-preview-screen="meetings"' index.html
+          grep -q 'class="module-workspace' index.html
+          grep -q 'data-module="service"' index.html
+          grep -q 'data-module-panel="tools"' index.html
+          grep -q 'data-meeting-room' index.html
+          grep -q 'data-meeting-theater' index.html
+          grep -q 'data-meeting-side="chat"' index.html
+          grep -q 'data-phone-step="4"' index.html
+          grep -q 'data-phone-screen="4"' index.html
           grep -q 'prefers-reduced-motion' assets/serviceos-app-site.css
-          grep -q '@media(max-width:760px)' assets/serviceos-app-site.css
+          grep -q '@media(max-width:430px)' assets/serviceos-app-site.css
+          grep -q '@media(max-width:360px)' assets/serviceos-app-site.css
           grep -q 'IntersectionObserver' assets/serviceos-app-site.js
-          grep -q 'lockon.employee.onboarding.v1' assets/serviceos-app-site.js
+          grep -q "lockon.employee.onboarding.v1" assets/serviceos-app-site.js
+          grep -q "data-phone-step" assets/serviceos-app-site.js
+          grep -q "serviceWorker.register" assets/serviceos-app-site.js
+          ! grep -Eq 'home-(v2|story)|showcase-(1\.0|meetings)' index.html
+          ! grep -q 'mobile-final.css' index.html
+          ! grep -q 'web-polish.css' index.html
           ! grep -q 'style="' index.html
-          ! grep -q '50/50' index.html
+          ! grep -q "'unsafe-inline'" index.html
+          test ! -e assets/home-v2.css
+          test ! -e assets/home-v2.js
+          test ! -e assets/home-story.css
+          test ! -e assets/home-story.js
+          test ! -e assets/showcase-1.0.21.css
+          test ! -e assets/showcase-1.0.22.css
+          test ! -e assets/showcase-meetings-1.0.22.js
 
-      - name: Verify central auth and onboarding
+      - name: Verify central auth, phone pairing and onboarding
         shell: bash
         run: |
+          set -euo pipefail
           ! grep -q 'auth/google-web' assets/google-auth.js
           grep -q 'website/redeem' assets/google-auth.js
           grep -q 'lockonapi.compute' assets/google-config.js
@@ -87,6 +110,7 @@ jobs:
           grep -q 'lockonapi.compute' index.html
           grep -q 'navLoginButton' index.html
           grep -q 'navPanelLink' index.html
+          grep -q 'webLoginDialog' index.html
           grep -q 'webAuthCodeForm' index.html
           grep -q 'webAuthCode' index.html
           grep -q 'agreeEmployee' index.html
@@ -101,6 +125,7 @@ jobs:
       - name: Verify worker, customer and tracking portals
         shell: bash
         run: |
+          set -euo pipefail
           grep -q 'orderWorkflowFilters' panel.html
           grep -q 'Cena orientacyjna' panel.html
           grep -q 'id="view-more"' panel.html
@@ -124,15 +149,21 @@ jobs:
           ! grep -q 'href="index.html"' track.html
           ! grep -q 'href="index.html"' klient.html
 
-      - name: Verify security/legal shell and cache
+      - name: Verify legal shell, CSP and cache
         shell: bash
         run: |
+          set -euo pipefail
           grep -q 'assets/serviceos-app-site.css' privacy.html
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q 'serviceos-shell-v31' sw.js
+          grep -q "serviceos-shell-v35" sw.js
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js
+          grep -q 'google-auth.js' sw.js
           grep -q 'track.html' sw.js
           grep -q 'klient.html' sw.js
+          grep -q "object-src 'none'" index.html
+          grep -q "frame-src 'none'" index.html
+          grep -q "base-uri 'none'" index.html
+          grep -q "form-action 'none'" index.html
