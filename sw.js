@@ -1,4 +1,4 @@
-const CACHE='serviceos-shell-v39';
+const CACHE='serviceos-shell-v40';
 const SHELL=[
   '/','/index.html','/panel.html','/klient.html','/track.html','/privacy.html','/terms.html','/signing.html',
   '/assets/logo.svg',
