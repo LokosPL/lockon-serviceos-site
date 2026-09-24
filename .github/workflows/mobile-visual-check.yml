@@ -151,6 +151,12 @@ jobs:
 
           await desktop.locator('#roles').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
+          await desktop.locator('[data-role-preview="tech"]').click();
+          if((await desktop.locator('[data-role-title]').textContent())!=='Serwisant') throw new Error('Role simulator did not switch to technician');
+          if(await desktop.locator('[data-role-nav] > i').filter({hasText:'Administracja'}).isVisible()) throw new Error('Technician role still exposes Administration preview');
+          await desktop.screenshot({path:'visual-check/desktop-role-technician.png'});
+          await desktop.locator('[data-role-preview="owner"]').click();
+          await desktop.waitForTimeout(180);
           await desktop.screenshot({path:'visual-check/desktop-roles-wow.png'});
 
           await desktop.locator('#meetings').scrollIntoViewIfNeeded();
@@ -194,6 +200,14 @@ jobs:
           await assertMobileTargets(mobile,'Mobile menu');
           await mobile.screenshot({path:'visual-check/mobile-menu.png'});
           await mobile.locator('[data-menu-toggle]').click();
+
+          await mobile.locator('#modules').scrollIntoViewIfNeeded();
+          await mobile.waitForTimeout(500);
+          const mobileModuleButton=mobile.locator('.module-mobile-tabs [data-module="clients"]');
+          if(!await mobileModuleButton.isVisible()) throw new Error('Mobile module controls are not visible');
+          await mobileModuleButton.click();
+          if(!await mobile.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Mobile clients module did not activate');
+          await assertMobileTargets(mobile,'Mobile module tabs');
 
           for(const [id,name] of [['modules','modules'],['roles','roles'],['meetings','meetings'],['connect','phone'],['security','security'],['start','start']]){
             await mobile.locator('#'+id).scrollIntoViewIfNeeded();
