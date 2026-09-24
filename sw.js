@@ -1,5 +1,5 @@
-const CACHE='serviceos-shell-v29';
-const SHELL=['/','/index.html','/panel.html','/assets/logo.svg','/assets/home-v2.css','/assets/home-v2.js','/assets/home-story.css','/assets/home-story.js','/assets/ui-2026.css','/assets/ui-2026.js','/assets/web-polish.css','/assets/mobile-final.css','/assets/showcase-1.0.21.css','/assets/panel.css','/assets/panel.js','/assets/google-config.js','/assets/google-auth.js','/track.html','/assets/track.css','/assets/track.js','/klient.html','/assets/customer-portal.css','/assets/customer-portal.js'];
+const CACHE='serviceos-shell-v30';
+const SHELL=['/','/index.html','/panel.html','/assets/logo.svg','/assets/home-v2.css','/assets/home-v2.js','/assets/home-story.css','/assets/home-story.js','/assets/ui-2026.css','/assets/ui-2026.js','/assets/web-polish.css','/assets/mobile-final.css','/assets/showcase-1.0.21.css','/assets/showcase-1.0.22.css','/assets/showcase-meetings-1.0.22.js','/assets/panel.css','/assets/panel.js','/assets/google-config.js','/assets/google-auth.js','/track.html','/assets/track.css','/assets/track.js','/klient.html','/assets/customer-portal.css','/assets/customer-portal.js'];
 self.addEventListener('install',(event)=>event.waitUntil(caches.open(CACHE).then((cache)=>cache.addAll(SHELL)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',(event)=>event.waitUntil(caches.keys().then((keys)=>Promise.all(keys.filter((key)=>key!==CACHE).map((key)=>caches.delete(key)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',(event)=>{

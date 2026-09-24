@@ -12,6 +12,7 @@
   <meta property="og:title" content="LockOn ServiceOS — cały serwis w jednym systemie">
   <meta property="og:description" content="Zobacz krok po kroku, jak ServiceOS prowadzi zespół od przyjęcia klienta do zakończenia naprawy.">
   <meta property="og:type" content="website">
+  <meta property="og:url" content="https://app.serviceos.pl/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/styles.css">
   <link rel="stylesheet" href="assets/home-v2.css">
@@ -21,6 +22,7 @@
   <link rel="stylesheet" href="assets/mobile-final.css">
   <link rel="stylesheet" href="assets/release-1.0.11.css">
   <link rel="stylesheet" href="assets/showcase-1.0.21.css">
+  <link rel="stylesheet" href="assets/showcase-1.0.22.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
@@ -227,26 +229,91 @@
       </div>
     </section>
 
-    <section class="page-section showcase-meeting-section" id="meetings">
-      <div class="wrap showcase-meeting-grid">
-        <div class="section-heading reveal">
-          <span>SPOTKANIA I SZKOLENIA</span>
-          <h2>Odprawa zespołu bez wychodzenia z ServiceOS.</h2>
-          <p>Właściciel, szef i koordynator mogą zaplanować spotkanie. Uczestnik widzi termin i zapis, ale wejście do pokoju staje się dostępne dopiero po świadomym rozpoczęciu przez prowadzącego.</p>
-          <ul class="showcase-check-list">
-            <li>Zapisy i limity uczestników</li>
-            <li>Mikrofon i udostępnianie ekranu zgodnie z uprawnieniami</li>
-            <li>Prowadzący może moderować i zakończyć spotkanie dla wszystkich</li>
-            <li>Po zakończeniu dostępna jest frekwencja</li>
-          </ul>
+    <section class="page-section showcase-meeting-section" id="meetings" data-meeting22>
+      <div class="wrap meeting22-shell">
+        <div class="meeting22-copy">
+          <div class="section-heading reveal">
+            <span>SPOTKANIA I SZKOLENIA</span>
+            <h2>Od zaproszenia do frekwencji — cały przebieg w jednym miejscu.</h2>
+            <p>Spotkanie nie jest dodatkiem do Startu. Ma własny moduł, własny link, jasny status i pokój do rozmowy, chatu oraz udostępniania ekranu. Uczestnik zawsze wie, czy czeka na prowadzącego, czy spotkanie naprawdę trwa.</p>
+          </div>
+          <div class="meeting22-checks reveal delay">
+            <div><b>01</b><span><strong>Świadome wiadomości e-mail</strong><span>Organizator decyduje, czy wysłać zaproszenie i późniejsze zmiany terminu.</span></span></div>
+            <div><b>02</b><span><strong>SCHEDULED to nie LIVE</strong><span>Upływ godziny nie uruchamia pokoju. Spotkanie rozpoczyna prowadzący.</span></span></div>
+            <div><b>03</b><span><strong>Rozmowa bez zgadywania</strong><span>Widać, kto mówi, kto ma wyciszony mikrofon i kto podniósł rękę.</span></span></div>
+            <div><b>04</b><span><strong>Udostępnianie pod kontrolą</strong><span>Własny podgląd, nazwa źródła, szybka zmiana i jednoznaczne zatrzymanie.</span></span></div>
+          </div>
         </div>
-        <div class="showcase-meeting-card reveal delay">
-          <div class="meeting-demo-head"><div><span>SPOTKANIA I SZKOLENIA</span><h3>Nowy standard przyjęcia urządzenia</h3></div><b>Zaplanowane</b></div>
-          <div class="meeting-demo-meta"><span>24 września · 15:00</span><span>45 min</span><span>Prowadzący: Koordynator</span></div>
-          <p>Przejście przez przyjęcie klienta, kartę serwisową i poprawne przekazanie telefonu do serwisu.</p>
-          <div class="meeting-demo-users"><span>12 / 20 zapisanych</span><span>🎙 Audio dostępne</span><span>▣ Ekran prowadzącego</span></div>
-          <div class="meeting-demo-actions"><button type="button" disabled>✓ Jesteś zapisany</button><button type="button" disabled>Wejście po rozpoczęciu</button></div>
-          <small>Sam termin nie uruchamia spotkania. Status „TRWA TERAZ” pojawia się dopiero po rozpoczęciu przez prowadzącego.</small>
+
+        <div class="meeting22-stage reveal delay">
+          <div class="meeting22-window">
+            <div class="meeting22-windowbar"><div class="meeting22-dots"><i></i><i></i><i></i></div><span>LOCKON SERVICEOS · SPOTKANIA I SZKOLENIA</span></div>
+            <div class="meeting22-scenes">
+              <div class="meeting22-scene-nav" role="tablist" aria-label="Przebieg spotkania">
+                <button class="active" type="button" data-meeting22-scene="invite">1 · E-mail</button>
+                <button type="button" data-meeting22-scene="details">2 · Szczegóły</button>
+                <button type="button" data-meeting22-scene="live">3 · Pokój LIVE</button>
+                <button type="button" data-meeting22-scene="after">4 · Po spotkaniu</button>
+              </div>
+
+              <div class="meeting22-scene active" data-meeting22-panel="invite">
+                <div class="meeting22-mail">
+                  <span>LOCKON SERVICEOS · ZAPROSZENIE NA SZKOLENIE</span>
+                  <h3>Nowy standard przyjęcia urządzenia</h3>
+                  <p>Przyjęcie klienta, karta serwisowa i poprawne przekazanie urządzenia.</p>
+                  <dl>
+                    <div><dt>Termin</dt><dd>24 września 2026 · 15:00</dd></div>
+                    <div><dt>Czas</dt><dd>około 45 minut</dd></div>
+                    <div><dt>Prowadzący</dt><dd>Koordynator</dd></div>
+                    <div><dt>Zespół</dt><dd>Nowogard · Szczecin · Goleniów</dd></div>
+                  </dl>
+                  <div class="meeting22-cta">OTWÓRZ SPOTKANIE W SERVICEOS</div>
+                  <p>Link prowadzi do karty spotkania. Nie zawiera tokenu pokoju, sesji ani prywatnych danych.</p>
+                </div>
+              </div>
+
+              <div class="meeting22-scene" data-meeting22-panel="details">
+                <div class="meeting22-detail">
+                  <article><span class="meeting22-kicker">KARTA SPOTKANIA</span><h3>Nowy standard przyjęcia urządzenia</h3><p>Prowadzący: Koordynator<br>24 września · 15:00 · 45 min<br>12 / 20 zapisanych</p><span class="meeting22-status">Zaplanowane</span></article>
+                  <article><span class="meeting22-kicker">PRZED STARTEM</span><h3>Spotkanie jeszcze się nie rozpoczęło.</h3><p>Jeżeli termin minie, status pozostaje zaplanowany i pojawia się informacja „oczekiwanie na prowadzącego”.</p><span class="meeting22-status">SCHEDULED ≠ LIVE</span></article>
+                  <article class="meeting22-route"><div><span>E-MAIL</span><b>Otwórz spotkanie</b></div><i></i><div><span>SERVICEOS</span><b>Sprawdza konto i dostęp</b></div><i></i><div><span>PROWADZĄCY</span><b>Rozpoczyna</b></div><i></i><div><span>LIVE</span><b>Dołącz</b></div></article>
+                </div>
+              </div>
+
+              <div class="meeting22-scene" data-meeting22-panel="live">
+                <div class="meeting22-room">
+                  <div class="meeting22-main">
+                    <div class="meeting22-shared"><header><span>● EKRAN PROWADZĄCEGO</span><span>Materiały szkoleniowe</span></header><div class="fake-slide"><span class="meeting22-kicker">PRZYJĘCIE URZĄDZENIA</span><h4>Klient → urządzenie → zlecenie</h4><p>Pracownik widzi następny krok i nie musi pamiętać całej procedury.</p></div></div>
+                    <div class="meeting22-local" data-demo-local><span>● UDOSTĘPNIASZ EKRAN</span><div class="meeting22-local-preview">Twój rzeczywisty podgląd</div></div>
+                    <div class="meeting22-controls"><button class="active" type="button">🎙 Mikrofon</button><button class="active" type="button" data-demo-share>▣ Zmień ekran / okno</button><button type="button" data-demo-hand>✋ Podnieś rękę</button><button type="button">Wyjdź</button></div>
+                  </div>
+                  <aside class="meeting22-side">
+                    <div class="meeting22-side-tabs"><button class="active" type="button" data-meeting22-side="people">Uczestnicy</button><button type="button" data-meeting22-side="chat">Chat</button></div>
+                    <div class="meeting22-people">
+                      <div class="meeting22-person speaking"><span class="meeting22-avatar">KO</span><div><strong>Koordynator</strong><small>Mówi</small><span class="meeting22-meter"><i></i><i></i><i></i><i></i></span></div><em>🎙</em></div>
+                      <div class="meeting22-person" data-demo-self><span class="meeting22-avatar">TY</span><div><strong>Ty</strong><small>Mikrofon wyciszony</small></div><em>🔇</em></div>
+                      <div class="meeting22-person"><span class="meeting22-avatar">S1</span><div><strong>Serwisant</strong><small>Uczestnik</small></div><em>🔇</em></div>
+                      <div class="meeting22-hand-queue" data-demo-hand-queue hidden><b>1</b> Ty chcesz zabrać głos</div>
+                    </div>
+                    <div class="meeting22-chat">
+                      <div class="meeting22-message">Koordynator: zaczynamy od wyszukania klienta.</div>
+                      <div class="meeting22-message mine">Jasne, mam otwartą kartę przyjęcia.</div>
+                    </div>
+                    <form class="meeting22-chat-form"><input maxlength="160" placeholder="Napisz wiadomość…" aria-label="Wiadomość na czacie"><button type="submit" aria-label="Wyślij">→</button></form>
+                  </aside>
+                </div>
+              </div>
+
+              <div class="meeting22-scene" data-meeting22-panel="after">
+                <div class="meeting22-after">
+                  <article><span>STATUS</span><strong>Spotkanie zakończone</strong><p>Po zakończeniu nie można ponownie wejść do pokoju. Zostaje historia spotkania i frekwencja.</p></article>
+                  <article><span>FREKWENCJA</span><strong>11 uczestników</strong><p>Widać zapis, faktyczne dołączenie i liczbę wejść. Dane nie mieszają się między spotkaniami.</p></article>
+                </div>
+                <div class="meeting22-flow" aria-label="Przebieg spotkania"><span>E-mail</span><span>Otwórz spotkanie</span><span>Szczegóły</span><span>Rozpocznij</span><span>Rozmowa / chat / ekran / ręka</span><span>Zakończ</span><span>Frekwencja</span></div>
+                <p class="meeting22-note">To demonstracja oparta na rzeczywistym układzie i funkcjach ServiceOS. Dane osób są przykładowe.</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -494,5 +561,6 @@
   <script src="assets/home-v2.js"></script>
   <script src="assets/ui-2026.js"></script>
   <script src="assets/home-story.js"></script>
+  <script src="assets/showcase-meetings-1.0.22.js"></script>
 </body>
 </html>
