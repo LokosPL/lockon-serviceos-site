@@ -4,171 +4,301 @@
   const qs = (selector, root = document) => root.querySelector(selector);
   const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.toggle('reduced-motion', reducedMotion);
+  document.body.classList.add('reveal-enabled');
 
-  const nav = qs('.site-nav');
-  const menuButton = qs('.mobile-menu-button');
-  const syncNav = () => nav?.classList.toggle('scrolled', window.scrollY > 10);
-  syncNav();
-  window.addEventListener('scroll', syncNav, { passive:true });
+  const topbar = qs('[data-site-nav]');
+  const menuToggle = qs('[data-menu-toggle]');
+  const mobileMenu = qs('#mobileMenu');
 
-  menuButton?.addEventListener('click', () => {
-    const open = nav?.classList.toggle('menu-open');
-    menuButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+  const setMenuOpen = (open) => {
+    topbar?.classList.toggle('menu-open', open);
+    menuToggle?.setAttribute('aria-expanded', open ? 'true' : 'false');
+    mobileMenu?.setAttribute('aria-hidden', open ? 'false' : 'true');
+  };
+
+  const syncTopbar = () => topbar?.classList.toggle('scrolled', window.scrollY > 10);
+  syncTopbar();
+  window.addEventListener('scroll', syncTopbar, { passive: true });
+
+  menuToggle?.addEventListener('click', () => {
+    setMenuOpen(!topbar?.classList.contains('menu-open'));
   });
 
-  qsa('.site-links a, .mobile-anchor-nav a').forEach((link) => {
-    link.addEventListener('click', () => {
-      nav?.classList.remove('menu-open');
-      menuButton?.setAttribute('aria-expanded','false');
-    });
+  qsa('#mobileMenu a, #mobileMenu button').forEach((control) => {
+    control.addEventListener('click', () => setMenuOpen(false));
   });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) setMenuOpen(false);
+  }, { passive: true });
 
   if (!reducedMotion) {
+    const pointerClasses = [
+      'pointer-x-left', 'pointer-x-mid', 'pointer-x-right',
+      'pointer-y-top', 'pointer-y-mid', 'pointer-y-bottom'
+    ];
+    let pointerFrame = 0;
     window.addEventListener('pointermove', (event) => {
-      const x = Math.round((event.clientX / Math.max(1, window.innerWidth)) * 100);
-      const y = Math.round((event.clientY / Math.max(1, window.innerHeight)) * 100);
-      document.body.style.setProperty('--mx', x + '%');
-      document.body.style.setProperty('--my', y + '%');
-    }, { passive:true });
+      if (pointerFrame) return;
+      pointerFrame = window.requestAnimationFrame(() => {
+        pointerFrame = 0;
+        document.body.classList.remove(...pointerClasses);
+        const x = event.clientX / Math.max(1, window.innerWidth);
+        const y = event.clientY / Math.max(1, window.innerHeight);
+        document.body.classList.add(x < .34 ? 'pointer-x-left' : x > .66 ? 'pointer-x-right' : 'pointer-x-mid');
+        document.body.classList.add(y < .34 ? 'pointer-y-top' : y > .66 ? 'pointer-y-bottom' : 'pointer-y-mid');
+      });
+    }, { passive: true });
   }
 
-  const observer = 'IntersectionObserver' in window
-    ? new IntersectionObserver((entries) => {
-        for (const entry of entries) {
-          if (!entry.isIntersecting) continue;
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      }, { threshold:.12, rootMargin:'0px 0px -35px 0px' })
-    : null;
+  const revealItems = qsa('.reveal');
+  if (reducedMotion || !('IntersectionObserver' in window)) {
+    revealItems.forEach((element) => element.classList.add('is-visible'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    }, { threshold: .12, rootMargin: '0px 0px -32px 0px' });
+    revealItems.forEach((element) => revealObserver.observe(element));
+  }
 
-  qsa('.reveal').forEach((element) => {
-    if (observer) observer.observe(element);
-    else element.classList.add('visible');
-  });
-
-  const activatePreview = (key) => {
-    qsa('[data-preview-tab]').forEach((button) => button.classList.toggle('active', button.dataset.previewTab === key));
-    qsa('[data-preview-screen]').forEach((screen) => screen.classList.toggle('active', screen.dataset.previewScreen === key));
-    qsa('[data-app-nav]').forEach((button) => button.classList.toggle('active', button.dataset.appNav === key));
-  };
-  qsa('[data-preview-tab],[data-app-nav]').forEach((button) => {
-    button.addEventListener('click', () => activatePreview(button.dataset.previewTab || button.dataset.appNav));
-  });
-
-  const previewKeys = ['start','service','meetings','admin'];
+  const previewKeys = ['start', 'service', 'meetings', 'admin'];
   let previewIndex = 0;
   let previewPausedUntil = 0;
-  const cyclePreview = () => {
-    if (reducedMotion || document.hidden || Date.now() < previewPausedUntil) return;
-    previewIndex = (previewIndex + 1) % previewKeys.length;
-    activatePreview(previewKeys[previewIndex]);
-  };
-  window.setInterval(cyclePreview, 4200);
-  qsa('[data-preview-tab],[data-app-nav]').forEach((button) => button.addEventListener('click', () => {
-    previewPausedUntil = Date.now() + 14000;
-    previewIndex = Math.max(0, previewKeys.indexOf(button.dataset.previewTab || button.dataset.appNav));
-  }));
 
-  const activateModule = (key) => {
-    qsa('[data-module-button]').forEach((button) => button.classList.toggle('active', button.dataset.moduleButton === key));
-    qsa('[data-module-panel]').forEach((panel) => panel.classList.toggle('active', panel.dataset.modulePanel === key));
+  const activatePreview = (key, userAction = false) => {
+    if (!previewKeys.includes(key)) return;
+    previewIndex = previewKeys.indexOf(key);
+    qsa('[data-preview]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.preview === key);
+      button.setAttribute('aria-pressed', button.dataset.preview === key ? 'true' : 'false');
+    });
+    qsa('[data-preview-screen]').forEach((screen) => {
+      screen.classList.toggle('active', screen.dataset.previewScreen === key);
+    });
+    if (userAction) previewPausedUntil = Date.now() + 12000;
   };
-  qsa('[data-module-button]').forEach((button) => button.addEventListener('click', () => activateModule(button.dataset.moduleButton)));
 
-  const meetingScene = qs('[data-meeting22-scene="live"]');
-  meetingScene?.addEventListener('click', () => {
-    meetingScene.classList.toggle('active');
+  qsa('[data-preview]').forEach((button) => {
+    button.addEventListener('click', () => activatePreview(button.dataset.preview || '', true));
   });
+  activatePreview('start');
+
+  if (!reducedMotion) {
+    window.setInterval(() => {
+      if (document.hidden || Date.now() < previewPausedUntil) return;
+      activatePreview(previewKeys[(previewIndex + 1) % previewKeys.length]);
+    }, 4300);
+  }
+
+  const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
+  const activateModule = (key) => {
+    if (!moduleKeys.includes(key)) return;
+    qsa('[data-module]').forEach((button) => {
+      const active = button.dataset.module === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-module-panel]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.modulePanel === key);
+    });
+  };
+
+  qsa('[data-module]').forEach((button) => {
+    button.addEventListener('click', () => activateModule(button.dataset.module || ''));
+  });
+  activateModule('service');
+
+  const activateMeetingSide = (key) => {
+    qsa('[data-meeting-side]').forEach((button) => {
+      const active = button.dataset.meetingSide === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+    qsa('[data-meeting-side-panel]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.meetingSidePanel === key);
+    });
+  };
+
+  qsa('[data-meeting-side]').forEach((button) => {
+    button.addEventListener('click', () => activateMeetingSide(button.dataset.meetingSide || 'chat'));
+  });
+  qsa('[data-meeting-side-open]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activateMeetingSide(button.dataset.meetingSideOpen || 'chat');
+      if (window.innerWidth <= 900) qs('.meeting-side')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
+    });
+  });
+  activateMeetingSide('chat');
+
+  const meetingRoom = qs('[data-meeting-room]');
+  const theaterButton = qs('[data-meeting-theater]');
+  theaterButton?.addEventListener('click', () => {
+    const active = meetingRoom?.classList.toggle('theater-mode') || false;
+    theaterButton.innerHTML = active ? '<span>▣</span> Widok standardowy' : '<span>▣</span> Tryb kinowy';
+    theaterButton.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+
+  const meetingElapsed = qs('[data-meeting-elapsed]');
+  let meetingSeconds = 123;
+  const renderMeetingElapsed = () => {
+    if (!meetingElapsed) return;
+    const minutes = Math.floor(meetingSeconds / 60);
+    const seconds = meetingSeconds % 60;
+    meetingElapsed.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+  };
+  renderMeetingElapsed();
+  if (!reducedMotion) {
+    window.setInterval(() => {
+      if (document.hidden) return;
+      meetingSeconds += 1;
+      renderMeetingElapsed();
+    }, 1000);
+  }
+
+  const phoneKeys = ['1', '2', '3', '4'];
+  let phoneIndex = 0;
+  let phonePausedUntil = 0;
+
+  const activatePhoneStep = (key, userAction = false) => {
+    if (!phoneKeys.includes(key)) return;
+    phoneIndex = phoneKeys.indexOf(key);
+    qsa('[data-phone-step]').forEach((button) => {
+      const active = button.dataset.phoneStep === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-phone-screen]').forEach((screen) => {
+      screen.classList.toggle('active', screen.dataset.phoneScreen === key);
+    });
+    if (userAction) phonePausedUntil = Date.now() + 12000;
+  };
+
+  qsa('[data-phone-step]').forEach((button) => {
+    button.addEventListener('click', () => activatePhoneStep(button.dataset.phoneStep || '1', true));
+  });
+  activatePhoneStep('1');
+
+  if (!reducedMotion) {
+    window.setInterval(() => {
+      if (document.hidden || Date.now() < phonePausedUntil) return;
+      activatePhoneStep(phoneKeys[(phoneIndex + 1) % phoneKeys.length]);
+    }, 3400);
+  }
 
   const onboardingKey = 'lockon.employee.onboarding.v1';
   const acceptButton = qs('#acceptOnboarding');
-  const state = qs('#onboardingState');
-  const checks = ['agreeEmployee','agreeRules','agreeMobile'].map((id) => qs('#' + id)).filter(Boolean);
-  const isAccepted = () => {
+  const onboardingState = qs('#onboardingState');
+  const checks = ['agreeEmployee', 'agreeRules', 'agreeMobile'].map((id) => qs('#' + id)).filter(Boolean);
+
+  const isOnboardingAccepted = () => {
     try { return localStorage.getItem(onboardingKey) === 'accepted'; }
     catch { return false; }
   };
-  const setAccepted = (accepted) => {
+
+  const setOnboardingState = (accepted) => {
     document.body.classList.toggle('onboarding-accepted', accepted);
     qsa('[data-requires-onboarding]').forEach((element) => {
       element.classList.toggle('onboarding-action-locked', !accepted);
       element.setAttribute('aria-disabled', accepted ? 'false' : 'true');
       if (element instanceof HTMLAnchorElement && element.classList.contains('download-link')) {
-        if (!element.dataset.downloadUrl && element.href && !element.href.endsWith('#start')) element.dataset.downloadUrl = element.href;
+        if (!element.dataset.downloadUrl && element.href && !element.href.endsWith('#start')) {
+          element.dataset.downloadUrl = element.href;
+        }
         element.href = accepted && element.dataset.downloadUrl ? element.dataset.downloadUrl : '#start';
       }
     });
+
     if (acceptButton) {
       acceptButton.disabled = accepted || !checks.every((input) => input.checked);
       acceptButton.textContent = accepted ? '✓ ServiceOS odblokowany' : 'Rozumiem — odblokuj ServiceOS';
     }
-    if (state) state.textContent = accepted
-      ? 'Gotowe. Możesz pobrać aplikację albo połączyć telefon.'
-      : 'Pobieranie i łączenie telefonu odblokują się po potwierdzeniu.';
+    if (onboardingState) {
+      onboardingState.textContent = accepted
+        ? 'Gotowe. Możesz pobrać aplikację albo połączyć telefon.'
+        : 'Pobieranie i łączenie telefonu odblokują się po potwierdzeniu.';
+    }
   };
+
   const guideToStart = () => {
     const target = qs('#start');
-    target?.scrollIntoView({ behavior:reducedMotion ? 'auto' : 'smooth', block:'center' });
+    target?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'center' });
     target?.classList.remove('onboarding-nudge');
-    requestAnimationFrame(() => target?.classList.add('onboarding-nudge'));
+    window.requestAnimationFrame(() => target?.classList.add('onboarding-nudge'));
     window.setTimeout(() => target?.classList.remove('onboarding-nudge'), 1300);
   };
-  checks.forEach((input) => input.addEventListener('change', () => setAccepted(isAccepted())));
+
+  checks.forEach((input) => input.addEventListener('change', () => setOnboardingState(isOnboardingAccepted())));
   acceptButton?.addEventListener('click', () => {
     if (!checks.every((input) => input.checked)) return;
-    try { localStorage.setItem(onboardingKey,'accepted'); } catch {}
-    setAccepted(true);
+    try { localStorage.setItem(onboardingKey, 'accepted'); } catch {}
+    setOnboardingState(true);
   });
+
   document.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target.closest('[data-requires-onboarding]') : null;
-    if (!target || isAccepted()) return;
+    if (!target || isOnboardingAccepted()) return;
     event.preventDefault();
     event.stopPropagation();
+    setMenuOpen(false);
     guideToStart();
   }, true);
-  if (isAccepted()) checks.forEach((input) => { input.checked = true; });
-  setAccepted(isAccepted());
 
-  qsa('[data-open-login]').forEach((button) => button.addEventListener('click', () => {
-    if (!isAccepted()) return guideToStart();
-    qs('#navLoginButton')?.click();
-  }));
+  if (isOnboardingAccepted()) checks.forEach((input) => { input.checked = true; });
+  setOnboardingState(isOnboardingAccepted());
 
-  qsa('[data-copy-site]').forEach((button) => button.addEventListener('click', async () => {
-    const original = button.textContent;
-    try {
-      await navigator.clipboard.writeText('https://app.serviceos.pl');
-      button.textContent = 'Skopiowano';
-    } catch {
-      button.textContent = 'app.serviceos.pl';
-    }
-    window.setTimeout(() => { button.textContent = original; }, 1400);
-  }));
+  qsa('[data-open-login]').forEach((button) => {
+    button.addEventListener('click', () => {
+      if (!isOnboardingAccepted()) {
+        guideToStart();
+        return;
+      }
+      qs('#navLoginButton')?.click();
+    });
+  });
+
+  qsa('[data-copy-site]').forEach((button) => {
+    button.addEventListener('click', async () => {
+      const original = button.textContent;
+      try {
+        await navigator.clipboard.writeText('https://app.serviceos.pl');
+        button.textContent = 'Skopiowano';
+      } catch {
+        button.textContent = 'app.serviceos.pl';
+      }
+      window.setTimeout(() => { button.textContent = original; }, 1400);
+    });
+  });
 
   const formatBytes = (value) => {
     const bytes = Number(value);
     if (!Number.isFinite(bytes) || bytes <= 0) return 'instalator Windows';
     return (bytes / 1024 / 1024).toFixed(0) + ' MB';
   };
-  const normalizeDigest = (value) => String(value || '').replace(/^sha256:/i,'').trim().toLowerCase();
+  const normalizeDigest = (value) => String(value || '').replace(/^sha256:/i, '').trim().toLowerCase();
+
   const releaseController = new AbortController();
   const releaseTimeout = window.setTimeout(() => releaseController.abort(), 5000);
   fetch('https://api.github.com/repos/LokosPL/LockOn-Hub/releases/latest', {
-    headers:{Accept:'application/vnd.github+json'},
-    credentials:'omit',
-    cache:'no-store',
-    referrerPolicy:'no-referrer',
-    signal:releaseController.signal
-  }).then((response) => response.ok ? response.json() : Promise.reject(new Error('release unavailable')))
+    headers: { Accept: 'application/vnd.github+json' },
+    credentials: 'omit',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
+    signal: releaseController.signal
+  })
+    .then((response) => response.ok ? response.json() : Promise.reject(new Error('release unavailable')))
     .then((release) => {
       const asset = release?.assets?.find((item) => item.name === 'LockOn-ServiceOS-Setup.exe');
-      const version = String(release?.name || release?.tag_name || '').replace(/^LockOn ServiceOS v?/i,'').replace(/^v/i,'');
+      const version = String(release?.name || release?.tag_name || '').replace(/^LockOn ServiceOS v?/i, '').replace(/^v/i, '');
       qsa('[data-release-version]').forEach((element) => { element.textContent = version || 'najnowsza'; });
       if (asset?.browser_download_url) {
         qsa('.download-link').forEach((element) => {
           element.dataset.downloadUrl = asset.browser_download_url;
-          if (isAccepted()) element.href = asset.browser_download_url;
+          if (isOnboardingAccepted()) element.href = asset.browser_download_url;
         });
       }
       qsa('[data-release-size]').forEach((element) => { element.textContent = formatBytes(asset?.size); });
@@ -187,27 +317,29 @@
     const counterObserver = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
-        const el = entry.target;
-        const target = Number(el.dataset.count || '0');
+        const element = entry.target;
+        const target = Number(element.dataset.count || '0');
         if (!Number.isFinite(target) || reducedMotion) {
-          el.textContent = String(target);
+          element.textContent = String(target);
         } else {
           const start = performance.now();
           const duration = 700;
           const frame = (now) => {
-            const progress = Math.min(1,(now-start)/duration);
-            el.textContent = String(Math.round(target * (1 - Math.pow(1-progress,3))));
-            if (progress < 1) requestAnimationFrame(frame);
+            const progress = Math.min(1, (now - start) / duration);
+            element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+            if (progress < 1) window.requestAnimationFrame(frame);
           };
-          requestAnimationFrame(frame);
+          window.requestAnimationFrame(frame);
         }
-        counterObserver.unobserve(el);
+        counterObserver.unobserve(element);
       }
-    },{threshold:.6});
-    animatedCounters.forEach((el) => counterObserver.observe(el));
+    }, { threshold: .55 });
+    animatedCounters.forEach((element) => counterObserver.observe(element));
   }
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => undefined), { once:true });
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js').catch(() => undefined);
+    }, { once: true });
   }
 })();
