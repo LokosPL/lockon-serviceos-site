@@ -86,6 +86,18 @@ jobs:
           grep -q 'data-role-account' index.html
           grep -q 'Bartłomiej' index.html
           grep -q 'data-role-select' index.html
+          grep -q 'data-service-demo-tab="plan"' index.html
+          grep -q 'data-service-demo-tab="invoices"' index.html
+          grep -q 'data-service-demo-view="notes"' index.html
+          grep -q 'data-module-panel="start"' index.html
+          grep -q 'data-module-panel="browser"' index.html
+          grep -q 'data-module-panel="help"' index.html
+          grep -q 'data-module-panel="settings"' index.html
+          grep -q 'data-support-demo-ticket="jan"' index.html
+          grep -q 'data-theme-demo="midnight"' index.html
+          grep -q 'data-service-order-drawer' index.html
+          grep -q 'data-live-dock' index.html
+          grep -q 'data-live-dock-return' index.html
           grep -q 'class="full-meeting-room"' index.html
           grep -q 'data-meeting-room' index.html
           grep -q 'data-meeting-theater' index.html
@@ -176,7 +188,7 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v38" sw.js
+          grep -q "serviceos-shell-v39" sw.js
           grep -q 'serviceos-site.css' sw.js
           grep -q 'serviceos-app-site.css' sw.js
           grep -q 'serviceos-app-site.js' sw.js

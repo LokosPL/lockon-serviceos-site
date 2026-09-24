@@ -105,15 +105,17 @@
     }, 4300);
   }
 
-  const moduleKeys = ['service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
+  const moduleKeys = ['start', 'browser', 'service', 'clients', 'meetings', 'finance', 'admin', 'tools', 'help', 'settings'];
+  const moduleAutoKeys = ['start', 'service', 'clients', 'meetings', 'finance', 'admin', 'tools'];
   let moduleIndex = 0;
   let modulePausedUntil = 0;
+  let moduleUserControlled = false;
   const moduleWorkspace = qs('.modules-os-window');
   let moduleWorkspaceVisible = false;
 
   const activateModule = (key, userAction = false) => {
     if (!moduleKeys.includes(key)) return;
-    moduleIndex = moduleKeys.indexOf(key);
+    moduleIndex = Math.max(0, moduleAutoKeys.indexOf(key));
     qsa('[data-module]').forEach((button) => {
       const active = button.dataset.module === key;
       button.classList.toggle('active', active);
@@ -122,7 +124,10 @@
     qsa('[data-module-panel]').forEach((panel) => {
       panel.classList.toggle('active', panel.dataset.modulePanel === key);
     });
-    if (userAction) modulePausedUntil = Date.now() + 14000;
+    if (userAction) {
+      moduleUserControlled = true;
+      modulePausedUntil = Number.POSITIVE_INFINITY;
+    }
   };
 
   qsa('[data-module]').forEach((button) => {
@@ -139,10 +144,223 @@
 
   if (!reducedMotion) {
     window.setInterval(() => {
-      if (document.hidden || !moduleWorkspaceVisible || Date.now() < modulePausedUntil) return;
-      activateModule(moduleKeys[(moduleIndex + 1) % moduleKeys.length]);
+      if (document.hidden || !moduleWorkspaceVisible || moduleUserControlled || Date.now() < modulePausedUntil) return;
+      activateModule(moduleAutoKeys[(moduleIndex + 1) % moduleAutoKeys.length]);
     }, 5200);
   }
+
+  const serviceDemoTabs = ['plan', 'intake', 'orders', 'transfers', 'quotes', 'invoices', 'notes'];
+  let serviceDemoActive = 'plan';
+
+  const activateServiceDemoView = (key, userAction = false) => {
+    if (!serviceDemoTabs.includes(key)) return;
+    serviceDemoActive = key;
+    qsa('[data-service-demo-tab]').forEach((button) => {
+      const active = button.dataset.serviceDemoTab === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-service-demo-view]').forEach((view) => {
+      view.classList.toggle('active', view.dataset.serviceDemoView === key);
+    });
+    if (userAction) modulePausedUntil = Date.now() + 18000;
+  };
+
+  qsa('[data-service-demo-tab]').forEach((button) => {
+    button.addEventListener('click', () => activateServiceDemoView(button.dataset.serviceDemoTab || 'plan', true));
+  });
+  activateServiceDemoView('plan');
+
+  qsa('.workplan-demo-days button').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('.workplan-demo-days button').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      modulePausedUntil = Date.now() + 10000;
+    });
+  });
+
+  const activateIntakeStep = (key) => {
+    qsa('[data-intake-step]').forEach((button) => {
+      const active = button.dataset.intakeStep === key;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    qsa('[data-intake-panel]').forEach((panel) => {
+      panel.classList.toggle('active', panel.dataset.intakePanel === key);
+    });
+  };
+
+  qsa('[data-intake-step]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activateIntakeStep(button.dataset.intakeStep || '1');
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+  qsa('[data-intake-next]').forEach((button) => {
+    button.addEventListener('click', () => {
+      activateIntakeStep(button.dataset.intakeNext || '1');
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+  activateIntakeStep('1');
+
+  const demoToast = qs('[data-demo-toast]');
+  let demoToastTimer = 0;
+  const showDemoToast = (title, copy) => {
+    if (!demoToast) return;
+    const titleEl = qs('[data-demo-toast-title]', demoToast);
+    const copyEl = qs('[data-demo-toast-copy]', demoToast);
+    if (titleEl) titleEl.textContent = title;
+    if (copyEl) copyEl.textContent = copy;
+    demoToast.hidden = false;
+    window.clearTimeout(demoToastTimer);
+    demoToastTimer = window.setTimeout(() => { demoToast.hidden = true; }, 2800);
+  };
+
+  const demoOrders = {
+    '1042': { title: '#1042 · iPhone 14 Pro', customer: 'Anna Kowalska · Nowogard', status: 'DIAGNOZA', next: 'Najbliższy krok: rozpocznij diagnozę' },
+    '1044': { title: '#1044 · MacBook Air M2', customer: 'Kamil Wójcik · Nowogard', status: 'NAPRAWA', next: 'Najbliższy krok: montaż nowej części' },
+    '1047': { title: '#1047 · Samsung S23', customer: 'Julia Lis · Nowogard', status: 'CZEKA NA CZĘŚCI', next: 'Najbliższy krok: dostawa modułu USB-C' },
+    '1050': { title: '#1050 · iPad Air', customer: 'Paweł Nowak · Nowogard', status: 'NOWE', next: 'Najbliższy krok: rozpocznij przyjęcie techniczne' },
+    '1041': { title: '#1041 · Samsung S24', customer: 'Piotr Nowak · Szczecin', status: 'W DRODZE', next: 'Najbliższy krok: potwierdzenie odbioru w punkcie' },
+    '1038': { title: '#1038 · iPhone 13', customer: 'Marta Lis · Nowogard', status: 'GOTOWE', next: 'Najbliższy krok: wydanie klientowi' },
+    '1036': { title: '#1036 · MacBook Pro', customer: 'Adam Zalewski · Nowogard', status: 'CZEKA NA CZĘŚCI', next: 'Najbliższy krok: dostawa baterii jutro' }
+  };
+
+  const serviceOrderDrawer = qs('[data-service-order-drawer]');
+  const openServiceOrderDrawer = (orderNo) => {
+    if (!serviceOrderDrawer) return;
+    const data = demoOrders[orderNo] || demoOrders['1042'];
+    const heading = qs('header h3', serviceOrderDrawer);
+    const customer = qs('header p', serviceOrderDrawer);
+    const status = qs('.service-order-drawer-status b', serviceOrderDrawer);
+    const next = qs('.service-order-drawer-status span', serviceOrderDrawer);
+    if (heading) heading.textContent = data.title;
+    if (customer) customer.textContent = data.customer;
+    if (status) status.textContent = data.status;
+    if (next) next.textContent = data.next;
+    serviceOrderDrawer.hidden = false;
+    modulePausedUntil = Date.now() + 20000;
+  };
+  const closeServiceOrderDrawer = () => {
+    if (serviceOrderDrawer) serviceOrderDrawer.hidden = true;
+  };
+
+  qsa('[data-demo-order]').forEach((button) => {
+    button.addEventListener('click', () => openServiceOrderDrawer(button.dataset.demoOrder || '1042'));
+  });
+  qsa('[data-service-order-close]').forEach((button) => button.addEventListener('click', closeServiceOrderDrawer));
+
+  qsa('[data-service-action]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.serviceAction || '';
+      const messages = {
+        'create-order': ['Zlecenie #1051 utworzone', 'Klient otrzymał potwierdzenie, a urządzenie trafiło do kolejki serwisu.'],
+        'quote-reply': ['Odpowiedź otwarta', 'ServiceOS przygotował odpowiedź w historii klienta.'],
+        'quote-price': ['Wycena 349 zł wysłana', 'Klient może zaakceptować wycenę ze swojego panelu.'],
+        'download-invoices': ['Paczka faktur gotowa', 'ServiceOS przygotował dokumenty z bieżącego miesiąca.'],
+        'download-one': ['Faktura gotowa', 'Dokument został przygotowany do pobrania.'],
+        'pin-note': ['Notatka przypięta', 'Pojawi się na górze prywatnego notatnika serwisanta.'],
+        'save-note': ['Notatka zapisana', 'Prywatna notatka została zapisana w ServiceOS.'],
+        'add-note': ['Notatka dodana', 'Informacja została dopisana do historii zlecenia.'],
+        'advance-order': ['Diagnoza zakończona', 'Zlecenie przeszło do kolejnego etapu i klient dostał aktualizację.'],
+        'browser-open': ['Instrukcja otwarta', 'ServiceOS otworzył dokumentację w swojej przeglądarce.'],
+        'support-join': ['Dołączono do rozmowy', 'Kanał konsultanta jest teraz przypisany do Ciebie.'],
+        'support-reply': ['Odpowiedź wysłana', 'Wiadomość trafiła do pracownika w kanale konsultanta.'],
+        'support-close': ['Kanał zakończony', 'Rozmowa została zamknięta i zapisana w historii wsparcia.'],
+        'help-send': ['Wiadomość wysłana', 'Bot ServiceOS analizuje pytanie.'],
+        'support-request': ['Konsultant poproszony', 'Prośba trafiła do kolejki wsparcia LockOn.']
+      };
+      const message = messages[action] || ['Gotowe', 'Zmiana została zapisana w ServiceOS.'];
+      showDemoToast(message[0], message[1]);
+      if (action === 'create-order') {
+        activateServiceDemoView('orders', true);
+        activateIntakeStep('1');
+      }
+      if (action === 'advance-order') closeServiceOrderDrawer();
+      if (action === 'pin-note') button.classList.toggle('active');
+      modulePausedUntil = Date.now() + 16000;
+    });
+  });
+
+  qsa('.notes-demo-layout>section>button').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('.notes-demo-layout>section>button').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      modulePausedUntil = Date.now() + 10000;
+    });
+  });
+
+  qsa('[data-support-demo-ticket]').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('[data-support-demo-ticket]').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      const key = button.dataset.supportDemoTicket || 'jan';
+      const name = qs('[data-support-demo-name]');
+      const state = qs('[data-support-demo-state]');
+      const thread = qs('.support-demo-thread');
+      if (key === 'anna') {
+        if (name) name.textContent = 'Anna Lis';
+        if (state) state.textContent = 'KONSULTANT DOŁĄCZYŁ';
+        if (thread) thread.innerHTML = '<article><b>Anna</b><p>Po aktualizacji nie widzę jednego z przekazań.</p><small>21:29</small></article><article class="bot"><b>Konsultant</b><p>Sprawdzam historię punktu i status urządzenia. Daj mi chwilę.</p><small>21:30</small></article>';
+      } else {
+        if (name) name.textContent = 'Jan Nowak';
+        if (state) state.textContent = 'CZEKA NA KONSULTANTA';
+        if (thread) thread.innerHTML = '<article><b>Jan</b><p>Nie wiem, gdzie potwierdzić odbiór przekazanego urządzenia.</p><small>21:26</small></article><article class="bot"><b>Bot ServiceOS</b><p>To znajdziesz w Serwis → Przekazania. Jeżeli chcesz, konsultant może dołączyć.</p><small>21:27</small></article>';
+      }
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+
+  qsa('[data-theme-demo]').forEach((button) => {
+    button.addEventListener('click', () => {
+      qsa('[data-theme-demo]').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      const label = button.dataset.themeDemo === 'midnight' ? 'Midnight' : 'Carbon';
+      showDemoToast('Motyw ' + label + ' wybrany', 'W ServiceOS zmiana wyglądu działa natychmiast.');
+      modulePausedUntil = Date.now() + 12000;
+    });
+  });
+
+  const liveDock = qs('[data-live-dock]');
+  const liveDockToggle = qs('[data-live-dock-toggle]');
+  const liveDockDismiss = qs('[data-live-dock-dismiss]');
+  const liveDockReturn = qs('[data-live-dock-return]');
+  const meetingsSection = qs('#meetings');
+  let meetingSectionVisible = false;
+  let meetingSectionSeen = false;
+  let liveDockDismissed = false;
+
+  const syncLiveDock = () => {
+    if (!liveDock) return;
+    const shouldShow = !liveDockDismissed && meetingSectionSeen && !meetingSectionVisible;
+    liveDock.hidden = !shouldShow;
+  };
+
+  liveDockToggle?.addEventListener('click', () => {
+    const expanded = liveDock?.classList.toggle('expanded') || false;
+    liveDockToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  });
+  liveDockDismiss?.addEventListener('click', () => {
+    liveDockDismissed = true;
+    if (liveDock) liveDock.hidden = true;
+  });
+  liveDockReturn?.addEventListener('click', () => {
+    meetingsSection?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
+    if (liveDock) liveDock.classList.remove('expanded');
+    liveDockToggle?.setAttribute('aria-expanded', 'false');
+  });
+
+  if ('IntersectionObserver' in window && meetingsSection) {
+    const liveDockObserver = new IntersectionObserver((entries) => {
+      meetingSectionVisible = entries.some((entry) => entry.isIntersecting);
+      if (meetingSectionVisible) meetingSectionSeen = true;
+      syncLiveDock();
+    }, { threshold: .16 });
+    liveDockObserver.observe(meetingsSection);
+  }
+  window.addEventListener('scroll', syncLiveDock, { passive: true });
+  syncLiveDock();
 
   const activateMeetingSide = (key) => {
     qsa('[data-meeting-side]').forEach((button) => {
