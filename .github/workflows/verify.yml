@@ -64,7 +64,7 @@ jobs:
           grep -q 'noindex,nofollow,noarchive' track.html
           grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
           grep -q 'position:static' assets/home-v2.css
-          grep -q "serviceos-shell-v28" sw.js
+          grep -q "serviceos-shell-v29" sw.js
           ! grep -q 'Przejdź do ServiceOS' track.html
           ! grep -q 'href="index.html"' track.html
           ! grep -q 'google-config.js' track.html
@@ -157,6 +157,17 @@ jobs:
           grep -q 'customer-login-intro' klient.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
           grep -q 'assets/mobile-final.css' index.html
+          grep -q 'assets/showcase-1.0.21.css' index.html
+          grep -q 'showcase-1.0.21.css' sw.js
+          grep -q 'Od wejścia klienta' index.html
+          grep -q 'KARTA SERWISOWA' index.html
+          grep -q 'SPOTKANIA I SZKOLENIA' index.html
+          grep -q 'ROLE W ZESPOLE' index.html
+          grep -q 'DLA SZEFA I WŁAŚCICIELA' index.html
+          grep -q 'showcase-journey-grid' index.html
+          grep -q 'showcase-feature-grid' index.html
+          grep -q 'showcase-role-grid' index.html
+          grep -q '@media(max-width:700px)' assets/showcase-1.0.21.css
           grep -q 'assets/mobile-final.css' panel.html
           grep -q 'assets/mobile-final.css' klient.html
           grep -q 'assets/mobile-final.css' track.html

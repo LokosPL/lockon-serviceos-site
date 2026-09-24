@@ -6,11 +6,11 @@
   <meta name="theme-color" content="#080a0d">
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://api.github.com https://br-steep-bonus-b1f1qh8u-lockonapi.compute.c-5.eu-central-1.aws.neon.tech; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
-  <title>LockOn ServiceOS — portal pracownika</title>
+  <title>LockOn ServiceOS — zobacz jak działa cały serwis</title>
   <link rel="canonical" href="https://app.serviceos.pl/">
-  <meta name="description" content="Oficjalny portal pracownika LockOn ServiceOS: zasady, instalacja, połączenie telefonu, moduły systemu i panel mobilny.">
-  <meta property="og:title" content="LockOn ServiceOS">
-  <meta property="og:description" content="Zanim zaczniesz pracę, poznaj zasady i połącz swoje urządzenie z ServiceOS.">
+  <meta name="description" content="Poznaj LockOn ServiceOS od wizyty klienta po odbiór urządzenia: zlecenia, karty serwisowe, przekazania, naprawy, dokumenty, spotkania, role i panel mobilny.">
+  <meta property="og:title" content="LockOn ServiceOS — cały serwis w jednym systemie">
+  <meta property="og:description" content="Zobacz krok po kroku, jak ServiceOS prowadzi zespół od przyjęcia klienta do zakończenia naprawy.">
   <meta property="og:type" content="website">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="stylesheet" href="assets/styles.css">
@@ -20,13 +20,14 @@
   <link rel="stylesheet" href="assets/web-polish.css">
   <link rel="stylesheet" href="assets/mobile-final.css">
   <link rel="stylesheet" href="assets/release-1.0.11.css">
+  <link rel="stylesheet" href="assets/showcase-1.0.21.css">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 </head>
 <body class="portal-home onboarding-locked">
-  <div class="site-loader" id="siteLoader" aria-live="polite" aria-label="Ładowanie portalu ServiceOS">
+  <div class="site-loader" id="siteLoader" aria-live="polite" aria-label="Ładowanie strony ServiceOS">
     <div class="loader-core">
-      <div class="loader-brand"><span class="loader-logo"><img src="assets/logo.svg" alt=""></span><div><strong>LockOn ServiceOS</strong><span>Portal pracownika</span></div></div>
-      <div class="loader-copy"><strong>Chwila — przygotowuję portal.</strong><span id="loaderLabel">Układam najważniejsze rzeczy…</span></div>
+      <div class="loader-brand"><span class="loader-logo"><img src="assets/logo.svg" alt=""></span><div><strong>LockOn ServiceOS</strong><span>Przewodnik po systemie</span></div></div>
+      <div class="loader-copy"><strong>Chwila — przygotowuję ServiceOS.</strong><span id="loaderLabel">Układam najważniejsze informacje…</span></div>
       <div class="loader-dots" aria-hidden="true"><i></i><i></i><i></i></div>
       <div class="loader-track"><i id="loaderProgress"></i></div>
     </div>
@@ -41,9 +42,10 @@
         <div><strong>LockOn</strong><span>ServiceOS</span></div>
       </a>
       <nav class="nav-links portal-links" aria-label="Poznaj ServiceOS">
-        <a href="#day">Jak działa</a>
-        <a href="#modules">Aplikacja</a>
-        <a href="#now">Nowości</a>
+        <a href="#day">Od klienta do odbioru</a>
+        <a href="#modules">Funkcje</a>
+        <a href="#roles">Role</a>
+        <a href="#meetings">Spotkania</a>
         <a href="#connect">Telefon</a>
       </nav>
       <div class="portal-nav-actions">
@@ -55,305 +57,277 @@
 
   <nav class="mobile-anchor-nav" aria-label="Szybka nawigacja">
     <a href="#day">Jak działa</a>
-    <a href="#now">Nowości</a>
+    <a href="#modules">Funkcje</a>
+    <a href="#roles">Role</a>
     <a href="#connect">Telefon</a>
     <a href="#download">Pobierz</a>
   </nav>
 
   <main id="top">
-    <section class="hero">
-      <div class="hero-glow glow-a"></div>
-      <div class="hero-glow glow-b"></div>
-      <div class="wrap hero-grid">
-        <div class="hero-copy reveal">
-          <div class="eyebrow-pill"><span></span> OFICJALNY PORTAL PRACOWNIKA LOCKON</div>
-          <h1>Najpierw poznaj ServiceOS.<br><em>Potem zacznij pracę.</em></h1>
-          <p class="hero-description">Ta strona przeprowadzi Cię przez codzienną pracę: przyjęcie telefonu, plan napraw, przekazania, wyceny, dokumenty klienta, faktury i prywatny notatnik serwisanta — a na końcu pokaże, jak bezpiecznie połączyć telefon.</p>
-          <div class="company-warning">
-            <strong>Nie musisz znać systemu przed pierwszym logowaniem.</strong>
-            <span>Przejdź stronę od góry do dołu. ServiceOS jest pokazany tutaj tak samo logicznie, jak później prowadzi Cię podczas pracy.</span>
+    <section class="showcase-hero-v3">
+      <div class="showcase-hero-halo halo-one" aria-hidden="true"></div>
+      <div class="showcase-hero-halo halo-two" aria-hidden="true"></div>
+      <div class="wrap showcase-hero-grid">
+        <div class="showcase-hero-copy reveal">
+          <div class="eyebrow-pill"><span></span> LOCKON SERVICEOS · CAŁY PROCES SERWISOWY</div>
+          <h1>Od wejścia klienta<br><em>do wydania naprawionego urządzenia.</em></h1>
+          <p class="showcase-hero-lead">ServiceOS łączy punkt obsługi, serwis, przekazania, dokumenty, kontakt z klientem, spotkania zespołu i rozliczenia. Na tej stronie zobaczysz dokładnie, co dzieje się krok po kroku i kto za co odpowiada.</p>
+          <div class="showcase-hero-actions">
+            <a class="button primary big" href="#day">Zobacz cały proces <span>↓</span></a>
+            <a class="button secondary big" href="#preview">Podejrzyj aplikację</a>
           </div>
-          <div class="hero-actions">
-            <a class="button primary big" href="#day">Zobacz jak działa <span>↓</span></a>
-            <a class="button secondary big story-link-secondary" href="#connect">Jak połączyć telefon</a>
-          </div>
-          <a class="hero-scroll-hint" href="#day"><i>↓</i><span>Zacznij od krótkiego przebiegu pracy</span></a>
-          <div class="hero-facts">
-            <div><strong>1 · Poznaj proces</strong><span>zobacz, jak wygląda zwykłe zlecenie</span></div>
-            <div><strong>2 · Poznaj ekran</strong><span>sprawdź, gdzie znajdziesz najważniejsze rzeczy</span></div>
-            <div><strong>3 · Połącz telefon</strong><span>przejdź instrukcję krok po kroku</span></div>
+          <div class="showcase-hero-proof">
+            <div><b>01</b><span><strong>Klient i urządzenie</strong><small>jedna karta sprawy od pierwszej wizyty</small></span></div>
+            <div><b>02</b><span><strong>Serwis i logistyka</strong><small>widać kto działa i gdzie jest telefon</small></span></div>
+            <div><b>03</b><span><strong>Dokumenty i kontakt</strong><small>karty, gwarancje, faktury i wiadomości</small></span></div>
           </div>
         </div>
 
-        <div class="hero-product reveal delay" aria-label="Podgląd LockOn ServiceOS">
-          <div class="product-window">
-            <div class="product-titlebar">
-              <div><img src="assets/logo.svg" alt=""><strong>LockOn ServiceOS</strong></div>
-              <span><i></i> ONLINE</span>
-            </div>
-            <div class="product-body">
-              <aside class="product-sidebar">
-                <img src="assets/logo.svg" alt="">
-                <button class="active">⌂</button>
-                <button>▣</button>
-                <button>⇄</button>
-                <button>%</button>
-                <button>⚙</button>
-              </aside>
-              <div class="product-screen">
-                <div class="product-screen-head"><div><span>SERWIS · PUNKT NOWOGARD</span><h2>Co robimy dalej?</h2></div><b>BM</b></div>
-                <div class="product-filter-row"><span class="active">Działaj teraz <b>4</b></span><span>Termin <b>2</b></span><span>W drodze <b>2</b></span></div>
-                <div class="product-order urgent"><strong>#1042</strong><div><b>iPhone 14 Pro</b><span>Diagnoza · następna akcja: rozpocznij naprawę</span><progress max="100" value="30"></progress></div><em>PO TERMINIE</em></div>
-                <div class="product-order"><strong>#1041</strong><div><b>Samsung S24</b><span>Zwrot do punktu macierzystego</span><progress max="100" value="70"></progress></div><em>W DRODZE</em></div>
-                <div class="product-order ready"><strong>#1038</strong><div><b>iPhone 13</b><span>Gotowe do odbioru przez klienta</span><progress max="100" value="90"></progress></div><em>GOTOWE</em></div>
+        <div class="showcase-device-stage reveal delay" aria-label="Przykładowy widok ServiceOS na laptopie i telefonie">
+          <div class="showcase-laptop">
+            <div class="showcase-laptop-bar"><span><i></i><i></i><i></i></span><strong>LockOn ServiceOS</strong><em>ONLINE</em></div>
+            <div class="showcase-laptop-body">
+              <aside><img src="assets/logo.svg" alt=""><span class="active">⌂</span><span>▣</span><span>⇄</span><span>◫</span><span>⚙</span></aside>
+              <div class="showcase-laptop-screen">
+                <div class="showcase-screen-head"><span>SERWIS · PUNKT NOWOGARD</span><h2>Co wymaga działania?</h2></div>
+                <div class="showcase-kpi-row"><article><small>Działaj teraz</small><strong>4</strong></article><article><small>W drodze</small><strong>2</strong></article><article><small>Do odbioru</small><strong>3</strong></article></div>
+                <div class="showcase-order-card hot"><b>#1042</b><div><strong>iPhone 14 Pro</strong><span>Diagnoza · termin dzisiaj</span></div><em>TERAZ</em></div>
+                <div class="showcase-order-card"><b>#1041</b><div><strong>Samsung S24</strong><span>Wraca do punktu klienta</span></div><em>W DRODZE</em></div>
+                <div class="showcase-order-card ready"><b>#1038</b><div><strong>iPhone 13</strong><span>Naprawa zakończona</span></div><em>GOTOWE</em></div>
               </div>
             </div>
           </div>
-
-          <div class="product-phone">
-            <div class="phone-speaker"></div>
-            <div class="phone-header"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Punkt Nowogard</span></div><b>BM</b></div>
-            <div class="phone-title"><span>PRIORYTET</span><strong>Co robimy teraz?</strong></div>
-            <div class="phone-priority"><span>#1042 · iPhone 14 Pro</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>Termin dzisiaj 14:30</small></div>
-            <div class="phone-kpis"><div><span>Do zrobienia</span><strong>4</strong></div><div><span>W drodze</span><strong>2</strong></div></div>
-            <div class="phone-action-row"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></div>
-            <div class="phone-action-row"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></div>
+          <div class="showcase-phone">
+            <div class="showcase-phone-notch"></div>
+            <div class="showcase-phone-brand"><img src="assets/logo.svg" alt=""><div><strong>ServiceOS</strong><span>Twój punkt</span></div></div>
+            <span class="showcase-phone-kicker">NASTĘPNA AKCJA</span>
+            <h3>Zakończ diagnozę #1042</h3>
+            <p>iPhone 14 Pro · termin dzisiaj 14:30</p>
+            <div class="showcase-phone-action"><b>＋</b><span><strong>Nowe zlecenie</strong><small>Przyjmij urządzenie</small></span></div>
+            <div class="showcase-phone-action"><b>⇄</b><span><strong>Przekazania</strong><small>Wysyłki i dostawy</small></span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="employee-roadmap" aria-label="Jak przejść instrukcję ServiceOS">
-      <div class="wrap roadmap-shell">
-        <div class="roadmap-intro">
-          <span>ZACZNIJ TUTAJ</span>
-          <strong>Jedna strona. Cztery proste etapy.</strong>
-          <small>Aktualna aplikacja Windows: <b data-release-version>—</b></small>
-        </div>
-        <div class="roadmap-steps">
-          <a href="#day"><b>01</b><strong>Zrozum pracę</strong><span>Od przyjęcia telefonu do odbioru.</span></a>
-          <a href="#modules"><b>02</b><strong>Poznaj aplikację</strong><span>Co jest gdzie i do czego służy.</span></a>
-          <a href="#connect"><b>03</b><strong>Połącz telefon</strong><span>Dokładna instrukcja bez zgadywania.</span></a>
-          <a href="#start"><b>04</b><strong>Zaakceptuj zasady</strong><span>Potem możesz pobrać i rozpocząć pracę.</span></a>
-        </div>
+    <section class="showcase-value-strip">
+      <div class="wrap">
+        <article><strong>Jedna historia zlecenia</strong><span>Nie trzeba szukać informacji po wiadomościach i kartkach.</span></article>
+        <article><strong>Wiele punktów</strong><span>Przekazanie urządzenia nie oznacza utraty kontroli nad sprawą.</span></article>
+        <article><strong>Jasne role</strong><span>Każdy pracownik widzi funkcje potrzebne do swojej pracy.</span></article>
+        <article><strong>Telefon + laptop</strong><span>Ten sam zakres pracy jest dostępny na komputerze i w panelu mobilnym.</span></article>
       </div>
     </section>
 
-    <section class="page-section workday-section story-chapter" id="day">
-      <div class="wrap workday-layout">
+    <section class="page-section showcase-journey-section story-chapter" id="day">
+      <div class="wrap">
         <div class="section-heading reveal" data-story-observe>
           <b class="chapter-number">01</b>
-          <span>TAK WYGLĄDA ZWYKŁA PRACA</span>
-          <h2>Od przyjęcia telefonu do odbioru — wszystko w jednym miejscu.</h2>
-          <p>Nie uczysz się technicznych kodów. ServiceOS pokazuje klienta, urządzenie, miejsce telefonu i następną rzecz do zrobienia.</p>
+          <span>OD KLIENTA DO ODBIORU</span>
+          <h2>Tak wygląda zwykła wizyta i cały dalszy serwis.</h2>
+          <p>ServiceOS prowadzi sprawę przez kolejne etapy. Pracownik widzi, co już się wydarzyło, co dzieje się teraz i jaka jest następna czynność.</p>
         </div>
-        <div class="workday-demo reveal delay" aria-label="Przykładowy dzień pracy w ServiceOS">
-          <div class="workday-live"><i></i><span>Przykładowy przebieg zlecenia #1042</span><b>NA ŻYWO</b></div>
-          <div class="workday-events">
-            <article class="workday-event event-1"><time>08:12</time><i></i><div><span>PRZYJĘCIE</span><strong>Klient zostawia Samsung S25</strong><small>Zlecenie zapisane, klient dostał potwierdzenie.</small></div></article>
-            <article class="workday-event event-2"><time>09:05</time><i></i><div><span>PRZEKAZANIE</span><strong>Telefon jedzie do serwisu</strong><small>Widać punkt macierzysty i aktualne miejsce urządzenia.</small></div></article>
-            <article class="workday-event event-3"><time>11:40</time><i></i><div><span>SERWIS</span><strong>Diagnoza → naprawa</strong><small>Serwisant widzi następną akcję i może przesunąć przewidywany termin bezpośrednio w planie pracy.</small></div></article>
-            <article class="workday-event event-4"><time>15:25</time><i></i><div><span>GOTOWE</span><strong>Urządzenie wraca do punktu</strong><small>Po fizycznym powrocie można przygotować odbiór klienta.</small></div></article>
-          </div>
-          <div class="workday-summary">
-            <div><span>Aktualny etap</span><strong>Naprawa zakończona</strong></div>
-            <div><span>Urządzenie</span><strong>Wraca do punktu</strong></div>
-            <div><span>Klient</span><strong>Powiadomiony</strong></div>
-          </div>
+
+        <div class="workday-demo showcase-journey-grid reveal delay" aria-label="Przebieg obsługi klienta w ServiceOS">
+          <article><b>01</b><span>PRZYJĘCIE</span><h3>Klient zostawia urządzenie.</h3><p>Pracownik wyszukuje klienta lub tworzy jego kartę, zapisuje telefon, usterkę, dane kontaktowe, przewidywany termin i cenę orientacyjną.</p></article>
+          <article><b>02</b><span>KARTA SERWISOWA</span><h3>System przygotowuje dokument przyjęcia.</h3><p>Zlecenie dostaje własny numer. Karta serwisowa może zostać wydrukowana, otwarta ponownie i przekazana klientowi wraz z jego bezpiecznym dostępem.</p></article>
+          <article><b>03</b><span>PRZEKAZANIE</span><h3>Telefon trafia do właściwego serwisu.</h3><p>Jeżeli naprawa odbywa się w innym punkcie, nadawca tworzy przekazanie. Odbiorca potwierdza fizyczne przyjęcie urządzenia.</p></article>
+          <article><b>04</b><span>DIAGNOZA I NAPRAWA</span><h3>Serwisant prowadzi pracę krok po kroku.</h3><p>Diagnoza, części, oczekiwanie, naprawa i gotowość są widoczne w jednym miejscu razem z historią zmian i notatkami.</p></article>
+          <article><b>05</b><span>KOSZTY I CZĘŚCI</span><h3>Wewnętrzne koszty zostają przy zleceniu.</h3><p>Serwis może zapisać części, koszt zakupu, robociznę, cenę końcową i dokumenty zakupowe bez pokazywania danych wewnętrznych klientowi.</p></article>
+          <article><b>06</b><span>KONTAKT Z KLIENTEM</span><h3>Klient dostaje informacje o ważnych zmianach.</h3><p>Wiadomości serwisowe mogą wychodzić z Gmaila pracownika obsługującego sprawę. Klient może też sprawdzić swoje zlecenie w prywatnym portalu.</p></article>
+          <article><b>07</b><span>POWRÓT</span><h3>Urządzenie wraca do punktu odbioru.</h3><p>System pokazuje drogę powrotną. Dopiero po prawidłowym przyjęciu w punkcie macierzystym urządzenie może czekać na klienta.</p></article>
+          <article><b>08</b><span>ODBIÓR I GWARANCJA</span><h3>Sprawa kończy się kompletną historią.</h3><p>Przy wydaniu zostają status końcowy, wykonane prace, dokumenty, karta gwarancyjna i pełny zapis tego, kto oraz kiedy obsługiwał sprawę.</p></article>
         </div>
       </div>
     </section>
 
-    <section class="page-section app-story-section story-chapter" id="modules">
+    <section class="page-section showcase-modules-section story-chapter" id="modules">
       <div class="wrap">
-        <div class="app-story-intro reveal" data-story-observe>
+        <div class="section-heading reveal" data-story-observe>
           <b class="chapter-number">02</b>
-          <span class="section-kicker">ZAKŁADKI I MODUŁY</span>
-          <h2>Poznaj aplikację, zanim pierwszy raz jej użyjesz.</h2>
-          <p>Każdy ekran ma jedno zadanie. Najpierw poznasz, co jest najważniejsze w codziennej pracy, a dopiero potem zobaczysz szczegóły. Na telefonie celowo pokazujemy mniej.</p>
+          <span>ZAKŁADKI I MODUŁY</span>
+          <h2>Wszystko, czego zespół potrzebuje do pracy.</h2>
+          <p>Nie jest to tylko lista napraw. ServiceOS łączy obsługę klienta, pracę serwisu, logistykę, dokumenty, zespół i komunikację.</p>
         </div>
 
-        <div class="app-story-layout">
+        <div class="showcase-feature-grid">
+          <article><div class="feature-mark">01</div><span>SERWIS</span><h3>Zlecenia i historia naprawy</h3><p>Przyjęcie urządzenia, statusy, technik, terminy, notatki, wykonane czynności i pełna historia zmian.</p></article>
+          <article><div class="feature-mark">02</div><span>KARTY I QR</span><h3>Karta serwisowa przy zleceniu</h3><p>Dokument dla urządzenia i klienta, ponowny wydruk, bezpieczny kod klienta oraz skan urządzenia przy przekazaniach.</p></article>
+          <article><div class="feature-mark">03</div><span>PRZEKAZANIA</span><h3>Kontrola nad fizyczną lokalizacją</h3><p>Wiadomo skąd telefon wyjechał, dokąd jedzie, kto go przyjął i czy może już wrócić do punktu klienta.</p></article>
+          <article><div class="feature-mark">04</div><span>SERWISANT</span><h3>Plan pracy i prywatne notatki</h3><p>Serwisant widzi kolejkę, terminy, zadania wymagające działania oraz własny notatnik do organizacji pracy.</p></article>
+          <article><div class="feature-mark">05</div><span>CZĘŚCI I FAKTURY</span><h3>Koszty przy właściwym zleceniu</h3><p>Części, koszt zakupu, robocizna, cena orientacyjna, cena końcowa i magazyn faktur zakupowych.</p></article>
+          <article><div class="feature-mark">06</div><span>KLIENT</span><h3>Karta klienta i prywatny portal</h3><p>Historia urządzeń, zlecenia, wyceny, wiadomości i dokumenty dostępne bez pokazywania wewnętrznych kosztów serwisu.</p></article>
+          <article><div class="feature-mark">07</div><span>WIADOMOŚCI</span><h3>Powiadomienia z konta pracownika</h3><p>Pracownik wykonuje akcję serwisową, a wiadomość może wyjść z jego Gmaila. Zaproszenia na spotkania pozostają oddzielone.</p></article>
+          <article><div class="feature-mark">08</div><span>SPOTKANIA</span><h3>Szkolenia i odprawy w ServiceOS</h3><p>Planowanie, zapisy, prowadzący, audio, udostępnianie ekranu, moderacja oraz frekwencja po zakończeniu.</p></article>
+          <article><div class="feature-mark">09</div><span>POMOC</span><h3>Bot i konsultant w jednym miejscu</h3><p>Pracownik najpierw korzysta z pomocy w aplikacji, a gdy potrzebuje człowieka, sam prosi konsultanta o dołączenie.</p></article>
+          <article><div class="feature-mark">10</div><span>ROZLICZENIA</span><h3>Przychód i udział serwisanta</h3><p>Osoby uprawnione widzą rozliczenia punktów, a serwisant może sprawdzić własną część zgodnie z ustawieniami.</p></article>
+          <article><div class="feature-mark">11</div><span>ZESPÓŁ</span><h3>Role, punkty i zakresy dostępu</h3><p>Właściciel zarządza kontami i punktami. Każda rola ma własny zakres, którego nie można samodzielnie zwiększyć.</p></article>
+          <article><div class="feature-mark">12</div><span>NARZĘDZIA</span><h3>Przeglądarka, aktualizacje i ustawienia</h3><p>Codzienne narzędzia są w tej samej aplikacji, a aktualizacje Windows trafiają przez wbudowany mechanizm ServiceOS.</p></article>
+        </div>
+
+        <div class="app-story-layout showcase-story-layout">
           <div class="app-story-list">
             <article class="app-story-item active" data-story-feature="home" data-story-index="01" data-story-observe>
-              <span>START</span>
-              <h3>Najpierw widzisz, co wymaga reakcji.</h3>
-              <p>Ekran główny nie jest raportem. Ma powiedzieć Ci jedną rzecz: co zrobić teraz, a co może poczekać.</p>
-              <ul><li>pilne zlecenia są na górze</li><li>widzisz najbliższą wymaganą akcję</li><li>szybkie przyciski prowadzą prosto do zadania</li></ul>
+              <span>START</span><h3>Najważniejsze rzeczy na początku dnia.</h3><p>Spotkania, skróty i podsumowanie są pod ręką, bez wchodzenia w techniczne szczegóły.</p>
             </article>
             <article class="app-story-item" data-story-feature="service" data-story-index="02" data-story-observe>
-              <span>SERWIS</span>
-              <h3>Lista jest lekka, a szczegóły otwierasz dopiero wtedy, gdy ich potrzebujesz.</h3>
-              <p>Na liście widzisz najważniejszy stan zlecenia. Pełne dane, historia, logistyka, koszty i karta klienta otwierają się w osobnym oknie szczegółów.</p>
-              <ul><li>licznik pokazuje telefony przekazane do serwisu</li><li>cena orientacyjna i termin są widoczne przy właściwym zleceniu</li><li>cięższe dane nie obciążają listy dopóki ich nie otworzysz</li></ul>
+              <span>SERWIS</span><h3>Zlecenie prowadzi całą sprawę.</h3><p>Klient, urządzenie, status, serwisant, logistyka, dokumenty, koszty i historia spotykają się w jednym miejscu.</p>
             </article>
             <article class="app-story-item" data-story-feature="transfers" data-story-index="03" data-story-observe>
-              <span>PRZEKAZANIA</span>
-              <h3>Gdy telefon jedzie do innego punktu, system prowadzi transport.</h3>
-              <p>ServiceOS oddziela naprawę od fizycznego przekazania urządzenia. Dzięki temu wiadomo, skąd telefon wyjechał, dokąd jedzie i czy został już przyjęty.</p>
-              <ul><li>nadawca rozpoczyna przekazanie</li><li>punkt docelowy potwierdza dostarczenie</li><li>w trakcie transportu statusy naprawy są chronione</li></ul>
+              <span>PRZEKAZANIA</span><h3>Fizyczna droga urządzenia jest widoczna.</h3><p>Telefon nie „znika” między punktami — każda wysyłka i każde przyjęcie ma swój etap.</p>
             </article>
             <article class="app-story-item" data-story-feature="customer" data-story-index="04" data-story-observe>
-              <span>KLIENT</span>
-              <h3>Klient dostaje informacje bez dzwonienia do punktu.</h3>
-              <p>Wiadomości serwisowe zawierają link do konkretnego zlecenia. Klient może też wejść do prywatnego portalu i zobaczyć całą swoją historię.</p>
-              <ul><li>publiczny link pokazuje tylko dane danego zlecenia</li><li>stały kod klienta otwiera prywatny portal</li><li>wyceny i odpowiedzi pojawiają się w jednym miejscu</li></ul>
+              <span>KLIENT</span><h3>Klient ma dostęp do swojej sprawy.</h3><p>Może śledzić zlecenia, wyceny i dokumenty bez dostępu do wewnętrznych danych firmy.</p>
             </article>
             <article class="app-story-item" data-story-feature="admin" data-story-index="05" data-story-observe>
-              <span>ZARZĄDZANIE</span>
-              <h3>Uprawnienia są proste: rola główna i dodatki są oddzielone.</h3>
-              <p>Właściciel zarządza kontami, punktami i bezpieczeństwem. Dodatkowe „Wsparcie LockOn” można nadać bez zmiany głównej roli pracownika.</p>
-              <ul><li>akceptacja nowych kont</li><li>blokowanie kont i unieważnianie sesji</li><li>Rozliczenia oraz administracja są widoczne tylko dla uprawnionych osób</li></ul>
+              <span>ZARZĄDZANIE</span><h3>Firma ustala, kto widzi jaki zakres.</h3><p>Konta, punkty, role i dodatkowy dostęp do wsparcia są kontrolowane przez osoby uprawnione.</p>
             </article>
           </div>
 
-          <div class="app-story-visual reveal delay" data-story-observe aria-label="Animowany podgląd modułów ServiceOS">
+          <div class="app-story-visual reveal delay" data-story-observe aria-label="Podgląd logiki modułów ServiceOS">
             <div class="story-window">
               <div class="story-window-top">
-                <div class="story-window-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Punkt Nowogard</span></div></div>
+                <div class="story-window-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Podgląd działania</span></div></div>
                 <div class="story-window-live"><i></i> ONLINE</div>
               </div>
               <div class="story-window-body">
                 <aside class="story-sidebar" aria-hidden="true">
-                  <span class="active" data-story-icon="home">⌂</span>
-                  <span data-story-icon="service">▣</span>
-                  <span data-story-icon="transfers">⇄</span>
-                  <span data-story-icon="customer">✉</span>
-                  <span data-story-icon="admin">⚙</span>
+                  <span class="active" data-story-icon="home">⌂</span><span data-story-icon="service">▣</span><span data-story-icon="transfers">⇄</span><span data-story-icon="customer">✉</span><span data-story-icon="admin">⚙</span>
                 </aside>
                 <div class="story-screens">
-                  <div class="story-screen active" data-story-screen="home" aria-hidden="false">
-                    <span class="story-screen-kicker">START</span><h3>Co wymaga uwagi?</h3>
-                    <div class="story-kpis"><article><span>Działaj teraz</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
-                    <div class="story-focus-card"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small></div>
-                  </div>
-                  <div class="story-screen" data-story-screen="service" aria-hidden="true">
-                    <span class="story-screen-kicker">SERWIS</span><h3>Zlecenie #1042</h3>
-                    <div class="story-list"><article><b>Klient</b><div><strong>Anna Kowalska</strong><span>kontakt zapisany przy zleceniu</span></div><em>OK</em></article><article><b>Telefon</b><div><strong>iPhone 14 Pro</strong><span>IMEI i opis usterki w szczegółach</span></div><em>URZĄDZENIE</em></article><article><b>Etap</b><div><strong>Diagnoza</strong><span>następna akcja: rozpocznij naprawę</span></div><em>PILNE</em></article></div>
-                  </div>
-                  <div class="story-screen" data-story-screen="transfers" aria-hidden="true">
-                    <span class="story-screen-kicker">PRZEKAZANIA</span><h3>Telefon jest w drodze</h3>
-                    <div class="story-transfer-route"><div><span>SKĄD</span><strong>Punkt Nowogard</strong></div><b>→</b><div><span>DOKĄD</span><strong>Serwis główny</strong></div></div>
-                    <div class="story-message"><b>CO ROBISZ?</b><p>Po fizycznym dostarczeniu odbiorca potwierdza przyjęcie. Dopiero wtedy urządzenie zmienia aktualną lokalizację.</p></div>
-                  </div>
-                  <div class="story-screen" data-story-screen="customer" aria-hidden="true">
-                    <span class="story-screen-kicker">KLIENT</span><h3>Informacja bez telefonu do punktu</h3>
-                    <div class="story-message"><b>WIADOMOŚĆ SERWISOWA</b><p>„Twoje zlecenie #1042 zmieniło status. Aktualne informacje znajdziesz pod bezpiecznym linkiem.”</p></div>
-                    <div class="story-message"><b>PORTAL KLIENTA</b><p>Stały kod klienta otwiera historię wszystkich jego zleceń i rozmów dotyczących wycen.</p></div>
-                  </div>
-                  <div class="story-screen" data-story-screen="admin" aria-hidden="true">
-                    <span class="story-screen-kicker">ZARZĄDZANIE</span><h3>Konta i bezpieczeństwo</h3>
-                    <div class="story-admin-grid"><article><span>NOWE KONTA</span><strong>Akceptuj wnioski</strong></article><article><span>SESJE</span><strong>Wyloguj urządzenia</strong></article><article><span>ROLA</span><strong>Główna funkcja pracownika</strong></article><article><span>DODATEK</span><strong>Wsparcie LockOn</strong></article></div>
-                  </div>
+                  <div class="story-screen active" data-story-screen="home" aria-hidden="false"><span class="story-screen-kicker">START</span><h3>Dzień pracy w jednym widoku</h3><div class="story-kpis"><article><span>Spotkania</span><strong>2</strong><small>jedno dzisiaj</small></article><article><span>Punkty</span><strong>3</strong><small>w Twoim zakresie</small></article><article><span>Zespół</span><strong>12</strong><small>aktywnych kont</small></article></div><div class="story-focus-card"><span>NAJBLIŻSZE</span><strong>Szkolenie: przyjęcie urządzenia</strong><small>15:00 · prowadzący: Koordynator</small></div></div>
+                  <div class="story-screen" data-story-screen="service" aria-hidden="true"><span class="story-screen-kicker">SERWIS</span><h3>Zlecenie #1042</h3><div class="story-list"><article><b>Klient</b><div><strong>Anna Kowalska</strong><span>dane kontaktowe przy zleceniu</span></div><em>OK</em></article><article><b>Urządzenie</b><div><strong>iPhone 14 Pro</strong><span>IMEI, opis i karta serwisowa</span></div><em>KARTA</em></article><article><b>Etap</b><div><strong>Diagnoza</strong><span>następna czynność: rozpocznij naprawę</span></div><em>TERAZ</em></article></div></div>
+                  <div class="story-screen" data-story-screen="transfers" aria-hidden="true"><span class="story-screen-kicker">PRZEKAZANIA</span><h3>Urządzenie w drodze</h3><div class="story-transfer-route"><div><span>SKĄD</span><strong>Punkt klienta</strong></div><b>→</b><div><span>DOKĄD</span><strong>Serwis główny</strong></div></div><div class="story-message"><b>CO DALEJ?</b><p>Punkt docelowy potwierdza fizyczne przyjęcie. Dopiero wtedy ServiceOS zmienia aktualne miejsce urządzenia.</p></div></div>
+                  <div class="story-screen" data-story-screen="customer" aria-hidden="true"><span class="story-screen-kicker">KLIENT</span><h3>Własna historia serwisowa</h3><div class="story-message"><b>ZLECENIE #1042</b><p>Aktualny etap, wycena, wiadomości i karta serwisowa są dostępne w prywatnym panelu klienta.</p></div><div class="story-message"><b>PRYWATNOŚĆ</b><p>Klient nie widzi kosztów zakupu, marży ani prywatnych notatek serwisanta.</p></div></div>
+                  <div class="story-screen" data-story-screen="admin" aria-hidden="true"><span class="story-screen-kicker">ZARZĄDZANIE</span><h3>Role i punkty</h3><div class="story-admin-grid"><article><span>WŁAŚCICIEL</span><strong>cała firma</strong></article><article><span>SZEF</span><strong>wszystkie punkty</strong></article><article><span>KOORDYNATOR</span><strong>przypisane punkty</strong></article><article><span>PRACOWNIK</span><strong>codzienna obsługa</strong></article></div></div>
                 </div>
               </div>
-              <div class="story-window-caption">Podgląd jest uproszczony — pokazuje logikę interfejsu, którą zobaczysz po zalogowaniu.</div>
+              <div class="story-window-caption">To uproszczony podgląd. Prawdziwy zakres funkcji zależy od roli pracownika.</div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="page-section release-now-section" id="now">
-      <div class="wrap release-now-shell">
-        <div class="release-now-head">
-          <div>
-            <span>SERVICEOS 1.0.0.14 · NOWY PRZEBIEG SERWISU</span>
-            <h2>Plan, gwarancja i szczegóły w jednym systemie.</h2>
-            <p>Nowa wersja ujednolica okna aplikacji, odciąża listę zleceń i prowadzi serwisanta od naprawy aż do wydruku gwarancji i gotowości do odbioru.</p>
+    <section class="page-section showcase-roles-section" id="roles">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span>ROLE W ZESPOLE</span>
+          <h2>Każdy ma własny zakres pracy — bez przypadkowego dostępu do wszystkiego.</h2>
+          <p>Uprawnienia są sprawdzane przez ServiceOS, a nie tylko ukrywane na ekranie. Pracownik nie może sam zmienić swojej roli.</p>
+        </div>
+        <div class="showcase-role-grid">
+          <article><div>01</div><span>CAŁA FIRMA</span><h3>Właściciel</h3><p>Administracja, użytkownicy, punkty, klienci, serwis, rozliczenia, wsparcie, ustawienia i aktualizacje.</p></article>
+          <article><div>02</div><span>ZARZĄDZANIE</span><h3>Szef</h3><p>Nadzór nad serwisem i wszystkimi punktami, rozliczenia oraz możliwość planowania i prowadzenia spotkań.</p></article>
+          <article><div>03</div><span>SWOJE PUNKTY</span><h3>Koordynator</h3><p>Organizacja pracy przypisanych punktów, zlecenia, przekazania oraz spotkania kierowane do swojego zakresu.</p></article>
+          <article><div>04</div><span>NAPRAWA</span><h3>Serwisant</h3><p>Zlecenia, plan pracy, terminy, części, koszty, faktury, prywatne notatki i własne Rozliczenia.</p></article>
+          <article><div>05</div><span>OBSŁUGA KLIENTA</span><h3>Pracownik punktu</h3><p>Przyjęcie urządzenia, karta klienta, zlecenie, przekazania, odbiór i bezpieczne akcje w swoim punkcie.</p></article>
+          <article><div>06</div><span>POMOC</span><h3>Wsparcie / konsultant</h3><p>Pomaga pracownikom w swoim zakresie. Prywatna rozmowa z botem pozostaje niewidoczna, dopóki użytkownik nie poprosi człowieka.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section showcase-meeting-section" id="meetings">
+      <div class="wrap showcase-meeting-grid">
+        <div class="section-heading reveal">
+          <span>SPOTKANIA I SZKOLENIA</span>
+          <h2>Odprawa zespołu bez wychodzenia z ServiceOS.</h2>
+          <p>Właściciel, szef i koordynator mogą zaplanować spotkanie. Uczestnik widzi termin i zapis, ale wejście do pokoju staje się dostępne dopiero po świadomym rozpoczęciu przez prowadzącego.</p>
+          <ul class="showcase-check-list">
+            <li>Zapisy i limity uczestników</li>
+            <li>Mikrofon i udostępnianie ekranu zgodnie z uprawnieniami</li>
+            <li>Prowadzący może moderować i zakończyć spotkanie dla wszystkich</li>
+            <li>Po zakończeniu dostępna jest frekwencja</li>
+          </ul>
+        </div>
+        <div class="showcase-meeting-card reveal delay">
+          <div class="meeting-demo-head"><div><span>SPOTKANIA I SZKOLENIA</span><h3>Nowy standard przyjęcia urządzenia</h3></div><b>Zaplanowane</b></div>
+          <div class="meeting-demo-meta"><span>24 września · 15:00</span><span>45 min</span><span>Prowadzący: Koordynator</span></div>
+          <p>Przejście przez przyjęcie klienta, kartę serwisową i poprawne przekazanie telefonu do serwisu.</p>
+          <div class="meeting-demo-users"><span>12 / 20 zapisanych</span><span>🎙 Audio dostępne</span><span>▣ Ekran prowadzącego</span></div>
+          <div class="meeting-demo-actions"><button type="button" disabled>✓ Jesteś zapisany</button><button type="button" disabled>Wejście po rozpoczęciu</button></div>
+          <small>Sam termin nie uruchamia spotkania. Status „TRWA TERAZ” pojawia się dopiero po rozpoczęciu przez prowadzącego.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section showcase-management-section" id="now">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span>DLA SZEFA I WŁAŚCICIELA</span>
+          <h2>Co widać z perspektywy zarządzania?</h2>
+          <p>ServiceOS nie zastępuje pracy ludzi. Porządkuje informacje tak, żeby było wiadomo co się dzieje, kto odpowiada za sprawę i gdzie trzeba zareagować.</p>
+        </div>
+        <div class="showcase-management-grid">
+          <article><b>01</b><h3>Pełna historia</h3><p>Każda ważna zmiana zlecenia zostaje w historii razem z czasem i osobą, która ją wykonała.</p></article>
+          <article><b>02</b><h3>Praca wielu punktów</h3><p>Przekazania pokazują faktyczną drogę urządzenia, zamiast udawać, że cały serwis odbywa się w jednym miejscu.</p></article>
+          <article><b>03</b><h3>Odpowiedzialność</h3><p>Role i zakres punktów ograniczają dostęp, a zlecenie pokazuje prowadzącego, serwisanta i kolejne działania.</p></article>
+          <article><b>04</b><h3>Dokumenty przy sprawie</h3><p>Karty serwisowe, faktury, gwarancje, notatki i wiadomości są powiązane z właściwym klientem i urządzeniem.</p></article>
+          <article><b>05</b><h3>Szkolenia zespołu</h3><p>Spotkania mają zapisy, prowadzącego, uprawnienia i frekwencję, więc można prowadzić odprawy w tym samym środowisku.</p></article>
+          <article><b>06</b><h3>Rozliczenia</h3><p>Osoby uprawnione widzą zatwierdzone wartości, a serwisant swoją część — bez mieszania danych finansowych z portalem klienta.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section showcase-workflow-section" id="workflow">
+      <div class="wrap showcase-workflow-shell">
+        <div>
+          <span class="section-kicker">JEDNA SPRAWA · WIELE OSÓB</span>
+          <h2>Informacja przechodzi razem z urządzeniem.</h2>
+          <p>Pracownik punktu nie musi opowiadać serwisantowi wszystkiego od nowa. Serwisant nie musi dzwonić po numer klienta. Punkt odbioru widzi, kiedy urządzenie naprawdę wróciło.</p>
+        </div>
+        <div class="showcase-handoff">
+          <article><strong>Pracownik punktu</strong><span>przyjmuje klienta i przygotowuje zlecenie</span></article>
+          <i>→</i>
+          <article><strong>Serwis</strong><span>diagnozuje, naprawia i uzupełnia wykonane prace</span></article>
+          <i>→</i>
+          <article><strong>Punkt klienta</strong><span>przyjmuje powrót i wydaje urządzenie</span></article>
+          <i>→</i>
+          <article><strong>Klient</strong><span>ma dokumenty i historię swojej sprawy</span></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="page-section showcase-preview-section" id="preview">
+      <div class="wrap">
+        <div class="section-heading reveal">
+          <span>PODGLĄD APLIKACJI</span>
+          <h2>Laptop daje pełny warsztat. Telefon pokazuje najważniejsze rzeczy w ruchu.</h2>
+          <p>Układ jest responsywny: na małym ekranie funkcje nie są ściskane, tylko ustawiane w kolejności wygodnej do dotyku.</p>
+        </div>
+        <div class="preview-stage showcase-preview-stage">
+          <div class="showcase-demo-tabs">
+            <button class="demo-nav active" data-demo-target="dashboard">Start</button>
+            <button class="demo-nav" data-demo-target="service">Serwis</button>
+            <button class="demo-nav" data-demo-target="meeting">Spotkania</button>
+            <button class="demo-nav" data-demo-target="roles">Role</button>
           </div>
-          <div class="release-now-version"><span>AKTUALNA WERSJA WINDOWS</span><strong data-release-version>—</strong></div>
-        </div>
-        <div class="release-feature-grid">
-          <article><b>01</b><strong>Plan pracy ma kolejność.</strong><p>Przeciągasz zlecenia na późniejszy dzień i układasz kolejność pracy w obrębie dnia.</p><small>Terminu nie można cofnąć. Gdy data zostanie wydłużona, klient otrzymuje wiadomość e-mail.</small></article>
-          <article><b>02</b><strong>Gwarancja przed odbiorem.</strong><p>Po zakończeniu naprawy serwisant ustawia liczbę miesięcy gwarancji i drukuje kartę z QR oraz kodem panelu klienta.</p><small>Dopiero kompletna gwarancja odblokowuje etap „Gotowe do odbioru”.</small></article>
-          <article><b>03</b><strong>Panel klienta pilnuje gwarancji.</strong><p>Klient widzi okres gwarancji, datę ważności, czy gwarancja jest aktywna oraz ile dni pozostało.</p><small>Informacja pojawia się przy właściwym zleceniu po przygotowaniu odbioru.</small></article>
-          <article><b>04</b><strong>Jedno UI zamiast okien Windows.</strong><p>Potwierdzenia, usuwanie i działania wrażliwe korzystają z okien ServiceOS zamiast systemowych komunikatów.</p><small>Nowe zlecenie, szczegóły i prywatne notatki korzystają z tego samego języka interfejsu.</small></article>
-        </div>
-        <div class="release-service-flow" aria-label="Przebieg pracy"><span>Przyjęcie</span><span>Plan pracy</span><span>Naprawa</span><span>Gwarancja</span><span>Odbiór</span></div>
-      </div>
-    </section>
-
-    <section class="page-section workflow-section" id="workflow">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>PRZEBIEG ZLECENIA</span>
-          <h2>ServiceOS zawsze pokazuje następny krok.</h2>
-          <p>Nie musisz pamiętać całego procesu. Zlecenie ma etap, termin, pilność i następną wymaganą akcję.</p>
-        </div>
-        <div class="workflow-grid reveal">
-          <article><b>01</b><strong>Przyjmujesz urządzenie</strong><span>Zapisujesz klienta, telefon i opis problemu.</span></article>
-          <article><b>02</b><strong>Diagnozujesz</strong><span>Serwisant sprawdza usterkę i ustala dalszą pracę.</span></article>
-          <article><b>03</b><strong>Naprawiasz albo przekazujesz</strong><span>ServiceOS pokazuje, gdzie fizycznie znajduje się telefon.</span></article>
-          <article><b>04</b><strong>Kończysz naprawę</strong><span>Po pracy technicznej urządzenie wraca do punktu klienta.</span></article>
-          <article><b>05</b><strong>Wystawiasz gwarancję</strong><span>Ustawiasz okres gwarancji, drukujesz kartę i dopiero wtedy oznaczasz urządzenie jako gotowe.</span></article>
-          <article><b>06</b><strong>Zamykasz zlecenie</strong><span>Historia zostaje zapisana, a rozliczenie tworzy się automatycznie.</span></article>
-        </div>
-        <div class="priority-row reveal">
-          <span class="danger">Po terminie</span>
-          <span class="warning">Kończy się termin</span>
-          <span class="orange">Działaj teraz</span>
-          <span class="blue">W drodze</span>
-          <span>Czeka na serwis</span>
-          <span>Czeka na części</span>
-          <span class="green">Gotowe do odbioru</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="page-section preview-section" id="preview">
-      <div class="wrap">
-        <div class="section-heading reveal">
-          <span>INTERAKTYWNY PODGLĄD</span>
-          <h2>Teraz kliknij i sprawdź ekran samodzielnie.</h2>
-          <p>Skoro znasz już logikę systemu, przełącz zakładki poniżej. To ostatni szybki trening przed pierwszym logowaniem.</p>
-        </div>
-
-        <div class="app-preview reveal">
-          <aside class="preview-nav">
-            <div class="preview-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn</strong><span>ServiceOS</span></div></div>
-            <button type="button" class="demo-nav active" data-demo-target="dashboard">⌂ <span>Start</span></button>
-            <button type="button" class="demo-nav" data-demo-target="service">▣ <span>Serwis</span></button>
-            <button type="button" class="demo-nav" data-demo-target="finance">% <span>Rozliczenia</span></button>
-            <button type="button" class="demo-nav" data-demo-target="admin">⚙ <span>Administracja</span></button>
-          </aside>
-          <div class="preview-content">
-            <div class="preview-topbar"><div><span>AKTYWNY PUNKT</span><strong>Punkt Nowogard</strong></div><span class="online-dot"><i></i> ONLINE</span></div>
-            <div class="preview-stage" aria-live="polite">
+          <div class="showcase-demo-window">
             <div class="demo-screen active" data-demo-screen="dashboard" aria-hidden="false">
-              <div class="preview-page-title"><span>START</span><h3>Co wymaga uwagi?</h3></div>
-              <div class="preview-stats"><article><span>Działaj teraz</span><strong>4</strong><small>2 z terminem dzisiaj</small></article><article><span>W drodze</span><strong>2</strong><small>między punktami</small></article><article><span>Gotowe</span><strong>3</strong><small>czeka na klienta</small></article></div>
-              <button type="button" class="preview-focus" data-demo-jump="service"><span>NASTĘPNA AKCJA · #1042</span><strong>Zakończ diagnozę i rozpocznij naprawę.</strong><small>iPhone 14 Pro · termin dzisiaj 14:30</small><b>Otwórz zlecenie →</b></button>
+              <div class="showcase-demo-heading"><span>START</span><h3>Najbliższe spotkania i szybki dostęp</h3></div>
+              <div class="showcase-demo-row"><strong>Szkolenie z przyjęcia urządzenia</strong><span>Zaplanowane · dzisiaj 15:00</span><b>✓ zapisany</b></div>
+              <div class="showcase-demo-cards"><article><span>Serwis</span><strong>Zlecenia i bieżąca praca</strong></article><article><span>Klienci</span><strong>Karty i historia</strong></article><article><span>Pomoc</span><strong>Bot i konsultant</strong></article></div>
             </div>
-
             <div class="demo-screen" data-demo-screen="service" aria-hidden="true">
-              <div class="preview-page-title"><span>SERWIS</span><h3>Kolejka pracy</h3></div>
-              <div class="preview-filters"><span class="active">Działaj teraz <b>4</b></span><span>Po terminie <b>1</b></span><span>Przekazane <b>2</b></span><span>Gotowe <b>3</b></span></div>
-              <div class="preview-orders">
-                <article class="danger"><b>#1042</b><div><strong>Anna Kowalska · iPhone 14 Pro</strong><span>Etap 3/10 · Diagnoza</span><p>Następna akcja: <strong>rozpocznij naprawę</strong></p><progress max="100" value="30"></progress></div><em>PO TERMINIE</em></article>
-                <article><b>#1041</b><div><strong>Piotr Nowak · Samsung S24</strong><span>Etap 7/10 · Powrót do Nowogardu</span><p>Następna akcja: <strong>potwierdź dostarczenie</strong></p><progress max="100" value="70"></progress></div><em>W DRODZE</em></article>
-                <article class="ready"><b>#1038</b><div><strong>Marta Lis · iPhone 13</strong><span>Etap 9/10 · Gotowe</span><p>Następna akcja: <strong>wydaj urządzenie klientowi</strong></p><progress max="100" value="90"></progress></div><em>GOTOWE</em></article>
-              </div>
+              <div class="showcase-demo-heading"><span>SERWIS</span><h3>#1042 · iPhone 14 Pro</h3></div>
+              <div class="showcase-demo-progress"><span class="done">Przyjęto</span><span class="done">Wysłano do serwisu</span><span class="active">Naprawa</span><span>Powrót</span><span>Odbiór</span></div>
+              <div class="showcase-demo-row"><strong>Wymiana wyświetlacza</strong><span>Serwisant: Jan Kowalski · termin: dzisiaj</span><b>W NAPRAWIE</b></div>
             </div>
-
-            <div class="demo-screen" data-demo-screen="finance" aria-hidden="true">
-              <div class="preview-page-title"><span>ROZLICZENIA</span><h3>Procent ustawiany przez serwisanta</h3></div>
-              <div class="preview-stats finance"><article><span>Przychód</span><strong>1 840 zł</strong><small>zapisany automatycznie</small></article><article><span>Serwisant</span><strong>1 104 zł</strong><small>przykład: 60%</small></article><article><span>Szef</span><strong>736 zł</strong><small>przykład: 40%</small></article></div>
-              <div class="preview-settlement"><span>✓ ZLECENIE #1038 ZAKOŃCZONE</span><strong>500,00 zł dodane automatycznie</strong><p>300,00 zł serwisant · 200,00 zł Szef · przykład ustawienia 60/40</p></div>
+            <div class="demo-screen" data-demo-screen="meeting" aria-hidden="true">
+              <div class="showcase-demo-heading"><span>SPOTKANIE</span><h3>Odprawa punktów</h3></div>
+              <div class="showcase-demo-call"><div><strong>Udostępniany ekran</strong><span>Materiały szkoleniowe prowadzącego</span></div><aside><b>Uczestnicy · 8</b><span>🎙 Prowadzący</span><span>🔇 Pracownik 1</span><span>🔇 Pracownik 2</span></aside></div>
             </div>
-
-            <div class="demo-screen" data-demo-screen="admin" aria-hidden="true">
-              <div class="preview-page-title"><span>ADMINISTRACJA</span><h3>Konta i bezpieczeństwo</h3></div>
-              <div class="preview-stats admin"><article><span>Sesje</span><strong>6</strong><small>Windows + WWW</small></article><article><span>Serwisy</span><strong>2</strong><small>aktywne punkty</small></article><article><span>Zablokowane</span><strong>0</strong><small>konta</small></article></div>
-              <div class="preview-admin-list"><div><span><strong>Wyspa Gryf</strong><small>aktywny serwisant</small></span><b>AUTO SERWIS</b></div><div><span><strong>Punkt Nowogard</strong><small>firmowy nadawca Gmail</small></span><b>ONLINE</b></div></div>
-            </div>
+            <div class="demo-screen" data-demo-screen="roles" aria-hidden="true">
+              <div class="showcase-demo-heading"><span>ROLE</span><h3>Zakres wynika z pracy użytkownika</h3></div>
+              <div class="showcase-demo-rolelist"><article><b>Właściciel</b><span>cała firma</span></article><article><b>Koordynator</b><span>przypisane punkty</span></article><article><b>Serwisant</b><span>naprawy i własny plan</span></article><article><b>Pracownik</b><span>obsługa klienta i logistyka</span></article></div>
             </div>
           </div>
+          <p class="showcase-preview-note">Podgląd pokazuje sposób pracy i układ informacji. Dane są przykładowe.</p>
         </div>
       </div>
     </section>
 
-    <section class="page-section connect-story story-chapter" id="connect">
+<section class="page-section connect-story story-chapter" id="connect">
       <div class="wrap">
         <div class="connect-story-head reveal" data-story-observe>
           <b class="chapter-number">03</b>

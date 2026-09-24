@@ -156,10 +156,13 @@ jobs:
             width:document.documentElement.clientWidth,
             scrollWidth:document.documentElement.scrollWidth,
             mobileAnchor:getComputedStyle(document.querySelector('.mobile-anchor-nav')).display,
-            heroProduct:getComputedStyle(document.querySelector('.hero-product')).display
+            laptop:getComputedStyle(document.querySelector('.showcase-laptop')).display,
+            phoneMock:getComputedStyle(document.querySelector('.showcase-phone')).display
           }));
           if(metrics.scrollWidth>metrics.width+1)throw new Error('Landing horizontal overflow: '+JSON.stringify(metrics));
-          if(metrics.mobileAnchor!=='none'||metrics.heroProduct!=='none')throw new Error('Mobile landing desktop UI leak: '+JSON.stringify(metrics));
+          if(metrics.mobileAnchor==='none')throw new Error('Mobile landing must expose quick anchor navigation: '+JSON.stringify(metrics));
+          if(metrics.laptop==='none')throw new Error('Mobile landing must keep a readable product preview: '+JSON.stringify(metrics));
+          if(metrics.phoneMock!=='none')throw new Error('Nested phone mock should be hidden on narrow screens: '+JSON.stringify(metrics));
 
           const panelMetrics=await panel.evaluate(()=>({
             width:document.documentElement.clientWidth,
