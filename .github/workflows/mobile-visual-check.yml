@@ -153,6 +153,30 @@ jobs:
           if(!await desktop.locator('[data-preview-screen="meetings"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Meetings preview did not activate');
           await desktop.locator('#modules').scrollIntoViewIfNeeded();
           await desktop.waitForTimeout(750);
+
+          for(const key of ['plan','intake','orders','transfers','quotes','invoices','notes']){
+            await desktop.locator('[data-service-demo-tab="'+key+'"]').click();
+            if(!await desktop.locator('[data-service-demo-view="'+key+'"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Service demo view did not activate: '+key);
+          }
+
+          await desktop.locator('[data-service-demo-tab="intake"]').click();
+          await desktop.locator('[data-intake-next="2"]').click();
+          await desktop.locator('[data-intake-next="3"]').click();
+          await desktop.locator('[data-intake-next="4"]').click();
+          if(!await desktop.locator('[data-intake-panel="4"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Intake flow did not reach summary');
+          await desktop.locator('[data-service-action="create-order"]').click();
+          if(!await desktop.locator('[data-service-demo-view="orders"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Creating demo order did not return to orders');
+
+          await desktop.locator('[data-demo-order="1042"]').first().click();
+          if(await desktop.locator('[data-service-order-drawer]').evaluate((el)=>el.hidden)) throw new Error('Order details drawer did not open');
+          await desktop.screenshot({path:'visual-check/desktop-service-order-drawer.png'});
+          await desktop.locator('[data-service-order-close]').first().click();
+
+          await desktop.locator('[data-service-demo-tab="notes"]').click();
+          await desktop.locator('[data-service-action="save-note"]').click();
+          if(await desktop.locator('[data-demo-toast]').evaluate((el)=>el.hidden)) throw new Error('Service action toast did not appear');
+          await desktop.screenshot({path:'visual-check/desktop-service-notes.png'});
+
           await desktop.locator('.modules-os-window .os-sidebar [data-module="clients"]').click();
           await desktop.waitForTimeout(350);
           if(!await desktop.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Clients module did not activate');
@@ -241,6 +265,9 @@ jobs:
           if(!await mobileModuleButton.isVisible()) throw new Error('Mobile module controls are not visible');
           await mobileModuleButton.click();
           if(!await mobile.locator('[data-module-panel="clients"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Mobile clients module did not activate');
+          await mobile.locator('.module-mobile-tabs [data-module="service"]').click();
+          await mobile.locator('[data-service-demo-tab="orders"]').click();
+          if(!await mobile.locator('[data-service-demo-view="orders"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Mobile Service orders view did not activate');
           await assertMobileTargets(mobile,'Mobile module tabs');
 
           for(const [id,name] of [['modules','modules'],['roles','roles'],['meetings','meetings'],['connect','phone'],['security','security'],['start','start']]){
