@@ -15,662 +15,292 @@
   <meta property="og:url" content="https://app.serviceos.pl/">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/serviceos-app-site.css">
+  <link rel="stylesheet" href="assets/serviceos-site.css">
 </head>
 <body class="site-home">
+  <svg class="icon-sprite" aria-hidden="true">
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 14a8 8 0 1 1 16 0"/><path d="M12 14l4-4"/><path d="M6 18h12"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></symbol>
+    <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.5 6.5a5 5 0 0 0-6.7 6.7L3 18l3 3 4.8-4.8a5 5 0 0 0 6.7-6.7l-3 3-3-3z"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18M8 14h3M13 14h3M8 17h3"/></symbol>
+    <symbol id="i-dollar" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5c-.8-1-2-1.5-3.5-1.5-2 0-3.5.9-3.5 2.3 0 3.7 7 1.5 7 5.2 0 1.5-1.5 2.5-3.7 2.5-1.6 0-3-.6-3.8-1.7M12 5v14"/></symbol>
+    <symbol id="i-user-cog" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-4 2.4-6 6-6 1.1 0 2.1.2 3 .6"/><circle cx="17" cy="17" r="3"/><path d="M17 12v2M17 20v2M12 17h2M20 17h2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 2.5-6 6-6s6 2 6 6M15 15c3.2 0 5 1.8 5 5"/></symbol>
+    <symbol id="i-headphones" viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><path d="M4 14h4v6H6a2 2 0 0 1-2-2zM20 14h-4v6h2a2 2 0 0 0 2-2z"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 0 0-.1-1l2-1.6-2-3.4-2.5 1A8 8 0 0 0 14.7 6L14.3 3h-4.6l-.4 3A8 8 0 0 0 7.6 7L5 6 3 9.4 5.1 11A7 7 0 0 0 5 12c0 .4 0 .7.1 1L3 14.6 5 18l2.6-1a8 8 0 0 0 1.7 1l.4 3h4.6l.4-3a8 8 0 0 0 1.7-1l2.6 1 2-3.4-2.1-1.6c.1-.3.1-.6.1-1z"/></symbol>
+    <symbol id="i-log-out" viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M18 12H9"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M15 8l4 4-4 4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M8 11l4 4 4-4M4 20h16"/></symbol>
+    <symbol id="i-package" viewBox="0 0 24 24"><path d="M4 7l8-4 8 4-8 4zM4 7v10l8 4 8-4V7M12 11v10"/></symbol>
+    <symbol id="i-truck" viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 5-3 8-7 10-4-2-7-5-7-10V6z"/><path d="M9 12l2 2 4-5"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></symbol>
+    <symbol id="i-screen" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 4h16v12H8l-4 4z"/></symbol>
+  </svg>
+
   <header class="site-topbar" data-site-nav>
     <div class="site-frame topbar-inner">
       <a class="site-brand" href="#top" aria-label="LockOn ServiceOS — strona główna">
         <span class="site-brand-mark"><img src="assets/logo.svg" alt=""></span>
         <span class="site-brand-copy"><strong>LockOn</strong><small>ServiceOS</small></span>
       </a>
-
       <nav class="desktop-nav" aria-label="Główna nawigacja">
-        <a href="#day">Jak działa</a>
-        <a href="#modules">Moduły</a>
-        <a href="#roles">Role</a>
-        <a href="#meetings">Spotkania</a>
-        <a href="#connect">Telefon</a>
+        <a href="#day">Jak działa</a><a href="#modules">Moduły</a><a href="#roles">Role</a><a href="#meetings">Spotkania</a><a href="#connect">Telefon</a>
       </nav>
-
       <div class="topbar-actions">
         <a id="navPanelLink" class="topbar-panel-link" href="panel.html" hidden>Otwórz panel</a>
         <button id="navLoginButton" class="button button-quiet" data-requires-onboarding type="button">Połącz telefon</button>
         <a class="button button-primary download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz ServiceOS</a>
       </div>
-
-      <button class="mobile-menu-toggle" type="button" aria-label="Otwórz menu" aria-controls="mobileMenu" aria-expanded="false" data-menu-toggle>
-        <span></span><span></span>
-      </button>
+      <button class="mobile-menu-toggle" type="button" aria-label="Otwórz menu" aria-controls="mobileMenu" aria-expanded="false" data-menu-toggle><span></span><span></span></button>
     </div>
-
     <div id="mobileMenu" class="mobile-menu" aria-hidden="true">
       <nav class="site-frame mobile-menu-grid" aria-label="Menu mobilne">
-        <a href="#day">Jak działa</a>
-        <a href="#modules">Moduły</a>
-        <a href="#roles">Role</a>
-        <a href="#meetings">Spotkania</a>
-        <a href="#connect">Telefon</a>
-        <a href="#security">Bezpieczeństwo</a>
+        <a href="#day">Jak działa</a><a href="#modules">Moduły</a><a href="#roles">Role</a><a href="#meetings">Spotkania</a><a href="#connect">Telefon</a><a href="#security">Bezpieczeństwo</a>
         <button class="mobile-menu-action" type="button" data-open-login data-requires-onboarding>Połącz telefon</button>
         <a class="mobile-menu-action primary download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start">Pobierz ServiceOS</a>
       </nav>
     </div>
-  </header>
-
-  <main id="top">
-    <section class="hero-section hero-wow">
-      <div class="hero-ambient" aria-hidden="true">
-        <span class="hero-orb hero-orb-a"></span>
-        <span class="hero-orb hero-orb-b"></span>
-        <span class="hero-grid-plane"></span>
-        <span class="hero-ridge hero-ridge-a"></span>
-        <span class="hero-ridge hero-ridge-b"></span>
-        <span class="hero-horizon"></span>
+  </header><main id="top">
+  <section class="hero-section">
+    <div class="hero-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="site-frame hero-grid">
+      <div class="hero-copy reveal">
+        <div class="product-kicker"><span class="status-dot"></span> LOCKON SERVICEOS · SYSTEM PRACY SERWISU</div>
+        <h1>Cały serwis.<br><span>Bez chaosu.</span></h1>
+        <p>Klient przychodzi z urządzeniem, zespół prowadzi naprawę, a ServiceOS pilnuje historii, przekazań, dokumentów i kontaktu. Każdy widzi tylko to, czego potrzebuje do swojej pracy.</p>
+        <div class="hero-actions"><a class="button button-primary button-large" href="#day">▶ Zobacz jak działa <svg class="os-icon" aria-hidden="true"><use href="#i-arrow"></use></svg></a><a class="button button-secondary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><svg class="os-icon" aria-hidden="true"><use href="#i-download"></use></svg> Pobierz ServiceOS</a></div>
+        <div class="hero-trust"><span>✓ Windows</span><span>✓ Code signing</span><span>✓ Zawsze aktualny</span></div>
       </div>
 
-      <div class="site-frame hero-wow-grid">
-        <div class="hero-copy reveal">
-          <div class="product-kicker"><span class="status-dot"></span> LOCKON SERVICEOS · SYSTEM PRACY SERWISU</div>
-          <h1>Cały serwis.<br><span>Bez chaosu.</span></h1>
-          <p class="hero-lead">Klient przychodzi z urządzeniem, zespół prowadzi naprawę, a ServiceOS pilnuje historii, przekazań, dokumentów i kontaktu. Każdy widzi tylko to, czego potrzebuje do swojej pracy.</p>
-
-          <div class="hero-actions">
-            <a class="button button-primary button-large hero-primary" href="#day"><span class="button-play">▶</span> Zobacz jak działa <span aria-hidden="true">→</span></a>
-            <a class="button button-secondary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><span aria-hidden="true">↓</span> Pobierz ServiceOS</a>
-          </div>
-
-          <div class="hero-trust" aria-label="Najważniejsze informacje">
-            <span><i>✓</i> Windows</span>
-            <span><i>✓</i> Code signing</span>
-            <span><i>✓</i> Zawsze aktualny</span>
-          </div>
-        </div>
-
-        <div class="hero-showcase reveal reveal-delay" data-hero-stage aria-label="Interaktywny podgląd LockOn ServiceOS">
-          <div class="showcase-halo" aria-hidden="true"></div>
-          <div class="showcase-ring showcase-ring-one" aria-hidden="true"></div>
-          <div class="showcase-ring showcase-ring-two" aria-hidden="true"></div>
-
-          <div class="desktop-device">
-            <div class="device-camera" aria-hidden="true"></div>
-            <div class="app-demo">
-              <div class="demo-titlebar">
-                <div class="demo-title"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><small>Wszystkie punkty</small></div>
-                <div class="demo-window-actions" aria-hidden="true"><i></i><i></i><i></i></div>
-              </div>
-
-              <div class="demo-shell">
-                <aside class="demo-sidebar">
-                  <div class="demo-brand">
-                    <img src="assets/logo.svg" alt="">
-                    <span><strong>LockOn</strong><small>ServiceOS</small></span>
-                  </div>
-                  <div class="demo-branch"><span class="status-dot"></span> Wszystkie punkty</div>
-                  <nav class="demo-nav" aria-label="Widoki podglądu aplikacji">
-                    <button class="active" type="button" data-preview="start"><span>⌂</span> Start</button>
-                    <button type="button" data-preview="service"><span>⌕</span> Serwis</button>
-                    <button type="button" data-preview="meetings"><span>▣</span> Spotkania</button>
-                    <button type="button" data-preview="admin"><span>◎</span> Administracja</button>
-                  </nav>
-                  <div class="demo-account"><b>BM</b><span><strong>Bartłomiej</strong><small>Właściciel</small></span></div>
-                </aside>
-
-                <div class="demo-content">
-                  <section class="demo-screen active" data-preview-screen="start">
-                    <div class="demo-start-head">
-                      <div>
-                        <span class="demo-eyebrow"><i class="status-dot"></i> WSZYSTKIE PUNKTY</span>
-                        <h2>Dobry wieczór, <em>Bartek.</em></h2>
-                        <p>Wszystko gotowe do pracy.</p>
-                      </div>
-                      <div class="demo-clock"><strong>21:42</strong><span>24 września · czwartek</span></div>
-                    </div>
-                    <div class="demo-start-hero">
-                      <div>
-                        <small>SPOTKANIA I SZKOLENIA</small>
-                        <strong>Najbliższe rzeczy w jednym miejscu</strong>
-                        <span>Szkolenia, spotkania i aktywne sesje zespołu</span>
-                      </div>
-                      <button type="button" tabindex="-1">Zarządzaj →</button>
-                    </div>
-                    <div class="demo-section-label">Szybki dostęp</div>
-                    <div class="demo-shortcuts">
-                      <article><b>⌕</b><span><strong>Serwis</strong><small>Zlecenia i bieżąca praca</small></span></article>
-                      <article><b>◎</b><span><strong>Administracja</strong><small>Pracownicy i punkty</small></span></article>
-                      <article><b>₿</b><span><strong>Rozliczenia</strong><small>Przychody i koszty</small></span></article>
-                    </div>
-                  </section>
-
-                  <section class="demo-screen" data-preview-screen="service">
-                    <div class="demo-screen-header">
-                      <div><span class="demo-eyebrow">SERWIS</span><h2>Co wymaga działania?</h2><p>Najpierw pilne, potem reszta kolejki.</p></div>
-                      <div class="demo-metric"><strong>4</strong><span>aktywne</span></div>
-                    </div>
-                    <div class="demo-service-grid">
-                      <div class="demo-order-list">
-                        <article class="demo-order hot"><span>#1042</span><div><strong>iPhone 14 Pro</strong><small>Diagnoza · termin dzisiaj</small></div><b>TERAZ</b></article>
-                        <article class="demo-order"><span>#1041</span><div><strong>Samsung S24</strong><small>Wraca do punktu klienta</small></div><b>W DRODZE</b></article>
-                        <article class="demo-order ready"><span>#1038</span><div><strong>iPhone 13</strong><small>Naprawa zakończona</small></div><b>GOTOWE</b></article>
-                      </div>
-                      <aside class="demo-focus-card"><small>PLAN DNIA</small><strong>3</strong><span>czynności przed zamknięciem punktu</span></aside>
-                    </div>
-                  </section>
-
-                  <section class="demo-screen" data-preview-screen="meetings">
-                    <div class="demo-screen-header">
-                      <div><span class="demo-eyebrow">SPOTKANIA I SZKOLENIA</span><h2>Zespół w jednym pokoju.</h2><p>Ekran, mikrofon i czat działają razem.</p></div>
-                      <div class="live-badge"><i></i> LIVE</div>
-                    </div>
-                    <div class="demo-meeting">
-                      <div class="demo-meeting-stage">
-                        <div class="mini-shared-app"><span></span><span></span><span></span><span></span></div>
-                        <div class="demo-stage-label"><i class="status-dot"></i> Ekran prowadzącego</div>
-                      </div>
-                      <aside class="demo-meeting-side">
-                        <strong>Czat</strong>
-                        <p>Czy widzicie ekran?</p>
-                        <p class="mine">Tak, wszystko czytelne.</p>
-                        <span>4 uczestników</span>
-                      </aside>
-                    </div>
-                  </section>
-
-                  <section class="demo-screen" data-preview-screen="admin">
-                    <div class="demo-screen-header">
-                      <div><span class="demo-eyebrow">ADMINISTRACJA</span><h2>Firma pod kontrolą.</h2><p>Role, punkty i dostęp w jednym miejscu.</p></div>
-                    </div>
-                    <div class="demo-admin-grid">
-                      <article><span>Aktywne konta</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article>
-                      <article><span>Punkty</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article>
-                      <article><span>Oczekuje</span><strong data-count="1">1</strong><small>konto do decyzji</small></article>
-                      <article><span>Aktywne sesje</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article>
-                    </div>
-                  </section>
-                </div>
-              </div>
-
-              <div class="demo-mobile-tabs" aria-label="Przełącz widok podglądu">
-                <button class="active" type="button" data-preview="start">Start</button>
-                <button type="button" data-preview="service">Serwis</button>
-                <button type="button" data-preview="meetings">Spotkania</button>
-                <button type="button" data-preview="admin">Admin</button>
-              </div>
-            </div>
-            <div class="device-base" aria-hidden="true"><span></span></div>
-          </div>
-
-          <div class="hero-phone-device" aria-label="Podgląd połączenia telefonu">
-            <div class="hero-phone-notch"></div>
-            <div class="hero-phone-screen">
-              <div class="hero-phone-brand"><img src="assets/logo.svg" alt=""><strong>LockOn</strong></div>
-              <div class="hero-phone-copy"><span>POŁĄCZ URZĄDZENIE</span><h3>Telefon gotowy.</h3><p>Wpisz kod wyświetlony w ServiceOS.</p></div>
-              <div class="hero-phone-code"><i>1</i><i>2</i><i>3</i><i>4</i></div>
-              <div class="hero-phone-action">Połącz</div>
-              <div class="hero-phone-secure"><span>✓</span> Ten sam zakres uprawnień</div>
-            </div>
-          </div>
-
-          <div class="floating-status floating-live"><span class="status-dot"></span><div><strong>SYSTEM ONLINE</strong><small>sesja aktywna</small></div></div>
-          <div class="floating-status floating-work"><span>4</span><div><strong>Do działania</strong><small>bieżąca kolejka</small></div></div>
-          <div class="preview-switcher" aria-label="Szybka zmiana podglądu">
-            <button class="active" type="button" data-preview="start">Start</button>
-            <button type="button" data-preview="service">Serwis</button>
-            <button type="button" data-preview="meetings">Spotkania</button>
-            <button type="button" data-preview="admin">Administracja</button>
-          </div>
-        </div>
+      <div class="hero-product reveal reveal-delay">
+        <div class="hero-halo"></div>
+        <div class="os-window hero-os-window">
+          <div class="os-titlebar"><div class="os-titlebar-drag"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><span>Wszystkie punkty</span></div><div class="os-window-actions"><i>–</i><i>□</i><i>×</i></div></div>
+          <div class="os-body">
+            
+<aside class="os-sidebar">
+  <div class="os-brand-block"><div class="os-brand-logo"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
+  <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
+  <nav class="os-nav-list">
+    <button class="os-nav-item active" type="button" data-preview="start"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item " type="button" data-preview="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
+    <button class="os-nav-item " type="button" data-preview="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
+    <button class="os-nav-item " type="button" data-preview="admin"><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+  </nav>
+  <div class="os-sidebar-spacer"></div>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
+  <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
+</aside>
+            <div class="os-content">
+              
+<section class="os-screen active" data-preview-screen="start">
+  <div class="os-dashboard">
+    <section class="os-start-hero">
+      <div class="os-start-glow"></div><div class="os-start-arc"></div>
+      <div class="os-welcome">
+        <div class="os-context"><span class="status-dot"></span> WSZYSTKIE PUNKTY</div>
+        <h2>Dobry wieczór, <span>System.</span></h2>
+        <p>Wszystko gotowe do pracy. Wybierz, od czego chcesz zacząć.</p>
+        <div class="os-start-actions"><span class="os-primary-chip">↗ Otwórz przeglądarkę</span><span class="os-secondary-chip">◉ Pomoc</span></div>
       </div>
-
-      <div class="site-frame hero-lower" id="day">
-        <div class="hero-metrics">
-          <article><span>01</span><div><strong>Jedna historia</strong><small>całe zlecenie w jednym miejscu</small></div></article>
-          <article><span>04</span><div><strong>Cztery etapy</strong><small>od przyjęcia do odbioru</small></div></article>
-          <article><span>↯</span><div><strong>Role i punkty</strong><small>każdy widzi właściwy zakres</small></div></article>
-          <article><span>⌁</span><div><strong>Komputer + telefon</strong><small>ta sama praca w dwóch widokach</small></div></article>
-        </div>
-
-        <div class="hero-flow" aria-label="Jak działa ServiceOS">
-          <article class="hero-flow-card">
-            <div class="hero-flow-top"><span>01</span><i>▱</i></div>
-            <h2>Przyjęcie urządzenia</h2>
-            <p>Klient, sprzęt, usterka i dokumenty trafiają do jednej sprawy.</p>
-            <b aria-hidden="true"></b>
-          </article>
-          <article class="hero-flow-card">
-            <div class="hero-flow-top"><span>02</span><i>⚙</i></div>
-            <h2>Serwis</h2>
-            <p>Diagnoza, naprawa, części, zdjęcia i notatki zostają przy zleceniu.</p>
-            <b aria-hidden="true"></b>
-          </article>
-          <article class="hero-flow-card">
-            <div class="hero-flow-top"><span>03</span><i>⇄</i></div>
-            <h2>Przekazanie</h2>
-            <p>System pokazuje, gdzie jest urządzenie i kto przejmuje kolejny krok.</p>
-            <b aria-hidden="true"></b>
-          </article>
-          <article class="hero-flow-card">
-            <div class="hero-flow-top"><span>04</span><i>✓</i></div>
-            <h2>Odbiór</h2>
-            <p>Wydanie klientowi zamyka proces, a pełna historia zostaje w systemie.</p>
-            <b aria-hidden="true"></b>
-          </article>
-        </div>
-      </div>
-      <a class="hero-scroll" href="#modules" aria-label="Przewiń do modułów"><span></span></a>
+      <div class="os-time"><small>Czwartek, 24 września 2026</small><strong data-live-clock>21:42</strong><span>▣ Dobry moment na działanie.</span><em>Najważniejsze rzeczy masz pod ręką.</em></div>
+      <aside class="os-weather"><span>POGODA TERAZ</span><strong>Nowogard</strong><div><b>12°</b><small>Pochmurnie</small></div></aside>
     </section>
-
-    <section class="modules-section" id="modules">
-      <div class="site-frame">
-        <div class="section-heading reveal">
-          <span class="section-label">MODUŁY</span>
-          <h2>Wszystko tam, gdzie <span>pracujesz.</span></h2>
-          <p>Nie szukasz funkcji po stronie. Wybierasz moduł i od razu widzisz to, co trzeba zrobić.</p>
+    <section class="os-next-meeting"><div><span>SPOTKANIA I SZKOLENIA</span><h3>Spotkania i szkolenia</h3><p>Najbliższe szkolenia i aktywne spotkanie w jednym miejscu.</p></div><div class="os-meeting-empty"><b>◎</b><strong>Brak aktywnego spotkania</strong><small>Nie masz teraz spotkania wymagającego uwagi.</small></div></section>
+    <div class="os-section-head"><div><h3>Szybki dostęp</h3><p>Najważniejsze funkcje systemu w zasięgu ręki.</p></div><span>Wybierz moduł z menu lub użyj skrótu</span></div>
+    <div class="os-shortcuts"><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg></b><div><strong>Serwis</strong><small>Zlecenia, urządzenia i bieżąca praca.</small></div><i>→</i></article><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg></b><div><strong>Administracja</strong><small>Pracownicy, punkty i dostępy.</small></div><i>→</i></article><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg></b><div><strong>Rozliczenia</strong><small>Przychody i rozliczenia w jednym miejscu.</small></div><i>→</i></article></div>
+    <div class="os-mini-stats"><article><b>2</b><span>Punkty<small>Wszystkie dostępne lokalizacje</small></span></article><article><b>2</b><span>Aktywne konta<small>0 oczekuje na decyzję</small></span></article><article><b>104 zł</b><span>Przychód<small>Zatwierdzone rozliczenia</small></span></article></div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="service">
+  <div class="os-service-page">
+    <header class="os-service-head"><div><span>SERWIS</span><h2>Klienci i naprawy</h2><p>Przyjęcie telefonu, reklamacje, statusy oraz centralne powiadomienia klienta.</p></div><div class="os-service-tabs"><i>Nowe zlecenie</i><i class="active">Zlecenia</i><i>Przekazania</i></div></header>
+    <div class="os-orders-card">
+      <div class="os-orders-top"><div><span>AKTYWNE ZLECENIA</span><strong>Co wymaga działania?</strong></div><b>4 aktywne</b></div>
+      <div class="os-order-row"><strong>#1042</strong><div><b>iPhone 14 Pro</b><span>Anna Kowalska · diagnoza</span><small>Najbliższy krok: rozpocznij diagnozę</small></div><em>TERAZ</em></div>
+      <div class="os-order-row"><strong>#1041</strong><div><b>Samsung S24</b><span>Piotr Nowak · przekazanie</span><small>Urządzenie wraca do punktu klienta</small></div><em>W DRODZE</em></div>
+      <div class="os-order-row"><strong>#1038</strong><div><b>iPhone 13</b><span>Marta Lis · zakończona naprawa</span><small>Telefon gotowy do odbioru</small></div><em class="ok">GOTOWE</em></div>
+    </div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="meetings">
+  <div class="os-meeting-page">
+    <header><div><span class="os-live">● TRWA TERAZ</span><h2>Szkolenie serwisowe</h2><p>Prowadzący: <strong>Bartłomiej</strong> · <b data-meeting-elapsed>02:03</b> / 60 min</p></div><span class="os-secondary-chip">▣ Tryb kinowy</span></header>
+    <div class="os-meeting-layout">
+      <div class="os-meeting-stage"><div class="os-shared-window"><div class="os-shared-sidebar"></div><div class="os-shared-main"><span></span><strong></strong><div></div><div></div></div><small><i class="status-dot"></i> Ekran prowadzącego</small></div><div class="os-meeting-controls-mini"><i><svg class="os-icon" aria-hidden="true"><use href="#i-mic"></use></svg> Mikrofon</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-screen"></use></svg> Udostępnianie</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-message"></use></svg> Czat</i></div></div>
+      <aside class="os-chat"><div><b>Czat</b><span>3</span></div><article><strong>Jan</strong><p>Widać ekran, możemy zaczynać.</p></article><article class="mine"><strong>Ty</strong><p>Super. Pokażę teraz cały proces.</p></article><article><strong>Anna</strong><p>Wszystko czytelne 👌</p></article></aside>
+    </div>
+  </div>
+</section>
+<section class="os-screen" data-preview-screen="admin">
+  <div class="os-admin-page"><header><span>ADMINISTRACJA</span><h2>Pracownicy, punkty i dostępy</h2><p>Dokładnie taki zakres, jaki wynika z roli.</p></header><div class="os-admin-grid"><article><span>AKTYWNE KONTA</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article><article><span>PUNKTY</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article><article><span>DO DECYZJI</span><strong data-count="1">1</strong><small>konto oczekujące</small></article><article><span>AKTYWNE SESJE</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article></div><div class="os-user-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div></div>
+</section>
+            </div>
+          </div>
+          <div class="os-mobile-tabs"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="meetings" type="button">Spotkania</button><button data-preview="admin" type="button">Admin</button></div>
         </div>
+        <div class="hero-phone-mini">
+          <div class="phone-notch"></div><img src="assets/logo.svg" alt=""><span>POŁĄCZ URZĄDZENIE</span><strong>Telefon gotowy.</strong><p>Wpisz kod z aplikacji ServiceOS.</p><div class="mini-code"><i>1</i><i>2</i><i>3</i><i>4</i></div><b>Połącz</b><small>✓ Ten sam zakres uprawnień</small>
+        </div>
+        <div class="hero-chip hero-chip-online"><span class="status-dot"></span><div><strong>SYSTEM ONLINE</strong><small>sesja aktywna</small></div></div>
+        <div class="hero-chip hero-chip-actions"><b>4</b><div><strong>Do działania</strong><small>bieżąca kolejka</small></div></div>
+        <div class="preview-switcher"><button class="active" data-preview="start" type="button">Start</button><button data-preview="service" type="button">Serwis</button><button data-preview="meetings" type="button">Spotkania</button><button data-preview="admin" type="button">Administracja</button></div>
+      </div>
+    </div>
 
-        <div class="module-workspace reveal reveal-delay">
-          <aside class="module-rail" aria-label="Moduły ServiceOS">
-            <div class="module-rail-brand"><span class="titlebar-mark"></span><strong>ServiceOS</strong></div>
-            <button class="active" type="button" data-module="service"><span>⌕</span> Serwis</button>
-            <button type="button" data-module="clients"><span>◎</span> Klienci</button>
-            <button type="button" data-module="meetings"><span>▣</span> Spotkania i szkolenia</button>
-            <button type="button" data-module="finance"><span>₿</span> Rozliczenia</button>
-            <button type="button" data-module="admin"><span>⚙</span> Administracja</button>
-            <button type="button" data-module="tools"><span>↗</span> Narzędzia</button>
-          </aside>
+    <div class="site-frame flow-wrap" id="day">
+      <div class="flow-metrics"><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-package"></use></svg></b><span><strong>Jedna historia</strong><small>całe zlecenie w jednym miejscu</small></span></article><article><b>04</b><span><strong>Cztery etapy</strong><small>od przyjęcia do odbioru</small></span></article><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg></b><span><strong>Role i punkty</strong><small>każdy widzi właściwy zakres</small></span></article><article><b><svg class="os-icon" aria-hidden="true"><use href="#i-phone"></use></svg></b><span><strong>Komputer + telefon</strong><small>ta sama praca w dwóch widokach</small></span></article></div>
+      <div class="flow-cards"><article><span>01</span><b><svg class="os-icon" aria-hidden="true"><use href="#i-package"></use></svg></b><h2>Przyjęcie urządzenia</h2><p>Klient, sprzęt, usterka i dokumenty trafiają do jednej sprawy.</p><i></i></article><article><span>02</span><b><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg></b><h2>Serwis</h2><p>Diagnoza, naprawa, części, zdjęcia i notatki zostają przy zleceniu.</p><i></i></article><article><span>03</span><b><svg class="os-icon" aria-hidden="true"><use href="#i-truck"></use></svg></b><h2>Przekazanie</h2><p>System pokazuje, gdzie jest urządzenie i kto przejmuje kolejny krok.</p><i></i></article><article><span>04</span><b><svg class="os-icon" aria-hidden="true"><use href="#i-check"></use></svg></b><h2>Odbiór</h2><p>Wydanie klientowi zamyka proces, a pełna historia zostaje w systemie.</p><i></i></article></div>
+    </div>
+  </section>
 
-          <div class="module-stage">
+  <section class="modules-section" id="modules">
+    <div class="site-frame">
+      <div class="section-heading reveal"><span>MODUŁY</span><h2>To nie makieta.<br><em>To ServiceOS.</em></h2><p>Układ, menu, rytm kart i stany są odwzorowane z aktualnej aplikacji desktopowej.</p></div>
+      <div class="os-window modules-os-window reveal reveal-delay">
+        <div class="os-titlebar"><div class="os-titlebar-drag"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><span>Wszystkie punkty</span></div><div class="os-window-actions"><i>–</i><i>□</i><i>×</i></div></div>
+        <div class="os-body">
+          
+<aside class="os-sidebar">
+  <div class="os-brand-block"><div class="os-brand-logo"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
+  <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
+  <nav class="os-nav-list">
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item active" type="button" data-module="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
+    <button class="os-nav-item " type="button" data-module="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
+    <button class="os-nav-item " type="button" data-module="finance"><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
+    <button class="os-nav-item " type="button" data-module="admin"><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
+    <button class="os-nav-item " type="button" data-module="clients"><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
+    <button class="os-nav-item " type="button" data-module="tools"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+  </nav>
+  <div class="os-sidebar-spacer"></div>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
+  <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
+</aside>
+          <div class="os-content os-module-content">
             <section class="module-panel active" data-module-panel="service">
-              <header class="module-panel-head"><div><span>SERWIS</span><h3>Zlecenia, które mówią co dalej.</h3><p>Najważniejsza akcja jest na wierzchu. Pełna historia pozostaje w jednej sprawie.</p></div><div class="panel-status"><i class="status-dot"></i> 4 wymagają działania</div></header>
-              <div class="service-preview">
-                <div class="service-preview-list">
-                  <article class="selected"><span>#1042</span><div><strong>iPhone 14 Pro</strong><small>Anna Kowalska · Diagnoza</small></div><b>TERAZ</b></article>
-                  <article><span>#1041</span><div><strong>Samsung S24</strong><small>Piotr Nowak · W drodze</small></div><b>10:12</b></article>
-                  <article><span>#1038</span><div><strong>iPhone 13</strong><small>Marta Lis · Gotowe</small></div><b>GOTOWE</b></article>
-                </div>
-                <aside class="service-preview-detail">
-                  <small>NASTĘPNA AKCJA</small><strong>Rozpocznij diagnozę.</strong><p>iPhone 14 Pro · termin dzisiaj 14:30</p><button type="button" tabindex="-1">Otwórz zlecenie →</button>
-                </aside>
-              </div>
+              <div class="os-service-page large"><header class="os-service-head"><div><span>SERWIS</span><h2>Klienci i naprawy</h2><p>Przyjęcie telefonu, reklamacje, statusy oraz centralne powiadomienia klienta.</p></div><div class="os-service-tabs"><i>Plan pracy</i><i>Nowe zlecenie</i><i class="active">Zlecenia</i><i>Przekazania</i></div></header><div class="os-orders-card"><div class="os-orders-top"><div><span>AKTYWNE ZLECENIA</span><strong>Co wymaga działania?</strong></div><b>4 aktywne</b></div><div class="os-order-row"><strong>#1042</strong><div><b>iPhone 14 Pro</b><span>Anna Kowalska · Diagnoza</span><small>Najbliższy krok: rozpocznij diagnozę</small></div><em>TERAZ</em></div><div class="os-order-row"><strong>#1041</strong><div><b>Samsung S24</b><span>Piotr Nowak · W drodze</span><small>Urządzenie wraca do punktu klienta</small></div><em>W DRODZE</em></div><div class="os-order-row"><strong>#1038</strong><div><b>iPhone 13</b><span>Marta Lis · Gotowe</span><small>Telefon czeka na odbiór</small></div><em class="ok">GOTOWE</em></div></div></div>
             </section>
-
-            <section class="module-panel" data-module-panel="clients">
-              <header class="module-panel-head"><div><span>KLIENCI</span><h3>Osoba, urządzenia i historia w jednym widoku.</h3><p>Kontaktujesz się z klientem bez szukania poprzednich napraw i dokumentów.</p></div></header>
-              <div class="client-preview">
-                <div class="client-profile"><div class="client-avatar">AK</div><div><strong>Anna Kowalska</strong><span>3 urządzenia · 5 zleceń</span></div><b>AKTYWNA</b></div>
-                <div class="client-history">
-                  <article><span>iPhone 14 Pro</span><strong>Diagnoza</strong><small>#1042 · dzisiaj</small></article>
-                  <article><span>iPhone 12</span><strong>Zakończone</strong><small>#0918 · 18.06</small></article>
-                  <article><span>MacBook Air</span><strong>Zakończone</strong><small>#0714 · 02.03</small></article>
-                </div>
-              </div>
-            </section>
-
+            <section class="module-panel" data-module-panel="clients"><div class="os-module-page"><header><span>KLIENCI</span><h2>Osoba, urządzenia i historia.</h2><p>Wszystko, co potrzebne do rozmowy z klientem, w jednym widoku.</p></header><div class="customer-hero"><b>AK</b><span><strong>Anna Kowalska</strong><small>3 urządzenia · 5 zleceń</small></span><em>AKTYWNA</em></div><div class="history-grid"><article><span>iPhone 14 Pro</span><strong>Diagnoza</strong><small>#1042 · dzisiaj</small></article><article><span>iPhone 12</span><strong>Zakończone</strong><small>#0918 · 18.06</small></article><article><span>MacBook Air</span><strong>Zakończone</strong><small>#0714 · 02.03</small></article></div></div></section>
             <section class="module-panel" data-module-panel="meetings">
-              <header class="module-panel-head"><div><span>SPOTKANIA I SZKOLENIA</span><h3>Odprawa bez wychodzenia z ServiceOS.</h3><p>Aktywne spotkanie pozostaje dostępne także podczas pracy w innych modułach.</p></div><div class="live-badge"><i></i> TRWA TERAZ</div></header>
-              <div class="meeting-module-preview">
-                <div><strong>Szkolenie serwisowe</strong><span>02:03 / 60 min · 4 uczestników</span></div>
-                <div class="meeting-module-actions"><span>▣ Tryb kinowy</span><span>◉ Mikrofon</span><span>↗ Ekran</span><span>☰ Czat</span></div>
-              </div>
-              <div class="module-dock"><i class="status-dot"></i><span><strong>Spotkanie działa w tle</strong><small>Przejdź do Serwisu i wróć jednym kliknięciem.</small></span><b>WRÓĆ →</b></div>
-            </section>
-
-            <section class="module-panel" data-module-panel="finance">
-              <header class="module-panel-head"><div><span>ROZLICZENIA</span><h3>Wynik jest połączony z wykonaną pracą.</h3><p>Uprawnione role widzą przychód, koszty i rozliczenia bez osobnych arkuszy.</p></div></header>
-              <div class="finance-preview">
-                <article><span>Przychód</span><strong>12 840 zł</strong><small>31 zamkniętych zleceń</small></article>
-                <article><span>Koszty części</span><strong>4 120 zł</strong><small>zatwierdzone dokumenty</small></article>
-                <article><span>Do rozliczenia</span><strong>2 460 zł</strong><small>bieżący okres</small></article>
-              </div>
-              <div class="finance-bars" aria-hidden="true"><i class="bar-a"></i><i class="bar-b"></i><i class="bar-c"></i><i class="bar-d"></i><i class="bar-e"></i><i class="bar-f"></i><i class="bar-g"></i></div>
-            </section>
-
+<section class="os-screen module-meeting-screen active">
+  <div class="os-meeting-page">
+    <header><div><span class="os-live">● TRWA TERAZ</span><h2>Szkolenie serwisowe</h2><p>Prowadzący: <strong>Bartłomiej</strong> · <b data-meeting-elapsed>02:03</b> / 60 min</p></div><span class="os-secondary-chip">▣ Tryb kinowy</span></header>
+    <div class="os-meeting-layout">
+      <div class="os-meeting-stage"><div class="os-shared-window"><div class="os-shared-sidebar"></div><div class="os-shared-main"><span></span><strong></strong><div></div><div></div></div><small><i class="status-dot"></i> Ekran prowadzącego</small></div><div class="os-meeting-controls-mini"><i><svg class="os-icon" aria-hidden="true"><use href="#i-mic"></use></svg> Mikrofon</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-screen"></use></svg> Udostępnianie</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-message"></use></svg> Czat</i></div></div>
+      <aside class="os-chat"><div><b>Czat</b><span>3</span></div><article><strong>Jan</strong><p>Widać ekran, możemy zaczynać.</p></article><article class="mine"><strong>Ty</strong><p>Super. Pokażę teraz cały proces.</p></article><article><strong>Anna</strong><p>Wszystko czytelne 👌</p></article></aside>
+    </div>
+  </div>
+</section></section>
+            <section class="module-panel" data-module-panel="finance"><div class="os-module-page"><header><span>ROZLICZENIA</span><h2>Praca i wynik w jednym miejscu.</h2><p>Przychody, koszty i rozliczenia bez osobnych arkuszy.</p></header><div class="finance-grid"><article><span>Przychód</span><strong>12 840 zł</strong><small>31 zamkniętych zleceń</small></article><article><span>Koszty części</span><strong>4 120 zł</strong><small>zatwierdzone dokumenty</small></article><article><span>Do rozliczenia</span><strong>2 460 zł</strong><small>bieżący okres</small></article></div><div class="finance-chart"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div></section>
             <section class="module-panel" data-module-panel="admin">
-              <header class="module-panel-head"><div><span>ADMINISTRACJA</span><h3>Role i punkty zamiast ręcznego pilnowania dostępu.</h3><p>Właściciel i koordynator zarządzają dokładnie tym zakresem, za który odpowiadają.</p></div></header>
-              <div class="admin-preview">
-                <div class="admin-stats"><article><span>Konta</span><strong>12</strong></article><article><span>Punkty</span><strong>3</strong></article><article><span>Do decyzji</span><strong>1</strong></article></div>
-                <div class="admin-user"><span class="client-avatar">JN</span><div><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></div><b>AKTYWNY</b></div>
-                <div class="admin-user"><span class="client-avatar">AL</span><div><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></div><b>AKTYWNY</b></div>
-              </div>
-            </section>
-
-            <section class="module-panel" data-module-panel="tools">
-              <header class="module-panel-head"><div><span>NARZĘDZIA</span><h3>Mniej przełączania między programami.</h3><p>Przeglądarka, pomoc i ustawienia są częścią tego samego środowiska pracy.</p></div></header>
-              <div class="tools-preview">
-                <article><span>↗</span><div><strong>Przeglądarka</strong><small>Internet wewnątrz ServiceOS</small></div><b>OTWÓRZ</b></article>
-                <article><span>?</span><div><strong>Pomoc</strong><small>Bot, konsultant i połączenie telefonu</small></div><b>POMOC</b></article>
-                <article><span>⚙</span><div><strong>Ustawienia</strong><small>Wygląd, konto i integracje</small></div><b>USTAW</b></article>
-              </div>
-            </section>
+<section class="os-screen module-admin-screen active">
+  <div class="os-admin-page"><header><span>ADMINISTRACJA</span><h2>Pracownicy, punkty i dostępy</h2><p>Dokładnie taki zakres, jaki wynika z roli.</p></header><div class="os-admin-grid"><article><span>AKTYWNE KONTA</span><strong data-count="12">12</strong><small>wszyscy użytkownicy</small></article><article><span>PUNKTY</span><strong data-count="3">3</strong><small>lokalizacje firmy</small></article><article><span>DO DECYZJI</span><strong data-count="1">1</strong><small>konto oczekujące</small></article><article><span>AKTYWNE SESJE</span><strong data-count="6">6</strong><small>połączone urządzenia</small></article></div><div class="os-user-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div></div>
+</section></section>
+            <section class="module-panel" data-module-panel="tools"><div class="os-module-page"><header><span>NARZĘDZIA</span><h2>Wszystko w jednym środowisku.</h2><p>Przeglądarka, pomoc i ustawienia są częścią ServiceOS.</p></header><div class="tool-list"><article><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span><strong>Przeglądarka</strong><small>Internet wewnątrz ServiceOS</small></span><b>OTWÓRZ</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span><strong>Pomoc</strong><small>Chat i kontakt z pomocą</small></span><b>POMOC</b></article><article><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span><strong>Ustawienia</strong><small>Wygląd, konto i integracje</small></span><b>USTAW</b></article></div></div></section>
           </div>
         </div>
       </div>
-    </section>
-
-    <section class="roles-section roles-wow" id="roles">
-      <div class="site-frame">
-        <div class="roles-head reveal">
-          <div class="section-heading">
-            <span class="section-label">ROLE</span>
-            <h2>Każdy dostaje <span>swój pulpit.</span></h2>
-            <p>Bez zbędnych zakładek. Bez przypadkowego dostępu. ServiceOS pokazuje każdemu tylko pracę, za którą odpowiada.</p>
-          </div>
-          <div class="roles-rule"><span class="status-dot"></span><strong>Ta sama rola działa na komputerze i telefonie.</strong></div>
-        </div>
-
-        <div class="role-showcase">
-          <article class="role-wow-card reveal">
-            <div class="role-wow-number">01</div>
-            <div class="role-wow-icon">◆</div>
-            <span>WŁAŚCICIEL</span>
-            <h3>Widzę całą firmę.</h3>
-            <p>Punkty, ludzi, wyniki i administrację.</p>
-            <div class="role-permissions"><i>Firma</i><i>Zespół</i><i>Rozliczenia</i></div>
-          </article>
-          <article class="role-wow-card reveal reveal-delay">
-            <div class="role-wow-number">02</div>
-            <div class="role-wow-icon">◎</div>
-            <span>SZEF / KOORDYNATOR</span>
-            <h3>Prowadzę zespół.</h3>
-            <p>Widzę pracę i ludzi w swoim zakresie.</p>
-            <div class="role-permissions"><i>Punkty</i><i>Zespół</i><i>Serwis</i></div>
-          </article>
-          <article class="role-wow-card reveal">
-            <div class="role-wow-number">03</div>
-            <div class="role-wow-icon">⌕</div>
-            <span>SERWISANT</span>
-            <h3>Naprawiam.</h3>
-            <p>Kolejka, części, terminy i urządzenia.</p>
-            <div class="role-permissions"><i>Zlecenia</i><i>Części</i><i>Terminy</i></div>
-          </article>
-          <article class="role-wow-card reveal reveal-delay">
-            <div class="role-wow-number">04</div>
-            <div class="role-wow-icon">⇄</div>
-            <span>OBSŁUGA</span>
-            <h3>Prowadzę klienta.</h3>
-            <p>Przyjęcie, kontakt, przekazanie i odbiór.</p>
-            <div class="role-permissions"><i>Klient</i><i>Dokumenty</i><i>Odbiór</i></div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="meetings-section meetings-wow" id="meetings">
-      <div class="meeting-ambient" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="site-frame">
-        <div class="meeting-intro reveal">
-          <div class="section-heading">
-            <span class="section-label"><i class="live-pin"></i> SPOTKANIA I SZKOLENIA</span>
-            <h2>Spotkanie trwa.<br><span>Ty pracujesz dalej.</span></h2>
-            <p>Rozmowa, ekran, czat i uczestnicy są częścią ServiceOS. Minimalizujesz pokój, przechodzisz do zlecenia i wracasz jednym kliknięciem.</p>
-          </div>
-          <div class="meeting-proof">
-            <article><b>01</b><span><strong>Jeden pokój</strong><small>ekran + głos + chat</small></span></article>
-            <article><b>02</b><span><strong>Tryb kinowy</strong><small>maksimum miejsca na treść</small></span></article>
-            <article><b>03</b><span><strong>Działa w tle</strong><small>nie gubisz połączenia</small></span></article>
-          </div>
-        </div>
-
-        <div class="meeting-visual meeting-wow-shell reveal reveal-delay" data-meeting-room>
-          <header class="meeting-room-header">
-            <div>
-              <div class="meeting-titleline"><span class="live-badge"><i></i> LIVE</span><strong>Szkolenie serwisowe</strong><span class="meeting-room-code">#ROOM-204</span></div>
-              <div class="meeting-meta"><span>Prowadzi <b>Bartłomiej</b></span><span><b data-meeting-elapsed>02:03</b> / 60 min</span><span><b>4</b> osoby online</span></div>
-            </div>
-            <button class="meeting-theater-button" type="button" data-meeting-theater><span>▣</span> Tryb kinowy</button>
-          </header>
-
-          <div class="meeting-room-grid">
-            <main class="meeting-stage">
-              <div class="shared-screen meeting-screen-wow">
-                <div class="meeting-screen-glow" aria-hidden="true"></div>
-                <div class="shared-titlebar"><span class="titlebar-mark"></span><span></span><span></span></div>
-                <div class="shared-shell">
-                  <aside><i class="active"></i><i></i><i></i><i></i><i></i></aside>
-                  <div class="shared-content">
-                    <div class="shared-head"><div><span></span><strong></strong><small></small></div><b></b></div>
-                    <div class="meeting-demo-dashboard">
-                      <article><span>DO DZIAŁANIA</span><strong>4</strong><small>aktywne zlecenia</small></article>
-                      <article><span>GOTOWE</span><strong>7</strong><small>do wydania</small></article>
-                      <article><span>DZISIAJ</span><strong>12</strong><small>obsłużonych spraw</small></article>
-                    </div>
-                    <div class="shared-card wide"><span></span><span></span><span></span><span></span></div>
-                    <div class="shared-cards"><i></i><i></i><i></i></div>
-                  </div>
-                </div>
-                <div class="screen-share-label"><span class="status-dot"></span> Ekran prowadzącego · płynny podgląd</div>
-
-                <div class="meeting-speaker-card">
-                  <div class="speaker-avatar">BM</div>
-                  <div><strong>Bartłomiej</strong><small>mówi teraz</small></div>
-                  <div class="voice-wave" aria-label="Aktywność mikrofonu"><i></i><i></i><i></i><i></i><i></i></div>
-                </div>
-              </div>
-
-              <div class="meeting-controls">
-                <button class="active" type="button"><span>◉</span> Mikrofon</button>
-                <button class="active" type="button"><span>↗</span> Udostępniam ekran</button>
-                <button type="button"><span>✋</span> Podnieś rękę</button>
-                <button type="button" data-meeting-side-open="chat"><span>☰</span> Otwórz czat</button>
-              </div>
-            </main>
-
-            <aside class="meeting-side">
-              <div class="meeting-side-tabs" role="tablist" aria-label="Panel spotkania">
-                <button class="active" type="button" role="tab" aria-selected="true" data-meeting-side="chat">Czat <b>3</b></button>
-                <button type="button" role="tab" aria-selected="false" data-meeting-side="people">Osoby <b>4</b></button>
-              </div>
-              <div class="meeting-side-panel active" data-meeting-side-panel="chat">
-                <div class="chat-messages">
-                  <article><strong>Jan</strong><p>Widać ekran, możemy zaczynać.</p><small>21:17</small></article>
-                  <article class="mine"><strong>Ty</strong><p>Super. Pokażę teraz cały proces.</p><small>21:18</small></article>
-                  <article><strong>Anna</strong><p>Jasne, wszystko czytelne 👌</p><small>21:18</small></article>
-                </div>
-                <div class="chat-typing"><span>Jan pisze</span><i></i><i></i><i></i></div>
-                <div class="chat-compose">Napisz wiadomość… <b>→</b></div>
-              </div>
-              <div class="meeting-side-panel" data-meeting-side-panel="people">
-                <div class="participant"><span class="client-avatar">BM</span><div><strong>Bartłomiej</strong><small>Prowadzący · mówi</small></div><b class="mic-on">◉</b></div>
-                <div class="participant"><span class="client-avatar">JN</span><div><strong>Jan Nowak</strong><small>Serwisant</small></div><b class="mic-on">◉</b></div>
-                <div class="participant"><span class="client-avatar">AL</span><div><strong>Anna Lis</strong><small>Obsługa</small></div><b>○</b></div>
-                <div class="participant"><span class="client-avatar">MK</span><div><strong>Marek Kowal</strong><small>Koordynator</small></div><b>○</b></div>
-              </div>
-            </aside>
-          </div>
-
-          <div class="meeting-dock meeting-dock-wow">
-            <span class="live-badge compact"><i></i> LIVE</span>
-            <div class="dock-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-            <div><strong>Spotkanie działa w tle.</strong><small>Możesz wejść do Serwisu, Klientów albo Rozliczeń — połączenie zostaje.</small></div>
-            <div class="dock-route"><span>Spotkanie</span><i>→</i><span>Serwis</span><i>→</i><b>Wróć</b></div>
-          </div>
-        </div>
-
-        <div class="meeting-explainer">
-          <article class="reveal"><span>01</span><div><strong>Uruchamiasz spotkanie</strong><small>Bez zewnętrznego linku i bez drugiej aplikacji.</small></div></article>
-          <article class="reveal reveal-delay"><span>02</span><div><strong>Pokazujesz ekran</strong><small>Cały zespół widzi dokładnie to, co omawiasz.</small></div></article>
-          <article class="reveal reveal-delay-2"><span>03</span><div><strong>Wracasz do pracy</strong><small>Pokój zostaje aktywny jako mały dock ServiceOS.</small></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="phone-section phone-wow" id="connect">
-      <div class="phone-beam" aria-hidden="true"></div>
-      <div class="site-frame phone-layout">
-        <div class="phone-copy reveal">
-          <div class="section-heading">
-            <span class="section-label">TELEFON</span>
-            <h2>Telefon gotowy<br><span>w minutę.</span></h2>
-            <p>Bez instalowania kolejnej aplikacji. Otwierasz stronę, wpisujesz kod z ServiceOS i masz swój panel.</p>
-          </div>
-
-          <div class="phone-connect-flow">
-            <div class="desktop-code-card">
-              <div class="desktop-code-head"><span class="titlebar-mark"></span><strong>ServiceOS · Pomoc</strong></div>
-              <small>POŁĄCZ URZĄDZENIE</small>
-              <strong class="desktop-code-value">ABCD-EFGH</strong>
-              <span>Kod jednorazowy</span>
-            </div>
-            <div class="connect-beam-line" aria-hidden="true"><i></i><i></i><i></i></div>
-          </div>
-
-          <div class="phone-steps">
-            <button class="active" type="button" data-phone-step="1"><b>1</b><span><strong>Otwórz app.serviceos.pl</strong><small>Na telefonie, bez instalowania aplikacji.</small></span></button>
-            <button type="button" data-phone-step="2"><b>2</b><span><strong>W ServiceOS wybierz „Połącz urządzenie”</strong><small>Dostaniesz krótki kod.</small></span></button>
-            <button type="button" data-phone-step="3"><b>3</b><span><strong>Wpisz kod na telefonie</strong><small>To jednorazowe połączenie.</small></span></button>
-            <button type="button" data-phone-step="4"><b>✓</b><span><strong>Gotowe</strong><small>Masz ten sam zakres pracy co na komputerze.</small></span></button>
-          </div>
-
-          <div class="phone-actions">
-            <button class="button button-primary button-large" type="button" data-open-login data-requires-onboarding>Połącz mój telefon →</button>
-            <button class="button button-secondary button-large" type="button" data-copy-site>Kopiuj app.serviceos.pl</button>
-          </div>
-        </div>
-
-        <div class="phone-stage reveal reveal-delay" aria-label="Animowany podgląd telefonu">
-          <div class="phone-orbit phone-orbit-a" aria-hidden="true"></div>
-          <div class="phone-orbit phone-orbit-b" aria-hidden="true"></div>
-          <div class="phone-glow" aria-hidden="true"></div>
-          <div class="phone-floating-badge phone-badge-secure"><span>✓</span><div><strong>Połączono</strong><small>bezpieczna sesja</small></div></div>
-          <div class="phone-floating-badge phone-badge-role"><span>BM</span><div><strong>Właściciel</strong><small>ten sam zakres</small></div></div>
-
-          <div class="phone-frame">
-            <div class="phone-speaker"></div>
-            <div class="phone-screen">
-              <section class="phone-screen-view active" data-phone-screen="1">
-                <div class="mobile-browser-bar"><span>‹</span><strong>app.serviceos.pl</strong><span>⋯</span></div>
-                <div class="mobile-web-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn</strong><small>ServiceOS</small></span></div>
-                <div class="mobile-connect-card"><span>POŁĄCZ TELEFON</span><h3>Pracuj mobilnie.</h3><p>Otwórz kod w aplikacji ServiceOS na komputerze.</p><button type="button" tabindex="-1">Mam kod →</button></div>
-              </section>
-
-              <section class="phone-screen-view" data-phone-screen="2">
-                <div class="mobile-app-head"><img src="assets/logo.svg" alt=""><span><strong>ServiceOS</strong><small>Pomoc</small></span></div>
-                <div class="mobile-help-card"><span>TWÓJ KOD</span><h3>ABCD-EFGH</h3><p>Wpisz go na telefonie. Kod działa tylko raz.</p><div class="code-progress"><i></i><i></i><i></i><i></i></div></div>
-                <div class="mobile-note">Kod wygasa automatycznie.</div>
-              </section>
-
-              <section class="phone-screen-view" data-phone-screen="3">
-                <div class="mobile-web-brand"><img src="assets/logo.svg" alt=""><span><strong>ServiceOS</strong><small>Połączenie telefonu</small></span></div>
-                <div class="mobile-code-entry"><span>WPISZ KOD</span><div class="mobile-code-box">ABCD-EFGH</div><button type="button" tabindex="-1">Połącz telefon</button><small><span class="status-dot"></span> Sprawdzam bezpieczne połączenie…</small></div>
-              </section>
-
-              <section class="phone-screen-view" data-phone-screen="4">
-                <div class="mobile-panel-head"><span class="status-dot"></span><div><strong>Gotowe.</strong><small>ServiceOS · online</small></div><b>BM</b></div>
-                <div class="mobile-next-action"><span>TERAZ</span><strong>Rozpocznij diagnozę #1042</strong><small>iPhone 14 Pro · termin 14:30</small></div>
-                <div class="mobile-panel-actions"><article><b>＋</b><span>Nowe</span></article><article><b>⇄</b><span>Przekaż</span></article><article><b>⌕</b><span>Zlecenia</span></article><article><b>⋯</b><span>Więcej</span></article></div>
-                <nav class="mobile-bottom-nav"><span class="active">Start</span><span>Zlecenia</span><span>Przekaż</span><span>Więcej</span></nav>
-              </section>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="security-section security-wow" id="security">
-      <div class="site-frame">
-        <div class="security-head reveal">
-          <div class="section-heading">
-            <span class="section-label">BEZPIECZEŃSTWO</span>
-            <h2>Proste dla człowieka.<br><span>Twarde dla systemu.</span></h2>
-            <p>Nie dokładamy użytkownikowi dziesięciu komunikatów. Uprawnienia i ograniczenia pilnuje system.</p>
-          </div>
-          <div class="security-lock" aria-hidden="true">
-            <div class="lock-ring"><span>✓</span></div>
-            <small>ACCESS<br>CONTROL</small>
-          </div>
-        </div>
-
-        <div class="security-grid">
-          <article class="security-card reveal"><span>01</span><div class="security-icon">✓</div><h3>Konto musi być zatwierdzone.</h3><p>Samo logowanie nie otwiera danych firmy.</p><b>APPROVED ONLY</b></article>
-          <article class="security-card reveal reveal-delay"><span>02</span><div class="security-icon">◎</div><h3>Rola określa zakres.</h3><p>Każdy widzi tylko swoje punkty i funkcje.</p><b>ROLE BASED</b></article>
-          <article class="security-card reveal reveal-delay-2"><span>03</span><div class="security-icon">↯</div><h3>Kod telefonu działa raz.</h3><p>Nie nadaje nowych uprawnień i sam wygasa.</p><b>ONE TIME</b></article>
-        </div>
-
-        <div class="security-strip reveal">
-          <span><i class="status-dot"></i> ServiceOS sprawdza dostęp po stronie serwera</span>
-          <span>telefon dziedziczy rolę</span>
-          <span>sesja może zostać unieważniona</span>
-          <span>CSP pozostaje aktywne</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="start-section start-wow" id="start">
-      <div class="start-ambient" aria-hidden="true"></div>
-      <div class="site-frame">
-        <div class="start-kicker reveal"><span class="status-dot"></span> GOTOWY DO PRACY</div>
-        <div class="start-panel reveal">
-          <div class="start-download">
-            <span class="section-label">START / DOWNLOAD</span>
-            <h2>Otwórz ServiceOS.<br><span>I po prostu zacznij.</span></h2>
-            <p>Aktualna wersja dla Windows. Telefon możesz połączyć później — w kilka sekund.</p>
-
-            <div class="release-card">
-              <div class="release-mark"><img src="assets/logo.svg" alt=""></div>
-              <div><strong>LockOn ServiceOS <span data-release-version>najnowsza</span></strong><span><span data-release-size>instalator Windows</span> · aktualny release</span><code data-release-digest>SHA-256 w GitHub Release</code></div>
-              <span class="release-ready"><i class="status-dot"></i> GOTOWE</span>
-            </div>
-
-            <div class="start-actions">
-              <a class="button button-primary button-large download-link start-main-download" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><span>↓</span> Pobierz ServiceOS</a>
-              <button class="button button-secondary button-large" type="button" data-open-login data-requires-onboarding>Połącz telefon</button>
-            </div>
-            <div class="release-links"><a href="signing.html">Code signing</a><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a></div>
-          </div>
-
-          <div class="onboarding-card" id="onboardingAccept">
-            <div class="onboarding-visual"><span>01</span><i></i><span>02</span><i></i><span>03</span></div>
-            <span>PIERWSZE URUCHOMIENIE</span>
-            <h3>Jedno krótkie potwierdzenie.</h3>
-            <p>Potwierdź zasady pracownika, a pobieranie i połączenie telefonu odblokują się w tej przeglądarce.</p>
-            <label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem lub osobą uprawnioną przez LockOn.</span></label>
-            <label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> i <a href="privacy.html">politykę prywatności</a>.</span></label>
-            <label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod „Połącz urządzenie” jest jednorazowy.</span></label>
-            <button id="acceptOnboarding" class="button button-primary onboarding-submit" type="button" disabled>Odblokuj ServiceOS →</button>
-            <small id="onboardingState">Potwierdź trzy punkty powyżej.</small>
-          </div>
-        </div>
-      </div>
-    </section>
-    </main>
-
-  <dialog id="webLoginDialog" class="portal-login-dialog" aria-labelledby="webLoginTitle">
-    <div class="portal-login-card">
-      <div class="portal-login-head">
-        <div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połączenie telefonu</span></div></div>
-        <button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button>
-      </div>
-      <div class="portal-login-copy"><span>KOD Z APLIKACJI WINDOWS</span><h2 id="webLoginTitle">Połącz telefon.</h2><p>W ServiceOS na komputerze otwórz <strong>Pomoc → Połącz urządzenie</strong> i przepisz kod.</p></div>
-      <div class="portal-login-steps">
-        <article><b>1</b><span><strong>ServiceOS</strong><small>Zaloguj się swoim zatwierdzonym kontem.</small></span></article>
-        <article><b>2</b><span><strong>Pomoc → Połącz urządzenie</strong><small>Wygeneruj kod ważny przez kilka minut.</small></span></article>
-        <article><b>3</b><span><strong>Wpisz kod</strong><small>Panel otworzy się automatycznie.</small></span></article>
-      </div>
-      <form id="webAuthCodeForm" class="portal-code-form">
-        <label for="webAuthCode"><span>Jednorazowy kod</span><small>ABCD-EFGH</small></label>
-        <div class="portal-code-field"><input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required><button id="webAuthCodeSubmit" type="submit" disabled>Połącz</button></div>
-        <small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small>
-      </form>
-      <div class="portal-login-security"><span>✓</span><span>Telefon otrzyma dokładnie ten sam zakres dostępu, który ma Twoje konto w ServiceOS.</span></div>
     </div>
-  </dialog>
+  </section>
 
-  <footer class="site-footer">
-    <div class="site-frame footer-inner">
-      <div class="footer-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn ServiceOS</strong><small>system pracy serwisu</small></span></div>
-      <nav class="footer-links" aria-label="Stopka">
-        <a href="panel.html">Panel pracownika</a>
-        <a href="klient.html">Panel klienta</a>
-        <a href="track.html">Tracking</a>
-        <a href="terms.html">Regulamin</a>
-        <a href="privacy.html">Prywatność</a>
-        <a href="signing.html">Code signing</a>
-      </nav>
+  <section class="roles-section" id="roles">
+    <div class="site-frame role-layout">
+      <div class="section-heading reveal"><span>ROLE</span><h2>Każdy widzi dokładnie<br><em>swój zakres pracy.</em></h2><p>ServiceOS nie pokazuje wszystkim wszystkiego. Menu i akcje wynikają z roli oraz przypisanych punktów.</p></div>
+      <div class="role-simulator reveal reveal-delay">
+        <div class="role-tabs"><button class="active" type="button" data-role-preview="owner"><b>01</b><span><strong>Właściciel</strong><small>cała firma</small></span></button><button type="button" data-role-preview="boss"><b>02</b><span><strong>Szef / Koordynator</strong><small>punkty + zespół</small></span></button><button type="button" data-role-preview="tech"><b>03</b><span><strong>Serwisant</strong><small>praca techniczna</small></span></button><button type="button" data-role-preview="front"><b>04</b><span><strong>Obsługa</strong><small>klient + wydanie</small></span></button></div>
+        <div class="role-app">
+          <div class="role-app-title"><span class="titlebar-mark"></span><strong>Podgląd roli w ServiceOS</strong><small data-role-scope>Wszystkie punkty</small></div>
+          <div class="role-app-body"><aside><div class="role-app-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn</strong><small>ServiceOS</small></span></div><div class="role-app-nav" data-role-nav><i class="active"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg> Start</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg> Serwis</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg> Spotkania</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg> Rozliczenia</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg> Administracja</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg> Klienci</i></div></aside><main><span>AKTYWNA ROLA</span><h3 data-role-title>Właściciel aplikacji</h3><p data-role-copy>Pełny widok punktów, zespołu, administracji i rozliczeń.</p><div class="role-permission-grid" data-role-permissions><i>Wszystkie punkty</i><i>Zespół</i><i>Rozliczenia</i><i>Administracja</i></div></main></div>
+        </div>
+      </div>
     </div>
-  </footer>
+  </section>
 
-  <script src="assets/google-config.js"></script>
-  <script src="assets/google-auth.js"></script>
-  <script src="assets/serviceos-app-site.js"></script>
+  <section class="meetings-section meetings-wow" id="meetings">
+    <div class="site-frame">
+      <div class="meeting-intro reveal"><div class="section-heading"><span>SPOTKANIA I SZKOLENIA</span><h2>Pokój spotkania.<br><em>Dokładnie jak w aplikacji.</em></h2><p>Ekran, mikrofon, chat i uczestnicy. Spotkanie nie znika, kiedy przechodzisz do Serwisu.</p></div><div class="meeting-points"><article><b>01</b><span><strong>Tryb kinowy</strong><small>duża scena</small></span></article><article><b>02</b><span><strong>Czat i osoby</strong><small>po prawej</small></span></article><article><b>03</b><span><strong>Działa w tle</strong><small>wracasz jednym kliknięciem</small></span></article></div></div>
+      <div class="os-window meeting-os-window reveal reveal-delay" data-meeting-room>
+        <div class="os-titlebar"><div class="os-titlebar-drag"><span class="titlebar-mark"></span><strong>LockOn ServiceOS</strong><span>Wszystkie punkty</span></div><div class="os-window-actions"><i>–</i><i>□</i><i>×</i></div></div>
+        <div class="os-body">
+          
+<aside class="os-sidebar">
+  <div class="os-brand-block"><div class="os-brand-logo"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn</strong><small>ServiceOS</small></div></div>
+  <div class="os-branch-pill"><span class="status-dot"></span><span>Wszystkie punkty</span></div>
+  <nav class="os-nav-list">
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
+    <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+  </nav>
+  <div class="os-sidebar-spacer"></div>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span></button>
+  <button class="os-nav-item " type="button" ><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+  <div class="os-role-preview"><span>PODGLĄD ROLI</span><strong>Właściciel aplikacji</strong></div>
+  <div class="os-account"><span>BM</span><div><strong>Bartłomiej</strong><small>Właściciel</small></div><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></div>
+</aside>
+          <div class="os-content">
+            <div class="full-meeting-room">
+              <header><div><div><span class="os-live">● TRWA TERAZ</span><h2>Szkolenie serwisowe</h2></div><p>Prowadzący: <strong>Bartłomiej</strong> · <b data-meeting-elapsed>02:03</b> / 60 min</p></div><button class="meeting-theater-button" type="button" data-meeting-theater>▣ Tryb kinowy</button></header>
+              <div class="meeting-room-layout">
+                <div class="meeting-stage-full">
+                  <div class="screen-share"><div class="screen-toolbar"><span class="titlebar-mark"></span><i></i><i></i></div><div class="screen-app"><aside></aside><main><div class="screen-head"><span></span><strong></strong></div><div class="screen-stats"><i></i><i></i><i></i></div><div class="screen-chart"><b></b><b></b><b></b><b></b></div></main></div><div class="screen-label"><span class="status-dot"></span> Ekran prowadzącego</div><div class="speaker-pill"><b>BM</b><span><strong>Bartłomiej</strong><small>mówi teraz</small></span><i></i><i></i><i></i><i></i></div></div>
+                  <div class="meeting-controls"><button class="active" type="button"><svg class="os-icon" aria-hidden="true"><use href="#i-mic"></use></svg> Mikrofon</button><button class="active" type="button"><svg class="os-icon" aria-hidden="true"><use href="#i-screen"></use></svg> Udostępnianie</button><button type="button">✋ Podnieś rękę</button><button type="button" data-meeting-side-open="chat"><svg class="os-icon" aria-hidden="true"><use href="#i-message"></use></svg> Czat</button></div>
+                </div>
+                <aside class="meeting-side"><div class="meeting-side-tabs"><button class="active" type="button" data-meeting-side="chat">Czat <b>3</b></button><button type="button" data-meeting-side="people">Uczestnicy <b>4</b></button></div><div class="meeting-side-panel active" data-meeting-side-panel="chat"><div class="chat-messages"><article><strong>Jan</strong><p>Widać ekran, możemy zaczynać.</p><small>21:17</small></article><article class="mine"><strong>Ty</strong><p>Super. Pokażę teraz cały proces.</p><small>21:18</small></article><article><strong>Anna</strong><p>Jasne, wszystko czytelne 👌</p><small>21:18</small></article></div><div class="chat-compose">Napisz wiadomość… <b>→</b></div></div><div class="meeting-side-panel" data-meeting-side-panel="people"><div class="participant"><b>BM</b><span><strong>Bartłomiej</strong><small>Prowadzący · mówi</small></span><em>◉</em></div><div class="participant"><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant</small></span><em>◉</em></div><div class="participant"><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa</small></span><em>○</em></div><div class="participant"><b>MK</b><span><strong>Marek Kowal</strong><small>Koordynator</small></span><em>○</em></div></div></aside>
+              </div>
+              <div class="meeting-dock"><span class="os-live">● LIVE</span><div><strong>Spotkanie działa w tle</strong><small>Przejdź do Serwisu i wróć bez ponownego łączenia.</small></div><b>WRÓĆ DO SPOTKANIA →</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="phone-section phone-wow" id="connect">
+    <div class="site-frame phone-layout">
+      <div class="phone-copy reveal"><div class="section-heading"><span>TELEFON</span><h2>Ten sam ServiceOS.<br><em>W kieszeni.</em></h2><p>Nie instalujesz osobnej aplikacji mobilnej. Otwierasz stronę, wpisujesz jednorazowy kod i dostajesz swój zakres pracy.</p></div><div class="phone-steps"><button class="active" type="button" data-phone-step="1"><b>1</b><span><strong>Otwórz app.serviceos.pl</strong><small>na telefonie</small></span></button><button type="button" data-phone-step="2"><b>2</b><span><strong>Pomoc → Połącz urządzenie</strong><small>w ServiceOS na komputerze</small></span></button><button type="button" data-phone-step="3"><b>3</b><span><strong>Przepisz kod</strong><small>jednorazowy i krótki</small></span></button><button type="button" data-phone-step="4"><b>✓</b><span><strong>Gotowe</strong><small>ten sam zakres uprawnień</small></span></button></div><div class="phone-actions"><button class="button button-primary button-large" type="button" data-open-login data-requires-onboarding>Połącz mój telefon <svg class="os-icon" aria-hidden="true"><use href="#i-arrow"></use></svg></button><button class="button button-secondary button-large" type="button" data-copy-site>Kopiuj app.serviceos.pl</button></div></div>
+      <div class="phone-stage reveal reveal-delay"><div class="phone-orbit"></div><div class="desktop-pair-card"><div><span class="titlebar-mark"></span><strong>ServiceOS · Pomoc</strong></div><small>POŁĄCZ URZĄDZENIE</small><b>ABCD-EFGH</b><span>Kod jednorazowy · wygasa automatycznie</span></div><div class="pair-beam"><i></i><i></i><i></i></div><div class="phone-frame"><div class="phone-speaker"></div><div class="phone-screen"><section class="phone-screen-view active" data-phone-screen="1"><div class="mobile-browser-bar"><span>‹</span><strong>app.serviceos.pl</strong><span>⋯</span></div><div class="mobile-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn</strong><small>ServiceOS</small></span></div><div class="mobile-card"><span>POŁĄCZ TELEFON</span><h3>Pracuj mobilnie.</h3><p>Użyj kodu z aplikacji ServiceOS.</p><b>Mam kod →</b></div></section><section class="phone-screen-view" data-phone-screen="2"><div class="mobile-brand"><img src="assets/logo.svg" alt=""><span><strong>ServiceOS</strong><small>Pomoc</small></span></div><div class="mobile-card center"><span>TWÓJ KOD</span><h3>ABCD-EFGH</h3><p>Kod działa tylko raz.</p></div></section><section class="phone-screen-view" data-phone-screen="3"><div class="mobile-brand"><img src="assets/logo.svg" alt=""><span><strong>ServiceOS</strong><small>Połączenie telefonu</small></span></div><div class="mobile-card center"><span>WPISZ KOD</span><h3>ABCD-EFGH</h3><b>Połącz telefon</b><small>Sprawdzam bezpieczne połączenie…</small></div></section><section class="phone-screen-view" data-phone-screen="4"><div class="mobile-panel-head"><span class="status-dot"></span><div><strong>Gotowe.</strong><small>ServiceOS · online</small></div><b>BM</b></div><div class="mobile-next"><span>TERAZ</span><strong>Diagnoza #1042</strong><small>iPhone 14 Pro · 14:30</small></div><div class="mobile-actions"><i>＋<small>Nowe</small></i><i>⇄<small>Przekaż</small></i><i>⌕<small>Zlecenia</small></i><i>⋯<small>Więcej</small></i></div></section></div></div></div>
+    </div>
+  </section>
+
+  <section class="security-section" id="security">
+    <div class="site-frame"><div class="section-heading center reveal"><span>BEZPIECZEŃSTWO</span><h2>Proste dla człowieka.<br><em>Twarde dla systemu.</em></h2><p>Trzy zasady. Bez ściany technicznego tekstu.</p></div><div class="security-grid"><article class="reveal"><b><svg class="os-icon" aria-hidden="true"><use href="#i-check"></use></svg></b><span>01</span><h3>Konto musi być zatwierdzone.</h3><p>Samo logowanie nie otwiera danych firmy.</p></article><article class="reveal reveal-delay"><b><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg></b><span>02</span><h3>Rola określa zakres.</h3><p>Menu i dane wynikają z przypisanych uprawnień.</p></article><article class="reveal reveal-delay-2"><b><svg class="os-icon" aria-hidden="true"><use href="#i-shield"></use></svg></b><span>03</span><h3>Kod telefonu działa raz.</h3><p>Nie dodaje nowych uprawnień i sam wygasa.</p></article></div></div>
+  </section>
+
+  <section class="start-section" id="start">
+    <div class="site-frame"><div class="start-panel reveal"><div class="start-download"><span class="section-label">START / DOWNLOAD</span><h2>ServiceOS jest gotowy.<br><em>Ty też.</em></h2><p>Pobierz aktualną wersję dla Windows albo połącz telefon z już zalogowaną sesją.</p><div class="release-card"><div class="release-mark"><img src="assets/logo.svg" alt=""></div><div><strong>LockOn ServiceOS <span data-release-version>najnowsza</span></strong><span><span data-release-size>instalator Windows</span> · aktualny GitHub Release</span><code data-release-digest>SHA-256 w GitHub Release</code></div><b><span class="status-dot"></span> GOTOWE</b></div><div class="start-actions"><a class="button button-primary button-large download-link" data-requires-onboarding data-download-url="https://github.com/LokosPL/LockOn-Hub/releases/latest/download/LockOn-ServiceOS-Setup.exe" href="#start"><svg class="os-icon" aria-hidden="true"><use href="#i-download"></use></svg> Pobierz ServiceOS</a><button class="button button-secondary button-large" type="button" data-open-login data-requires-onboarding><svg class="os-icon" aria-hidden="true"><use href="#i-phone"></use></svg> Połącz telefon</button></div><div class="release-links"><a href="signing.html">Code signing</a><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a></div></div><div class="onboarding-card" id="onboardingAccept"><span>PIERWSZE URUCHOMIENIE</span><h3>Jedno krótkie potwierdzenie.</h3><p>Potwierdź zasady pracownika, a pobieranie i połączenie telefonu odblokują się w tej przeglądarce.</p><label><input id="agreeEmployee" type="checkbox"><span>Jestem pracownikiem lub osobą uprawnioną przez LockOn.</span></label><label><input id="agreeRules" type="checkbox"><span>Przeczytałem <a href="terms.html">regulamin</a> i <a href="privacy.html">politykę prywatności</a>.</span></label><label><input id="agreeMobile" type="checkbox"><span>Rozumiem, że kod „Połącz urządzenie” jest jednorazowy.</span></label><button id="acceptOnboarding" class="button button-primary onboarding-submit" type="button" disabled>Odblokuj ServiceOS →</button><small id="onboardingState">Potwierdź trzy punkty powyżej.</small></div></div></div>
+  </section>
+</main>
+<dialog id="webLoginDialog" class="portal-login-dialog" aria-labelledby="webLoginTitle">
+  <div class="portal-login-card">
+    <div class="portal-login-head"><div class="portal-login-brand"><img src="assets/logo.svg" alt=""><div><strong>LockOn ServiceOS</strong><span>Połączenie telefonu</span></div></div><button id="closeWebLogin" class="portal-login-close" type="button" aria-label="Zamknij">×</button></div>
+    <div class="portal-login-copy"><span>KOD Z APLIKACJI WINDOWS</span><h2 id="webLoginTitle">Połącz telefon.</h2><p>W ServiceOS na komputerze otwórz <strong>Pomoc → Połącz urządzenie</strong> i przepisz kod.</p></div>
+    <div class="portal-login-steps"><article><b>1</b><span><strong>ServiceOS</strong><small>Zaloguj się swoim zatwierdzonym kontem.</small></span></article><article><b>2</b><span><strong>Pomoc → Połącz urządzenie</strong><small>Wygeneruj kod ważny przez kilka minut.</small></span></article><article><b>3</b><span><strong>Wpisz kod</strong><small>Panel otworzy się automatycznie.</small></span></article></div>
+    <form id="webAuthCodeForm" class="portal-code-form"><label for="webAuthCode"><span>Jednorazowy kod</span><small>ABCD-EFGH</small></label><div class="portal-code-field"><input id="webAuthCode" inputmode="text" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH" aria-label="Jednorazowy kod ServiceOS" required><button id="webAuthCodeSubmit" type="submit" disabled>Połącz</button></div><small id="webAuthCodeStatus">Kod działa tylko raz i nie zmienia Twoich uprawnień.</small></form>
+    <div class="portal-login-security"><span>✓</span><span>Telefon otrzyma dokładnie ten sam zakres dostępu, który ma Twoje konto w ServiceOS.</span></div>
+  </div>
+</dialog>
+<footer class="site-footer"><div class="site-frame footer-inner"><div class="footer-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn ServiceOS</strong><small>system pracy serwisu</small></span></div><nav class="footer-links" aria-label="Stopka"><a href="panel.html">Panel pracownika</a><a href="klient.html">Panel klienta</a><a href="track.html">Tracking</a><a href="terms.html">Regulamin</a><a href="privacy.html">Prywatność</a><a href="signing.html">Code signing</a></nav></div></footer>
+<script src="assets/google-config.js"></script>
+<script src="assets/google-auth.js"></script>
+<script src="assets/serviceos-app-site.js"></script>
 </body>
 </html>
