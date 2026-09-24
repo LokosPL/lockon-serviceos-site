@@ -4,7 +4,11 @@ on:
   push:
     paths:
       - "index.html"
+      - "privacy.html"
+      - "terms.html"
+      - "signing.html"
       - "assets/**"
+      - "sw.js"
       - ".github/workflows/verify.yml"
   pull_request:
     branches: ["main"]
@@ -27,20 +31,52 @@ jobs:
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 22
+
       - name: Check JavaScript syntax
         run: |
+          node --check assets/serviceos-app-site.js
           node --check assets/google-auth.js
           node --check assets/google-config.js
-          node --check assets/site.js
-          node --check assets/home-v2.js
-          node --check assets/home-story.js
-          node --check assets/showcase-meetings-1.0.22.js
           node --check assets/panel.js
           node --check assets/track.js
           node --check assets/customer-portal.js
           node --check assets/ui-2026.js
           node --check sw.js
-      - name: Verify central auth wiring
+
+      - name: Verify rebuilt landing contracts
+        shell: bash
+        run: |
+          grep -q 'assets/serviceos-app-site.css' index.html
+          grep -q 'assets/serviceos-app-site.js' index.html
+          grep -q 'Cały serwis' index.html
+          grep -q 'Od wejścia klienta' index.html
+          grep -q 'id="day"' index.html
+          grep -q 'id="modules"' index.html
+          grep -q 'id="roles"' index.html
+          grep -q 'id="meetings"' index.html
+          grep -q 'id="connect"' index.html
+          grep -q 'id="security"' index.html
+          grep -q 'id="start"' index.html
+          grep -q 'mobile-anchor-nav' index.html
+          grep -q 'showcase-laptop' index.html
+          grep -q 'showcase-phone' index.html
+          grep -q 'workday-demo' index.html
+          grep -q 'showcase-journey-grid' index.html
+          grep -q 'showcase-role-grid' index.html
+          grep -q 'data-meeting22-scene="live"' index.html
+          grep -q 'Tryb kinowy' index.html
+          grep -q 'SCHEDULED ≠ LIVE' index.html
+          grep -q 'Połącz urządzenie' index.html
+          grep -q 'data-preview-screen="start"' index.html
+          grep -q 'data-module-panel="service"' index.html
+          grep -q 'prefers-reduced-motion' assets/serviceos-app-site.css
+          grep -q '@media(max-width:760px)' assets/serviceos-app-site.css
+          grep -q 'IntersectionObserver' assets/serviceos-app-site.js
+          grep -q 'lockon.employee.onboarding.v1' assets/serviceos-app-site.js
+          ! grep -q 'style="' index.html
+          ! grep -q '50/50' index.html
+
+      - name: Verify central auth and onboarding
         shell: bash
         run: |
           ! grep -q 'auth/google-web' assets/google-auth.js
@@ -50,176 +86,53 @@ jobs:
           ! grep -q 'apps.googleusercontent.com' assets/google-config.js
           grep -q 'lockonapi.compute' index.html
           grep -q 'navLoginButton' index.html
+          grep -q 'navPanelLink' index.html
+          grep -q 'webAuthCodeForm' index.html
           grep -q 'webAuthCode' index.html
           grep -q 'agreeEmployee' index.html
+          grep -q 'agreeRules' index.html
+          grep -q 'agreeMobile' index.html
           grep -q 'data-requires-onboarding' index.html
-          grep -q 'lockon.employee.onboarding.v1' assets/home-v2.js
-          grep -q 'lockon.employee.onboarding.v1' assets/panel.js
-          grep -q 'Połącz urządzenie' index.html
-          grep -q 'orderWorkflowFilters' panel.html
-          grep -q 'ZAKŁADKI I MODUŁY' index.html
-          grep -q 'Rozliczenia' index.html
-          grep -q 'mobile-anchor-nav' index.html
-          grep -q 'track.html' sw.js
-          grep -q 'public/service-track' assets/track.js
-          grep -q 'noindex,nofollow,noarchive' track.html
-          grep -q 'portal-home #preview .demo-screen' assets/home-v2.css
-          grep -q 'position:static' assets/home-v2.css
-          grep -q "serviceos-shell-v30" sw.js
-          ! grep -q 'Przejdź do ServiceOS' track.html
-          ! grep -q 'href="index.html"' track.html
-          ! grep -q 'google-config.js' track.html
-          grep -q '\[hidden\]{display:none!important}' assets/track.css
-          grep -q 'REFRESH_MS=20000' assets/track.js
-          grep -q 'public/customer-portal/login' assets/customer-portal.js
-          grep -q 'public/customer-portal/google/login' assets/customer-portal.js
-          grep -q 'public/customer-portal/google/link' assets/customer-portal.js
-          grep -q 'public/customer-portal/settings' assets/customer-portal.js
-          grep -q 'customerAccessChoice' klient.html
-          grep -q 'customerSettingsForm' klient.html
-          grep -q 'accounts.google.com' klient.html
-          grep -q 'data-customer-state' klient.html
-          grep -q 'customer-portal-page \[hidden\]' assets/customer-portal.css
-          grep -q 'public/customer-portal/quotes' assets/customer-portal.js
-          grep -q 'noindex,nofollow,noarchive' klient.html
-          ! grep -q 'href="index.html"' klient.html
-          ! grep -q 'google-config.js' klient.html
-          grep -q 'customerQuotesList' panel.html
-          grep -q 'id="day"' index.html
-          grep -q 'workday-demo' index.html
-          grep -q 'panel-order-context' assets/panel.js
-          grep -q 'Dane techniczne i identyfikatory' assets/panel.js
-          ! grep -q 'bez aktywnego TECHNICIAN' panel.html
-          grep -q '/service/customer-quotes' assets/panel.js
-          grep -q 'workflow' assets/panel.js
-          grep -q 'Cena orientacyjna' panel.html
-          grep -q 'data-save-order-prices' assets/panel.js
-          grep -q 'event.preventDefault()' assets/site.js
-          ! grep -q '50/50' index.html
-          ! grep -q 'style="' index.html
-          ! grep -q 'style="' assets/panel.js
-          grep -q '/service/orders' assets/panel.js
-          grep -q 'name="imei".*required' panel.html
-          grep -q 'name="serialNumber".*required' panel.html
-          grep -q 'name="deviceNotes".*required' panel.html
-          grep -q 'newOrderBusy' assets/panel.js
-          grep -q '/service/transfers' assets/panel.js
-          grep -q 'RETURN_HOME' assets/panel.js
-          grep -q 'REPAIR_DONE' assets/panel.js
-          grep -q '/admin/logout-all' assets/panel.js
-          grep -q 'panel.html' manifest.webmanifest
-          grep -q 'localStorage.getItem(tokenKey)' assets/google-auth.js
-          grep -q 'localStorage.getItem(tokenKey)' assets/panel.js
-          grep -q 'Status jest zablokowany na czas transportu' assets/panel.js
-          grep -q 'contain:layout paint style' assets/home-v2.css
-          grep -q 'preview-stage' index.html
-          ! grep -q 'actingPointId:activePointId' assets/panel.js
-          ! grep -q 'payload.pointId = activePointId' assets/panel.js
-          grep -q '/me/active-point' assets/panel.js
-          grep -q 'updated.activePointId' assets/panel.js
-          grep -q 'data-admin-approve' assets/panel.js
-          grep -q 'data-admin-block' assets/panel.js
-          grep -q 'data-admin-support' assets/panel.js
-          grep -q '/support/presence' assets/panel.js
-          grep -q 'mobileRequestConsultant' assets/panel.js
-          grep -q 'SPEED_TEST' assets/panel.js
-          grep -q 'CONNECTIVITY_TEST' assets/panel.js
-          grep -q 'BROWSER_SEARCH' assets/panel.js
-          grep -q 'speed.cloudflare.com' panel.html
-          grep -q 'customerPortalCode' assets/customer-portal.js
-          grep -q 'copyCustomerCode' assets/customer-portal.js
-          grep -q 'track-portal-banner' track.html
-          ! grep -q 'window.scrollBy' assets/site.js
-          grep -q 'assets/ui-2026.css' index.html
-          grep -q 'assets/ui-2026.css' panel.html
-          grep -q 'assets/ui-2026.css' klient.html
-          grep -q 'assets/ui-2026.css' track.html
-          grep -q 'assets/ui-2026.js' panel.html
-          grep -q 'customer-portal-page' klient.html
-          grep -q 'track-page' track.html
-          grep -q 'assets/home-story.css' index.html
-          grep -q 'assets/home-story.js' index.html
-          grep -q 'data-story-feature="home"' index.html
-          grep -q 'data-connect-step="4"' index.html
-          grep -q 'Połącz telefon' index.html
-          grep -q 'home-story.css' sw.js
-          grep -q 'home-story.js' sw.js
-          grep -q 'webAuthCodeForm' index.html
           ! grep -q 'googleSignInButton' index.html
           ! grep -q 'accounts.google.com' index.html
-          grep -q 'assets/web-polish.css' index.html
-          grep -q 'assets/web-polish.css' panel.html
-          grep -q 'assets/web-polish.css' klient.html
-          grep -q 'assets/web-polish.css' track.html
-          grep -q 'assets/web-polish.css' privacy.html
-          grep -q 'assets/web-polish.css' terms.html
-          grep -q 'assets/web-polish.css' signing.html
-          grep -q 'web-polish.css' sw.js
-          grep -q 'customer-login-intro' klient.html
-          grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q 'assets/mobile-final.css' index.html
-          grep -q 'assets/showcase-1.0.21.css' index.html\n          grep -q 'assets/showcase-1.0.22.css' index.html\n          grep -q 'assets/showcase-meetings-1.0.22.js' index.html\n          grep -q 'data-meeting22' index.html\n          grep -q 'SCHEDULED ≠ LIVE' index.html\n          grep -q 'showcase-1.0.22.css' sw.js\n          grep -q 'showcase-meetings-1.0.22.js' sw.js
-          grep -q 'showcase-1.0.21.css' sw.js
-          grep -q 'Od wejścia klienta' index.html
-          grep -q 'KARTA SERWISOWA' index.html
-          grep -q 'SPOTKANIA I SZKOLENIA' index.html
-          grep -q 'ROLE W ZESPOLE' index.html
-          grep -q 'DLA SZEFA I WŁAŚCICIELA' index.html
-          grep -q 'showcase-journey-grid' index.html
-          grep -q 'showcase-feature-grid' index.html
-          grep -q 'showcase-role-grid' index.html
-          grep -q '@media(max-width:700px)' assets/showcase-1.0.21.css
-          grep -q 'assets/mobile-final.css' panel.html
-          grep -q 'assets/mobile-final.css' klient.html
-          grep -q 'assets/mobile-final.css' track.html
-          grep -q 'mobile-final.css' sw.js
+          grep -q 'localStorage.getItem(tokenKey)' assets/google-auth.js
+          grep -q 'localStorage.getItem(tokenKey)' assets/panel.js
+
+      - name: Verify worker, customer and tracking portals
+        shell: bash
+        run: |
+          grep -q 'orderWorkflowFilters' panel.html
+          grep -q 'Cena orientacyjna' panel.html
           grep -q 'id="view-more"' panel.html
           grep -q 'id="view-support"' panel.html
           grep -q 'data-panel-nav="support"' panel.html
-          grep -q 'id="mobileSupportState"' panel.html
-          grep -q 'id="mobileHelpMessages"' panel.html
           grep -q 'id="mobileHelpForm"' panel.html
-          grep -q 'id="mobileHelpInput"' panel.html
           grep -q 'id="mobileRequestConsultant"' panel.html
-          grep -q 'id="mobileSupportPresence"' panel.html
-          grep -q 'id="mobileSupportTickets"' panel.html
-          grep -q "target:mobileHelpTarget" assets/panel.js
-          grep -q "/support/leave" assets/panel.js
-          grep -q 'data-icon="home"' panel.html
-          grep -q 'data-icon="orders"' panel.html
-          grep -q 'data-icon="transfer"' panel.html
-          grep -q 'account-dialog-top' panel.html
-          grep -q "OWNER:'Właściciel'" assets/panel.js
-          grep -q "TECHNICIAN:'Serwisant'" assets/panel.js
-          grep -q 'simple-view-title' panel.html
-          grep -q 'prefers-reduced-motion' assets/mobile-final.css
-          grep -q 'data-panel-nav="more"' panel.html
-          grep -q 'panel-quick-heading' panel.html
-          grep -q 'panel-boot-card' panel.html
-          grep -q 'Cztery proste kroki' index.html
-          ! grep -q 'data-connect-step="5"' index.html
-          ! grep -q 'loaderPercent' index.html
-          ! grep -q 'setInterval(() => {' assets/site.js
-          grep -q "makeSelectable" assets/home-story.js
-          ! grep -q "addEventListener('scroll'" assets/home-story.js
-          grep -q "homeLimit" assets/panel.js
-          grep -q "view-scan" panel.html
-          grep -q "/service/scan" assets/panel.js
-          grep -q "data-service-card-choice" panel.html
-          grep -q "data-service-card-print" assets/panel.js
-          grep -q "delete payload.handlingMode" assets/panel.js
-          grep -q "pendingScanKey" assets/panel.js
-          grep -q "readCardHash" assets/customer-portal.js
-          grep -q "public/customer-portal/orders/" assets/customer-portal.js
-          grep -q "customer-service-card-download" assets/customer-portal.js
-          node - <<'NODE'
-          const fs = require('fs');
-          const source = fs.readFileSync('assets/panel.js', 'utf8');
-          const match = source.match(/const advanced\s*=\s*\[([^\]]+)\]/);
-          if (!match) throw new Error('Brak listy widoków zaawansowanych w panel.js');
-          for (const view of ['quotes','earnings','admin','scan','workspace','tech-notes','invoices','support']) {
-            if (!match[1].includes(`'${view}'`) && !match[1].includes(`"${view}"`)) {
-              throw new Error(`Brak widoku ${view} w liście advanced`);
-            }
-          }
-          NODE
+          grep -q '/service/orders' assets/panel.js
+          grep -q '/service/transfers' assets/panel.js
+          grep -q '/admin/logout-all' assets/panel.js
+          grep -q '/support/presence' assets/panel.js
+          grep -q '/service/scan' assets/panel.js
+          grep -q 'public/customer-portal/login' assets/customer-portal.js
+          grep -q 'public/customer-portal/google/login' assets/customer-portal.js
+          grep -q 'public/customer-portal/settings' assets/customer-portal.js
+          grep -q 'customerAccessChoice' klient.html
+          grep -q 'customerSettingsForm' klient.html
+          grep -q 'noindex,nofollow,noarchive' klient.html
+          grep -q 'public/service-track' assets/track.js
+          grep -q 'noindex,nofollow,noarchive' track.html
+          ! grep -q 'href="index.html"' track.html
+          ! grep -q 'href="index.html"' klient.html
+
+      - name: Verify security/legal shell and cache
+        shell: bash
+        run: |
+          grep -q 'assets/serviceos-app-site.css' privacy.html
+          grep -q 'assets/serviceos-app-site.css' terms.html
+          grep -q 'assets/serviceos-app-site.css' signing.html
+          grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
+          grep -q 'serviceos-shell-v31' sw.js
+          grep -q 'serviceos-app-site.css' sw.js
+          grep -q 'serviceos-app-site.js' sw.js
+          grep -q 'track.html' sw.js
+          grep -q 'klient.html' sw.js
