@@ -246,6 +246,36 @@ main section[id]{scroll-margin-top:84px}
 
 
 /* Hero composition v2 — matches the approved cinematic reference */
+
+.hero-ambient::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  width:920px;height:920px;
+  right:-30px;top:22px;
+  border:2px solid rgba(255,108,38,.46);
+  border-left-color:rgba(255,126,53,.76);
+  border-bottom-color:rgba(255,93,24,.62);
+  border-radius:50%;
+  box-shadow:
+    0 0 18px rgba(255,104,31,.34),
+    0 0 62px rgba(255,91,22,.19),
+    inset 0 0 48px rgba(255,100,28,.025);
+  transform:rotate(-13deg);
+  opacity:.9;
+}
+.hero-ambient::after{
+  content:"";
+  position:absolute;
+  right:4%;top:126px;
+  width:720px;height:360px;
+  border-radius:50%;
+  background:radial-gradient(ellipse,rgba(255,111,38,.12),rgba(255,94,24,.035) 46%,transparent 72%);
+  filter:blur(24px);
+  opacity:.95;
+}
+.hero-ridge::after{background:linear-gradient(180deg,rgba(255,115,40,.3),rgba(255,84,19,.07) 14%,transparent 34%);filter:drop-shadow(0 -1px 7px rgba(255,94,24,.22))}
+
 .hero-section{
   min-height:auto;
   padding:48px 0 42px;
