@@ -89,6 +89,12 @@ jobs:
           grep -q 'data-service-demo-tab="plan"' index.html
           grep -q 'data-service-demo-tab="invoices"' index.html
           grep -q 'data-service-demo-view="notes"' index.html
+          grep -q 'data-module-panel="start"' index.html
+          grep -q 'data-module-panel="browser"' index.html
+          grep -q 'data-module-panel="help"' index.html
+          grep -q 'data-module-panel="settings"' index.html
+          grep -q 'data-support-demo-ticket="jan"' index.html
+          grep -q 'data-theme-demo="midnight"' index.html
           grep -q 'data-service-order-drawer' index.html
           grep -q 'data-live-dock' index.html
           grep -q 'data-live-dock-return' index.html
