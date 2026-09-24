@@ -262,12 +262,177 @@
 
   <section class="roles-section" id="roles">
     <div class="site-frame role-layout">
-      <div class="section-heading reveal"><span>ROLE</span><h2>Każdy widzi dokładnie<br><em>swój zakres pracy.</em></h2><p>ServiceOS nie pokazuje wszystkim wszystkiego. Menu i akcje wynikają z roli oraz przypisanych punktów.</p></div>
+      <div class="section-heading reveal">
+        <span>ROLE</span>
+        <h2>Każdy widzi dokładnie<br><em>swój zakres pracy.</em></h2>
+        <p>To nie jest już statyczna makieta. Zmień rolę, a potem klikaj po menu ServiceOS — dokładnie jak w aplikacji.</p>
+      </div>
+
       <div class="role-simulator reveal reveal-delay">
-        <div class="role-tabs"><button class="active" type="button" data-role-preview="owner"><b>01</b><span><strong>Właściciel</strong><small>cała firma</small></span></button><button type="button" data-role-preview="boss"><b>02</b><span><strong>Szef / Koordynator</strong><small>punkty + zespół</small></span></button><button type="button" data-role-preview="tech"><b>03</b><span><strong>Serwisant</strong><small>praca techniczna</small></span></button><button type="button" data-role-preview="front"><b>04</b><span><strong>Obsługa</strong><small>klient + wydanie</small></span></button></div>
+        <div class="role-tabs" aria-label="Role w ServiceOS">
+          <button class="active" type="button" data-role-preview="owner"><b>01</b><span><strong>Właściciel</strong><small>cała firma</small></span></button>
+          <button type="button" data-role-preview="boss"><b>02</b><span><strong>Szef / Koordynator</strong><small>punkty + zespół</small></span></button>
+          <button type="button" data-role-preview="tech"><b>03</b><span><strong>Serwisant</strong><small>praca techniczna</small></span></button>
+          <button type="button" data-role-preview="front"><b>04</b><span><strong>Obsługa</strong><small>klient + wydanie</small></span></button>
+        </div>
+
         <div class="role-app">
-          <div class="role-app-title"><span class="titlebar-mark"></span><strong>Podgląd roli w ServiceOS</strong><small data-role-scope>Wszystkie punkty</small></div>
-          <div class="role-app-body"><aside><div class="role-app-brand"><img src="assets/logo.svg" alt=""><span><strong>LockOn</strong><small>ServiceOS</small></span></div><div class="role-app-nav" data-role-nav><i class="active"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg> Start</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg> Serwis</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg> Spotkania</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg> Rozliczenia</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg> Administracja</i><i><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg> Klienci</i></div></aside><div class="role-app-main"><span>AKTYWNA ROLA</span><h3 data-role-title>Właściciel aplikacji</h3><p data-role-copy>Pełny widok punktów, zespołu, administracji i rozliczeń.</p><div class="role-permission-grid" data-role-permissions><i>Wszystkie punkty</i><i>Zespół</i><i>Rozliczenia</i><i>Administracja</i></div></div></div>
+          <div class="role-app-title">
+            <span class="titlebar-mark"></span>
+            <strong>Podgląd roli w ServiceOS</strong>
+            <span class="role-app-view" data-role-current-view>Start</span>
+            <small data-role-scope>Wszystkie punkty</small>
+          </div>
+
+          <div class="role-app-body">
+            <aside class="role-app-sidebar">
+              <div class="role-app-brand">
+                <img src="assets/logo.svg" alt="">
+                <span><strong>LockOn</strong><small>ServiceOS</small></span>
+              </div>
+
+              <div class="role-app-branch">
+                <span class="status-dot"></span>
+                <span data-role-branch>Wszystkie punkty</span>
+              </div>
+
+              <nav class="role-app-nav" data-role-nav aria-label="Menu podglądu roli">
+                <button class="active" type="button" data-role-nav-key="dashboard"><svg class="os-icon" aria-hidden="true"><use href="#i-gauge"></use></svg><span>Start</span></button>
+                <button type="button" data-role-nav-key="browser"><svg class="os-icon" aria-hidden="true"><use href="#i-globe"></use></svg><span>Przeglądarka</span></button>
+                <button type="button" data-role-nav-key="service"><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg><span>Serwis</span></button>
+                <button type="button" data-role-nav-key="meetings"><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg><span>Spotkania i szkolenia</span></button>
+                <button type="button" data-role-nav-key="earnings"><svg class="os-icon" aria-hidden="true"><use href="#i-dollar"></use></svg><span>Rozliczenia</span></button>
+                <button type="button" data-role-nav-key="administration"><svg class="os-icon" aria-hidden="true"><use href="#i-user-cog"></use></svg><span>Administracja</span></button>
+                <button type="button" data-role-nav-key="customers"><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg><span>Klienci</span></button>
+                <button type="button" data-role-nav-key="support"><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Wsparcie</span></button>
+              </nav>
+
+              <div class="role-sidebar-spacer"></div>
+
+              <button class="role-app-nav-button" type="button" data-role-help><svg class="os-icon" aria-hidden="true"><use href="#i-headphones"></use></svg><span>Pomoc</span><small>Chat</small></button>
+              <button class="role-app-nav-button" type="button" data-role-nav-key="settings"><svg class="os-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span>Ustawienia</span></button>
+
+              <div class="role-preview-box-demo">
+                <div><span>Podgląd roli</span><small>AKTYWNY</small></div>
+                <select data-role-select aria-label="Zmień rolę w podglądzie">
+                  <option value="owner">Właściciel aplikacji</option>
+                  <option value="boss">Szef / Koordynator</option>
+                  <option value="tech">Serwisant</option>
+                  <option value="front">Obsługa</option>
+                </select>
+              </div>
+
+              <div class="role-account-card" data-role-account>
+                <div class="role-account-avatar">BM</div>
+                <div class="role-account-copy"><strong>Bartłomiej</strong><span>Właściciel</span></div>
+                <button type="button" data-role-account-action aria-label="Pokaż konto"><svg class="os-icon" aria-hidden="true"><use href="#i-log-out"></use></svg></button>
+              </div>
+            </aside>
+
+            <div class="role-app-content" data-role-content>
+              <section class="role-app-panel active" data-role-screen="dashboard">
+                <div class="role-dashboard">
+                  <div class="role-dashboard-copy">
+                    <span>AKTYWNA ROLA</span>
+                    <h3 data-role-title>Właściciel aplikacji</h3>
+                    <p data-role-copy>Pełny widok punktów, zespołu, administracji i rozliczeń.</p>
+                  </div>
+                  <div class="role-dashboard-status"><span class="status-dot"></span><strong>ServiceOS online</strong><small data-role-status-copy>Pełny zakres firmy</small></div>
+                  <div class="role-permission-grid" data-role-permissions>
+                    <i>Wszystkie punkty</i><i>Zespół</i><i>Rozliczenia</i><i>Administracja</i>
+                  </div>
+                  <div class="role-dashboard-quick">
+                    <article><b><svg class="os-icon" aria-hidden="true"><use href="#i-wrench"></use></svg></b><span><strong>Serwis</strong><small>4 zlecenia wymagają działania</small></span></article>
+                    <article><b><svg class="os-icon" aria-hidden="true"><use href="#i-calendar"></use></svg></b><span><strong>Spotkania</strong><small>1 szkolenie dzisiaj</small></span></article>
+                    <article><b><svg class="os-icon" aria-hidden="true"><use href="#i-users"></use></svg></b><span><strong>Klienci</strong><small>pełna historia kontaktu</small></span></article>
+                  </div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="browser">
+                <div class="role-browser">
+                  <header><span>PRZEGLĄDARKA</span><h3>Nowa karta</h3><b>🔒 Bezpieczna karta</b></header>
+                  <div class="role-browser-toolbar"><button type="button">←</button><button type="button">→</button><button type="button">↻</button><div><span>🔒</span><strong>serviceos.pl</strong></div><button type="button">↗</button></div>
+                  <div class="role-browser-page"><img src="assets/logo.svg" alt=""><span>LOCKON SERVICEOS</span><strong>Przeglądarka wewnątrz aplikacji.</strong><small>Linki i narzędzia bez opuszczania środowiska pracy.</small></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="service">
+                <div class="role-service-screen">
+                  <header><span>SERWIS</span><h3>Klienci i naprawy</h3><p>Przyjęcie telefonu, statusy, przekazania i historia zlecenia.</p></header>
+                  <div class="role-screen-tabs"><i class="active">Zlecenia</i><i>Nowe zlecenie</i><i>Przekazania</i></div>
+                  <div class="role-order-list">
+                    <article><b>#1042</b><span><strong>iPhone 14 Pro</strong><small>Anna Kowalska · diagnoza</small></span><em>TERAZ</em></article>
+                    <article><b>#1041</b><span><strong>Samsung S24</strong><small>Piotr Nowak · przekazanie</small></span><em>W DRODZE</em></article>
+                    <article><b>#1038</b><span><strong>iPhone 13</strong><small>Marta Lis · gotowe</small></span><em class="ok">GOTOWE</em></article>
+                  </div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="meetings">
+                <div class="role-meeting-screen">
+                  <header><div><span>● TRWA TERAZ</span><h3>Szkolenie serwisowe</h3><p>Bartłomiej · 18:42 / 60 min</p></div><b>Tryb kinowy</b></header>
+                  <div class="role-meeting-grid">
+                    <div class="role-share-stage"><div class="role-share-window"><aside></aside><div><i></i><strong></strong><article></article><article></article></div></div><small><span class="status-dot"></span>Ekran prowadzącego</small></div>
+                    <aside class="role-mini-chat"><strong>Czat</strong><p><b>Jan</b> Widać ekran.</p><p><b>Anna</b> Wszystko czytelne 👌</p></aside>
+                  </div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="earnings">
+                <div class="role-finance-screen">
+                  <header><span>ROZLICZENIA</span><h3>Twój wynik i bieżący okres</h3><p>Widok dopasowany do zakresu roli.</p></header>
+                  <div class="role-finance-kpis"><article><span>PRZYCHÓD</span><strong>12 840 zł</strong><small>31 zamkniętych zleceń</small></article><article><span>DO ROZLICZENIA</span><strong>2 460 zł</strong><small>bieżący okres</small></article><article><span>EFEKTYWNOŚĆ</span><strong>91%</strong><small>realizacja planu</small></article></div>
+                  <div class="role-finance-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="administration">
+                <div class="role-admin-screen">
+                  <header><span>ADMINISTRACJA</span><h3>Pracownicy, punkty i dostępy</h3><p>Pełny zakres właściciela aplikacji.</p></header>
+                  <div class="role-admin-kpis"><article><b>12</b><span>Aktywne konta</span></article><article><b>3</b><span>Punkty</span></article><article><b>1</b><span>Do decyzji</span></article><article><b>6</b><span>Aktywne sesje</span></article></div>
+                  <div class="role-person-list"><article><b>JN</b><span><strong>Jan Nowak</strong><small>Serwisant · Nowogard</small></span><em>AKTYWNY</em></article><article><b>AL</b><span><strong>Anna Lis</strong><small>Obsługa · Szczecin</small></span><em>AKTYWNY</em></article></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="customers">
+                <div class="role-customers-screen">
+                  <header><span>KLIENCI</span><h3>Klienci i ich serwisy</h3><p>Naprawy, urządzenia, dostęp i historia kontaktu.</p></header>
+                  <div class="role-customer-card"><b>AK</b><span><strong>Anna Kowalska</strong><small>anna@przyklad.pl · +48 500 123 456</small></span><em>AKTYWNA</em></div>
+                  <div class="role-customer-grid"><article><span>NAPRAWY</span><strong>5</strong><small>1 aktywna</small></article><article><span>URZĄDZENIA</span><strong>3</strong><small>w historii</small></article><article><span>PORTAL</span><strong>Online</strong><small>Google + kod</small></article></div>
+                  <div class="role-customer-order"><b>#1042</b><span><strong>iPhone 14 Pro</strong><small>Diagnoza rozpoczęta dzisiaj, 14:12</small></span><em>TERAZ</em></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="support">
+                <div class="role-support-screen">
+                  <header><span>WSPARCIE LOCKON</span><h3>Centrum pomocy zespołu</h3><p>Kolejka konsultanta i użytkownicy online.</p></header>
+                  <div class="role-support-kpis"><article><strong>2</strong><span>Czekają na człowieka</span></article><article><strong>4</strong><span>Użytkownicy online</span></article></div>
+                  <div class="role-support-workspace"><aside><strong>AKTYWNOŚĆ</strong><p><span class="status-dot"></span> Jan Nowak <small>przy bocie</small></p><p><span class="status-dot"></span> Anna Lis <small>online</small></p></aside><section><strong>Kolejka konsultanta</strong><article><b>NOWA PROŚBA</b><span>„Potrzebuję pomocy z przekazaniem urządzenia.”</span></article></section></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="settings">
+                <div class="role-settings-screen">
+                  <header><span>USTAWIENIA OSOBISTE</span><h3>Dopasuj ServiceOS do siebie</h3><p>Wygląd, skala i informacje o koncie.</p></header>
+                  <div class="role-settings-grid"><article class="selected"><span>WYGLĄD</span><strong>Carbon</strong><small>Ciemny motyw ServiceOS</small></article><article><span>SKALA</span><strong>100%</strong><small>Standardowy interfejs</small></article><article><span>KONTO</span><strong>Bartłomiej</strong><small>Właściciel aplikacji</small></article><article><span>WERSJA</span><strong>ServiceOS</strong><small>zawsze aktualny</small></article></div>
+                </div>
+              </section>
+
+              <section class="role-app-panel" data-role-screen="help">
+                <div class="role-help-screen">
+                  <header><span>POMOC LOCKON</span><h3>Pomoc w ServiceOS</h3><p>Najpierw bot, a gdy trzeba — konsultant.</p></header>
+                  <div class="role-help-chat"><article><b>Bot ServiceOS</b><p>Cześć. Mogę znaleźć zlecenie, wyjaśnić proces albo otworzyć właściwy ekran.</p></article><article class="user"><b>Ty</b><p>Pokaż mi, gdzie przekazać urządzenie.</p></article><div><span>Napisz wiadomość…</span><b>→</b></div></div>
+                </div>
+              </section>
+
+              <div class="role-account-popover" data-role-account-popover hidden>
+                <div class="role-account-popover-head"><b>BM</b><span><strong>Bartłomiej</strong><small>Właściciel aplikacji</small></span></div>
+                <p>To konto właściciela. Podgląd roli zmienia zakres aplikacji, ale nie zmienia zalogowanego użytkownika.</p>
+                <button type="button" data-role-account-close>Zamknij</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
