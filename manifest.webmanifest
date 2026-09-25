@@ -9,7 +9,7 @@
   "theme_color": "#0b0d10",
   "icons": [
     {
-      "src": "/assets/logo.svg",
+      "src": "/assets/serviceos-app-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

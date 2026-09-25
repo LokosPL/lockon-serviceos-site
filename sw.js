@@ -1,7 +1,7 @@
-const CACHE='serviceos-shell-v40';
+const CACHE='serviceos-shell-v41';
 const SHELL=[
   '/','/index.html','/panel.html','/klient.html','/track.html','/privacy.html','/terms.html','/signing.html',
-  '/assets/logo.svg',
+  '/assets/serviceos-app-icon.svg',
   '/assets/serviceos-site.css','/assets/serviceos-app-site.css','/assets/serviceos-app-site.js',
   '/assets/ui-2026.css','/assets/ui-2026.js','/assets/web-polish.css','/assets/mobile-final.css',
   '/assets/panel.css','/assets/panel.js','/assets/google-config.js','/assets/google-auth.js',
