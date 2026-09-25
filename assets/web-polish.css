@@ -83,7 +83,7 @@
   filter:drop-shadow(0 8px 18px rgba(255,116,69,.13));
 }
 .portal-home .portal-nav .brand strong{font-size:14px!important;letter-spacing:-.01em}
-.portal-home .portal-nav .brand span{font-size:10px!important;color:#73808c!important}
+.portal-home .portal-nav .brand span{font-size:12.5px!important;color:#73808c!important}
 .portal-home .portal-links{
   margin-left:auto!important;
   gap:3px!important;
@@ -98,7 +98,7 @@
   padding:0 12px!important;
   border-radius:10px!important;
   color:#8f9aa5!important;
-  font-size:11px!important;
+  font-size:13.5px!important;
   font-weight:760!important;
   transition:background .2s ease,color .2s ease,transform .2s var(--lx-ease)!important;
 }
@@ -120,7 +120,7 @@
   min-height:40px!important;
   border-radius:11px!important;
   padding:0 13px!important;
-  font-size:11px!important;
+  font-size:13.5px!important;
   font-weight:820!important;
 }
 .portal-home .nav-panel-link{
@@ -278,8 +278,8 @@
   filter:drop-shadow(0 7px 16px rgba(255,116,69,.14));
 }
 .portal-login-brand>div{display:flex;flex-direction:column;line-height:1.08}
-.portal-login-brand strong{font-size:13px!important}
-.portal-login-brand span{font-size:9px!important;color:#74808c!important;margin-top:4px}
+.portal-login-brand strong{font-size:15px!important}
+.portal-login-brand span{font-size:12px!important;color:#74808c!important;margin-top:4px}
 .portal-login-close{
   position:static!important;
   width:38px!important;
@@ -303,7 +303,7 @@
   border-radius:999px;
   background:rgba(105,221,159,.045);
   color:#93e9bb;
-  font-size:9px;
+  font-size:12px;
   font-weight:880;
   letter-spacing:.09em;
 }
@@ -327,7 +327,7 @@
   max-width:520px;
   margin:0!important;
   color:#929da8!important;
-  font-size:13px!important;
+  font-size:15px!important;
   line-height:1.7!important;
 }
 .portal-login-guide{
@@ -353,10 +353,10 @@
   place-items:center;
   background:rgba(255,116,69,.07);
   color:#ff976d;
-  font-size:9px;
+  font-size:12px;
 }
-.portal-login-guide strong{margin-top:10px;font-size:11px;line-height:1.35}
-.portal-login-guide span{margin-top:4px;color:#6e7a86;font-size:9px;line-height:1.45}
+.portal-login-guide strong{margin-top:10px;font-size:13.5px;line-height:1.35}
+.portal-login-guide span{margin-top:4px;color:#6e7a86;font-size:12px;line-height:1.45}
 .portal-code-form{
   margin:0;
   padding:18px;
@@ -372,7 +372,7 @@
   gap:12px;
   margin-bottom:9px;
   color:#aeb7c0;
-  font-size:10px;
+  font-size:12.5px;
   font-weight:800;
 }
 .portal-code-form>label span:last-child{
@@ -411,7 +411,7 @@
   border-radius:13px!important;
   background:linear-gradient(135deg,#ff8452,#f05a38)!important;
   color:#fff!important;
-  font-size:12px!important;
+  font-size:14px!important;
   font-weight:860!important;
   box-shadow:0 12px 30px rgba(241,82,46,.17),inset 0 1px rgba(255,255,255,.16)!important;
 }
@@ -423,7 +423,7 @@
   min-height:19px;
   margin-top:10px!important;
   color:#71808c!important;
-  font-size:10px!important;
+  font-size:12.5px!important;
   line-height:1.5!important;
 }
 #webAuthCodeStatus::before{
@@ -436,7 +436,7 @@
   border:1px solid rgba(255,255,255,.09);
   border-radius:50%;
   color:#8d99a4;
-  font-size:9px;
+  font-size:12px;
   font-weight:900;
 }
 #webAuthCodeStatus.auth-error{color:#ff9e9e!important}
@@ -459,11 +459,11 @@
   display:grid!important;
   place-items:center!important;
 }
-.portal-login-security>span:last-child{font-size:10px!important;line-height:1.55!important}
+.portal-login-security>span:last-child{font-size:12.5px!important;line-height:1.55!important}
 .portal-login-help{
   margin-top:14px;
   color:#65717d;
-  font-size:9px;
+  font-size:12px;
   line-height:1.5;
   text-align:center;
 }
@@ -492,8 +492,8 @@
   height:35px!important;
   filter:drop-shadow(0 8px 17px rgba(255,116,69,.13));
 }
-.mobile-panel .panel-brand strong{font-size:13px!important}
-.mobile-panel .panel-brand span{font-size:9px!important;color:#697682!important}
+.mobile-panel .panel-brand strong{font-size:15px!important}
+.mobile-panel .panel-brand span{font-size:12px!important;color:#697682!important}
 .mobile-panel .panel-point{
   min-height:45px;
   padding:6px 12px!important;
@@ -501,10 +501,10 @@
   border-radius:13px!important;
   background:rgba(255,255,255,.02)!important;
 }
-.mobile-panel .panel-point>span{font-size:8px!important;color:#64717d!important}
+.mobile-panel .panel-point>span{font-size:11px!important;color:#64717d!important}
 .mobile-panel .panel-point select{
   width:min(36vw,230px)!important;
-  font-size:12px!important;
+  font-size:14px!important;
 }
 .mobile-panel .panel-account-button{
   width:42px!important;
@@ -528,7 +528,7 @@
 }
 .mobile-panel .panel-hero p{
   color:#8c98a3!important;
-  font-size:13px!important;
+  font-size:15px!important;
 }
 .mobile-panel .panel-focus>button,
 .mobile-panel .panel-focus-clear{
@@ -550,9 +550,9 @@
   background:linear-gradient(145deg,rgba(18,24,31,.88),rgba(11,16,22,.92))!important;
   box-shadow:0 10px 35px rgba(0,0,0,.10),inset 0 1px rgba(255,255,255,.02)!important;
 }
-.mobile-panel .panel-kpis span{color:#778490!important;font-size:10px!important}
+.mobile-panel .panel-kpis span{color:#778490!important;font-size:12.5px!important}
 .mobile-panel .panel-kpis strong{font-size:27px!important}
-.mobile-panel .panel-kpis small{font-size:9px!important}
+.mobile-panel .panel-kpis small{font-size:12px!important}
 .mobile-panel .panel-section-head{margin-top:27px!important}
 .mobile-panel .panel-section-head h2{font-size:19px!important}
 .mobile-panel .panel-section-head>button,
@@ -579,8 +579,8 @@
   background:rgba(255,116,69,.065)!important;
   color:#ff9065!important;
 }
-.mobile-panel .panel-quick-grid strong{font-size:13px!important}
-.mobile-panel .panel-quick-grid small{font-size:10px!important;color:#6f7b87!important}
+.mobile-panel .panel-quick-grid strong{font-size:15px!important}
+.mobile-panel .panel-quick-grid small{font-size:12.5px!important;color:#6f7b87!important}
 .mobile-panel .panel-list{gap:9px!important}
 .mobile-panel .panel-order-card,
 .mobile-panel .panel-transfer-card,
@@ -683,7 +683,7 @@
     color:#677480!important;
   }
   .mobile-panel .panel-bottom-nav button span{font-size:18px!important}
-  .mobile-panel .panel-bottom-nav button b{font-size:8px!important;letter-spacing:0!important}
+  .mobile-panel .panel-bottom-nav button b{font-size:11px!important;letter-spacing:0!important}
   .mobile-panel .panel-bottom-nav button.active{
     color:#ff9a72!important;
     background:rgba(255,116,69,.075)!important;
@@ -749,15 +749,15 @@
   height:35px!important;
   filter:drop-shadow(0 8px 17px rgba(255,116,69,.13));
 }
-.customer-portal-page .customer-brand strong{font-size:13px!important}
-.customer-portal-page .customer-brand span{font-size:9px!important;color:#6f7b86!important}
+.customer-portal-page .customer-brand strong{font-size:15px!important}
+.customer-portal-page .customer-brand span{font-size:12px!important;color:#6f7b86!important}
 .customer-portal-page .customer-nav button{
   min-height:40px!important;
   padding:0 13px!important;
   border-radius:11px!important;
   border-color:rgba(255,255,255,.085)!important;
   background:rgba(255,255,255,.025)!important;
-  font-size:11px!important;
+  font-size:13.5px!important;
   font-weight:800!important;
 }
 .customer-portal-page .customer-shell{
@@ -819,9 +819,9 @@
   place-items:center;
   background:rgba(255,116,69,.06);
   color:#ff946b;
-  font-size:10px;
+  font-size:12.5px;
 }
-.customer-login-points span{font-size:11px;color:#a0aab4;line-height:1.45}
+.customer-login-points span{font-size:13.5px;color:#a0aab4;line-height:1.45}
 .customer-login-box{
   padding:36px 32px;
   align-self:center;
@@ -835,7 +835,7 @@
   place-items:center;
   background:rgba(255,116,69,.055);
   color:#ff976d;
-  font-size:11px;
+  font-size:13.5px;
   font-weight:900;
 }
 .customer-login-box>strong{
@@ -847,7 +847,7 @@
 .customer-login-box>p{
   margin:5px 0 0!important;
   color:#788591!important;
-  font-size:11px!important;
+  font-size:13.5px!important;
   line-height:1.6!important;
 }
 .customer-portal-page .customer-login-card form{
@@ -856,7 +856,7 @@
 }
 .customer-portal-page .customer-login-card label span{
   color:#8f9aa5!important;
-  font-size:10px!important;
+  font-size:12.5px!important;
 }
 .customer-portal-page .customer-login-card input{
   min-height:50px!important;
@@ -881,7 +881,7 @@
 .customer-login-note{
   margin-top:12px;
   color:#66737f;
-  font-size:9px;
+  font-size:12px;
   line-height:1.55;
 }
 .customer-login-note strong{color:#96a1ab}
@@ -1038,7 +1038,7 @@
     display:flex!important;
     align-items:center!important;
     text-decoration:none!important;
-    font-size:10px!important;
+    font-size:12.5px!important;
     font-weight:780!important;
   }
   .portal-home .hero{padding-top:115px!important}
@@ -1147,8 +1147,8 @@
 }
 .legal-shell-page .nav-inner{min-height:70px!important}
 .legal-shell-page .brand img{width:35px!important;height:35px!important}
-.legal-shell-page .brand strong{font-size:13px!important}
-.legal-shell-page .brand span{font-size:9px!important;color:#6f7b86!important}
+.legal-shell-page .brand strong{font-size:15px!important}
+.legal-shell-page .brand span{font-size:12px!important;color:#6f7b86!important}
 .legal-shell-page .nav-links{gap:5px!important}
 .legal-shell-page .nav-links a{
   min-height:36px;
@@ -1157,7 +1157,7 @@
   display:inline-flex;
   align-items:center;
   color:#8995a0!important;
-  font-size:11px!important;
+  font-size:13.5px!important;
   text-decoration:none!important;
 }
 .legal-shell-page .nav-links a:hover{background:rgba(255,255,255,.035);color:#f2f4f6!important}
