@@ -378,3 +378,54 @@ a{color:inherit;text-decoration:none}::-webkit-scrollbar{width:9px;height:9px}::
   .hero-settings-grid{grid-template-columns:1fr}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1!important;transform:none!important}.hero-os-window,.hero-phone-mini{transform:none!important}}
+
+
+/* Readability hotfix 2026-09-25 */
+.site-home{font-size:16px}
+.site-brand-copy strong{font-size:16px}.site-brand-copy small{font-size:12px}
+.desktop-nav a,.topbar-panel-link{font-size:13px}
+.button{min-height:44px;font-size:14px}.button-large{min-height:52px;font-size:15px}
+.section-heading>span,.section-label{font-size:11px}.section-heading p{font-size:16px;line-height:1.72}
+.hero-copy>p{font-size:17px}.hero-trust{font-size:12px}
+.flow-metrics strong{font-size:15px}.flow-metrics small{font-size:11px}
+.flow-cards h2{font-size:20px}.flow-cards p{font-size:13px;line-height:1.65}.flow-cards article>span{font-size:11px}
+.os-module-page header p,.os-service-head p,.os-admin-page header p{font-size:12px}
+.modules-os-window small,.modules-os-window p{font-size:11px}
+.modules-os-window .os-nav-item span{font-size:13px}
+.role-tabs strong{font-size:12px}.role-tabs small{font-size:10px}
+.role-app-nav button,.role-app-nav-button{font-size:10px}
+.role-app-content header p,.role-dashboard-copy p,.role-help-chat article p,.role-account-popover p{font-size:10px}
+.role-app-content header>span,.role-dashboard-copy>span,.role-browser header>span,.role-finance-screen header>span,.role-admin-screen header>span,.role-customers-screen header>span,.role-support-screen header>span,.role-settings-screen header>span,.role-help-screen header>span{font-size:9px}
+.meeting-intro p,.phone-copy .section-heading p{font-size:16px}
+.meeting-points strong,.phone-steps strong{font-size:13px}.meeting-points small,.phone-steps small{font-size:11px}
+.meeting-controls button,.meeting-side-tabs button{font-size:11px}
+.chat-messages p,.participant small,.meeting-dock small{font-size:10px}
+.desktop-pair-card>div strong{font-size:11px}.desktop-pair-card>small{font-size:9px}.desktop-pair-card>span{font-size:10px}
+.mobile-card p,.mobile-next small,.mobile-actions small{font-size:10px}
+.security-card>span{font-size:11px}.security-card h3{font-size:20px}.security-card p{font-size:14px;line-height:1.7}
+.start-download>p{font-size:15px}.release-card strong{font-size:15px}.release-card span{font-size:11px}.release-card code{font:600 10px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace}.release-card>b{font-size:9px}.release-links a{font-size:12px}
+.onboarding-card p{font-size:14px}.onboarding-card label{font-size:12px}.onboarding-card>small{font-size:10px}
+.portal-login-dialog{width:min(94vw,640px)}
+.portal-login-card{padding:28px}
+.portal-login-brand strong{font-size:16px}.portal-login-brand span{font-size:11px}
+.portal-login-copy>span{font-size:10px}.portal-login-copy h2{font-size:34px}.portal-login-copy p{font-size:14px;line-height:1.65}
+.portal-login-steps{gap:10px;margin-top:22px}.portal-login-steps article{min-height:128px;padding:13px}
+.portal-login-steps article>b{width:30px;height:30px;font-size:10px}.portal-login-steps strong{font-size:12px}.portal-login-steps small{font-size:10px;line-height:1.55}
+.portal-code-form>label{font-size:11px}.portal-code-field input{height:52px;font-size:16px}.portal-code-field button{min-width:98px;font-size:14px}
+.portal-code-form>small{font-size:10px}.portal-login-security{font-size:10px;line-height:1.55}
+.footer-brand strong{font-size:13px}.footer-brand small{font-size:10px}.footer-links a{font-size:11px}
+
+@media(max-width:700px){
+  .site-home{font-size:15px}
+  .section-heading p{font-size:15px}
+  .hero-copy>p{font-size:16px}
+  .hero-trust{font-size:11px}
+  .flow-cards h2{font-size:16px}.flow-cards p{font-size:12px}
+  .portal-login-card{padding:20px}
+  .portal-login-copy h2{font-size:30px}
+  .portal-login-copy p{font-size:14px}
+  .portal-login-steps article{min-height:0;padding:13px}
+  .portal-login-steps strong{font-size:13px}.portal-login-steps small{font-size:11px}
+  .portal-code-field{grid-template-columns:1fr}.portal-code-field button{min-height:48px}
+  .footer-links a{font-size:12px}
+}
