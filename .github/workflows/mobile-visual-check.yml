@@ -120,6 +120,20 @@ jobs:
             if(tooSmall.length) throw new Error(label+' targets below 44px: '+JSON.stringify(tooSmall));
           };
 
+          const assertReadableText=async(page,selector,minPx,label)=>{
+            const values=await page.locator(selector).evaluateAll((els)=>els.map((el)=>{
+              const style=getComputedStyle(el);
+              const rect=el.getBoundingClientRect();
+              return {
+                text:(el.textContent||'').trim().replace(/\s+/g,' ').slice(0,70),
+                size:parseFloat(style.fontSize||'0'),
+                visible:style.display!=='none'&&style.visibility!=='hidden'&&rect.width>0&&rect.height>0
+              };
+            }).filter((x)=>x.visible));
+            const tooSmall=values.filter((x)=>x.size+0.01<minPx);
+            if(tooSmall.length) throw new Error(label+' text below '+minPx+'px: '+JSON.stringify(tooSmall));
+          };
+
           const viewports=[
             {name:'phone-320',width:320,height:720},
             {name:'phone-360',width:360,height:800},
@@ -137,6 +151,8 @@ jobs:
             await page.goto(base+'/index.html',{waitUntil:'domcontentloaded'});
             await page.waitForTimeout(750);
             await assertNoHorizontalOverflow(page,'Landing '+viewport.name);
+            await assertReadableText(page,'.section-heading p',14,'Section copy '+viewport.name);
+            await assertReadableText(page,'.flow-cards p',11.5,'Workflow copy '+viewport.name);
             if(viewport.width<=430) await assertMobileTargets(page,'Landing '+viewport.name);
             await page.screenshot({path:'visual-check/matrix-'+viewport.name+'-landing.png'});
             await page.close();
@@ -144,8 +160,13 @@ jobs:
 
           const desktop=await browser.newPage({viewport:{width:1440,height:900},deviceScaleFactor:1});
           await watchErrors(desktop,'Landing interactions');
-          await desktop.goto(base+'/index.html',{waitUntil:'domcontentloaded'});
+          await desktop.goto(base+'/index.html#google',{waitUntil:'domcontentloaded'});
           await desktop.waitForTimeout(650);
+          const normalizedUrl=new URL(desktop.url());
+          if(/\/index\.html$/i.test(normalizedUrl.pathname)||normalizedUrl.hash.toLowerCase()==='#google') throw new Error('Public home URL was not normalized: '+desktop.url());
+          await assertReadableText(desktop,'.desktop-nav a',13,'Desktop navigation');
+          await assertReadableText(desktop,'.hero-os-window .os-nav-item span',10,'Hero app navigation');
+          await assertReadableText(desktop,'.footer-links a',11,'Footer links');
 
           await desktop.locator('[data-preview="service"]').first().click();
           if(!await desktop.locator('[data-preview-screen="service"]').evaluate((el)=>el.classList.contains('active'))) throw new Error('Service preview did not activate');
@@ -289,6 +310,9 @@ jobs:
           await login.goto(base+'/index.html?login=1',{waitUntil:'domcontentloaded'});
           await login.waitForTimeout(300);
           if(!await login.locator('#webLoginDialog').evaluate((el)=>el.open)) throw new Error('Phone pairing dialog did not open');
+          await assertReadableText(login,'.portal-login-copy p',14,'Pairing dialog intro');
+          await assertReadableText(login,'.portal-login-steps strong',13,'Pairing dialog steps');
+          await assertReadableText(login,'.portal-login-steps small',11,'Pairing dialog detail');
           await login.screenshot({path:'visual-check/mobile-phone-pairing-dialog.png'});
           await login.close();
 

@@ -190,7 +190,12 @@ jobs:
           grep -q 'assets/serviceos-app-site.css' terms.html
           grep -q 'assets/serviceos-app-site.css' signing.html
           grep -q 'Połączenie telefonu z panelem WWW odbywa się wyłącznie' privacy.html
-          grep -q "serviceos-shell-v41" sw.js
+          grep -q "serviceos-shell-v42" sw.js
+          grep -q "normalizePublicHomeUrl" assets/serviceos-app-site.js
+          grep -q "Readability hotfix 2026-09-25" assets/serviceos-site.css
+          ! grep -q 'href="index.html"' privacy.html
+          ! grep -q 'href="index.html"' terms.html
+          ! grep -q 'href="index.html"' signing.html
           grep -q 'serviceos-site.css' sw.js
           grep -q 'smartfon otoczony pomarańczową orbitą' assets/serviceos-app-icon.svg
           grep -q 'id="orbit"' assets/serviceos-app-icon.svg || true

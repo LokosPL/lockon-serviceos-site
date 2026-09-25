@@ -1,6 +1,27 @@
 (() => {
   'use strict';
 
+  const normalizePublicHomeUrl = () => {
+    const url = new URL(window.location.href);
+    let changed = false;
+
+    if (/\/index\.html$/i.test(url.pathname)) {
+      url.pathname = url.pathname.replace(/index\.html$/i, '');
+      changed = true;
+    }
+
+    if (url.hash.toLowerCase() === '#google') {
+      url.hash = '';
+      changed = true;
+    }
+
+    if (changed) {
+      history.replaceState(history.state, '', url.pathname + url.search + url.hash);
+    }
+  };
+
+  normalizePublicHomeUrl();
+
   const qs = (selector, root = document) => root.querySelector(selector);
   const qsa = (selector, root = document) => [...root.querySelectorAll(selector)];
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
