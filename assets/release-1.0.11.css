@@ -2,25 +2,25 @@
 .release-now-section{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,111,43,.025),transparent)}
 .release-now-shell{position:relative;padding:clamp(28px,4vw,56px);border:1px solid rgba(255,255,255,.09);border-radius:28px;background:radial-gradient(circle at 92% 0,rgba(255,102,38,.12),transparent 30%),linear-gradient(145deg,rgba(21,27,35,.94),rgba(11,15,20,.94));box-shadow:0 28px 80px rgba(0,0,0,.2)}
 .release-now-head{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(220px,.7fr);gap:28px;align-items:end}
-.release-now-head>div:first-child>span{display:block;margin-bottom:10px;color:#ff8c59;font-size:12px;font-weight:900;letter-spacing:.12em}
+.release-now-head>div:first-child>span{display:block;margin-bottom:10px;color:#ff8c59;font-size:14px;font-weight:900;letter-spacing:.12em}
 .release-now-head h2{margin:0;font-size:clamp(34px,4vw,62px);line-height:.98;letter-spacing:-.055em}
 .release-now-head p{margin:14px 0 0;max-width:760px;color:#9aa6b3;font-size:16px;line-height:1.7}
 .release-now-version{justify-self:end;min-width:220px;padding:16px 18px;border:1px solid rgba(255,128,70,.2);border-radius:16px;background:rgba(255,108,44,.06)}
-.release-now-version span{display:block;color:#818d99;font-size:10px;font-weight:850;letter-spacing:.1em}
+.release-now-version span{display:block;color:#818d99;font-size:12.5px;font-weight:850;letter-spacing:.1em}
 .release-now-version strong{display:block;margin-top:4px;font-size:24px}
 .release-feature-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:28px}
 .release-feature-grid article{min-height:210px;padding:20px;border:1px solid rgba(255,255,255,.075);border-radius:18px;background:rgba(255,255,255,.022)}
-.release-feature-grid b{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:28px;padding:0 8px;border-radius:9px;background:rgba(255,112,65,.1);color:#ff8a54;font-size:11px}
+.release-feature-grid b{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:28px;padding:0 8px;border-radius:9px;background:rgba(255,112,65,.1);color:#ff8a54;font-size:13.5px}
 .release-feature-grid strong{display:block;margin-top:20px;font-size:19px;line-height:1.2}
-.release-feature-grid p{margin:9px 0 0;color:#929eaa;font-size:13px;line-height:1.65}
-.release-feature-grid small{display:block;margin-top:14px;color:#687481;font-size:11px;line-height:1.55}
+.release-feature-grid p{margin:9px 0 0;color:#929eaa;font-size:15px;line-height:1.65}
+.release-feature-grid small{display:block;margin-top:14px;color:#687481;font-size:13.5px;line-height:1.55}
 .release-service-flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:18px}
-.release-service-flow span{padding:9px 10px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:rgba(5,8,12,.28);color:#8995a1;font-size:11px;text-align:center}
+.release-service-flow span{padding:9px 10px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:rgba(5,8,12,.28);color:#8995a1;font-size:13.5px;text-align:center}
 .release-service-flow span::before{content:"✓";margin-right:5px;color:#67d79a}
 .legal-update-note{margin:18px 0;padding:14px 16px;border:1px solid rgba(255,126,68,.16);border-radius:13px;background:rgba(255,105,42,.045);color:#aeb8c2;line-height:1.65}
 @media(max-width:1050px){.release-feature-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.release-service-flow{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:720px){.release-now-head{grid-template-columns:1fr}.release-now-version{justify-self:start}.release-feature-grid{grid-template-columns:1fr}.release-service-flow{grid-template-columns:1fr 1fr}.release-feature-grid article{min-height:0}}
 
-.customer-legal-footer{max-width:1120px;margin:0 auto;padding:20px 24px 28px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;color:#77828e;font-size:12px}
+.customer-legal-footer{max-width:1120px;margin:0 auto;padding:20px 24px 28px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap;color:#77828e;font-size:14px}
 .customer-legal-footer a{color:#98a3ae;text-decoration:none}
 .customer-legal-footer a:hover{color:#fff}
